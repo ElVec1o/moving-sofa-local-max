@@ -12,7 +12,10 @@ repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.20434287"
-    description: "Concept DOI (all versions)"
+    description: "Concept DOI (always resolves to latest version)"
+  - type: doi
+    value: "10.5281/zenodo.20434372"
+    description: "Version DOI (v0.2.0)"
   - type: doi
     value: "10.5281/zenodo.20434288"
     description: "Version DOI (v0.1.0)"
