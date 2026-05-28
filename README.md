@@ -1,5 +1,7 @@
 # Strict local maximality of Gerver's moving sofa
 
+[![DOI](https://zenodo.org/badge/1252674180.svg)](https://doi.org/10.5281/zenodo.20434287)
+
 A computer-assisted argument that Joseph Gerver's 1992 candidate sofa
 $c_G$ is a strict local maximum of the moving-sofa area functional on
 the Sobolev space $H^2([0, \pi/2]; \mathbb{R}^2)$ of corner
