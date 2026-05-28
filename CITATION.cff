@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Strict local maximality of Gerver's moving sofa: a computer-assisted Sobolev coercivity argument"
+authors:
+  - family-names: Bonfioli
+    given-names: Vico
+version: "0.1.0"
+date-released: 2026-05-29
+license: MIT
+repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
+abstract: >
+  A computer-assisted argument that Joseph Gerver's 1992 candidate sofa
+  is a strict local maximum of the area functional on the Sobolev space
+  H^2 of corner trajectories, modulo translation symmetry. The
+  coercivity constant satisfies m >= 4.34 in the H^2-norm; the
+  trajectory is the unique critical point in an explicit H^2-ball of
+  radius >= 0.0456. Three ingredients are not yet rigorous and are
+  flagged throughout: (i) the finite-dimensional Hessian is evaluated
+  with a floating-point polygon-intersection oracle (Shapely) rather
+  than true interval arithmetic; (ii) the cross-term coupling between
+  low and high Fourier modes is bounded by a numerical placeholder
+  rather than an analytic estimate; (iii) the second variation Q
+  decomposes as Q_smooth + Q_jump, where Lemma 8 characterizes Q_smooth
+  analytically but Q_jump (from the four contact-transition breakpoints)
+  is captured only empirically by the polygon Hessian computation.
+keywords:
+  - moving sofa problem
+  - Gerver's sofa
+  - local maximality
+  - second variation
+  - computer-assisted

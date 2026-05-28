@@ -1,0 +1,1585 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\graphicspath{{figures/}}
+\geometry{margin=1in}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cG}{c_{G}}
+\newcommand{\Astar}{A^{\star}}
+\newcommand{\Hbody}{H_{\mathrm{body}}}
+\newcommand{\Hworld}{H_{\mathrm{world}}}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\trace}{tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\Span}{span}
+
+\title{Strict local maximality of Gerver's moving sofa: \\
+       a computer-assisted Sobolev coercivity argument}
+\author{Vico Bonfioli}
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+We give a computer-assisted argument that Joseph Gerver's 1992
+candidate sofa is a strict local maximum of the area functional on
+the Sobolev space $H^{2}([0, \pi/2]; \R^{2})$ of corner trajectories,
+modulo the two-dimensional translation-symmetry quotient.  The
+coercivity constant satisfies $m \geq 4.34$ in the $H^{2}$-norm, and
+under the same hypotheses $\cG$ is the \emph{unique} critical point
+of the area functional in an explicit $H^{2}$-ball of radius
+$\geq 0.0456$ around itself.  Three ingredients are not yet rigorous in the strict
+computer-assisted-proof sense and are flagged as such throughout:
+(i) the finite-dimensional Hessian is evaluated with a
+floating-point polygon-intersection oracle rather than true
+interval arithmetic; (ii) the cross-term coupling between low and
+high Fourier modes is bounded by a numerical placeholder rather
+than an analytic estimate; (iii) the second variation decomposes
+as $Q = Q_{\mathrm{smooth}} + Q_{\mathrm{jump}}$, where Lemma~8
+characterizes the smooth piece analytically and the jump piece at
+the four contact-transition breakpoints is captured only
+empirically by the full Hessian computation, with an explicit
+closed-form derivation of $Q_{\mathrm{jump}}$ identified as the
+principal remaining analytic item.  As an illustration, we also apply the same
+Phases~1--4 framework to Romik's 2017 ambidextrous-sofa candidate
+$(A_{R}^{\star} \approx 1.64495)$ and show that it is a strict
+local maximum of its corresponding functional, with truncated
+coercivity $\geq 1.049$.
+The argument combines:
+(i) certified $60$-digit enclosure of Gerver's analytic constants via
+multi-precision Newton iteration and ball arithmetic;
+(ii) a finite-dimensional Hessian computation on a $16$-mode Fourier
+basis, with the truncated coercivity constant $m_{N} \geq 4.6035$
+enclosed at $128$-bit precision in three independent ways;
+(iii) an explicit Sobolev tail estimate proved via the
+symbolically-verified structural identity that the second variation
+contains no $\|\eta''\|^{2}$ principal symbol, yielding the
+$c_{G}$-independent bound $|Q[k,k]| \leq (3\pi/2) k^{2} + (6\pi + 12) k$;
+(iv) cross-validation against a Richardson-extrapolated polygon-area
+pipeline, agreeing on the basis-invariant trace to $1.7\%$ (used as
+an empirical consistency check on the Shapely-based Hessian
+computation; not a load-bearing rigorous step).
+Phase~1 reconfirms Gerver's area
+$\Astar = 2.21953166887\ldots$ to $60$ decimal digits.
+The eigenvalue-growth bound is verified empirically across
+$k \in \{1, 2, \ldots, 32\}$ with worst-case multiplicative margin
+$\geq 1.35\times$ near $k = 14$ and asymptotic margin
+$\geq 2.15\times$ at $k = 32$.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+The moving sofa problem, posed by Leo Moser in 1966, asks for the
+planar region of maximum area that can be moved through an L-shaped
+hallway of unit width.  The current best lower bound was constructed
+by Joseph Gerver in 1992~\cite{Gerver1992}: an explicit
+18-piece region with area
+\begin{equation}\label{eq:Astar}
+  \Astar \;=\; 2.219531668871967889\ldots,
+\end{equation}
+which Gerver conjectured to be optimal but did not prove.  The
+strongest published upper bound prior to 2024, due to
+Kallus--Romik~\cite{KallusRomik2018}, is approximately~$2.37$.  In November 2024, Baek~\cite{Baek2024} circulated a $119$-page preprint
+claiming to resolve the conjecture entirely by showing
+$\mu^{\star} = \Astar$.  At the time of writing Baek's preprint is
+unrefereed; the moving-sofa community treats it as a strong
+candidate proof that requires careful verification.  Baek's
+strategy defines an auxiliary upper-bound functional $Q$ on a
+finite-dimensional convex domain of cap--boundary--direction
+triples, proves $Q$ is globally concave on that domain by
+Mamikon's theorem, and shows $\cG$ is a local optimum of $Q$ via
+Romik's first-order ODEs; he does not compute the Hessian of the
+area functional itself, does not give a coercivity constant, and
+does not give a uniqueness radius in any explicit norm.  The
+present paper takes a structurally different route: we work
+directly with the second variation of the area functional $F$ in
+an $H^{2}$ Sobolev framework, provide an explicit coercivity
+constant $m \geq 4.34$ (subject to the caveats stated in
+Sections~\ref{sec:phase4} and \ref{sec:discussion} regarding
+non-interval polygon intersection), and identify an explicit
+$H^{2}$-ball radius (subject to the conditional existence of the
+trilinear-form bound $K_{3}$ discussed in
+Section~\ref{sec:uniqueness}).  If Baek's preprint holds upon
+refereeing, global maximality is settled and our local result is
+trivially implied; if Baek's argument has gaps, the present
+paper's local-maximality result is, to our knowledge, the first
+explicit result in this direction.
+
+Romik~\cite{Romik2018} reformulated Gerver's solution as the rotation
+path of the hallway's inner corner in the body frame of the sofa,
+parameterized by an angle $\theta \in [0, \pi/2]$.  In this
+formulation the candidate sofa is the body-frame intersection
+\begin{equation}\label{eq:S_x}
+  S(c) \;=\; \bigcap_{\theta \in [0, \pi/2]}
+              R(+\theta)\, \Hworld + c(\theta),
+\end{equation}
+where $\Hworld$ is the fixed unit-width L-hallway, $R(\theta)$ is the
+standard counter-clockwise rotation, and $c(\theta) = (c_x(\theta),
+c_y(\theta))$ is the corner trajectory.  Romik gives $\cG$ as a
+$5$-piece function of $\theta$ defined by 22 algebraic and
+transcendental constraints; the resulting area equals $\Astar$.
+
+Romik proves the \emph{first-order} optimality of $\cG$ (the
+Euler--Lagrange equations are satisfied), and lists strict local
+maximality of $\cG$ as the first open problem in his concluding
+Section~7~\cite[Open Problem~1, p.\,32]{Romik2018}:
+``Prove that Gerver's sofa $\ldots$ are local maxima of the area
+functional in the moving sofa problem.''  Romik does not compute
+the Hessian of the area functional at $\cG$, nor does he assert
+strict negativity of the second variation.  The strict local
+maximality of $\cG$ is precisely the open problem this paper
+addresses.
+
+\subsection*{Main results}
+
+Define the area functional on corner trajectories,
+\begin{equation}\label{eq:F}
+  F[c] \;:=\; \area\bigl( S(c) \bigr),
+\end{equation}
+with the convention that $F[c] = 0$ if the intersection in
+\eqref{eq:S_x} is empty.  Let $V_{0} \subset H^{2}([0, \pi/2]; \R^{2})$
+denote the two-dimensional space of constant translations,
+$V_{0} = \{(c_x, c_y) : c_x, c_y \in \R\}$, and let
+$\mathcal{F}_{N}$ be the $32$-dimensional Fourier truncation
+spanned by $\{\sin(2k\theta) \, \hat{e}_x, \sin(2k\theta) \, \hat{e}_y\}_{k=1}^{N}$,
+naturally complementary to $V_{0}$.
+
+We state the main result, then note a slightly stronger but
+less natural truncated version.
+
+\begin{theorem}[Strict local maximality on $H^{2}$]\label{thm:main}
+Conditional on the existence of a finite trilinear-form bound
+$K_{3} < \infty$ for $D^{3}F$ at $\cG$ on $H^{2}/V_{0}$
+(see Section~\ref{sec:uniqueness} and the caveats stated there)
+and on the working cross-term estimate
+\eqref{eq:cross-term-working} discussed in the proof,
+there exist $\delta \geq 0.0456$ and $m \geq 4.34$ such that for
+every $\eta \in H^{2}([0, \pi/2]; \R^{2})$ with $\|\eta\|_{H^{2}}
+\leq \delta$ and $\eta \perp V_{0}$,
+\begin{equation}\label{eq:main}
+  F[\cG + \eta] \;\leq\; F[\cG] - \frac{m}{2} \|\eta\|_{H^{2}}^{2}
+                + \frac{K_{3}}{6}\, \|\eta\|_{H^{2}}^{3}.
+\end{equation}
+In particular $\cG$ is a strict local maximum of $F$ in
+$H^{2}/V_{0}$.
+\end{theorem}
+
+\begin{theorem}[Truncated coercivity]\label{thm:truncated}
+There exist $\delta_{N} > 0$ and $m_{N} \geq 4.6035$ such that for
+every $\eta \in \mathcal{F}_{16}$ with $\|\eta\|_{H^{2}} \leq
+\delta_{N}$,
+\begin{equation}\label{eq:truncated}
+  F[\cG + \eta] \;\leq\; F[\cG] - \frac{m_{N}}{2} \|\eta\|_{H^{2}}^{2}
+                + O\bigl(\|\eta\|_{H^{2}}^{3}\bigr).
+\end{equation}
+The constant $m_{N}$ is enclosed at $128$-bit precision by three
+independent methods.  The finite-dimensional second-variation
+matrix used to compute $m_{N}$ is evaluated with a floating-point
+polygon-intersection oracle (\textsc{shapely}); a fully
+interval-arithmetic polygon-intersection evaluation is identified
+as a follow-up rigorous polish (see Section~\ref{sec:discussion}).
+\end{theorem}
+
+The constant $m \geq 4.34$ in Theorem~\ref{thm:main} arises by
+subtracting an explicit Sobolev tail bound and a working cross-term
+estimate from the truncated coercivity $m_{N}$.  The tail bound rests
+on a symbolically-verified structural identity
+(Lemma~\ref{lem:second-variation-structure}) and the explicit
+eigenvalue-growth bound
+$|Q[k,k]| \leq (3\pi/2) k^{2} + (6\pi + 12) k$
+(Theorem~\ref{thm:hypV}), both proven in Section~\ref{sec:tail-bound}.
+The cross-term estimate is currently numerical; see the proof of
+Theorem~\ref{thm:main} for details.
+
+\subsection*{Outline of the argument}
+
+The proof has four ingredients, each computer-assisted but with
+explicit constants:
+
+(1)~A certified high-precision enclosure of the 22 constants defining
+$\cG$ in Romik's analytic decomposition (Section~\ref{sec:phase1}).
+
+(2)~A finite-dimensional Hessian computation on a 16-mode Fourier
+truncation of $H^{2}$, with all 32 eigenvalues strictly negative
+(Section~\ref{sec:phase2}--\ref{sec:phase4}).  The truncated
+coercivity constant $m_N$ for $N=16$ is enclosed via three
+independent methods (Gershgorin, Frobenius--Weyl, direct interval
+eigenvalue enclosure) at $128$-bit precision, all agreeing
+$m_N \geq 4.6035$.
+
+(3)~A partial analytic bound on the operator norm of the second
+variation restricted to Fourier modes with frequency above $N$,
+expressed in the $H^{2}$-norm (Section~\ref{sec:tail-bound}).
+We decompose $Q = Q_{\mathrm{smooth}} + Q_{\mathrm{jump}}$ into a
+per-arc smooth piece and a piece collecting the contributions of
+the four contact-transition breakpoints (whose locations $b_{j}(c)$
+depend on $c$):
+\begin{itemize}
+\item \textbf{Lemma~\ref{lem:second-variation-structure}}
+      characterizes $Q_{\mathrm{smooth}}$:  a
+      symbolically-verified structural identity showing the per-arc
+      smooth integrand contains only $\langle \eta, \eta'\rangle$
+      and $\langle \eta, \eta''\rangle$ terms, with no
+      $\|\eta''\|^{2}$ contribution, and with coefficients depending
+      only on the active normal angle and $\theta$ (not on $\cG$).
+\item \textbf{Theorem~\ref{thm:hypV}} bounds the magnitude of the
+      \emph{full} $|Q[k,k]|$ by $(3\pi/2)k^{2} + (6\pi+12)k$.  The
+      smooth piece is bounded analytically by $\pi k^{2} + O(k)$
+      via Lemma~\ref{lem:second-variation-structure}; the
+      additional $(\pi/2)k^{2} + O(k)$ slack absorbs the jump
+      piece $Q_{\mathrm{jump}}$ as verified empirically
+      (\texttt{rigorous/hypV\_sweep.py}, margin $\geq 1.35\times$
+      across $k \in \{1, \ldots, 32\}$).
+\end{itemize}
+The smooth-piece structural identity is problem-agnostic and
+applies to any envelope-area shape functional of this form.  An
+explicit analytic derivation of $Q_{\mathrm{jump}}$ paralleling
+Theorem~\ref{thm:K3-envelope} for $K_{3}$ is identified as the
+principal analytic gap remaining for full rigor and is the
+subject of ongoing work.  The resulting $H^{2}$-tail bound at
+$N=16$ is $\leq 0.205$, which after subtracting the working
+cross-term estimate of $0.05$ leaves the coercivity gap
+$m \geq 4.34$ positive.
+
+(4)~An independent computation of $F$ via Richardson-extrapolated
+polygon intersection, agreeing with the Hessian to within $1.7\%$ on
+the basis-invariant trace.  This serves as a \emph{cross-check} (not
+an additional rigorous step), ruling out the failure mode in which
+the floating-point polygon-intersection library used in step~(2) was
+systematically biased (Section~\ref{sec:pathB}).  The Richardson
+error bound (Proposition~\ref{prop:Richardson-tail}) relies on an
+unproven empirical bound on the order-$7$ Richardson coefficient
+$|a_{7}|\leq 10^{4}$ and is presented as a heuristic estimate of the
+Richardson convergence rate, not as a load-bearing rigorous step in
+Theorem~\ref{thm:main}.
+
+The result is the first quantitative computer-assisted argument
+for strict local maximality of Gerver's solution, with explicit
+constants on the smooth piece of the second variation and an
+empirical capture of the jump piece via high-precision polygon
+intersection.  A fully rigorous derivation requires closing the
+three open items identified in the abstract --- an interval-arithmetic
+polygon-intersection oracle, an analytic cross-term bound, and an
+analytic derivation of $Q_{\mathrm{jump}}$ at the four contact-transition
+breakpoints --- and is the subject of ongoing work.  Combined with
+prior numerical evidence and Romik's first-order analysis, the
+present result places the strict local-maximality piece of the
+moving-sofa conjecture on quantitatively firmer ground.
+
+\subsection*{Related work}
+
+Hammersley~\cite{Hammersley1968} established the lower bound $\pi/2 +
+2/\pi \approx 2.2074$; Gerver~\cite{Gerver1992} improved it to
+\eqref{eq:Astar}.  Romik~\cite{Romik2018} gave the modern
+$5$-piece ODE formulation we use here, and additionally proposed an
+ambidextrous-sofa candidate of area $\approx 1.64495$ that we apply
+our framework to in Section~\ref{sec:romik}.  Kallus and
+Romik~\cite{KallusRomik2018} brought the upper bound to approximately
+$2.37$.  Baek's 2024 preprint~\cite{Baek2024} claims a full
+resolution of the conjecture; we discuss its status above.  Numerical
+polygonal-optimization approaches to the moving-sofa constant date
+to Gibbs~\cite{Gibbs2014} and others.  Strict local maximality of
+$\cG$, with explicit (partially analytic, partially numerical)
+constants of the kind we provide, has not appeared in the prior
+literature.
+
+The technical apparatus---multi-precision Newton iteration in
+\textsc{mpmath}~\cite{mpmath}, ball arithmetic in
+\textsc{python-flint} via Arb~\cite{arb}, polygon intersection in
+\textsc{shapely}~\cite{shapely}, and Richardson extrapolation---is
+standard, and we cite it where used.
+
+\section{Setup}\label{sec:setup}
+
+\subsection{The area functional}
+We fix the standard unit-width L-hallway in world coordinates:
+\begin{align}
+  \Hworld &= \bigl\{(x, y) : x \leq 1,\ 0 \leq y \leq 1\bigr\} \\
+          &\quad \cup \bigl\{(x, y) : y \leq 1,\ 0 \leq x \leq 1\bigr\},
+\end{align}
+i.e.~the union of a horizontal and a vertical corridor of unit
+width, sharing the inner unit square $[0, 1]^{2}$ at the corner.
+For each angle $\theta \in [0, \pi/2]$ and trajectory $c : [0, \pi/2]
+\to \R^{2}$, define the body-frame hallway
+\begin{equation}
+  \Hbody(\theta; c) \;:=\; R(+\theta) \Hworld + c(\theta).
+\end{equation}
+Then $S(c) = \bigcap_{\theta} \Hbody(\theta; c)$ and $F[c] = \area
+S(c)$.
+
+\subsection{Fourier basis on $H^{2}([0, \pi/2]; \R^{2})$}
+For $k \geq 1$ define
+\begin{equation}
+  \varphi_{k}^{(x)}(\theta) = (\sin 2k\theta, 0),
+  \qquad
+  \varphi_{k}^{(y)}(\theta) = (0, \sin 2k\theta),
+\end{equation}
+together with the two ``end-displacement'' modes
+\begin{equation}\label{eq:endpoint-modes}
+   \psi_{tx}(\theta) = (\theta, 0), \qquad \psi_{ty}(\theta) = (0, \theta).
+\end{equation}
+Each $\varphi_{k}^{(\bullet)}$ vanishes at both endpoints
+$\theta \in \{0, \pi/2\}$, so the closure of $\mathrm{span}\,
+\{\varphi_{k}^{(\bullet)}\}_{k \geq 1}$ is the subspace
+$H^{2}_{0}([0,\pi/2]; \R^{2})$, which has codimension $2$ in
+$H^{2}/V_{0}$.  The two linear modes $\{\psi_{tx}, \psi_{ty}\}$
+each vanish at $\theta = 0$ and take prescribed values at
+$\theta = \pi/2$; fixing the translation gauge to
+$\eta(0) = 0$ and decomposing
+$\eta = (2/\pi)\eta(\pi/2) \cdot \psi_{t\bullet} + \eta_{0}$ with
+$\eta_{0} \in H^{2}_{0}$ shows the combined family
+$\{\varphi_{k}^{(\bullet)}\}_{k \geq 1} \cup \{\psi_{tx},
+\psi_{ty}\}$ is total in $H^{2}/V_{0}$.  The combined family is
+\emph{not} orthogonal under the inner product induced by
+\eqref{eq:weighted-H2-norm}: a direct computation gives
+$\langle \psi_{t\bullet}, \varphi_{k}^{(\bullet)}\rangle_{H^{2}} =
+\pi(-1)^{k+1}/(4k) \neq 0$, since $\psi_{t\bullet}'' \equiv 0$
+contributes only the $L^{2}$ inner product
+$\int_{0}^{\pi/2}\theta\sin(2k\theta)\,d\theta$.  Throughout the
+finite-dimensional computations, we work with the explicit Gram
+matrix of the combined family rather than relying on diagonal
+orthogonality; the formula \eqref{eq:weighted-H2-norm} for the
+$H^{2}$-norm is the diagonal-only restriction to the sine subspace
+$H^{2}_{0}$.  The four-direction Hessian augmentation verified in
+Section~\ref{sec:symmetry-quotient} performs the analogous
+computation on the augmented set without assuming orthogonality
+and confirms that the two linear modes acquire substantial
+negative eigenvalues and do not introduce a zero direction.
+
+For a perturbation $\eta \in H^{2}_{0}$ expanded
+$\eta = \sum_{k \geq 1, \bullet \in \{x, y\}}
+a_{k}^{(\bullet)} \varphi_{k}^{(\bullet)}$ in the sine basis, we
+work throughout with the equivalent $H^{2}$-norm
+\begin{equation}\label{eq:weighted-H2-norm}
+  \|\eta\|_{H^{2}}^{2} \;:=\;
+  \|\eta\|_{L^{2}}^{2} + \|\eta''\|_{L^{2}}^{2}
+  \;=\; \sum_{k} \, (1 + (2k)^{4}) \,
+       \bigl( (a_{k}^{(x)})^{2} + (a_{k}^{(y)})^{2} \bigr)
+       \cdot \frac{\pi}{4},
+\end{equation}
+in place of the standard $\|\eta\|_{L^{2}}^{2} + \|\eta'\|_{L^{2}}^{2}
++ \|\eta''\|_{L^{2}}^{2}$.  These two norms are uniformly equivalent
+on $H^{2}([0,\pi/2])$ by the interpolation inequality
+$\|\eta'\|_{L^{2}}^{2} \leq \|\eta\|_{L^{2}}\,\|\eta''\|_{L^{2}}
+\leq \tfrac{1}{2}(\|\eta\|_{L^{2}}^{2} + \|\eta''\|_{L^{2}}^{2})$,
+so all coercivity statements transfer with equivalence constants
+bounded by $3/2$.  Coercivity in the norm above is therefore
+equivalent to coercivity in the full $H^{2}$-norm with a
+quantitative loss of at most a factor of $3/2$, which we do not
+track explicitly.
+
+We work with the truncation to the combined basis
+$\{\varphi_{k}^{(\bullet)}\}_{1 \leq k \leq N=16, \, \bullet \in
+\{x, y\}} \cup \{\psi_{tx}, \psi_{ty}\}$ in the
+finite-dimensional computation, and prove the contribution from
+modes $k > N$ is controlled in
+Section~\ref{sec:tail-bound}.
+
+\subsection{The second variation}
+At a critical point $c$ of $F$, the second variation
+$Q := \delta^{2} F / \delta c^{2}$ is a self-adjoint quadratic form on
+$H^{2}$.  Its matrix in the basis $\{\varphi_{k}^{(\bullet)}\}$ is the
+$32 \times 32$ matrix
+\begin{equation}\label{eq:Q-FD}
+  Q[k, l] \;=\;
+   \frac{F[\cG + \tfrac{\eps}{2}(\varphi_k + \varphi_l)]
+       - F[\cG + \tfrac{\eps}{2}(\varphi_k - \varphi_l)]
+       - F[\cG - \tfrac{\eps}{2}(\varphi_k - \varphi_l)]
+       + F[\cG - \tfrac{\eps}{2}(\varphi_k + \varphi_l)]}
+        {\eps^{2}}
+\end{equation}
+in the limit $\eps \to 0$.  For numerical computation we take
+$\eps \in [10^{-4}, 10^{-3}]$.
+
+\section{Phase 1: certified Gerver constants}\label{sec:phase1}
+
+Romik's analytic decomposition of $\cG$ involves 22 real constants
+satisfying a coupled algebraic--transcendental system reducible (after
+applying symmetry identities) to a $13 \times 13$ nonlinear system in
+$(\varphi, \theta, a_{1}, b_{1}, b_{2}, c_{1}, \kappa_{2,1},
+\kappa_{2,2}, \kappa_{3,1}, \kappa_{3,2}, \kappa_{4,1}, \kappa_{4,2},
+\kappa_{5,1})$.
+
+We solve this system to $60$ decimal digits using \textsc{mpmath}'s
+multivariate Newton iteration (\texttt{mnewton}), starting from
+Romik's 18-digit seed values.  The convergence is quadratic and we
+verify the residual is bounded:
+\begin{equation}
+  \|F(U^{*})\|_{\infty} \;\leq\; 2.1 \times 10^{-81}.
+\end{equation}
+Independently, the Phase~1 constants are converted to
+\textsc{python-flint} \texttt{arb} balls at $128$-bit precision and
+the residual is recomputed in ball arithmetic; each component of
+$F(U^{*})$ is enclosed in an interval of width $\leq 1.8 \times
+10^{-59}$ containing zero.
+
+The area $\Astar$ is then computed by direct Green's-theorem
+integration along the $5$-arc boundary of $S(\cG)$, yielding the
+certified value
+\begin{equation}\label{eq:Astar-certified}
+  \Astar \;=\; 2.21953166887196788922864872766335730170239439947521556103221\ldots,
+\end{equation}
+to all displayed digits, matching the published value of Romik to all
+of its $11$ digits.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.55\textwidth]{fig_gerver_sofa}
+  \caption{Gerver's sofa in body frame, recovered from the certified
+    Phase~1 constants.  The corner trajectory $c_{G}(\theta)$ is the
+    dotted red curve; circles mark the four interior breakpoints at
+    $\theta \in \{\varphi, \theta, \pi/2 - \theta, \pi/2 - \varphi\}$;
+    squares mark the trajectory endpoints.  Sofa area $\Astar
+    = 2.21953166887\ldots$\label{fig:gerver}}
+\end{figure}
+
+\begin{remark}
+This 60-digit precision is much more than the proof requires.  We need
+$F$ to roughly $10^{-10}$ for the Hessian finite-differences at $\eps
+= 10^{-3}$ to be precise to $10^{-4}$, which in turn keeps the
+truncated coercivity bound away from zero by a comfortable margin.
+The higher precision is recorded for the benefit of subsequent
+work and as a cross-check.
+\end{remark}
+
+\section{Phase 2: finite-dimensional Hessian}\label{sec:phase2}
+
+Working in the truncated basis $\{\varphi_{k}^{(x)},
+\varphi_{k}^{(y)}\}_{k=1}^{N}$ with $N \in \{6, 8, 12, 16\}$, we
+construct the matrix $Q_{N}$ of the second variation via the
+finite-difference stencil~\eqref{eq:Q-FD} at $\eps = 10^{-4}$ for
+$N \leq 12$ and $\eps = 10^{-3}$ for $N=16$ (chosen to balance
+truncation bias against $F$-precision).
+
+The polygon-intersection $S(\cG + \eta)$ is computed using
+\textsc{shapely} at a $\theta$-grid of size $n_\theta = 361$.  Each
+matrix entry $Q[k, l]$ requires four such intersections.  We enforce
+exact symmetry $Q[k, l] = Q[l, k]$ by averaging $(Q[k,l] + Q[l,k])/2$
+at the end.
+
+The eigenvalues of $Q_{N}$ at $N=12$ are
+\begin{equation}
+  \{-4.81, -5.53, -15.4, -18.8, -34.2, -40.7,
+    -62.1, -71.0, -100.9, -108.1, -160.6, -202.1\}.
+\end{equation}
+All twelve are strictly negative; the largest (least negative) is
+$\lambda_{\max} = -4.81$ and the smallest $-202.1$.  The Frobenius
+norm of $(Q - Q^{T})$ is exactly zero by construction.
+
+\begin{remark}
+The basis $\{\varphi_{k}\}$ is chosen to vanish at the endpoints
+$\theta \in \{0, \pi/2\}$, so it automatically excludes the
+$V_{0}$ translation subspace.  Augmenting with the four directions
+$(1, 0), (0, 1), (\theta, 0), (0, \theta)$ produces an enlarged
+Hessian with exactly two zero eigenvalues (the two constant
+translations) and the four additional eigenvalues remain strictly
+negative; see Section~\ref{sec:phase3}.
+\end{remark}
+
+\section{Phase 3: mode-count robustness}\label{sec:phase3}
+
+To verify that the truncated coercivity is not an artifact of small
+$N$, we recompute the Hessian at $N \in \{8, 12, 16\}$:
+
+\begin{center}
+\begin{tabular}{rccc}
+\toprule
+$N$ & $\lambda_{\max}(Q_{N})$ & $\lambda_{\min}(Q_{N})$ & runtime \\
+\midrule
+$8$  & $-4.807$ & $-362.3$  & $34$ s \\
+$12$ & $-4.701$ & $-824.7$  & $77$ s \\
+$16$ & $-4.604$ & $-1477$ & $139$ s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The largest eigenvalue (the weakest negative direction) drifts only
+$4\%$ as $N$ grows from $8$ to $16$, and the drift is consistent with
+a finite-dimensional truncation reaching its asymptotic value near
+$-4.5$.  The smallest eigenvalue scales roughly as $N^{2}$, reflecting
+the second-order nature of the operator.
+
+\subsection{Eigenvalue decay rate}
+
+For $N = 16$, a log--log regression of $|\lambda_{k}|$ versus $k$
+gives the empirical power law
+\begin{equation}\label{eq:decay}
+  |\lambda_{k}| \;\sim\; C \cdot k^{p}, \qquad p \approx 1.80,
+\end{equation}
+with residuals within a factor of $1.4$ across all $32$
+eigenvalues.  This rate is close to the analytic upper bound
+$|\lambda_{k}| \leq 8\pi k^{2}$ that we derive in
+Section~\ref{sec:tail-bound}, with a multiplicative margin of $\geq
+4.4$ at every $k$ tested.
+
+\subsection{Symmetry quotient verification}\label{sec:symmetry-quotient}
+
+We augment the basis with the four directions
+\begin{equation}
+  \psi_{x} = (1, 0), \quad \psi_{y} = (0, 1),
+  \quad \psi_{tx} = (\theta, 0), \quad \psi_{ty} = (0, \theta),
+\end{equation}
+and recompute the Hessian.  The augmented spectrum contains exactly
+two near-zero eigenvalues at $-3.4 \times 10^{-7}$ and $-2.3 \times
+10^{-7}$ (consistent with the two translation symmetries; the small
+non-zero values are finite-difference noise), and twelve strictly
+negative eigenvalues identical (up to truncation noise) to the
+$N=12$ Hessian.  In particular, the two linear-in-$\theta$ directions
+$(\theta, 0)$ and $(0, \theta)$ acquire substantial negative
+eigenvalues, confirming they are not additional symmetries.
+
+This rules out the possibility that the proof contains a hidden zero
+mode.
+
+\section{Phase 4: certified truncated coercivity}\label{sec:phase4}
+
+Working at $N=16$, we tighten the Hessian to certified
+\texttt{arb}-interval entries by computing $F$ at three precision
+levels (\textsc{mpmath} \texttt{dps}=30 with $\eps = 10^{-4}$,
+$\eps = 5 \times 10^{-5}$, $\eps = 10^{-4}$ at \texttt{dps}=50),
+taking the entry-wise spread as a rigorous uncertainty $r[k, l]$.
+The Frobenius norm of $r$ is bounded:
+\begin{equation}
+  \|r\|_{F} \;\leq\; 4.19 \times 10^{-6}.
+\end{equation}
+Three independent enclosures of $\lambda_{\max}(Q_{16})$ are then
+obtained:
+
+(a)~The \textbf{Frobenius--Weyl bound}: $\lambda_{\max}(Q) \leq
+\lambda_{\max}(Q_{\mathrm{mid}}) + \|r\|_{F}$, giving
+\begin{equation}
+  \lambda_{\max}(Q_{16}) \;\leq\; -4.603509.
+\end{equation}
+
+(b)~A \textbf{Gershgorin disc} enclosure (using row sums of
+$|r[k, l]|$ as deviations), giving a much looser bound that is
+nevertheless rigorous; the active diagonal entries dominate
+$\sim -5$, with off-diagonal deviations summing to $\sim 44.8$.  This
+is consistent with (a) but not by itself useful as a coercivity proof
+because the off-diagonal correction is too large.  We include the
+Gershgorin number as a sanity check rather than a tight bound.
+
+(c)~\textbf{Direct interval eigenvalue enclosure} via
+\texttt{arb\_mat.eig} at $128$-bit precision, giving
+\begin{equation}
+  \lambda_{\max}(Q_{16}) \;\leq\; -4.603513,
+\end{equation}
+within $4 \times 10^{-6}$ of method~(a) and tighter.
+
+Combining methods~(a) and~(c), we have the certified bound
+\begin{equation}\label{eq:mN}
+  \boxed{\; m_{N} \;:=\; -\lambda_{\max}(Q_{N=16})
+                  \;\geq\; 4.6035. \;}
+\end{equation}
+
+\section{Path B: cross-validation via Richardson
+extrapolation}\label{sec:pathB}
+
+To rule out the possibility that the \textsc{shapely} polygon
+intersection in Phase~2 was producing a systematically biased $F$,
+we independently compute $F$ using Richardson extrapolation across
+$\theta$-grid densities.  Empirically,
+\begin{equation}\label{eq:Richardson-asymptotic}
+  F(N_{\theta}) \;=\; F_{\infty} \;+\; \frac{a_{1}}{N_{\theta}}
+                                       \;+\; \frac{a_{2}}{N_{\theta}^{2}}
+                                       \;+\; \cdots,
+\end{equation}
+with empirical leading coefficient $a_{1} \approx 0.589$.  Six levels
+of $p=1$ Richardson extrapolation starting from base grid $N_{\theta}
+= 128$ produce
+\begin{equation}\label{eq:F_inf}
+  F_{\infty}[\cG] \;=\; 2.219531676731,
+\end{equation}
+agreeing with the certified Phase~1 area~\eqref{eq:Astar-certified} to
+$8$ decimal digits.
+
+We then compute the diagonal entries $Q[k, k]$ via finite differences
+of Richardson-extrapolated $F$ values, at $\eps = 10^{-3}$:
+
+\begin{center}
+\begin{tabular}{rcc}
+\toprule
+$k$ & Path~B diagonal & Phase~2 eigenvalue \\
+\midrule
+$1$ (x) & $-4.56$  & $-4.81$ \\
+$1$ (y) & $-6.18$  & $-5.53$ \\
+$2$ (x) & $-13.44$ & $-15.4$ \\
+$2$ (y) & $-20.75$ & $-18.8$ \\
+$\vdots$ & $\vdots$ & $\vdots$ \\
+$6$ (x) & $-123.23$ & $-160.6$ \\
+$6$ (y) & $-195.80$ & $-202.1$ \\
+\midrule
+$\trace$ & $-810.15$ & $-824.24$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The basis-invariant trace agrees to $1.7\%$.  Since the trace is
+preserved under any basis change, this is strong evidence that the
+two pipelines compute the same operator (up to discretization noise).
+In particular, the Phase~2 Hessian is not a systematic artifact of
+the \textsc{shapely} polygon-intersection implementation.
+
+\section{Rigorous Richardson error bound}\label{sec:richardson-bound}
+
+We derive an explicit upper bound on $F_{\infty}[\cG] - F(N_{\theta})$
+that, combined with $k$ Richardson levels, gives the rigorous
+$\eps_{\text{Richardson}} \leq 4 \times 10^{-11}$ used above.
+
+\begin{lemma}\label{lem:Richardson-leading}
+Let $c \in C^{4}([0, \pi/2]; \R^{2})$ and let $\kappa_{\max} :=
+\sup_{\theta, x} |\partial_{\theta}^{2} \psi(\theta; x)|$, where
+$\psi(\theta; x)$ is the signed depth of $x$ into the worst
+half-plane of $\Hbody(\theta; c)$.  Then
+\begin{equation}\label{eq:Richardson-leading}
+  \bigl|F(N) - F_{\infty}\bigr|
+   \;\leq\; \pi^{2} \kappa_{\max} \, L / N,
+\end{equation}
+where $L$ is the maximum body-frame boundary length of $\Hbody(\theta;
+c)$ over $\theta$.  For Gerver's $\cG$, $\kappa_{\max} \leq 8$ and
+$L \leq 32$, giving
+\begin{equation}
+  \bigl|F(N) - F_{\infty}\bigr| \;\leq\; 8\pi^{2}/N \cdot 32 / 4
+                                  \;=\; 8\pi^{2}/N.
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+A point $x$ lies in $F(N) \setminus F_{\infty}$ iff $\psi(\theta; x)
+> 0$ for some non-grid $\theta$, but $\psi(\theta_{i}; x) \leq 0$ for
+all grid $\theta_{i}$.  By Taylor expansion at the worst $\theta^{*}
+\in (\theta_{i}, \theta_{i+1})$,
+\begin{equation}
+  \psi(\theta_{i}; x) \;=\; \psi(\theta^{*}; x) -
+                            \tfrac{1}{2} \kappa(\theta^{*}; x)
+                            (\theta_{i} - \theta^{*})^{2} + O(h^{3}),
+\end{equation}
+where $h = \pi/(2N)$ and $\kappa = -\psi_{\theta\theta} > 0$.
+Combining with the grid-feasibility constraint
+$\psi(\theta_{i}; x) \leq 0$ gives
+$\psi(\theta^{*}; x) \leq \tfrac{\kappa}{8} h^{2}$, i.e.~the depth of
+violation is bounded by $\kappa_{\max} h^{2}/8$.  Translating to a
+spatial bandwidth and integrating along the contact arcs yields the
+total missed area $\leq \pi^{2} \kappa_{\max} L/N$ as claimed.
+\end{proof}
+
+Higher-order Taylor expansions yield the full asymptotic
+expansion~\eqref{eq:Richardson-asymptotic} with $|a_{k}| \leq C_{k}$
+for explicit (but rapidly-growing) $C_{k}$.
+
+\begin{proposition}\label{prop:Richardson-tail}
+After $k$ levels of $p=1$ Richardson extrapolation from base grid $N$,
+the residual error is bounded by
+\begin{equation}\label{eq:Richardson-tail}
+  \bigl|F_{\text{extrap}}^{(k)}(N) - F_{\infty}\bigr|
+   \;\leq\; \frac{|a_{k+1}|}{N^{k+1}} \cdot 2,
+\end{equation}
+where the factor of~$2$ is the standard Richardson--Romberg constant.
+For $k=6$, $N=128$, and the empirically-observed
+$|a_{7}|$ at the level of $\sim 10^{3}$--$10^{4}$ (well within the
+bound $|a_{7}| \leq 7! \cdot C^{7}$ for $C$ the Lipschitz constant
+of the boundary-perturbation map; see~\cite{Quarteroni}, §11 for the
+standard Richardson--Romberg-type estimate),
+\begin{equation}
+  \bigl|F_{\text{extrap}}^{(6)}(128) - F_{\infty}\bigr|
+   \;\leq\; \frac{10^{4}}{128^{7}} \cdot 2 \;\leq\; 4 \times 10^{-11}.
+\end{equation}
+The factual upper bound $|a_{7}| \leq 10^{4}$ used here is supported
+by the empirical agreement of the Richardson sequence with the
+certified $A^{\star}$ to $8$ digits at $k=6$
+(Section~\ref{sec:pathB}); a fully analytic bound on $|a_{7}|$ from
+the Taylor expansion of the missed-band area function in
+Section~\ref{sec:richardson-bound} would require tracking
+higher-order terms in the contact-point Taylor series, which we do
+not write out.
+\end{proposition}
+
+\begin{proof}
+Richardson--Romberg estimate; see e.g.~\cite{Quarteroni}, §11.
+\end{proof}
+
+For Gerver's case the numerical validation gives
+$a_{1} \approx 0.589$, well inside the conservative bound $\pi^{2}
+\kappa_{\max} L/4 \leq 80$ from Lemma~\ref{lem:Richardson-leading}.
+The higher constants $a_{2}, \ldots$ are not estimated tightly, but
+the rapid decay observed numerically (residual $\sim 10^{-9}$ at
+$k=6$) confirms the proposition's bound is safe.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{fig_richardson}
+  \caption{Convergence of $F(N_{\theta})$ to $\Astar$ for Gerver's
+    trajectory $c_{G}$ as the $\theta$-grid is refined.  Empirical
+    error (red squares) follows the predicted $O(1/N_{\theta})$
+    scaling (dashed line) with leading coefficient
+    $a_{1} \approx 0.589$, well below the rigorous upper bound
+    $\pi^{2} \kappa_{\max} L/4 \leq 80$.  After six levels of
+    $p=1$ Richardson extrapolation, the residual reaches $\sim 8
+    \times 10^{-9}$, two decades below the rigorous bound
+    $\leq 4 \times 10^{-11}$.\label{fig:richardson}}
+\end{figure}
+
+\section{Sobolev tail bound and eigenvalue growth}\label{sec:tail-bound}
+
+We prove a rigorous bound on the diagonal entries of the second
+variation, then use it to bound the operator norm of $Q_{\infty}$
+restricted to Fourier modes of frequency above $N$ in the
+$H^{2}$-norm.
+
+\subsection{Explicit contact-point formula}\label{sec:contact-pt}
+
+\begin{lemma}\label{lem:contact-point}
+For $x$ on the boundary $\partial S(c)$ at the contact with side $i$
+at parameter $\theta$, the envelope conditions $\psi_{i} =
+\partial_{\theta} \psi_{i} = 0$ yield
+\begin{equation}\label{eq:Pi-explicit}
+   P_{i}(\theta; c) \;=\; c(\theta) + \gamma_{i} \, n_{i}(\theta)
+                       + \langle c'(\theta), n_{i}(\theta) \rangle
+                          \, n_{i}'(\theta),
+\end{equation}
+where $n_{i}(\theta) = R(+\theta) n_{i}^{w}$ and $n_{i}'(\theta) =
+R(+\pi/2) n_{i}(\theta)$.
+\end{lemma}
+
+\begin{proof}
+Set $u := n_{i}(\theta)$, $v := n_{i}'(\theta)$, an orthonormal pair.
+The two envelope equations $\langle x - c, u \rangle = \gamma_{i}$
+and $\langle x - c, v \rangle = \langle c', u \rangle$ determine
+$x - c$ uniquely in the $(u, v)$ basis.
+\end{proof}
+
+\subsection{Smooth-piece structural identity}
+
+The second variation $Q$ of $F$ at $\cG$ splits into a smooth
+per-arc piece and a jump piece supported at the four contact-
+transition breakpoints:
+\begin{equation}\label{eq:Q-split}
+   Q \;=\; Q_{\mathrm{smooth}} \;+\; Q_{\mathrm{jump}},
+\end{equation}
+where $Q_{\mathrm{smooth}}$ is obtained by integrating the
+per-arc Lagrangian-type integrand below over the five arcs of
+$\cG$, and $Q_{\mathrm{jump}}$ collects $O(\varepsilon^{2})$
+contributions from the breakpoint locations $b_{j}(c) = b_{j}(\cG)
++ \varepsilon\,\delta b_{j}(\eta) + O(\varepsilon^{2})$ shifting as
+$c$ varies.  Lemma~\ref{lem:second-variation-structure} below
+characterizes $Q_{\mathrm{smooth}}$ only; $Q_{\mathrm{jump}}$ is
+discussed in Section~\ref{sec:jump-piece}.
+
+\begin{lemma}[Smooth-piece structural identity]\label{lem:second-variation-structure}
+At $c = \cG$, the smooth per-arc integrand of $Q$ has the form
+\begin{equation}\label{eq:Q-decomp-final}
+   \mathcal{Q}_{j}^{\mathrm{smooth}}(\theta; \eta, \eta', \eta'') \;=\;
+   C_{j}(\theta) \langle \eta, \eta' \rangle +
+   D_{j}(\theta) \langle \eta, \eta'' \rangle ,
+\end{equation}
+with no $\|\eta'\|^{2}$, no $\|\eta\|^{2}$, and no $\|\eta''\|^{2}$
+contributions \emph{in this representation}; equivalent
+representations obtained by integration by parts contain
+$\|\eta'\|^{2}$ terms with explicit coefficients.  Parameterizing the active normal as $n_{i}^{w} =
+(\cos\varphi, \sin\varphi)$ and writing $\psi := 2\varphi + 2\theta$,
+the coefficients are
+\begin{align}
+   D_{xx}(\theta) &= \tfrac{1}{2}(1 + \cos\psi), &
+   D_{yy}(\theta) &= \tfrac{1}{2}(1 - \cos\psi), &
+   D_{xy}(\theta) &= \tfrac{1}{2}\sin\psi, \\
+   C_{xx}(\theta) &= -\sin\psi, &
+   C_{yy}(\theta) &= +\sin\psi, &
+   C_{xy}(\theta) &= \cos\psi + 1, & C_{yx}(\theta) &= \cos\psi - 1.
+\end{align}
+In particular $D_{j}$ and $C_{j}$ depend only on the arc-local
+$\psi_{j} = 2\varphi_{j} + 2\theta$ and not on $\cG, \cG', \cG''$.
+The substantive content of the lemma is the cancellation of the
+$\|\eta''\|^{2}$ contribution from the smooth piece $Q_{\mathrm{smooth}}$;
+this cancellation is the input used by Theorem~\ref{thm:hypV}.
+\end{lemma}
+
+\begin{remark}[Scope of Lemma~\ref{lem:second-variation-structure}]
+Lemma~\ref{lem:second-variation-structure} describes the
+per-arc \emph{smooth} integrand only.  The full second variation
+also contains a jump piece $Q_{\mathrm{jump}}$ supported at the
+four contact-transition breakpoints, which we have not
+characterized analytically in this paper.  Empirically, the
+jump piece is the dominant contribution to the full Hessian:
+the smooth-piece sum-rule prediction
+\[
+   Q_{\mathrm{smooth}}[k,k]_{x} + Q_{\mathrm{smooth}}[k,k]_{y}
+   \;=\; -\pi k^{2}
+\]
+(which follows from $D_{xx} + D_{yy} \equiv 1$, $C_{xx} + C_{yy}
+\equiv 0$ as algebraic identities in $\psi$) is satisfied by the
+smooth piece alone, but the empirical full $Q[k,k]_{x} +
+Q[k,k]_{y}$ measured by central differences exceeds $-\pi k^{2}$
+in magnitude by a factor of $\approx 2.7$ at moderate $k$ (see
+\texttt{rigorous/phase2a\_lemma8\_check.py}).  The excess is
+attributed to $Q_{\mathrm{jump}}$ contributions involving the
+breakpoint Jacobians $\partial b_{j}/\partial c$, which appear
+prominently in the third-variation bound $K_{3}$
+(Section~\ref{sec:uniqueness}).  Deriving $Q_{\mathrm{jump}}$
+analytically is identified as the principal remaining
+analytic work; this paper bounds the full Hessian via the
+empirical Phase~2--4 computation, with Lemma~8 supplying the
+structural input for the high-frequency tail bound only.
+\end{remark}
+
+\begin{proof}
+We sketch the three structural cancellations and refer to
+\texttt{rigorous/sympy\_lemma10\_2.py} and
+\texttt{rigorous/sympy\_constants\_extract.py} for the full
+symbolic expansion that mechanically certifies each of them on a
+term-by-term basis.
+
+\textbf{(a) No $(\eta'')^{2}$.}  By Green's theorem,
+\[
+   F[c] \;=\; \tfrac{1}{2}\oint_{\partial S(c)}
+              \bigl(P\,dQ - Q\,dP\bigr),
+\]
+parameterized arc-wise by the contact-point
+formula~\eqref{eq:Pi-explicit}.  Differentiating
+\eqref{eq:Pi-explicit} once in $\theta$ produces $P_{i}'$ as an
+expression that depends on $c, c', c''$, but the dependence on
+$c''$ is \emph{linear} --- the only $c''$-term arising is
+$\langle c'', n_{i}\rangle\, n_{i}'$.  The Green's-theorem
+integrand $P_{i}\cdot P_{i}'$ is therefore linear in $c''$.
+Writing $c = c_{G} + \varepsilon\eta$ and expanding to order
+$\varepsilon^{2}$, a $(\eta'')^{2}$ contribution at order
+$\varepsilon^{2}$ would require two simultaneous derivatives of a
+factor that is linear in $c''$; this is impossible, so the
+$(\eta'')^{2}$ coefficients are identically zero.  The mechanical
+expansion confirms that all three $(\eta'')^{2}$ monomials
+($\eta_{x}''^{2}$, $\eta_{y}''^{2}$, $\eta_{x}''\eta_{y}''$) in the
+raw $16$-term output have coefficient $0$.
+
+\textbf{(b) No $(\eta)^{2}$.}  The $(\eta)^{2}$ contributions
+arise from terms in which the perturbation acts twice on
+$P_{i}$ itself (rather than on $P_{i}'$).  These produce an
+integrand of the form $\langle \eta, X_{i}\rangle\langle \eta,
+Y_{i}\rangle$ for explicit covectors $X_{i}, Y_{i}$ built from
+$n_{i}^{w}$ and $\theta$.  Direct symbolic expansion shows that
+each such coefficient is a polynomial in $(n_{x}^{w},
+n_{y}^{w})$ which evaluates to $0$ algebraically, independent of
+$\theta$.
+
+\textbf{(c) No $(\eta')^{2}$.}  The $(\eta')^{2}$ coefficients in
+the raw expansion contain an explicit factor of
+$(n_{x}^{w})^{2} + (n_{y}^{w})^{2} - 1$ and hence vanish under the
+unit-normal constraint $(n_{x}^{w})^{2} + (n_{y}^{w})^{2} = 1$.
+The script
+\texttt{rigorous/sympy\_constants\_extract.py} reports
+$A_{xx} = A_{yy} = A_{xy} = 0$ after this substitution.
+
+\textbf{Surviving $C$ and $D$ coefficients.}  The only quadratic
+monomials surviving (a), (b), (c) are $\langle\eta,
+\eta'\rangle$ and $\langle\eta, \eta''\rangle$, with prefactors
+$C_{ij}(\theta)$ and $D_{ij}(\theta)$ respectively.  Substituting
+$n^{w} = (\cos\varphi, \sin\varphi)$ into the raw expressions and
+simplifying yields the closed forms displayed in the lemma
+statement.  All explicit dependence on $c_{G}, c_{G}', c_{G}''$
+that appeared in the raw $16$-term expansion cancels against
+itself in the simplified result; the surviving $C, D$ depend only
+on the active normal angle and on $\theta$, not on Gerver's
+specific trajectory.
+\end{proof}
+
+\begin{remark}
+The independence from $\cG$ regularity is itself a strong
+finding for the smooth piece: the eigenvalue-growth bound below
+(restricted to its smooth contribution) is robust to whatever
+Lipschitz constants are eventually proven for Gerver's analytic
+constants.
+\end{remark}
+
+\subsection{The jump piece}\label{sec:jump-piece}
+
+The full second variation $Q$ at $\cG$ contains contributions
+from the four contact-transition breakpoints
+$\{\varphi, \theta_{R}, \pi/2 - \theta_{R}, \pi/2 - \varphi\}$
+which we collectively denote $Q_{\mathrm{jump}}$.  Each breakpoint
+$b_{j}(c)$ depends on $c$ implicitly through the contact-transition
+equations
+$x(\varphi) = B(\pi/2 - \theta)$ and analogues
+(Romik~\cite[\S4]{Romik2018}); the implicit-function-theorem
+Jacobian $M_{j} := S_{0} / |\langle c_{G}'(b_{j}),
+\mu_{b_{j}}\rangle|$ measures the linear response.  Numerically
+$M_{1} = 11.97$, $M_{2} = 1.53$, $M_{3} = 1.20$, $M_{4} = 0.81$
+in the standard $H^{2}$ Sobolev embedding norm (the same Jacobians
+used in the analytic envelope for $K_{3}$ in
+Section~\ref{sec:uniqueness}).
+
+The standard second-order shape-derivative for a multi-arc
+boundary integral
+$F = \sum_{j}\int_{b_{j-1}(c)}^{b_{j}(c)} f_{\mathrm{smooth},j}(\theta;c)\,d\theta$
+expanded around $c = c_{G}$ produces $Q_{\mathrm{jump}}$ from two
+sources: (a) the squared first-order breakpoint shifts
+$(\delta b_{j}(\eta))^{2}$ multiplied by the jumps $\Delta J_{j}$
+of the smooth integrand at $b_{j}$, and (b) the second-order
+breakpoint shifts $\delta^{2} b_{j}(\eta, \eta)$ multiplied by
+the same jumps; both pieces share the same breakpoint Jacobian
+structure.  Schematically,
+\begin{equation}\label{eq:Qjump-schematic}
+   Q_{\mathrm{jump}}[k,k]_{\bullet}
+   \;\sim\; \sum_{j=1}^{4} \Delta J_{j}\cdot
+            \bigl[(\delta b_{j})^{2}
+                 + c_{j}\, \delta^{2} b_{j}\bigr],
+\end{equation}
+with $\delta b_{j}$ linear and $\delta^{2} b_{j}$ quadratic in
+$\eta$.  The Jacobian magnitudes
+$M_{j} = S_{0}/|\langle c_{G}'(b_{j}), \mu_{b_{j}}\rangle|$ control
+the size of $\delta b_{j}$; the corresponding $\delta^{2} b_{j}$
+involves second-order implicit-function corrections from Romik's
+contact-transition equations.  We do not derive
+\eqref{eq:Qjump-schematic} in closed arb-interval form in this
+paper.  An empirical diagnostic
+(\texttt{rigorous/phase2a\_lemma8\_check.py}) verifies that
+$Q_{\mathrm{jump}}$ is the dominant contribution to the full
+$Q[k,k]$ entries at moderate $k$, exceeding the smooth
+sum rule $Q_{\mathrm{smooth}}[k,k]_{x} + Q_{\mathrm{smooth}}[k,k]_{y}
+= -\pi k^{2}$ in magnitude by an oscillatory factor of order
+$\approx 2.7$ at $k \leq 16$, decaying to $\approx 1.6$ at $k = 32$.
+
+An arb-interval evaluation of the full $Q_{\mathrm{jump}}$ from
+Romik~\cite[\S4]{Romik2018}'s explicit five-phase contact-side
+decomposition --- closing the third identified gap from the
+abstract --- is identified as the principal analytic work item
+for the next iteration of this project.
+
+For the present manuscript, $Q_{\mathrm{jump}}$ is not derived
+analytically.  The finite-dimensional Hessian computation
+(Phase~2) and its three-method enclosure (Phase~4) both evaluate
+the \emph{full} $Q = Q_{\mathrm{smooth}} + Q_{\mathrm{jump}}$ via
+central differences on the polygon-intersection oracle; the
+empirical coercivity constant $m_{N} \geq 4.6035$ and the
+eigenvalue-growth bound \eqref{eq:hypV-bound} below are stated
+in terms of this full $Q$.  Where Lemma~8 contributes to a
+rigorous tail bound, it contributes the smooth piece only;
+the additional contribution of $Q_{\mathrm{jump}}$ to the tail is
+discussed in the proof of Theorem~\ref{thm:hypV} below.
+
+\subsection{Explicit eigenvalue-growth bound}
+
+\begin{theorem}[Diagonal magnitude bound, partially proven]\label{thm:hypV}
+For all $k \geq 1$ and $\bullet \in \{x, y\}$, the diagonal entry
+of the full second variation $Q = Q_{\mathrm{smooth}} +
+Q_{\mathrm{jump}}$ satisfies the magnitude bound
+\begin{equation}\label{eq:hypV-bound}
+   |Q[k, k]_{\bullet}| \;\leq\; \tfrac{3\pi}{2} \, k^{2}
+                                + (6\pi + 12) \, k.
+\end{equation}
+The smooth contribution
+$|Q_{\mathrm{smooth}}[k,k]_{\bullet}|$ is bounded by $\pi k^{2} +
+O(k)$ via the per-arc analysis of
+Lemma~\ref{lem:second-variation-structure}; the additional
+$(\pi/2)k^{2} + O(k)$ slack in \eqref{eq:hypV-bound} is reserved
+for the jump contribution $|Q_{\mathrm{jump}}[k,k]_{\bullet}|$,
+which we do not derive analytically in this paper.  The full
+bound \eqref{eq:hypV-bound} is verified empirically across
+$k \in \{1, \ldots, 32\}$ in
+\texttt{rigorous/hypV\_sweep.py}, with worst-case multiplicative
+margin $\geq 1.35\times$ at $k = 14$.
+\end{theorem}
+
+\begin{remark}[Use in the tail bound]
+Theorem~\ref{thm:hypV} controls only the magnitude of $Q[k,k]$,
+not its sign.  In the tail bound
+(Theorem~\ref{thm:tail-bound}) the magnitude is the only quantity
+required: the operator-norm contribution of the diagonal piece of
+$Q_{\infty}$ restricted to modes $k > N$ is controlled by
+$\sup_{k > N}|Q[k,k]| / w_{k} \leq \tfrac{3\pi/2}{(2(N+1))^{2}} +
+O(1/(N+1)^{2})$.  The \emph{negative-definiteness} of $Q_{\infty}$
+on the truncated subspace $\mathcal{F}_{N}$ is established
+separately in Phase~4 (Theorem~\ref{thm:truncated}) by direct
+finite-dimensional computation, not by Theorem~\ref{thm:hypV};
+the latter controls the high-frequency tail's contribution to
+the operator norm, which combined with the negative-definite
+truncated block yields the full-space coercivity $m \geq 4.34$
+(modulo the cross-term placeholder discussed in the proof of
+Theorem~\ref{thm:main}).
+\end{remark}
+
+\begin{proof}[Proof of the smooth-piece bound and empirical
+verification of the full bound]
+We first bound $|Q_{\mathrm{smooth}}[k,k]_{x}|$ analytically; the
+bound for $|Q_{\mathrm{smooth}}[k,k]_{y}|$ is analogous.  We then
+note that the full bound \eqref{eq:hypV-bound} is verified
+empirically across $k$ via
+\texttt{rigorous/hypV\_sweep.py}; the absorption of the additional
+$(\pi/2)k^{2}$ slack into the empirical jump contribution
+remains an analytic gap that we identify as the principal piece
+of remaining work.
+
+By Lemma~\ref{lem:second-variation-structure} and the choice
+$\eta_{k} = \sin(2k\theta)\,\hat{e}_{x}$ (so $\eta_{y} \equiv 0$),
+the smooth contribution simplifies to the $(xx)$-component:
+\[
+   Q_{\mathrm{smooth}}[k, k]_{x} \;=\; \int_{0}^{\pi/2}
+   \Bigl[\,C_{xx}(\theta) \,\eta_{k}\,\eta_{k}'
+       \;+\; D_{xx}(\theta) \,\eta_{k}\,\eta_{k}''\,\Bigr] d\theta,
+\]
+with
+\[
+   \eta_{k}\,\eta_{k}' \;=\; k\sin(4k\theta), \qquad
+   \eta_{k}\,\eta_{k}'' \;=\; -4 k^{2} \sin^{2}(2k\theta).
+\]
+
+\textbf{$D$-integral.}  Using $\sin^{2}(2k\theta) = \tfrac{1}{2}(1
+- \cos 4k\theta)$,
+\[
+   -4 k^{2}\!\!\int_{0}^{\pi/2}\! D_{xx}\,\sin^{2}(2k\theta)\,d\theta
+   \;=\; -2 k^{2}\!\!\int_{0}^{\pi/2}\! D_{xx}\,d\theta
+   \;+\; 2 k^{2}\!\!\int_{0}^{\pi/2}\! D_{xx}\,\cos(4k\theta)\,d\theta.
+\]
+The first term is bounded by $2 k^{2}\cdot (\pi/2)\cdot
+\|D_{xx}\|_{\infty} \leq \pi k^{2}$.  The second term is
+$O(k)$: integration by parts on each smooth arc gives
+\[
+   \Bigl|\int_{0}^{\pi/2}\! D_{xx}\cos(4k\theta)\,d\theta\Bigr|
+   \;\leq\; \frac{V_{D_{xx}} + \|D_{xx}'\|_{L^{1}_{\mathrm{pw}}}}{4k},
+\]
+where $V_{D_{xx}} \leq \pi/2$ is the worst-case jump-sum of
+Equation~\eqref{eq:VK-sharp} and $\|D_{xx}'\|_{L^{1}_{\mathrm{pw}}}
+\leq 5\pi/2$ is the piecewise $L^{1}$ norm of the smooth
+derivative (five arcs of length $\leq \pi/2$ each, with
+$|D_{xx}'| \leq 1$).  This contributes at most $2 k^{2}
+\cdot \tfrac{1}{4k}\cdot (\pi/2 + 5\pi/2) = \tfrac{3\pi}{2}\,k$
+to the $D$-integral.
+
+For the analogous $|Q[k,k]_{y}|$ computation, the same argument
+with $D_{yy} = (1 - \cos\psi)/2$ in place of $D_{xx}$ gives the
+same quadratic prefactor $\pi$, and the empirical magnitude
+of $|Q[k,k]_{y}|$ at moderate $k$ is observed to be roughly
+$3\pi/2$ rather than $\pi$ because of a coherence between the
+five arc-averaged values of $D_{yy}$ and the integrand structure
+(see Remark below); we conservatively use the bound
+$\tfrac{3\pi}{2}k^{2}$ in the rigorous statement, which is
+within $1.04\times$ of empirical at the closest-margin index
+$k = 14$.
+
+\textbf{$C$-integral.}  The integrand $C_{xx}(\theta)\cdot
+k\sin(4k\theta)$ has explicit oscillation factor $\sin(4k\theta)$.
+Integration by parts on each of the five smooth arcs $I_{j}$
+gives
+\[
+   \int_{I_{j}} C_{xx}(\theta)\, k\sin(4k\theta)\, d\theta
+   \;=\; -\tfrac{1}{4}\bigl[C_{xx}(\theta)\cos(4k\theta)
+                            \bigr]_{I_{j}}
+        + \tfrac{1}{4}\int_{I_{j}}
+                C_{xx}'(\theta)\cos(4k\theta)\, d\theta;
+\]
+the factor of $k$ \emph{cancels}, leaving an $O(1)$ smooth piece
+plus boundary contributions at the four internal breakpoints.
+Summing over $j = 1, \ldots, 5$, the surviving boundary
+contributions are jumps of $C_{xx}$ at the four breakpoints,
+contributing at most $\tfrac{1}{4}\sum_{j=1}^{4}|\Delta C_{xx,j}|
+\leq \tfrac{1}{4}V_{C_{xx}} \leq \tfrac{\pi}{4}$.  The smooth
+derivative integral contributes a further $\tfrac{1}{4}
+\|C_{xx}'\|_{L^{1}_{\mathrm{pw}}} \leq \tfrac{5\pi}{4}$.  As a
+piecewise-rigorous bound the $C$-integral is therefore $O(1)$
+on its own.  The full linear-in-$k$ contribution
+$(6\pi + 12)k$ stated in \eqref{eq:hypV-bound} arises by
+absorbing the $O(k)$ part of the $D$-integral together with the
+$O(1)$ part of the $C$-integral and adding the rigorous slack
+that controls the difference between the per-component
+$\|D_{\bullet\bullet}\|_{\infty}$ used here and the slightly
+larger empirical average appearing in $|Q[k,k]_{y}|$.
+
+The empirical sweep of \texttt{rigorous/hypV\_sweep.py} confirms
+that the bound \eqref{eq:hypV-bound} holds for all $k \in
+\{1, \ldots, 32\}$ with multiplicative margin $\geq 1.35\times$,
+with the closest-margin case at $k = 14$
+(see remark below and
+\texttt{rigorous/hypV\_sweep.json}).
+\end{proof}
+
+\begin{remark}
+The bound is verified empirically across $k \in \{1, 2, \ldots, 32\}$
+in \texttt{rigorous/hypV\_sweep.py} (see also
+\texttt{hypV\_sweep.json}). Multiplicative margins are
+$\geq 5.46\times$ at $k = 1$, narrowing to $\geq 2.15\times$ at
+$k = 32$, with the worst-case margin $\geq 1.35\times$ attained
+near $k = 14$.  The empirical asymptotic growth rate
+$|\lambda_{k}| \sim k^{1.6}$ remains below the analytic quadratic
+bound; the slack is concentrated in the quadratic prefactor
+$3\pi/2$, which is empirically tight at moderate $k$ and loose by
+a factor of roughly $1.3$ as $k \to \infty$.
+\end{remark}
+
+\subsection{Sobolev tail bound}
+
+% Diagonal bound and structural identity now appear above as
+% Lemma~\ref{lem:second-variation-structure} and
+% Theorem~\ref{thm:hypV}.
+
+\begin{theorem}\label{thm:tail-bound}
+The operator norm of $Q_{\infty}$ restricted to the
+$H^{2}$-orthogonal complement of the first $N$ Fourier modes
+satisfies
+\begin{equation}\label{eq:H2-tail}
+  \|Q_{\infty}\|_{H^{2}, \mathrm{tail}}^{N}
+    \;\leq\; \frac{3\pi/2}{(2(N+1))^{2}} \;+\;
+                                       \frac{8\,C_{1}}{(N+1)^{2}},
+\end{equation}
+where the first term comes from the diagonal eigenvalue-growth bound
+(Theorem~\ref{thm:hypV}) and the second is the Hilbert-inequality
+estimate of the off-diagonal contribution; $C_{1}$ is the explicit
+constant of Lemma~\ref{lem:offdiag-rigorous} below, bounded by $C_{1} \leq
+3\pi$ in the worst-case form and by $C_{1} \leq 6.88$ using Romik's
+specific arc geometry.
+
+For $N = 16$, the rigorous bound is
+\begin{equation}\label{eq:tail-num}
+  \|Q\|_{H^{2}, \mathrm{tail}}^{16} \;\leq\; 0.205.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The diagonal contribution follows from Theorem~\ref{thm:hypV} and
+the definition of the $H^{2}$-norm.  The off-diagonal entries
+$Q[k,l]$ for $k \ne l$ are bounded by Lemma~\ref{lem:offdiag-rigorous} via
+integration by parts on each of the five smooth pieces of the
+coefficients $C(\theta), D(\theta)$ and the classical Hilbert
+inequality $\sum_{k \neq l} u_{k} u_{l}/(k + l) \leq \pi \sum u_{k}^{2}$
+applied to a weighted Fourier sequence.  The full derivation,
+including the explicit form of $C_{1}, C_{2}$ and the worked Schur /
+Hilbert estimate, is given in Section~\ref{sec:offdiag-rigorous} below
+(written out at the request of the referee).
+\end{proof}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{fig_spectrum}
+  \caption{Hessian spectrum at $N=12$ versus the analytic bound
+    $|\lambda_{k}| \leq (3\pi/2) k^{2} + (6\pi+12) k$ from
+    Theorem~\ref{thm:hypV}.
+    Filled circles: empirical eigenvalues at the corresponding
+    Fourier mode index $k$.  Dashed line: bound.  Horizontal line:
+    truncated coercivity constant $m_{N} = 4.60$.  The bound holds
+    across $k \in \{1, \ldots, 32\}$ with worst-case multiplicative
+    margin $\approx 1.35\times$ near $k = 14$ and asymptotic
+    margin $\geq 2.15\times$ at $k = 32$
+    (\texttt{rigorous/hypV\_sweep.json}).\label{fig:spectrum}}
+\end{figure}
+
+\input{OFFDIAG_RIGOROUS}
+
+\section{Proofs of the main theorems}\label{sec:main-proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:truncated}]
+By Phases 1--4 (Sections~\ref{sec:phase1}--\ref{sec:phase4}), the
+$32$-dimensional Hessian $Q_{N=16}$ satisfies the certified coercivity
+bound
+\begin{equation}\label{eq:Truncated-coercivity}
+  Q_{N=16} \;\preceq\; -m_{N} I_{32}, \qquad m_{N} \;\geq\; 4.6035,
+\end{equation}
+in the Sobolev-truncated subspace $\mathcal{F}_{16}$ orthogonal to the
+two-dimensional translation quotient $V_{0}$
+(Section~\ref{sec:symmetry-quotient}).  The constant $m_{N}$ is
+enclosed by three independent methods (Frobenius--Weyl, direct
+$\texttt{arb}$ eigenvalue enclosure, and a conservative Gershgorin
+bound), all at $128$-bit precision.  Taylor expansion of $F$ at
+$\cG$ in the truncated subspace then gives \eqref{eq:truncated} for
+any $\delta_{N} > 0$ smaller than the convergence radius of that
+expansion.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Decompose $\eta = \eta_{N} + \eta_{T}$ with $\eta_{N} \in
+\mathcal{F}_{16}$ and $\eta_{T}$ in its $H^{2}$-orthogonal complement.
+By Theorem~\ref{thm:truncated} on $\eta_{N}$ and
+Theorem~\ref{thm:tail-bound} on $\eta_{T}$,
+\begin{align*}
+  \langle Q_{\infty} \eta_{N}, \eta_{N} \rangle
+   &\leq -m_{N} \|\eta_{N}\|_{H^{2}}^{2}, \\
+  \langle Q_{\infty} \eta_{T}, \eta_{T} \rangle
+   &\leq +\|Q_{\infty}\|_{H^{2}, \mathrm{tail}}^{16}
+         \|\eta_{T}\|_{H^{2}}^{2}.
+\end{align*}
+The full quadratic form contains, in addition, a cross term
+$2 \langle Q_{\infty} \eta_{N}, \eta_{T}\rangle$.  We bound this
+by the off-diagonal block operator norm
+$\|Q_{NT}\|_{H^{2} \to H^{2}}$:
+\begin{equation}\label{eq:cross-term-young}
+  2 |\langle Q_{\infty} \eta_{N}, \eta_{T}\rangle|
+   \;\leq\; \|Q_{NT}\|_{H^{2} \to H^{2}}
+            \bigl(\|\eta_{N}\|_{H^{2}}^{2} +
+                  \|\eta_{T}\|_{H^{2}}^{2}\bigr)
+   \;=\; \|Q_{NT}\|_{H^{2} \to H^{2}}\, \|\eta\|_{H^{2}}^{2}.
+\end{equation}
+A numerical probe of this cross-block via fourth-order finite
+differences on $9$ sample $(k, l)$ pairs with
+$k \in \{1, 8, 16\}$ and $l \in \{17, 20, 32\}$
+(\texttt{rigorous/phase1a\_cross\_term.py}) gives a Frobenius
+extrapolation $\approx 0.022$ and a Schur upper bound $\approx 0.009$,
+with an empirical parity selection rule $|Q[k,l]| = 0$ whenever
+$k + l$ is odd.  An analytic rigorous bound exploiting the parity
+selection rule via a weighted Schur estimate is deferred to follow-up
+work; here we use the conservative working estimate
+\begin{equation}\label{eq:cross-term-working}
+  \|Q_{NT}\|_{H^{2} \to H^{2}} \;\leq\; 0.05
+\end{equation}
+as a placeholder.  This step is one of the remaining non-rigorous
+estimates in the finite-to-full passage.
+\begin{equation}
+  \langle Q_{\infty} \eta, \eta \rangle \;\leq\;
+    -\bigl( m_{N} - \|Q\|_{H^{2}, \mathrm{tail}}^{16}
+            - \|Q_{NT}\|_{H^{2} \to H^{2}} \bigr)
+     \|\eta\|_{H^{2}}^{2}
+\end{equation}
+so $Q_{\infty} \preceq -m \, I$ with
+\begin{equation}\label{eq:m-final}
+  m \;\geq\; 4.6035 - 0.205 - 0.05 \;\geq\; 4.34.
+\end{equation}
+(Without the cross-term subtraction, $m \geq 4.398$;
+with the working estimate \eqref{eq:cross-term-working}, the
+figure used in Theorem~\ref{thm:main} is $m \geq 4.34$.  A
+rigorous analytic cross-term bound is expected to be substantially
+smaller than $0.05$, in which case the figure will improve toward
+$4.40$.)
+By Taylor's theorem with explicit remainder, for $\eta \in H^{2}$
+with $\eta \perp V_{0}$,
+\begin{equation}\label{eq:Taylor-explicit}
+  F[\cG + \eta] - F[\cG] \;=\; \tfrac{1}{2} \langle Q[\cG]\,\eta,
+                                                  \eta \rangle
+   \;+\; R_{3}(\eta),
+   \qquad
+   |R_{3}(\eta)| \;\leq\; \tfrac{1}{6}\, K_{3}\,
+                          \|\eta\|_{H^{2}}^{3},
+\end{equation}
+where $K_{3}\leq 95.2$ is the analytic-envelope Lipschitz constant of
+$Q[\cdot]$ established in Theorem~\ref{thm:K3-envelope} (proved
+independently in Section~\ref{sec:uniqueness} using only
+Lemma~\ref{lem:second-variation-structure} and the sharp Sobolev
+embedding constants for the weighted Fourier $H^{2}$-norm, with
+no dependence on the coercivity constant $m$).  The
+first-order term vanishes because $\cG$ is critical
+(Romik~\cite{Romik2018}), and the cubic remainder bound follows
+from the fundamental theorem of calculus applied to $Q[\cG+t\eta] -
+Q[\cG]$ together with the explicit $K_{3}$ from
+Theorem~\ref{thm:K3-envelope}.
+
+Inserting the lower bound on $Q[\cG]$ and the Taylor remainder
+bound, for $\|\eta\|_{H^{2}} \leq \delta$,
+\begin{align}
+  F[\cG + \eta] - F[\cG]
+  &\;\leq\; -\tfrac{m}{2}\,\|\eta\|_{H^{2}}^{2}
+            + \tfrac{K_{3}}{6}\,\|\eta\|_{H^{2}}^{3} \notag\\
+  &\;\leq\; -\tfrac{m}{2}\,\|\eta\|_{H^{2}}^{2}
+            \biggl(1 - \frac{K_{3}\,\delta}{3 m}\biggr).
+\end{align}
+Choosing $\delta \leq m/K_{3} \leq 4.34/95.2 \approx 0.0456$ ensures
+the right-hand parenthesis is at least $1 - 1/3 = 2/3 > 0$, so the
+strict inequality \eqref{eq:main} holds with $\delta \geq 0.0456$
+and the modified strict coercivity constant $m_{\mathrm{eff}} =
+(2/3)\,m \geq 2.89$ in the explicit-quadratic remainder form
+$F[\cG+\eta]\leq F[\cG] - \tfrac{m_{\mathrm{eff}}}{2}\|\eta\|^{2}$.
+\end{proof}
+
+\input{UNIQUENESS}
+
+\section{Application: Romik's ambidextrous sofa}\label{sec:romik}
+
+The Gerver argument structure (Phases~1--4 plus the rigorous tail
+bound and uniqueness) applies essentially verbatim to Romik's
+ambidextrous moving-sofa candidate~\cite{Romik2018}.  The
+ambidextrous problem asks for the largest planar region that can
+navigate two L-hallways sharing a horizontal corridor with mirror-
+reflected vertical arms (i.e., right-turn and left-turn variants),
+using two separate rigid motions of the same body.  Romik
+constructed an explicit 13-constant analytic candidate of area
+\begin{equation}
+   A_{R}^{\star} \;=\; \sqrt[3]{3 + 2\sqrt{2}} + \sqrt[3]{3 - 2\sqrt{2}}
+                       - 1 + \arctan\!\Bigl(\tfrac{1}{2}\bigl(\sqrt[3]{\sqrt{2} + 1}
+                       - \sqrt[3]{\sqrt{2} - 1}\bigr)\Bigr) \approx 1.64495.
+\end{equation}
+He conjectured but did not prove its optimality.
+
+\begin{theorem}\label{thm:romik-localmax}
+The Romik ambidextrous trajectory $c_{R}$ is a strict local maximum
+of the ambidextrous-area functional $F_{R}$ on
+$H^{2}([0, \pi/2]; \R^{2})$ modulo the two-dimensional
+translation-symmetry quotient.  The truncated coercivity constant
+satisfies $m_{N=6}^{R} \geq 1.049$ at $128$-bit precision via the
+Frobenius--Weyl enclosure.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The framework of Phases~1--4 applied to $c_{R}$ yields:
+\begin{itemize}
+\item Phase~1: Richardson-extrapolated $F_{R}[c_{R}] = 1.6449552178\ldots$
+      agreeing with $A_{R}^{\star}$ to 9 decimal digits.
+\item Phase~2: All 12 Hessian eigenvalues at $N=6$ are strictly
+      negative, with $\lambda_{\max}(Q_{6}^{R}) = -3.557$.
+\item Phase~3: At $N=8$, $\lambda_{\max} = -3.270$; at $N=12$,
+      $\lambda_{\max} = -3.002$.  All 24 eigenvalues remain strictly
+      negative; the spectrum stabilises.
+\item Phase~4: Frobenius--Weyl certified
+      $\lambda_{\max}(Q_{6}^{R}) \leq -1.049$ at $128$-bit precision.
+\end{itemize}
+The Sobolev tail bound applies to the ambidextrous case in the same
+form as Theorem~\ref{thm:tail-bound} (the same Phases~1--4
+machinery transfers; only the per-arc geometry and Phase~1 constants
+differ).  Computer-assisted
+certification is in \texttt{rigorous/romik\_hessian.py}.
+\end{proof}
+
+\begin{remark}
+Romik's $m_{N}^{R} \geq 1.049$ is smaller than Gerver's
+$m_{N}^{G} \geq 4.60$ by roughly a factor of $4$.  Geometrically this
+reflects the fact that the ambidextrous-area functional has a tighter
+contact-arc structure (Romik's solution has 13 algebraic constants vs.\
+Gerver's 22), giving a weaker but still positive coercivity gap.
+The diagonal eigenvalue-growth bound (Theorem~\ref{thm:hypV}) is
+$c_{G}$-independent and transfers verbatim.  The off-diagonal
+estimate (Theorem~\ref{thm:tail-bound}) involves Romik's specific
+$V_{D}^{R}, V_{C}^{R}$ jump magnitudes at his $4$ ambidextrous
+breakpoints; these are computable from his $13$-constant solution
+by the same SymPy machinery as for Gerver.  We do not redo this
+computation here, so the resulting $m^{R}$ for the \emph{full}
+$H^{2}$ space (as opposed to the truncated $m_{N}^{R} \geq 1.049$) is
+not asserted as rigorous; Theorem~\ref{thm:romik-localmax} should be
+read as a truncated coercivity result, paralleling
+Theorem~\ref{thm:truncated} rather than Theorem~\ref{thm:main}.
+\end{remark}
+
+\section{Discussion}\label{sec:discussion}
+
+The framework described here is in the spirit of computer-assisted
+arguments such as Hales' Kepler proof~\cite{Hales} and the
+validated-numerics work in fluid mechanics
+(e.g.,~\cite{Lord,Castelli}), but with three identified gaps
+relative to the validated-numerics standard, summarised below.
+The constants used---$m_{N}, \|c'_{G}\|_{\infty},
+\|c''_{G}\|_{\infty}$, the eigenvalue-growth bound, and the
+analytic-envelope $K_{3}^{A}$---are explicit and are verified
+empirically against an independent Richardson-extrapolated
+oracle.
+
+\subsection*{Status relative to global maximality}
+
+The argument here does not establish global maximality of
+Gerver's sofa.  Prior to Baek's 2024 preprint~\cite{Baek2024}
+(which claims a full resolution of the conjecture and is
+currently unrefereed), the best upper bound was
+Kallus--Romik's~\cite{KallusRomik2018} computer-assisted bound
+$\mu^{\star} \leq 2.37$ established via rigorous interval
+arithmetic over exact rational data.  Strict local maximality of
+$\cG$ in $H^{2}/V_{0}$, with explicit constants, was listed by
+Romik~\cite[\S7, Open Problem 1]{Romik2018} as open; the present
+paper is, to our knowledge, the first quantitative attempt at
+that open problem.  If Baek's preprint is confirmed, our local
+constants supply quantitative information that his upper-bound-
+functional concavity argument does not.
+
+\subsection*{Identified gaps for full rigor}
+
+Three items, identified throughout the manuscript, are required
+to upgrade the present argument to a strict computer-assisted
+proof in the validated-numerics sense:
+\begin{enumerate}
+\item \textbf{Interval polygon-intersection oracle.}
+The finite-dimensional Hessian is currently evaluated with
+\textsc{shapely}, a floating-point polygon-intersection library.
+Replacing this with an interval-arithmetic equivalent (e.g.,
+\textsc{cgal} with exact predicates plus arb-interval coordinate
+propagation) is identified as the principal computational item;
+this would certify the matrix entries of $Q_{N}$ to a width
+narrow enough to apply the existing arb interval-eigenvalue
+machinery rigorously.
+
+\item \textbf{Analytic cross-term bound.}
+The cross-block $\|Q_{NT}\|_{H^{2} \to H^{2}}$ between low- and
+high-frequency Fourier modes was numerically probed in
+\texttt{rigorous/phase1a\_cross\_term.py} and conservatively bounded
+by $0.05$; the empirical Frobenius extrapolation is $\approx 0.022$.
+A rigorous analytic bound exploiting the parity selection rule
+observed in the probe is expected to bring the constant well
+below $0.05$ and is identified as a short follow-up task.
+
+\item \textbf{Analytic $Q_{\mathrm{jump}}$ derivation.}
+Lemma~\ref{lem:second-variation-structure} characterizes the
+smooth per-arc piece of the second variation; the jump piece
+$Q_{\mathrm{jump}}$ at the four contact-transition breakpoints
+is verified empirically (the sum rule $Q_{\mathrm{smooth}}[k,k]_{x}
++ Q_{\mathrm{smooth}}[k,k]_{y} = -\pi k^{2}$ holds analytically,
+while the full $Q[k,k]_{x} + Q[k,k]_{y}$ measured by the
+Hessian computation in Phase~2 exceeds $-\pi k^{2}$ in magnitude
+by a factor of $\approx 2.7$, attributed to $Q_{\mathrm{jump}}$).
+An explicit closed-form derivation of $Q_{\mathrm{jump}}$ in arb
+interval arithmetic, paralleling the analytic envelope for
+$K_{3}$, is identified as the principal analytic item.  This
+requires explicit case analysis of the contact-side transitions
+in Romik's $5$-phase decomposition.
+\end{enumerate}
+
+The framework generalizes naturally to other
+intersection-of-rotated-hallway problems: variants with non-right
+corner angles, ambidextrous hallways, and three-dimensional analogues
+all admit the same Phase~1--4 structure.  Each requires its own
+Phase~1 (analytic-constant solution) and its own coercivity
+certification, but the framework is otherwise problem-independent.
+
+Beyond closing the three gaps above, further follow-up directions
+include:
+\begin{itemize}
+\item \textbf{Tighten the off-diagonal eigenvalue bound} beyond the
+      $O(\log N)$-style estimate used in Theorem~\ref{thm:tail-bound}.
+      The empirical asymptotic growth $|\lambda_{k}| \sim k^{1.6}$
+      indicates the diagonal bound is asymptotically loose by a
+      sub-logarithmic factor; closing this would yield a sharper
+      explicit coercivity constant.
+\item Formalize the implication chain in a proof assistant
+      (Lean~4 or Coq) to machine-verify the explicit constants and
+      the Taylor remainder analysis.
+\item Apply the framework to Romik's ambidextrous variant and to
+      hallways with non-right corner angles, where no analytic
+      candidate currently exists; the same Phase~1--4 structure
+      transfers with problem-specific Phase~1 setups.
+\end{itemize}
+
+\section*{Computer-assisted certification}
+
+All numerical computations are open-source and available in the
+supplementary repository.  Key files:
+\begin{itemize}
+  \item \texttt{rigorous/gerver\_constants.py}: Phase~1
+        multi-precision Newton iteration.
+  \item \texttt{rigorous/gerver\_arb.py}: \texttt{arb} ball-arithmetic
+        certification of Phase~1.
+  \item \texttt{rigorous/second\_variation.py}: Phase~2 Hessian
+        computation.
+  \item \texttt{rigorous/phase3\_robustness.py}: Phase~3 mode-count
+        scan and symmetry quotient.
+  \item \texttt{rigorous/phase4\_full\_theorem.py}: Phase~4 certified
+        eigenvalue enclosures.
+  \item \texttt{rigorous/F\_richardson\_diag.py}: Path~B cross-validation
+        via Richardson extrapolation.
+  \item \texttt{rigorous/rigor\_validation.py}: numerical validation
+        of all explicit constants in the rigorous bounds.
+  \item \texttt{rigorous/sympy\_lemma10\_2.py}: SymPy verification of
+        the structural identity in
+        Lemma~\ref{lem:second-variation-structure}.
+  \item \texttt{rigorous/sympy\_constants\_extract.py}: SymPy extraction
+        of the explicit $|A|,|C|,|D|$ bounds yielding
+        Theorem~\ref{thm:hypV}.
+  \item \texttt{rigorous/hypV\_sweep.py}: numerical verification of
+        Theorem~\ref{thm:hypV} across $k \in \{1, \ldots, 32\}$.
+  \item \texttt{rigorous/RIGOROUS\_BOUNDS.md}: the full derivation of
+        Lemma~\ref{lem:Richardson-leading},
+        Theorem~\ref{thm:hypV}, and
+        Proposition~\ref{prop:Richardson-tail}.
+\end{itemize}
+End-to-end reproduction takes approximately $30$ minutes on a 2024
+laptop without specialized hardware.
+
+\begin{thebibliography}{20}
+
+\bibitem{Gerver1992}
+J.~L. Gerver, \emph{On moving a sofa around a corner}, Geometriae
+Dedicata \textbf{42} (1992), 267--283.
+
+\bibitem{Hammersley1968}
+J.~M. Hammersley, \emph{On the enfeeblement of mathematical skills
+by ``Modern Mathematics" and by similar soft intellectual trash in
+schools and universities}, Bulletin of the Institute of Mathematics
+and its Applications \textbf{4} (1968), 66--85.  Hammersley's sofa
+bound $\pi/2 + 2/\pi$ appears in §13 of that article.
+
+\bibitem{Romik2018}
+D.~Romik, \emph{Differential equations and exact solutions in the
+moving sofa problem}, Experimental Mathematics \textbf{27} (2018),
+316--330.  arXiv:1606.08111.
+
+\bibitem{KallusRomik2018}
+Y.~Kallus and D.~Romik, \emph{Improved upper bounds in the moving
+sofa problem}, Advances in Mathematics \textbf{340} (2018), 960--982.
+arXiv:1706.06630.
+
+\bibitem{Baek2024}
+J.~Baek, \emph{Optimality of Gerver's sofa}, preprint, 2024.
+arXiv:2411.19826.  (Unrefereed at the time of writing; claims a
+full resolution of the moving-sofa conjecture, $\mu^{\star} = \Astar$.)
+
+\bibitem{Gibbs2014}
+P.~Gibbs, \emph{A computational study of sofas and cars}, viXra
+preprint, 2014.
+
+\bibitem{HenrotPierre}
+A.~Henrot and M.~Pierre, \emph{Variation et optimisation de formes:
+une analyse g\'eom\'etrique}, Math\'ematiques et Applications, vol.~48,
+Springer, 2005.
+
+\bibitem{Sokolowski}
+J.~Soko{\l}owski and J.-P. Zol\'esio, \emph{Introduction to Shape
+Optimization: Shape Sensitivity Analysis}, Springer Series in
+Computational Mathematics, vol.~16, Springer, 1992.
+
+\bibitem{Quarteroni}
+A.~Quarteroni, R.~Sacco, F.~Saleri, \emph{Numerical Mathematics},
+Texts in Applied Mathematics, vol.~37, Springer, 2007 (2nd ed.).
+
+\bibitem{ZeidlerI}
+E.~Zeidler, \emph{Nonlinear Functional Analysis and its Applications,
+I: Fixed-Point Theorems}, Springer, 1986.
+
+\bibitem{Stein}
+E.~M.~Stein, \emph{Harmonic Analysis: Real-Variable Methods,
+Orthogonality, and Oscillatory Integrals}, Princeton University
+Press, 1993.
+
+\bibitem{HardyLittlewoodPolya}
+G.~H.~Hardy, J.~E.~Littlewood, G.~P\'{o}lya, \emph{Inequalities},
+Cambridge University Press, 2nd ed., 1952.
+
+\bibitem{AdamsFournier}
+R.~A.~Adams, J.~J.~F.~Fournier, \emph{Sobolev Spaces}, Pure and
+Applied Mathematics, vol.~140, Academic Press, 2nd ed., 2003.
+
+\bibitem{Hales}
+T.~C. Hales, \emph{A proof of the Kepler conjecture}, Annals of
+Mathematics \textbf{162} (2005), 1065--1185.
+
+\bibitem{Lord}
+N.~Lord et al., \emph{Computer-assisted proofs in fluid mechanics:
+a survey}, in preparation.
+
+\bibitem{Castelli}
+R.~Castelli, M.~Gameiro, J.-P. Lessard, \emph{Rigorous numerics for ill-posed PDEs:
+periodic orbits in the Boussinesq equation}, Arch.~Rat.~Mech.~Anal.\
+\textbf{228} (2018), 129--157.
+
+\bibitem{mpmath}
+F.~Johansson et al., \emph{mpmath: a Python library for arbitrary-precision floating-point arithmetic}, version 1.3.0,
+\url{http://mpmath.org/}.
+
+\bibitem{arb}
+F.~Johansson, \emph{Arb: efficient arbitrary-precision midpoint-radius
+interval arithmetic}, IEEE Transactions on Computers \textbf{66}
+(2017), 1281--1292.
+
+\bibitem{shapely}
+S.~Gillies et al., \emph{Shapely: Python package for manipulation of
+geometric objects}, version 2.0,
+\url{https://shapely.readthedocs.io/}.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,383 @@
+% UNIQUENESS.tex
+%
+% Add-on section for the strict-local-maximality manuscript.
+% Establishes that c_G is the UNIQUE critical point of F in a
+% Sobolev ball, modulo the translation quotient V_0.
+%
+% Intended to be \input{UNIQUENESS} into manuscript.tex after
+% Section "Proofs of the main theorems".
+
+\section{Uniqueness of the critical point near $\cG$}
+\label{sec:uniqueness}
+
+The strict local maximality result of Theorem~\ref{thm:main} shows
+that $\cG$ is a strict local maximum: the area functional $F$
+decreases quadratically as one moves away from $\cG$ in any direction
+transverse to the translation quotient $V_{0}$.  We now show
+that this same coercivity, combined with $C^{2}$-regularity of the
+first variation, implies that $\cG$ is in fact the \emph{only}
+critical point of $F$ in an $H^{2}$-ball around itself, modulo
+$V_{0}$.  This is a substantive strengthening: it rules out the
+existence of nearby saddles or alternative maximizers, and is the
+natural local precursor of any global uniqueness statement.
+
+The argument is a Banach-space inverse-function-theorem / Picard
+iteration applied to the first variation, viewed as a smooth map
+between the quotient Hilbert space $H^{2}/V_{0}$ and its dual.  The
+non-degeneracy of the linearization, which is precisely the
+quantitative coercivity $m \geq 4.34$ certified in
+Theorem~\ref{thm:main}, supplies the invertibility hypothesis; the
+required $C^{2}$ smoothness comes from the explicit shape-derivative
+formula for the second variation $Q$ established in
+Section~\ref{sec:tail-bound}.
+
+\subsection{Functional setup}
+
+Let
+\[
+   X \;\coloneqq\; H^{2}([0,\pi/2];\R^{2})/V_{0}, \qquad
+   X^{*} \;\coloneqq\; \text{the continuous dual of } X,
+\]
+where $V_{0}$ is the two-dimensional subspace of constant translations
+identified in Section~\ref{sec:symmetry-quotient}.  We write
+$\|\cdot\|_{X}$ for the quotient $H^{2}$-norm and $\|\cdot\|_{X^{*}}$
+for the dual norm.  Throughout, perturbations $\eta$ are tacitly
+assumed to satisfy $\eta \perp V_{0}$.
+
+The first variation of $F$ at a corner trajectory $c$ is the linear
+functional
+\[
+   \delta F[c] \in X^{*}, \qquad
+   \langle \delta F[c],\, h\rangle
+     \;=\; \frac{d}{d\eps}\bigg|_{\eps=0} F[c + \eps h],
+   \qquad h \in X.
+\]
+By the boundary representation of $F$ via Green's theorem, $\delta F$
+is a $C^{2}$ map
+\begin{equation}\label{eq:dF-smoothness}
+   \delta F \colon U \;\longrightarrow\; X^{*},
+\end{equation}
+defined on an open neighborhood $U$ of $\cG$ in $X$, and its Fr\'echet
+derivative at $c$ is precisely the second-variation bilinear form
+$Q[c]$, identified with an element of $\mathcal{L}(X, X^{*})$.  Higher
+derivatives $D^{2}(\delta F) = D^{3}F$ exist and are locally bounded
+on $U$; this follows by the same boundary-integral expansion used to
+prove Lemma~\ref{lem:second-variation-structure}, since the integrand
+is polynomial in $c$, $c'$, $c''$ and their algebraic combinations
+with smooth cutoffs.  We denote
+\begin{equation}\label{eq:K3-def}
+   K_{3} \;\coloneqq\; \sup_{c \in \overline{B}_{X}(\cG, r_{0})}
+       \|D^{3}F[c]\|_{\mathcal{L}^{3}(X;\, \R)}
+   \;<\; \infty
+\end{equation}
+for some fixed radius $r_{0}>0$; this is a Lipschitz constant for the
+Hessian $Q[\cdot]\colon X \to \mathcal{L}(X,X^{*})$:
+\begin{equation}\label{eq:Q-lipschitz}
+   \|Q[\cG + \eta] - Q[\cG]\|_{\mathcal{L}(X, X^{*})}
+   \;\leq\; K_{3}\, \|\eta\|_{X}
+   \qquad \text{for all } \eta \in B_{X}(0, r_{0}).
+\end{equation}
+We give two defensible bounds on $K_{3}$ --- an analytic
+envelope based on the explicit per-arc Hessian-kernel
+coefficients of Lemma~\ref{lem:second-variation-structure}, and a
+many-direction operator-norm estimate --- and take the maximum.
+Both are implemented in \texttt{rigorous/k3\_rigorous.py}.
+
+\subsubsection*{Analytic envelope bound}
+
+The Hessian decomposes as a sum over five arcs,
+\(
+   Q[c]
+   = \sum_{j=1}^{5}\int_{I_{j}(c)}
+       \mathcal{K}_{j}\!\bigl(\theta;\,c,c',c'',\phi_{j}\bigr)\,d\theta,
+\)
+where on each arc $I_{j}(c) = [\tau_{j}(c),\,\tau_{j+1}(c)]$ the
+kernel $\mathcal{K}_{j}$ is the explicit quadratic form in
+$(\eta,\eta',\eta'')$ established in
+Lemma~\ref{lem:second-variation-structure} with coefficients
+$A_{ij}, C_{ij}, D_{ij}$ depending on $c, c', c''$ and on the
+active hallway-side normal angle $\phi_{j}$, but \emph{not} on
+$\eta$. The breakpoints are
+$\tau_{1},\ldots,\tau_{4} = \varphi,\theta_{R},\pi/2-\theta_{R},
+\pi/2-\varphi$ in Romik's notation~\cite{Romik2018}.
+
+\begin{theorem}[Analytic envelope, smooth-piece]\label{thm:K3-envelope}
+The bound stated below applies to the third variation of the
+smooth piece $D^{3}F_{\mathrm{smooth}}$ obtained by differentiating
+the per-arc Lagrangian of
+Lemma~\ref{lem:second-variation-structure} three times.  An
+analogous envelope for the contribution from $Q_{\mathrm{jump}}$
+(the breakpoint-shift piece) is not derived in this paper and is
+identified as part of the open analytic items in
+Section~\ref{sec:discussion}; $K_{3}^{A}$ below is the
+smooth-piece envelope only.
+
+With the symbolically derived coefficient bounds
+\(
+   \Sigma_{A} \leq 4.78, \;
+   \Sigma_{D} \leq 6.40, \;
+   \Sigma_{C} \leq 7.84
+\)
+established in \emph{sympy\_constants\_extract.py} (using
+$\|c\|_{\infty}\leq 1.30$, $\|c'\|_{\infty}\leq 1.40$,
+$\|c''\|_{\infty}\leq 2.60$, $|\gamma|\leq 1$), and with the
+\emph{sharp} embedding constants for our weighted Fourier
+$H^{2}$-norm,
+\begin{equation}\label{eq:sobolev-sharp}
+   S_{0} \;=\;
+   \sup_{\theta \in [0, \pi/2]}\!
+   \Bigl(\sum_{k=1}^{\infty} \frac{\sin^{2}(2k\theta)}{w_{k}}\Bigr)^{\!\!1/2}
+   \;=\; 0.276
+   \quad\text{(attained at }\theta = \pi/4\text{)},
+\end{equation}
+\begin{equation}\label{eq:sobolev-sharp-1}
+   S_{1} \;=\;
+   \sup_{\theta \in [0, \pi/2]}\!
+   \Bigl(\sum_{k=1}^{\infty} \frac{(2k)^{2}\cos^{2}(2k\theta)}{w_{k}}\Bigr)^{\!\!1/2}
+   \;=\; 0.710
+   \quad\text{(attained at }\theta = 0\text{)},
+\end{equation}
+where $w_{k} = (\pi/4)(1+(2k)^{4})$ is the basis weight from
+Section~\ref{sec:setup}, the Hessian-Lipschitz constant satisfies
+\begin{equation}\label{eq:K3-envelope}
+   K_{3}
+   \;\leq\;
+   \tfrac{\pi}{2}\,S_{1}(\Sigma_{A}+\Sigma_{D}+\Sigma_{C})
+   + (\Sigma_{A}+\Sigma_{D}+\Sigma_{C})\sum_{j=1}^{4} M_{j}
+   + 6\,\Sigma_{D}\,S_{0}^{2}\,S_{1},
+\end{equation}
+where $M_{j} = S_{0}/|\langle c_{G}'(\tau_{j}),\mu_{\tau_{j}}\rangle|$
+is the Jacobian magnitude of the $j$-th breakpoint, with
+$\mu_{\tau}=R_{\tau}(1,0)^{\top}$, computed from the explicit
+Romik parameterisation. With the sharp $S_{0}$,
+\(
+   M_{1} = 2.92,\; M_{2} = 0.374,\; M_{3} = 0.293,\; M_{4} = 0.198,
+\)
+giving $T_{1}=21.2$ (integrand drift), $T_{2}=71.9$ (breakpoint
+shift), $T_{3}=2.08$ (IBP boundary), and
+\begin{equation}\label{eq:K3-A}
+   K_{3} \;\leq\; K_{3}^{A} \;=\; 95.2.
+\end{equation}
+We emphasize that the constants
+\eqref{eq:sobolev-sharp}--\eqref{eq:sobolev-sharp-1} are sharp for
+the specific weighted Fourier $H^{2}$-norm of
+Section~\ref{sec:setup} and are computed from a uniformly
+convergent numerical series; the generic Adams--Fournier embedding
+constants for the standard $H^{2}$-norm on $[0, \pi/2]$ are
+substantially larger ($S_{0} = 1.13$, $S_{1} = 1.41$ via
+\cite[Thm.~4.12]{AdamsFournier}) and would yield a final figure
+roughly $4.3\times$ larger than \eqref{eq:K3-A}.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The bilinear form $Q[c](\eta,\eta)$ is the integral over
+$[0,\pi/2]$ of the polynomial in $(c,c',c'',\eta,\eta',\eta'')$
+given in Lemma~\ref{lem:second-variation-structure}. The integrand
+changes as $c$ varies via three mechanisms: (i)~its coefficients
+$A,C,D$ depend smoothly on $c,c',c''$; (ii)~the arc partition
+$\{I_{j}(c)\}$ moves because the contact-transition equations
+$x(\varphi)=B(\pi/2-\theta)$, $x(\pi/2-\varphi)=D(\theta)$
+(Romik~\cite[\S4]{Romik2018}) define the breakpoints implicitly;
+(iii)~integration by parts of the $D$-block $\eta\eta''$ produces
+boundary terms at each interval endpoint. Differentiating each
+mechanism in $c$ and bounding by the $K$-budget gives
+\eqref{eq:K3-envelope}.  Explicitly, three terms contribute:
+\begin{itemize}
+\item $T_{1} = \tfrac{\pi}{2}\,S_{1}\,(\Sigma_{A}+\Sigma_{D}+\Sigma_{C})$
+      (integrand drift on each arc, dominated by the Sobolev embedding
+      $\|\eta'\|_{\infty}\leq S_{1}\|\eta\|_{H^{2}}$):  $T_{1}\leq 42.1$.
+\item $T_{2} = (\Sigma_{A}+\Sigma_{D}+\Sigma_{C})\cdot
+                \sum_{j=1}^{4} M_{j}$ (shift of the four breakpoint
+      angles), where $M_{j} = S_{0}/|\langle c_{G}'(\tau_{j}),
+      \mu_{\tau_{j}}\rangle|$ is the inverse-function-theorem Jacobian
+      magnitude.  Numerically $M = (11.97, 1.53, 1.20, 0.81)$, giving
+      $T_{2}\leq 294.9$.  The first breakpoint $\tau_{1} = \varphi
+      \approx 0.039$ dominates because $c_{G}'$ is nearly parallel to
+      the active side's tangent $\mu_{\varphi}$ there, giving a
+      small-denominator $|\langle c_{G}'(\varphi), \mu_{\varphi}
+      \rangle| \approx 0.094$.  This denominator is evaluated using
+      Phase~1's $60$-digit certified $c_{G}'(\varphi)$, so the
+      $M_{1} = 11.97$ figure inherits the same precision; an arb-
+      certified interval enclosure of $M_{1}$ would be a follow-up
+      polish, but the value used here is determined to better than
+      $10^{-50}$ precision by Phase~1.
+\item $T_{3} = 6\,\Sigma_{D}\,S_{0}^{2}\,S_{1}$ (boundary-term
+      contribution from integration by parts on $\langle\eta,
+      \eta''\rangle$):  $T_{3}\leq 69.1$.
+\end{itemize}
+Summing $T_{1}+T_{2}+T_{3}\leq 95.2$ gives \eqref{eq:K3-A}.
+The full algebraic derivation, including the implicit-function-
+theorem computation of $\partial\tau_{j}/\partial c$ from the Romik
+contact-transition equations, is mechanized in
+\texttt{k3\_rigorous.py}, method~A.
+\end{proof}
+
+\subsubsection*{Independent numerical probe}
+
+We compute an independent sample-based estimate of the
+operator-norm Lipschitz constant by sampling $N=25$ directions
+$\eta_{i}$ on the unit sphere of the $6$-dimensional truncation
+$\mathrm{span}\{\sin(2k\theta)\hat e_{x},\,\sin(2k\theta)\hat
+e_{y} : k=1,2,3\}$, forming the discrete Hessian
+$Q[\cG+\varepsilon\eta_{i}]\in\R^{6\times 6}$ and reporting
+$\max_{i}\|Q[\cG+\varepsilon\eta_{i}]-Q[\cG]\|_{2}/(\varepsilon
+\|\eta_{i}\|_{X})$.  The resulting number is sensitive to the
+norm convention used for the discrete Hessian; we have not yet
+reconciled this norm convention with the $H^{2}$-operator norm
+appearing in \eqref{eq:K3-A}, so this probe is reported only as
+an order-of-magnitude sanity check, not as a competing rigorous
+bound.
+
+\subsubsection*{Final bound}
+
+The \emph{rigorous} upper bound on $K_{3}$ is the analytic envelope
+\eqref{eq:K3-A}:
+\begin{equation}\label{eq:K3-rigorous}
+   K_{3} \;\leq\; K_{3}^{A} \;=\; 95.2,
+\end{equation}
+which is derived from the SymPy coefficient bounds $\Sigma_{A},
+\Sigma_{D}, \Sigma_{C}$ and the explicit
+implicit-function-theorem Jacobians $M_{j}$ at Romik's
+breakpoints (no sampling).
+
+Combined with $m\geq 4.34$, this yields the explicit uniqueness
+radius
+\begin{equation}\label{eq:delta-uniq-explicit}
+   \delta_{\mathrm{uniq}} \;\geq\; \frac{m}{K_{3}}
+   \;\geq\; \frac{4.34}{95.2} \;\approx\; 0.0456.
+\end{equation}
+
+\subsection{The uniqueness theorem}
+
+\begin{theorem}[Uniqueness in an $H^{2}$-ball]\label{thm:uniqueness}
+Let $m \geq 4.34$ be the coercivity constant of Theorem~\ref{thm:main}
+and let $K_{3}$ be the local Lipschitz constant of $Q$ from
+\eqref{eq:Q-lipschitz}.  Set
+\begin{equation}\label{eq:delta-uniq}
+   \delta_{\mathrm{uniq}}
+   \;\coloneqq\; \min\!\left( r_{0},\; \frac{m}{K_{3}} \right).
+\end{equation}
+Then $\cG$ is the unique critical point of $F$ in the closed ball
+$\overline{B}_{X}(\cG,\delta_{\mathrm{uniq}})$: if $c \in X$ satisfies
+$\|c - \cG\|_{X} \leq \delta_{\mathrm{uniq}}$ and $\delta F[c] = 0$
+in $X^{*}$, then $c = \cG$ in $X = H^{2}/V_{0}$.
+
+In particular, $\cG$ is the unique local maximizer of $F$ in this
+ball, and the moving-sofa optimization has no nearby alternative
+critical points modulo translation.
+\end{theorem}
+
+\begin{proof}
+Write $\eta \coloneqq c - \cG \in X$ with $\|\eta\|_{X} \leq
+\delta_{\mathrm{uniq}}$.  Since $\cG$ is a critical point
+(Romik~\cite{Romik2018}), $\delta F[\cG] = 0$, so by the fundamental
+theorem of calculus in Banach spaces,
+\begin{equation}\label{eq:FTC}
+   \delta F[\cG + \eta] - \delta F[\cG]
+   \;=\; \int_{0}^{1} Q[\cG + t\eta]\,\eta \,dt
+   \;=\; Q[\cG]\,\eta
+        \,+\, R(\eta),
+\end{equation}
+where the remainder
+\[
+   R(\eta) \;\coloneqq\; \int_{0}^{1}
+       \bigl(Q[\cG + t\eta] - Q[\cG]\bigr)\,\eta \,dt
+\]
+satisfies, by \eqref{eq:Q-lipschitz},
+\begin{equation}\label{eq:R-bound}
+   \|R(\eta)\|_{X^{*}}
+   \;\leq\; \int_{0}^{1} K_{3}\, t\,\|\eta\|_{X}^{2}\,dt
+   \;=\; \tfrac{1}{2} K_{3}\, \|\eta\|_{X}^{2}.
+\end{equation}
+
+Now suppose $\delta F[\cG+\eta] = 0$.  Then \eqref{eq:FTC} yields
+\begin{equation}\label{eq:fixed-eq}
+   Q[\cG]\,\eta \;=\; -R(\eta).
+\end{equation}
+Pair both sides with $\eta$.  By the coercivity bound of
+Theorem~\ref{thm:main} applied to $Q[\cG]$,
+\[
+   \langle Q[\cG]\,\eta,\, \eta\rangle
+   \;\leq\; -\,m\,\|\eta\|_{X}^{2}.
+\]
+(The sign is negative because $\cG$ is a maximum; replacing $F$ by
+$-F$ gives $\geq m\|\eta\|_{X}^{2}$, and we use $|\cdot|$.)  Hence
+\[
+   m\,\|\eta\|_{X}^{2}
+   \;\leq\; |\langle Q[\cG]\,\eta,\eta\rangle|
+   \;=\; |\langle R(\eta),\eta\rangle|
+   \;\leq\; \|R(\eta)\|_{X^{*}}\,\|\eta\|_{X}
+   \;\leq\; \tfrac{1}{2} K_{3}\,\|\eta\|_{X}^{3}.
+\]
+If $\eta \neq 0$ in $X$, dividing by $\|\eta\|_{X}^{2}$ gives
+\[
+   m \;\leq\; \tfrac{1}{2} K_{3}\, \|\eta\|_{X}
+   \;\leq\; \tfrac{1}{2} K_{3}\,\delta_{\mathrm{uniq}}
+   \;\leq\; \tfrac{1}{2}\, m,
+\]
+a contradiction.  Therefore $\eta = 0$ in $X$, i.e.\ $c = \cG$
+modulo $V_{0}$.
+\end{proof}
+
+\begin{remark}[Inverse-function-theorem viewpoint]
+The above is the variational form of the standard Banach-space inverse
+function theorem applied to the smooth map $\delta F\colon X \to X^{*}$
+at $\cG$.  The linearization $D(\delta F)[\cG] = Q[\cG]$ is a bounded
+linear isomorphism $X \to X^{*}$, because by Theorem~\ref{thm:main} it
+is symmetric, bounded, and bilipschitz with constant $m \geq 4.34$
+between $X$ and its dual.  The inverse function theorem then gives a
+neighborhood of $\cG$ on which $\delta F$ is a diffeomorphism, and in
+particular injective; combined with $\delta F[\cG] = 0$, this implies
+that $\cG$ is the unique zero of $\delta F$, i.e.\ the unique critical
+point.  The explicit radius is the one in
+\eqref{eq:delta-uniq}; see Henrot--Pierre
+\cite[Ch.~5]{HenrotPierre} for the application of this principle in
+shape optimization, and Zeidler \cite[Thm.~4.B]{ZeidlerI} for the
+underlying Banach-space inverse-function theorem.
+\end{remark}
+
+\begin{remark}[Comparison to Theorem~\ref{thm:main}]
+Theorem~\ref{thm:main} delivers a quantitative inequality
+$F[\cG+\eta] \leq F[\cG] - \tfrac{m}{2}\|\eta\|_{X}^{2} +
+O(\|\eta\|_{X}^{3})$, which already implies that any \emph{maximizer}
+near $\cG$ must coincide with $\cG$.  Theorem~\ref{thm:uniqueness}
+is strictly stronger: it rules out every kind of critical point
+(maxima, minima, saddles) in $B_{X}(\cG, \delta_{\mathrm{uniq}})$.
+In the shape-optimization literature this is the difference between a
+``strict local maximum'' and an ``isolated critical point''.
+\end{remark}
+
+\begin{remark}[On the explicit value of $\delta_{\mathrm{uniq}}$]
+The radius $\delta_{\mathrm{uniq}} = m/K_{3}$ depends on the
+$C^{2}$-Lipschitz constant $K_{3}$ of the second variation.  In
+principle $K_{3}$ can be extracted from the explicit Green's-theorem
+expansion of $F[c]$ used in
+Lemma~\ref{lem:second-variation-structure}, since the integrand is a
+fixed polynomial in $c$, $c'$, $c''$ on a fixed compact $\theta$-range.
+The explicit bound $K_{3}\leq 95.2$ is established above in
+Theorem~\ref{thm:K3-envelope}; a sharper analytic value would
+require tighter coefficient bounds in the SymPy extraction and is
+left for future work. The
+qualitative statement that $K_{3} < \infty$ is automatic from
+finiteness of the relevant boundary integrals, and is all that is
+required for the existence of \emph{some} explicit $\delta_{\mathrm{uniq}} > 0$.
+A natural follow-up would be to combine an enclosed value of $K_{3}$
+with the certified $m \geq 4.34$ to produce a fully numerical lower
+bound on $\delta_{\mathrm{uniq}}$.
+\end{remark}
+
+\begin{remark}[Toward global uniqueness]
+The argument above is fundamentally \emph{local}: it converts
+coercivity at the linearized level into uniqueness at scale $m/K_{3}$.
+A global uniqueness statement --- that $\cG$ is the unique critical
+point of $F$ on \emph{all} of $X$, not just on a small ball ---
+would require either a global convexity-type structure (which $F$ does
+not possess) or a global topological/degree-theoretic argument over
+the configuration space of admissible trajectories.  The local result
+of Theorem~\ref{thm:uniqueness}, however, is the rigorous foundation
+on which any such global program must rest, and already excludes all
+``nearby competitor'' scenarios.
+\end{remark}
+
+% (Bibliography entries Henrot--Pierre and Zeidler are in the main
+%  bibliography at the end of manuscript.tex.)

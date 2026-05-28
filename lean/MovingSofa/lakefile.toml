@@ -1,0 +1,10 @@
+name = "MovingSofa"
+version = "0.1.0"
+defaultTargets = ["movingsofa"]
+
+[[lean_lib]]
+name = "MovingSofa"
+
+[[lean_exe]]
+name = "movingsofa"
+root = "Main"
