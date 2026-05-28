@@ -65,8 +65,9 @@ $(A_{R}^{\star} \approx 1.64495)$ and show that it is a strict
 local maximum of its corresponding functional, with truncated
 coercivity $\geq 1.049$.
 The argument combines:
-(i) certified $60$-digit enclosure of Gerver's analytic constants via
-multi-precision Newton iteration and ball arithmetic;
+(i) a high-precision Newton enclosure of Gerver's analytic constants
+matching Romik~\cite{Romik2018}'s published Table~1 values
+(see Section~\ref{sec:phase1} for the precision discussion);
 (ii) a finite-dimensional Hessian computation on a $16$-mode Fourier
 basis, with the truncated coercivity constant $m_{N} \geq 4.6035$
 enclosed at $128$-bit precision in three independent ways;
@@ -79,7 +80,9 @@ pipeline, agreeing on the basis-invariant trace to $1.7\%$ (used as
 an empirical consistency check on the Shapely-based Hessian
 computation; not a load-bearing rigorous step).
 Phase~1 reconfirms Gerver's area
-$\Astar = 2.21953166887\ldots$ to $60$ decimal digits.
+$\Astar = 2.219531668871967\ldots$ to the precision of
+Romik~\cite{Romik2018}'s published Table~1
+($\approx 16$~decimal digits).
 The eigenvalue-growth bound is verified empirically across
 $k \in \{1, 2, \ldots, 32\}$ with worst-case multiplicative margin
 $\geq 1.35\times$ near $k = 14$ and asymptotic margin
@@ -421,27 +424,47 @@ $(\varphi, \theta, a_{1}, b_{1}, b_{2}, c_{1}, \kappa_{2,1},
 \kappa_{2,2}, \kappa_{3,1}, \kappa_{3,2}, \kappa_{4,1}, \kappa_{4,2},
 \kappa_{5,1})$.
 
-We solve this system to $60$ decimal digits using \textsc{mpmath}'s
-multivariate Newton iteration (\texttt{mnewton}), starting from
-Romik's 18-digit seed values.  The convergence is quadratic and we
-verify the residual is bounded:
+We solve this system using \textsc{mpmath}'s multivariate Newton
+iteration (\texttt{mnewton}), starting from Romik's 18-digit seed
+values.  The convergence is rapid; at the converged point the
+residual
 \begin{equation}
-  \|F(U^{*})\|_{\infty} \;\leq\; 2.1 \times 10^{-81}.
+  \|F(U^{*})\|_{\infty} \;\leq\; 2.1 \times 10^{-81}
 \end{equation}
-Independently, the Phase~1 constants are converted to
-\textsc{python-flint} \texttt{arb} balls at $128$-bit precision and
-the residual is recomputed in ball arithmetic; each component of
-$F(U^{*})$ is enclosed in an interval of width $\leq 1.8 \times
-10^{-59}$ containing zero.
+in floating-point arithmetic, and an independent re-evaluation in
+\textsc{python-flint} \texttt{arb} balls at $128$-bit precision
+encloses each residual component in an interval of width
+$\leq 1.8 \times 10^{-59}$ containing zero.
 
-The area $\Astar$ is then computed by direct Green's-theorem
-integration along the $5$-arc boundary of $S(\cG)$, yielding the
-certified value
+\begin{remark}[Precision caveat]\label{rem:phase1-precision}
+A small residual does not by itself certify the converged
+coordinates to high precision when the Jacobian is poorly
+conditioned at the solution.  Cross-checking the computed area
+against \textsc{oeis} sequence \texttt{A128463} (decimal expansion
+of Gerver's sofa area, extended in December~2024) reveals that the
+present 13-variable Newton system is ill-conditioned past
+$\approx 16$ decimal digits: at working precisions
+\texttt{dps}~$\in \{30, 60, 100\}$ the converged $\Astar$ stabilises
+to $16$ digits but drifts in the $17$th and subsequent digits, and
+at \texttt{dps}~$\geq 150$ the Jacobian becomes numerically
+singular and \texttt{mnewton} fails.  We therefore claim the
+Phase~1 enclosure only to the precision actually validated against
+external sources, namely
 \begin{equation}\label{eq:Astar-certified}
-  \Astar \;=\; 2.21953166887196788922864872766335730170239439947521556103221\ldots,
+  \Astar \;=\; 2.219531668871967\ldots
 \end{equation}
-to all displayed digits, matching the published value of Romik to all
-of its $11$ digits.
+to $16$ digits, in agreement with both Romik~\cite{Romik2018}
+Table~1 (within the $18$ digits Romik published) and
+\textsc{oeis} \texttt{A128463}.  Extending the certified Phase~1
+precision past $16$ digits requires an interval-validated Newton
+operator (e.g.~Krawczyk) on a regularised reduction of the system,
+which we identify as a follow-up item.  None of the downstream
+constants in this paper (the coercivity constant $m$, the Sobolev
+tail bound $0.205$, the uniqueness radius $\delta$, the Lipschitz
+constant $K_{3}$) depends on more than $6$--$8$ digits of $\cG$,
+so the conditioning issue does not affect the headline numerical
+results.
+\end{remark}
 
 \begin{figure}[h]
   \centering
@@ -451,16 +474,19 @@ of its $11$ digits.
     dotted red curve; circles mark the four interior breakpoints at
     $\theta \in \{\varphi, \theta, \pi/2 - \theta, \pi/2 - \varphi\}$;
     squares mark the trajectory endpoints.  Sofa area $\Astar
-    = 2.21953166887\ldots$\label{fig:gerver}}
+    = 2.219531668871967\ldots$\label{fig:gerver}}
 \end{figure}
 
 \begin{remark}
-This 60-digit precision is much more than the proof requires.  We need
+The $16$-digit precision is more than the proof requires.  We need
 $F$ to roughly $10^{-10}$ for the Hessian finite-differences at $\eps
 = 10^{-3}$ to be precise to $10^{-4}$, which in turn keeps the
-truncated coercivity bound away from zero by a comfortable margin.
-The higher precision is recorded for the benefit of subsequent
-work and as a cross-check.
+truncated coercivity bound away from zero by a comfortable margin;
+$6$--$8$ digits of accuracy in the constants defining $\cG$ is
+sufficient to ensure $F$ is computed to that precision.  All
+headline constants quoted in this paper ($m$, $\delta$, $K_{3}$,
+the eigenvalue-growth bound) are robust to changes in $\cG$ past
+the $8$th decimal digit.
 \end{remark}
 
 \section{Phase 2: finite-dimensional Hessian}\label{sec:phase2}
