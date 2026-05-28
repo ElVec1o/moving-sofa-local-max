@@ -32,23 +32,27 @@
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\Span}{span}
 
-\title{Strict local maximality of Gerver's moving sofa: \\
-       a computer-assisted Sobolev coercivity argument}
+\title{Computer-assisted Sobolev-coercivity evidence for\\
+       local maximality of Gerver's sofa and Romik's\\
+       ambidextrous moving-sofa candidate}
 \author{Vico Bonfioli}
 \date{\today}
 
 \begin{document}
 
 \begin{abstract}
-We give a computer-assisted argument that Joseph Gerver's 1992
-candidate sofa is a strict local maximum of the area functional on
-the Sobolev space $H^{2}([0, \pi/2]; \R^{2})$ of corner trajectories,
-modulo the two-dimensional translation-symmetry quotient.  The
-coercivity constant satisfies $m \geq 4.34$ in the $H^{2}$-norm, and
-under the same hypotheses $\cG$ is the \emph{unique} critical point
-of the area functional in an explicit $H^{2}$-ball of radius
-$\geq 0.0456$ around itself.  Three ingredients are not yet rigorous in the strict
-computer-assisted-proof sense and are flagged as such throughout:
+We present computer-assisted \emph{numerical evidence for} a strict
+local maximum of the area functional at Joseph Gerver's 1992
+candidate sofa, on the Sobolev space $H^{2}([0, \pi/2]; \R^{2})$ of
+corner trajectories, modulo the two-dimensional translation-symmetry
+quotient.  We stress at the outset that the results below are
+\emph{not} theorems in the strict computer-assisted-proof sense: they
+are conditional on three explicitly identified non-rigorous
+ingredients~(i)--(iii), each flagged throughout.  Conditional on these,
+the evidence yields a coercivity constant $m \geq 4.27$ in the
+$H^{2}$-norm, and under the same hypotheses $\cG$ is the \emph{unique}
+critical point of the area functional in an explicit $H^{2}$-ball of
+radius $\geq 0.044$ around itself.  The three ingredients are:
 (i) the finite-dimensional Hessian is evaluated with a
 floating-point polygon-intersection oracle rather than true
 interval arithmetic; (ii) the cross-term coupling between low and
@@ -59,18 +63,27 @@ characterizes the smooth piece analytically and the jump piece at
 the four contact-transition breakpoints is captured only
 empirically by the full Hessian computation, with an explicit
 closed-form derivation of $Q_{\mathrm{jump}}$ identified as the
-principal remaining analytic item.  As an illustration, we also apply the same
-Phases~1--4 framework to Romik's 2017 ambidextrous-sofa candidate
-$(A_{R}^{\star} \approx 1.64495)$ and show that it is a strict
-local maximum of its corresponding functional, with truncated
-coercivity $\geq 1.049$.
+principal remaining analytic item.  The same framework applies to Romik's ambidextrous-sofa candidate
+$\Sigma$ $(A_{R}^{\star} \approx 1.64495)$, yielding---under the same
+three caveats---numerical evidence for a strict local maximum of the
+ambidextrous-area functional on $H^{2}$ with coercivity constant
+$m^{R} \geq 2.2$.  Unlike the Gerver statement, which is subsumed by
+Baek's global resolution, this ambidextrous evidence is implied by no
+prior work and is, to our knowledge, the first quantitative
+local-maximality evidence for $\Sigma$ (the second half of Romik's
+Open Problem~1).
 The argument combines:
 (i) a high-precision Newton enclosure of Gerver's analytic constants
 matching Romik~\cite{Romik2018}'s published Table~1 values
 (see Section~\ref{sec:phase1} for the precision discussion);
 (ii) a finite-dimensional Hessian computation on a $16$-mode Fourier
-basis, with the truncated coercivity constant $m_{N} \geq 4.6035$
-enclosed at $128$-bit precision in three independent ways;
+basis, for which the \emph{computed} $32\times32$ matrix has truncated
+coercivity constant $m_{N} \geq 4.6035$, agreed on by three independent
+methods (the $128$-bit interval step encloses the finite-difference
+step-sensitivity between step sizes, \emph{not} the floating-point
+polygon-intersection error of caveat~(i), so this is a high-precision
+computation rather than a certified enclosure of the true second
+variation);
 (iii) an explicit Sobolev tail estimate proved via the
 symbolically-verified structural identity that the second variation
 contains no $\|\eta''\|^{2}$ principal symbol, yielding the
@@ -118,16 +131,29 @@ does not give a uniqueness radius in any explicit norm.  The
 present paper takes a structurally different route: we work
 directly with the second variation of the area functional $F$ in
 an $H^{2}$ Sobolev framework, provide an explicit coercivity
-constant $m \geq 4.34$ (subject to the caveats stated in
+constant $m \geq 4.27$ (subject to the caveats stated in
 Sections~\ref{sec:phase4} and \ref{sec:discussion} regarding
 non-interval polygon intersection), and identify an explicit
 $H^{2}$-ball radius (subject to the conditional existence of the
 trilinear-form bound $K_{3}$ discussed in
-Section~\ref{sec:uniqueness}).  If Baek's preprint holds upon
-refereeing, global maximality is settled and our local result is
-trivially implied; if Baek's argument has gaps, the present
-paper's local-maximality result is, to our knowledge, the first
-explicit result in this direction.
+Section~\ref{sec:uniqueness}).  Following the etiquette appropriate to
+a serious if still unrefereed preprint, we assume throughout that
+Baek's resolution holds; global maximality of Gerver's sofa then
+implies its local maximality, so the present paper is not in doubt
+about \emph{whether} $\cG$ is locally maximal.  Its contribution lies
+elsewhere: (i) it makes that statement \emph{quantitative}---an
+explicit $H^{2}$ coercivity constant and uniqueness radius, which a
+global concavity argument does not provide---and (ii) it supplies a
+method that applies equally to the \emph{ambidextrous} moving-sofa
+problem, where Romik's candidate shape $\Sigma$~\cite{Romik2018} is
+conjectured optimal but neither global nor local optimality is known
+(Romik~\cite[\S7, Open Problem~1]{Romik2018}); there
+(Section~\ref{sec:romik}, Theorem~\ref{thm:romik-localmax}) we obtain
+the first quantitative local-maximality \emph{evidence}---a full-space
+$H^{2}$ coercivity constant $m^{R}\geq 2.2$, conditional on the same
+three ingredients and at the same level of rigour as the Gerver
+statement---which is genuinely new, being implied by no prior global
+result.
 
 Romik~\cite{Romik2018} reformulated Gerver's solution as the rotation
 path of the hallway's inner corner in the body frame of the sofa,
@@ -154,6 +180,28 @@ strict negativity of the second variation.  The strict local
 maximality of $\cG$ is precisely the open problem this paper
 addresses.
 
+\paragraph{Reader's guide and where the new contribution lies.}
+The headline result of this paper is the local-maximality evidence
+for Romik's \emph{ambidextrous} candidate $\Sigma$
+(Section~\ref{sec:romik}): unlike the Gerver statement, which is
+subsumed by Baek's global resolution, the $\Sigma$ result is implied
+by no prior work and is, to our knowledge, the first quantitative
+local-maximality evidence for the second half of Romik's Open
+Problem~1.  The analytic and computational apparatus, however, is
+most transparently explained on Gerver's trajectory, where the
+constants are classical and the contact structure is well documented.
+We therefore develop the entire framework---the $H^{2}$ second
+variation, the structural Lemma~\ref{lem:second-variation-structure},
+the Sobolev tail bound, and the certified finite-dimensional
+Hessian---on $\cG$ throughout Sections~\ref{sec:space-regularity}--\ref{sec:uniqueness},
+both as a validation against a case whose optimality is already
+known and as the vehicle for the method.
+Section~\ref{sec:romik} then applies the \emph{identical} machinery
+to $\Sigma$ to obtain the genuinely new result.  A reader interested
+primarily in the ambidextrous contribution may read the abstract,
+this introduction, and Section~\ref{sec:romik}, treating the Gerver
+sections as the method's derivation.
+
 \subsection*{Main results}
 
 Define the area functional on corner trajectories,
@@ -177,15 +225,18 @@ $K_{3} < \infty$ for $D^{3}F$ at $\cG$ on $H^{2}/V_{0}$
 (see Section~\ref{sec:uniqueness} and the caveats stated there)
 and on the working cross-term estimate
 \eqref{eq:cross-term-working} discussed in the proof,
-there exist $\delta \geq 0.0456$ and $m \geq 4.34$ such that for
+there exist $\delta \geq 0.044$ and $m \geq 4.27$ such that for
 every $\eta \in H^{2}([0, \pi/2]; \R^{2})$ with $\|\eta\|_{H^{2}}
 \leq \delta$ and $\eta \perp V_{0}$,
 \begin{equation}\label{eq:main}
   F[\cG + \eta] \;\leq\; F[\cG] - \frac{m}{2} \|\eta\|_{H^{2}}^{2}
                 + \frac{K_{3}}{6}\, \|\eta\|_{H^{2}}^{3}.
 \end{equation}
-In particular $\cG$ is a strict local maximum of $F$ in
-$H^{2}/V_{0}$.
+In particular, conditional on the same hypotheses and on the three
+non-rigorous ingredients~(i)--(iii) identified in the abstract and
+Section~\ref{sec:discussion}, $\cG$ is a strict local maximum of $F$
+in $H^{2}/V_{0}$.  We restate that this is numerical evidence under
+explicit conditions, not a strict-sense computer-assisted proof.
 \end{theorem}
 
 \begin{theorem}[Truncated coercivity]\label{thm:truncated}
@@ -196,15 +247,18 @@ every $\eta \in \mathcal{F}_{16}$ with $\|\eta\|_{H^{2}} \leq
   F[\cG + \eta] \;\leq\; F[\cG] - \frac{m_{N}}{2} \|\eta\|_{H^{2}}^{2}
                 + O\bigl(\|\eta\|_{H^{2}}^{3}\bigr).
 \end{equation}
-The constant $m_{N}$ is enclosed at $128$-bit precision by three
-independent methods.  The finite-dimensional second-variation
-matrix used to compute $m_{N}$ is evaluated with a floating-point
-polygon-intersection oracle (\textsc{shapely}); a fully
-interval-arithmetic polygon-intersection evaluation is identified
-as a follow-up rigorous polish (see Section~\ref{sec:discussion}).
+The constant $m_{N}$ is bracketed to $128$-bit precision by three
+independent methods applied to the \emph{computed} matrix.  That
+matrix is itself evaluated with a floating-point polygon-intersection
+oracle (\textsc{shapely}), so the bracket bounds the eigenvalues of
+the computed matrix and the finite-difference step-sensitivity, but
+not the discrepancy between the computed matrix and the true second
+variation; a fully interval-arithmetic polygon-intersection evaluation
+is identified as the rigorous step that would close this gap (see
+Section~\ref{sec:discussion}).
 \end{theorem}
 
-The constant $m \geq 4.34$ in Theorem~\ref{thm:main} arises by
+The constant $m \geq 4.27$ in Theorem~\ref{thm:main} arises by
 subtracting an explicit Sobolev tail bound and a working cross-term
 estimate from the truncated coercivity $m_{N}$.  The tail bound rests
 on a symbolically-verified structural identity
@@ -217,7 +271,7 @@ Theorem~\ref{thm:main} for details.
 
 \subsection*{Outline of the argument}
 
-The proof has four ingredients, each computer-assisted but with
+The argument has four ingredients, each computer-assisted but with
 explicit constants:
 
 (1)~A certified high-precision enclosure of the 22 constants defining
@@ -261,9 +315,9 @@ explicit analytic derivation of $Q_{\mathrm{jump}}$ paralleling
 Theorem~\ref{thm:K3-envelope} for $K_{3}$ is identified as the
 principal analytic gap remaining for full rigor and is the
 subject of ongoing work.  The resulting $H^{2}$-tail bound at
-$N=16$ is $\leq 0.205$, which after subtracting the working
+$N=16$ is $\leq 0.28$, which after subtracting the working
 cross-term estimate of $0.05$ leaves the coercivity gap
-$m \geq 4.34$ positive.
+$m \geq 4.27$ positive.
 
 (4)~An independent computation of $F$ via Richardson-extrapolated
 polygon intersection, agreeing with the Hessian to within $1.7\%$ on
@@ -330,6 +384,112 @@ For each angle $\theta \in [0, \pi/2]$ and trajectory $c : [0, \pi/2]
 \end{equation}
 Then $S(c) = \bigcap_{\theta} \Hbody(\theta; c)$ and $F[c] = \area
 S(c)$.
+
+\subsection{Function space, regularity of $\cG$, and the meaning of
+local maximality}\label{sec:space-regularity}
+
+\paragraph{The space.}
+We work on the Sobolev space $H^{2} = H^{2}([0,\pi/2];\R^{2})$ of
+trajectories $c = (c_{x}, c_{y})$ whose components, together with their
+first two distributional derivatives, are square-integrable, equipped
+with the norm
+\begin{equation}\label{eq:H2-standard-norm}
+  \|c\|_{H^{2}}^{2} \;=\;
+   \|c\|_{L^{2}}^{2} + \|c'\|_{L^{2}}^{2} + \|c''\|_{L^{2}}^{2}.
+\end{equation}
+In one dimension the embedding $H^{2}([0,\pi/2]) \hookrightarrow
+C^{1}([0,\pi/2])$ holds (and is compact), so every $c \in H^{2}$ is
+continuously differentiable; this is exactly the regularity required to
+make sense of the body-frame hallway $\Hbody(\theta; c)$ and of the
+contact-path construction, both of which involve $c'$.  The functional
+$F$ is invariant under the two-dimensional space $V_{0}$ of constant
+translations $c \mapsto c + v$, $v \in \R^{2}$; all statements below
+are made on the quotient $H^{2}/V_{0}$, with the gauge $\eta(0) = 0$
+fixing a representative.  For $c$ in an $H^{2}$-neighbourhood of $\cG$
+the half-plane data $\Hbody(\theta; c)$ vary continuously in $\theta$
+and in $c$, the intersection $S(c)$ remains a bounded planar region,
+and its area depends continuously on $c$; thus $F$ is well defined and
+continuous near $\cG$.  In the finite-dimensional computation we use
+the uniformly equivalent weighted norm \eqref{eq:weighted-H2-norm},
+which differs from \eqref{eq:H2-standard-norm} by a factor of at most
+$3/2$.\footnote{All numerical constants reported in this paper---the
+coercivity constants $m$, $m_{N}$, $m^{R}$, the trilinear bound
+$K_{3}$, and the radius $\delta$---are computed in the weighted
+Fourier norm \eqref{eq:weighted-H2-norm}.  Converting any of them to
+the standard norm \eqref{eq:H2-standard-norm} changes each by a
+factor of at most $3/2$; we do not propagate this factor through the
+final figures, so the standard-norm constants would be weaker by at
+most that amount.}
+
+\paragraph{Regularity of $\cG$.}
+Gerver's trajectory is \emph{not} smooth.  In Romik's decomposition
+$\cG$ is real-analytic on each of the five open arcs
+(Section~\ref{sec:phase1}) and is glued $C^{1}$ across the four
+interior breakpoints (the angles marked in
+Figure~\ref{fig:gerver}), but the second derivative $\cG''$ has jump
+discontinuities there.  Hence
+\begin{equation}
+  \cG \in H^{2} \setminus C^{2}:
+\end{equation}
+the trajectory lies in our function space but is only piecewise smooth.
+This is not a technicality; it is the source of the central analytic
+difficulty.  Because the contact-set transitions occur at the
+breakpoints, the second variation of $F$ at $\cG$ splits as
+\begin{equation}\label{eq:Q-split-intro}
+  Q \;=\; Q_{\mathrm{smooth}} + Q_{\mathrm{jump}},
+\end{equation}
+where $Q_{\mathrm{smooth}}$ is the sum of per-arc smooth contributions
+and $Q_{\mathrm{jump}}$ collects boundary terms supported at the four
+breakpoints, whose \emph{locations themselves move} under perturbation
+of $c$.  Lemma~\ref{lem:second-variation-structure} characterizes
+$Q_{\mathrm{smooth}}$ analytically; an analytic treatment of
+$Q_{\mathrm{jump}}$ is the principal item left open
+(Sections~\ref{sec:jump-piece} and \ref{sec:discussion}).
+
+\paragraph{What ``local maximum'' means here, and why a negative
+second variation is not enough.}
+We call $\cG$ a \emph{strict local maximum} of $F$ on $H^{2}/V_{0}$ if
+there exists $\delta > 0$ such that
+$F[\cG + \eta] < F[\cG]$ for every $\eta \perp V_{0}$ with
+$0 < \|\eta\|_{H^{2}} \leq \delta$.  In infinite dimensions this does
+\emph{not} follow from negative-definiteness of the second variation
+alone: a bounded self-adjoint form $Q$ can satisfy
+$\langle Q\eta, \eta\rangle < 0$ for every $\eta \neq 0$ while its
+spectrum accumulates at $0$, in which case no such $\delta$ exists and
+$\cG$ need not be a local maximum.  The operative hypothesis is the
+stronger one of \emph{coercivity}---a uniform spectral gap
+\begin{equation}\label{eq:coercivity-def}
+  \langle Q\eta, \eta\rangle \;\leq\; -m\,\|\eta\|_{H^{2}}^{2},
+  \qquad m > 0,
+\end{equation}
+holding for all $\eta \perp V_{0}$---together with a bound on the cubic
+remainder of $F$.  These two ingredients are what the present paper
+supplies (subject to the caveats of Section~\ref{sec:discussion}):
+Theorem~\ref{thm:main} furnishes such an $m$ and an explicit
+trilinear-form bound $K_{3}$ for $D^{3}F$, and the elementary Taylor
+estimate at the critical point $\cG$,
+\begin{equation}\label{eq:coercivity-implies-max}
+  F[\cG + \eta] - F[\cG]
+  \;=\; \tfrac12\langle Q\eta, \eta\rangle + R_{3}(\eta)
+  \;\leq\; -\tfrac{m}{2}\,\|\eta\|_{H^{2}}^{2}
+           + \tfrac{K_{3}}{6}\,\|\eta\|_{H^{2}}^{3}
+  \;<\; 0
+\end{equation}
+for $0 < \|\eta\|_{H^{2}} \leq \delta := m/K_{3}$, then yields the
+strict local maximum.  The conclusion is thus quantitative rather than
+qualitative.  The inference \eqref{eq:coercivity-implies-max} is
+elementary \emph{once} a finite cubic remainder bound $K_{3}<\infty$
+is granted; we stress that this is a genuine hypothesis, not an
+automatic fact: because $\cG\in H^{2}\setminus C^{2}$ and the
+contact-transition breakpoints $b_{j}(c)$ move under perturbation,
+$F$ is not obviously of class $C^{3}$ on an $H^{2}$-ball, and the
+existence of $K_{3}$ (with an envelope covering the jump-piece
+derivatives) is one of the open items listed in
+Section~\ref{sec:discussion}.  Granting it, the outstanding questions
+concern whether $m$, $K_{3}$, and the matrix of $Q$ are computed to
+the required precision, not the logical passage from coercivity to
+local maximality.  The full argument is carried out in
+Section~\ref{sec:main-proof}.
 
 \subsection{Fourier basis on $H^{2}([0, \pi/2]; \R^{2})$}
 For $k \geq 1$ define
@@ -460,7 +620,7 @@ precision past $16$ digits requires an interval-validated Newton
 operator (e.g.~Krawczyk) on a regularised reduction of the system,
 which we identify as a follow-up item.  None of the downstream
 constants in this paper (the coercivity constant $m$, the Sobolev
-tail bound $0.205$, the uniqueness radius $\delta$, the Lipschitz
+tail bound $0.28$, the uniqueness radius $\delta$, the Lipschitz
 constant $K_{3}$) depends on more than $6$--$8$ digits of $\cG$,
 so the conditioning issue does not affect the headline numerical
 results.
@@ -575,16 +735,21 @@ $N=12$ Hessian.  In particular, the two linear-in-$\theta$ directions
 $(\theta, 0)$ and $(0, \theta)$ acquire substantial negative
 eigenvalues, confirming they are not additional symmetries.
 
-This rules out the possibility that the proof contains a hidden zero
-mode.
+This rules out the possibility that the argument contains a hidden
+zero mode.
 
-\section{Phase 4: certified truncated coercivity}\label{sec:phase4}
+\section{Phase 4: high-precision truncated coercivity}\label{sec:phase4}
 
-Working at $N=16$, we tighten the Hessian to certified
-\texttt{arb}-interval entries by computing $F$ at three precision
+Working at $N=16$, we bracket the eigenvalues of the \emph{computed}
+Hessian by computing $F$ at three precision/step
 levels (\textsc{mpmath} \texttt{dps}=30 with $\eps = 10^{-4}$,
 $\eps = 5 \times 10^{-5}$, $\eps = 10^{-4}$ at \texttt{dps}=50),
-taking the entry-wise spread as a rigorous uncertainty $r[k, l]$.
+taking the entry-wise spread as a step-sensitivity radius $r[k, l]$.
+We emphasise that $r$ captures finite-difference and precision
+sensitivity \emph{only}: the floating-point polygon-intersection error
+(caveat~(i)) is not enclosed, so the bounds below bracket the
+eigenvalues of the computed matrix, not those of the true second
+variation.
 The Frobenius norm of $r$ is bounded:
 \begin{equation}
   \|r\|_{F} \;\leq\; 4.19 \times 10^{-6}.
@@ -613,7 +778,8 @@ Gershgorin number as a sanity check rather than a tight bound.
 \end{equation}
 within $4 \times 10^{-6}$ of method~(a) and tighter.
 
-Combining methods~(a) and~(c), we have the certified bound
+Combining methods~(a) and~(c), we have the following bound on the
+computed Hessian (rigorous modulo caveat~(i)):
 \begin{equation}\label{eq:mN}
   \boxed{\; m_{N} \;:=\; -\lambda_{\max}(Q_{N=16})
                   \;\geq\; 4.6035. \;}
@@ -1037,7 +1203,7 @@ separately in Phase~4 (Theorem~\ref{thm:truncated}) by direct
 finite-dimensional computation, not by Theorem~\ref{thm:hypV};
 the latter controls the high-frequency tail's contribution to
 the operator norm, which combined with the negative-definite
-truncated block yields the full-space coercivity $m \geq 4.34$
+truncated block yields the full-space coercivity $m \geq 4.27$
 (modulo the cross-term placeholder discussed in the proof of
 Theorem~\ref{thm:main}).
 \end{remark}
@@ -1173,7 +1339,7 @@ specific arc geometry.
 
 For $N = 16$, the rigorous bound is
 \begin{equation}\label{eq:tail-num}
-  \|Q\|_{H^{2}, \mathrm{tail}}^{16} \;\leq\; 0.205.
+  \|Q\|_{H^{2}, \mathrm{tail}}^{16} \;\leq\; 0.28.
 \end{equation}
 \end{theorem}
 
@@ -1211,8 +1377,8 @@ Hilbert estimate, is given in Section~\ref{sec:offdiag-rigorous} below
 
 \begin{proof}[Proof of Theorem~\ref{thm:truncated}]
 By Phases 1--4 (Sections~\ref{sec:phase1}--\ref{sec:phase4}), the
-$32$-dimensional Hessian $Q_{N=16}$ satisfies the certified coercivity
-bound
+computed $32$-dimensional Hessian $Q_{N=16}$ satisfies the coercivity
+bound (rigorous modulo caveat~(i))
 \begin{equation}\label{eq:Truncated-coercivity}
   Q_{N=16} \;\preceq\; -m_{N} I_{32}, \qquad m_{N} \;\geq\; 4.6035,
 \end{equation}
@@ -1242,7 +1408,14 @@ Theorem~\ref{thm:tail-bound} on $\eta_{T}$,
 The full quadratic form contains, in addition, a cross term
 $2 \langle Q_{\infty} \eta_{N}, \eta_{T}\rangle$.  We bound this
 by the off-diagonal block operator norm
-$\|Q_{NT}\|_{H^{2} \to H^{2}}$:
+\begin{equation}\label{eq:QNT-def}
+  \|Q_{NT}\|_{H^{2} \to H^{2}}
+   \;:=\; \sup_{\substack{\|\eta_{N}\|_{H^{2}} = 1 \\
+                          \|\eta_{T}\|_{H^{2}} = 1}}
+          \bigl| \langle Q_{\infty} \eta_{N}, \eta_{T}\rangle \bigr|,
+\end{equation}
+the operator norm of the block of $Q_{\infty}$ coupling the
+low-mode subspace $\mathcal{F}_{16}$ to its complement:
 \begin{equation}\label{eq:cross-term-young}
   2 |\langle Q_{\infty} \eta_{N}, \eta_{T}\rangle|
    \;\leq\; \|Q_{NT}\|_{H^{2} \to H^{2}}
@@ -1272,11 +1445,11 @@ estimates in the finite-to-full passage.
 \end{equation}
 so $Q_{\infty} \preceq -m \, I$ with
 \begin{equation}\label{eq:m-final}
-  m \;\geq\; 4.6035 - 0.205 - 0.05 \;\geq\; 4.34.
+  m \;\geq\; 4.6035 - 0.28 - 0.05 \;\geq\; 4.27.
 \end{equation}
 (Without the cross-term subtraction, $m \geq 4.398$;
 with the working estimate \eqref{eq:cross-term-working}, the
-figure used in Theorem~\ref{thm:main} is $m \geq 4.34$.  A
+figure used in Theorem~\ref{thm:main} is $m \geq 4.27$.  A
 rigorous analytic cross-term bound is expected to be substantially
 smaller than $0.05$, in which case the figure will improve toward
 $4.40$.)
@@ -1295,7 +1468,14 @@ $Q[\cdot]$ established in Theorem~\ref{thm:K3-envelope} (proved
 independently in Section~\ref{sec:uniqueness} using only
 Lemma~\ref{lem:second-variation-structure} and the sharp Sobolev
 embedding constants for the weighted Fourier $H^{2}$-norm, with
-no dependence on the coercivity constant $m$).  The
+no dependence on the coercivity constant $m$).  We emphasize that
+this envelope bounds the Lipschitz constant of the \emph{smooth}
+part $D^{3}F_{\mathrm{smooth}}$ only; it does \emph{not} include the
+contribution of the moving-breakpoint jump piece, so the radius
+$\delta\geq 0.044$ derived below is conditional on the hypothesis
+that a finite full trilinear bound $K_{3}<\infty$ exists (open
+item~(iii) of Section~\ref{sec:discussion}) and does not exceed the
+smooth envelope.  The
 first-order term vanishes because $\cG$ is critical
 (Romik~\cite{Romik2018}), and the cubic remainder bound follows
 from the fundamental theorem of calculus applied to $Q[\cG+t\eta] -
@@ -1311,9 +1491,10 @@ bound, for $\|\eta\|_{H^{2}} \leq \delta$,
   &\;\leq\; -\tfrac{m}{2}\,\|\eta\|_{H^{2}}^{2}
             \biggl(1 - \frac{K_{3}\,\delta}{3 m}\biggr).
 \end{align}
-Choosing $\delta \leq m/K_{3} \leq 4.34/95.2 \approx 0.0456$ ensures
+Choosing $\delta \leq m/K_{3} \leq 4.27/95.2 \approx 0.044$ (with
+$K_{3}$ here the smooth envelope, see the caveat above) ensures
 the right-hand parenthesis is at least $1 - 1/3 = 2/3 > 0$, so the
-strict inequality \eqref{eq:main} holds with $\delta \geq 0.0456$
+strict inequality \eqref{eq:main} holds with $\delta \geq 0.044$
 and the modified strict coercivity constant $m_{\mathrm{eff}} =
 (2/3)\,m \geq 2.89$ in the explicit-quadratic remainder form
 $F[\cG+\eta]\leq F[\cG] - \tfrac{m_{\mathrm{eff}}}{2}\|\eta\|^{2}$.
@@ -1339,51 +1520,120 @@ constructed an explicit 13-constant analytic candidate of area
 He conjectured but did not prove its optimality.
 
 \begin{theorem}\label{thm:romik-localmax}
-The Romik ambidextrous trajectory $c_{R}$ is a strict local maximum
-of the ambidextrous-area functional $F_{R}$ on
-$H^{2}([0, \pi/2]; \R^{2})$ modulo the two-dimensional
-translation-symmetry quotient.  The truncated coercivity constant
-satisfies $m_{N=6}^{R} \geq 1.049$ at $128$-bit precision via the
-Frobenius--Weyl enclosure.
+Subject to the same three caveats as Theorem~\ref{thm:main}
+(non-interval polygon intersection; the cross-term placeholder; the
+empirical capture of the jump piece), and to the conditional
+existence of a finite trilinear bound $K_{3}^{R}$ for $D^{3}F_{R}$
+at $c_{R}$, the Romik ambidextrous trajectory $c_{R}$ is a strict
+local maximum of the ambidextrous-area functional $F_{R}$ on
+$H^{2}([0, \pi/2]; \R^{2})$, modulo the two-dimensional
+translation-symmetry quotient.  The $H^{2}$ coercivity constant
+satisfies $m^{R} \geq 2.2$, supported by the \emph{computed} truncated
+constant $m_{N=16}^{R} \geq 2.89$ (subject to caveat~(i)) together with
+the doubled Sobolev tail bound below.  As with Theorem~\ref{thm:main},
+this is numerical evidence under explicit conditions, not a
+strict-sense computer-assisted proof.
 \end{theorem}
 
+\noindent
+This is the genuinely new content of the paper: unlike Gerver's
+sofa, whose local maximality is subsumed by Baek's global
+resolution, the ambidextrous shape $\Sigma$ is the subject of no
+global optimality result, so Theorem~\ref{thm:romik-localmax} is not
+implied by any prior work and constitutes the first quantitative
+local-maximality statement for $\Sigma$, addressing the second half
+of Romik~\cite[\S7, Open Problem~1]{Romik2018}.
+
 \begin{proof}[Proof sketch]
-The framework of Phases~1--4 applied to $c_{R}$ yields:
+The trajectory $c_{R}$ is taken to be a critical point of $F_{R}$ on
+the strength of Romik's analytic first-order construction (the
+Euler--Lagrange equations are satisfied exactly); the residual
+$\|\nabla F_{R}[c_{R}]\|_{2} \approx 1.1\times 10^{-2}$ in our discrete
+gradient is attributed to discretisation error (finite $\theta$-grid,
+truncated sine basis), exactly as in the Gerver case.  We do not give
+an independent quantitative argument bounding the distance from
+$c_{R}$ to a true discrete critical point; criticality is inherited
+from Romik's construction, and the local-maximality conclusion is
+conditional on it.  The framework of Phases~1--4 applied
+to $c_{R}$ then yields:
 \begin{itemize}
 \item Phase~1: Richardson-extrapolated $F_{R}[c_{R}] = 1.6449552178\ldots$
       agreeing with $A_{R}^{\star}$ to 9 decimal digits.
-\item Phase~2: All 12 Hessian eigenvalues at $N=6$ are strictly
-      negative, with $\lambda_{\max}(Q_{6}^{R}) = -3.557$.
-\item Phase~3: At $N=8$, $\lambda_{\max} = -3.270$; at $N=12$,
-      $\lambda_{\max} = -3.002$.  All 24 eigenvalues remain strictly
-      negative; the spectrum stabilises.
-\item Phase~4: Frobenius--Weyl certified
-      $\lambda_{\max}(Q_{6}^{R}) \leq -1.049$ at $128$-bit precision.
+\item Phase~2: at $N=16$ all $32$ Hessian eigenvalues are strictly
+      negative, with $\lambda_{\max}(Q_{16}^{R}) = -2.896$.
+\item Phase~3: the largest eigenvalue is $-3.557$ at $N=6$, $-3.002$
+      at $N=12$, and $-2.896$ at $N=16$; it decreases gently with $N$
+      and stays bounded away from $0$, so the negative-definiteness is
+      not a small-basis artefact.
+\item Phase~4: the \texttt{python-flint} interval eigenvalue solver
+      \texttt{arb\_mat.eig} brackets
+      $\lambda_{\max}(Q_{16}^{R}) \leq -2.896$ at $128$-bit precision
+      (for the \emph{computed} matrix; subject to caveat~(i)),
+      i.e.\ $m_{N=16}^{R} \geq 2.896$.  This uses the same
+      computation methodology as the Gerver case
+      (Theorem~\ref{thm:truncated}); it requires the finite step size
+      $\varepsilon = 10^{-5}$, because a mode-$k$ perturbation has
+      $H^{2}$-size $\sim \varepsilon k^{2}$ and the coarser
+      $\varepsilon = 10^{-3}$ leaves the linear regime for the high
+      modes, inflating the step-sensitivity radius.
 \end{itemize}
-The Sobolev tail bound applies to the ambidextrous case in the same
-form as Theorem~\ref{thm:tail-bound} (the same Phases~1--4
-machinery transfers; only the per-arc geometry and Phase~1 constants
-differ).  Computer-assisted
-certification is in \texttt{rigorous/romik\_hessian.py}.
+For the tail, the per-arc structural identity
+(Lemma~\ref{lem:second-variation-structure}) is problem-agnostic: the
+ambidextrous second variation is a sum of two single-hallway
+contributions (from $S_{x}$ and its reflection $\rho(S_{x})$, $\rho$
+the reflection across $y=\tfrac12$), each of the form
+$C(\theta)\langle\eta,\eta'\rangle + D(\theta)\langle\eta,\eta''\rangle$
+with no $\|\eta''\|^{2}$ principal symbol.  The effective coefficients
+are the sums $C_{L}+C_{R}$, $D_{L}+D_{R}$, so the universal
+total-variation bounds double:
+$V_{D}^{R}\leq\pi$, $V_{C}^{R}\leq 2\pi$, hence
+$C_{1}^{R},C_{2}^{R}\leq 6\pi$ and the diagonal growth bound of
+Theorem~\ref{thm:hypV} becomes
+$|Q^{R}[k,k]|\leq 3\pi\,k^{2}+(12\pi+24)k$.  Substituting into
+\eqref{eq:H2-tail} at $N=16$ gives the rigorous (geometry-independent)
+tail bound
+\begin{equation}\label{eq:tail-num-romik}
+   \|Q^{R}\|_{H^{2},\mathrm{tail}}^{16}
+   \;\leq\; \frac{3\pi}{(2\cdot 17)^{2}} + \frac{8\cdot 6\pi}{17^{2}}
+   \;\leq\; 0.53,
+\end{equation}
+i.e.\ essentially twice the Gerver bound \eqref{eq:tail-num} (the
+doubling acts on the dominant off-diagonal Hilbert term).  With the
+cross-term placeholder also doubled to $0.10$, the full-space
+coercivity is
+\[
+   m^{R} \;\geq\; m_{N=16}^{R} - 0.53 - 0.10
+         \;\geq\; 2.896 - 0.63 \;=\; 2.27.
+\]
+The computer-assisted computation is in
+\texttt{rigorous/romik\_hessian.py} (default step $\varepsilon=10^{-5}$,
+$N=16$).
 \end{proof}
 
 \begin{remark}
-Romik's $m_{N}^{R} \geq 1.049$ is smaller than Gerver's
-$m_{N}^{G} \geq 4.60$ by roughly a factor of $4$.  Geometrically this
-reflects the fact that the ambidextrous-area functional has a tighter
-contact-arc structure (Romik's solution has 13 algebraic constants vs.\
-Gerver's 22), giving a weaker but still positive coercivity gap.
-The diagonal eigenvalue-growth bound (Theorem~\ref{thm:hypV}) is
-$c_{G}$-independent and transfers verbatim.  The off-diagonal
-estimate (Theorem~\ref{thm:tail-bound}) involves Romik's specific
-$V_{D}^{R}, V_{C}^{R}$ jump magnitudes at his $4$ ambidextrous
-breakpoints; these are computable from his $13$-constant solution
-by the same SymPy machinery as for Gerver.  We do not redo this
-computation here, so the resulting $m^{R}$ for the \emph{full}
-$H^{2}$ space (as opposed to the truncated $m_{N}^{R} \geq 1.049$) is
-not asserted as rigorous; Theorem~\ref{thm:romik-localmax} should be
-read as a truncated coercivity result, paralleling
-Theorem~\ref{thm:truncated} rather than Theorem~\ref{thm:main}.
+The ambidextrous trajectory $c_{R}$ has only two contact-transition
+breakpoints, at $\theta=\beta$ and $\theta=\tfrac\pi2-\beta$ with
+$\beta = \arctan\!\bigl(\tfrac12(\sqrt[3]{\sqrt2+1}-\sqrt[3]{\sqrt2-1})\bigr)
+\approx 0.2897$, separating the three arcs of Romik's $13$-constant
+solution.  Because $\Sigma = S_{x}\cap\rho(S_{x})$ is invariant under
+the reflection $\rho$, at each breakpoint \emph{both} the direct and
+the reflected hallway family change active side, which is the source
+of the factor-$2$ doubling in $V_{D}^{R},V_{C}^{R}$ above; the
+mirror symmetry does not reduce the total variation of the summed
+coefficients, so we keep the conservative doubling rather than
+claim a cancellation we have not proved.  The coercivity constant
+$m^{R}\geq 2.2$ is smaller than Gerver's $m\geq 4.27$, consistent
+with the tighter contact-arc structure of the ambidextrous problem,
+but it is positive with a comfortable margin and is obtained at the
+\emph{same} level of rigour (the same three caveats).  We do not
+separately compute a uniqueness radius for $\Sigma$: this would
+require the trilinear bound $K_{3}^{R}$, whose existence is assumed
+exactly as $K_{3}$ is for Gerver (Section~\ref{sec:uniqueness}).
+The transfer of Lemma~\ref{lem:second-variation-structure} to
+$F_{R}$ is by the problem-agnostic structural argument above and was
+not re-verified symbolically for the ambidextrous coefficients
+specifically; like the Gerver jump piece, this is within the scope
+of caveat~(iii).
 \end{remark}
 
 \section{Discussion}\label{sec:discussion}
@@ -1407,13 +1657,22 @@ Gerver's sofa.  Prior to Baek's 2024 preprint~\cite{Baek2024}
 currently unrefereed), the best upper bound was
 Kallus--Romik's~\cite{KallusRomik2018} computer-assisted bound
 $\mu^{\star} \leq 2.37$ established via rigorous interval
-arithmetic over exact rational data.  Strict local maximality of
-$\cG$ in $H^{2}/V_{0}$, with explicit constants, was listed by
-Romik~\cite[\S7, Open Problem 1]{Romik2018} as open; the present
-paper is, to our knowledge, the first quantitative attempt at
-that open problem.  If Baek's preprint is confirmed, our local
-constants supply quantitative information that his upper-bound-
-functional concavity argument does not.
+arithmetic over exact rational data.  Local maximality of $\cG$ was
+listed by Romik~\cite[\S7, Open Problem 1]{Romik2018} as open;
+assuming Baek's global resolution holds, the Gerver half of that
+problem is now subsumed, and the value added here is
+quantitative---an explicit coercivity constant and uniqueness radius
+that the global upper-bound-functional concavity argument does not
+provide.  The companion half of Romik's Open Problem~1, the local
+maximality of the ambidextrous shape $\Sigma$, is addressed by no
+global result; the same method applied there
+(Section~\ref{sec:romik}, Theorem~\ref{thm:romik-localmax}) gives,
+to our knowledge, the first quantitative local-maximality evidence
+for $\Sigma$---a full-space $H^{2}$ coercivity constant
+$m^{R}\geq 2.2$, obtained at the same level of rigour and subject to
+the same three caveats as the Gerver statement.  Because no global
+optimality result for $\Sigma$ exists, this is the part of the paper
+not implied by prior work.
 
 \subsection*{Identified gaps for full rigor}
 
@@ -1429,7 +1688,19 @@ Replacing this with an interval-arithmetic equivalent (e.g.,
 propagation) is identified as the principal computational item;
 this would certify the matrix entries of $Q_{N}$ to a width
 narrow enough to apply the existing arb interval-eigenvalue
-machinery rigorously.
+machinery rigorously.  As a concrete symptom of the present
+non-rigorous status, individual diagonal entries $Q[k,k]$ are
+reproducible only to a few percent across finite-difference step
+sizes and $\theta$-grid resolutions (e.g.\ the $k=1$ entry varies
+between $-4.56$ and $-4.88$, a $\approx 7\%$ spread, across the
+configurations in \texttt{rigorous/phase2a\_lemma8\_check.json} and
+\texttt{rigorous/hypV\_sweep.json}); we therefore report $m_{N}$ to
+three significant figures and treat the negative-definiteness as
+strong evidence rather than a certified enclosure.  The matrix is
+also far from diagonally dominant (off-diagonal Gershgorin row sums
+$\sim 45$ against diagonal $\sim -5$), so the sign of the smallest
+eigenvalue is sensitive to entrywise errors and an interval oracle
+is genuinely necessary to make the conclusion rigorous.
 
 \item \textbf{Analytic cross-term bound.}
 The cross-block $\|Q_{NT}\|_{H^{2} \to H^{2}}$ between low- and
@@ -1481,7 +1752,7 @@ include:
       transfers with problem-specific Phase~1 setups.
 \end{itemize}
 
-\section*{Computer-assisted certification}
+\section*{Reproducibility and computer-assisted computations}
 
 All numerical computations are open-source and available in the
 supplementary repository.  Key files:
@@ -1494,8 +1765,8 @@ supplementary repository.  Key files:
         computation.
   \item \texttt{rigorous/phase3\_robustness.py}: Phase~3 mode-count
         scan and symmetry quotient.
-  \item \texttt{rigorous/phase4\_full\_theorem.py}: Phase~4 certified
-        eigenvalue enclosures.
+  \item \texttt{rigorous/phase4\_full\_theorem.py}: Phase~4
+        eigenvalue enclosures of the computed Hessian.
   \item \texttt{rigorous/F\_richardson\_diag.py}: Path~B cross-validation
         via Richardson extrapolation.
   \item \texttt{rigorous/rigor\_validation.py}: numerical validation
@@ -1515,6 +1786,27 @@ supplementary repository.  Key files:
 \end{itemize}
 End-to-end reproduction takes approximately $30$ minutes on a 2024
 laptop without specialized hardware.
+
+\section*{Use of artificial intelligence}
+
+This work was produced with substantial assistance from several AI
+systems, used at different stages to draft and develop the mathematics,
+write the supporting code, cross-review and critique the arguments, and
+iterate on the manuscript.  The models used include Anthropic's Claude
+(versions 4.6, 4.7, and 4.8), Google's Gemini 3.1 Pro, and Meta AI.
+In particular, the assistants contributed to the mathematical
+derivations; wrote essentially all of the supporting code (the Newton
+solver for Gerver's constants, the Hessian and coercivity computations,
+the symbolic verification of Lemma~\ref{lem:second-variation-structure},
+and the numerical sweeps); generated successive rounds of adversarial
+peer review that shaped the present, deliberately conservative,
+statement of results; and produced initial drafts of the text.  The
+author set the research direction, ran and checked the computations,
+verified the arguments, and is solely responsible for the final text
+and for any errors.  The three items flagged as open throughout
+(Section~\ref{sec:discussion}) are stated as open precisely because
+they have not been verified to a standard the author is willing to
+certify.
 
 \begin{thebibliography}{20}
 

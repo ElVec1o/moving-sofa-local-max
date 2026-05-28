@@ -1,29 +1,49 @@
-# Strict local maximality of Gerver's moving sofa
+# Computer-assisted Sobolev-coercivity evidence for local maximality of moving-sofa candidates
 
 [![DOI](https://zenodo.org/badge/1252674180.svg)](https://doi.org/10.5281/zenodo.20434287)
 
-A computer-assisted argument that Joseph Gerver's 1992 candidate sofa
-$c_G$ is a strict local maximum of the moving-sofa area functional on
-the Sobolev space $H^2([0, \pi/2]; \mathbb{R}^2)$ of corner
-trajectories, modulo translation symmetry.
+Computer-assisted **numerical evidence** for a strict local maximum of
+the moving-sofa area functional, on the Sobolev space
+$H^2([0, \pi/2]; \mathbb{R}^2)$ of corner trajectories, modulo
+translation symmetry.
+
+**The headline new contribution** is the first quantitative
+local-maximality evidence for **Romik's ambidextrous candidate
+$\Sigma$** — the second half of Romik's 2018 Open Problem 1, implied by
+no prior work. The identical apparatus is also developed on Gerver's
+sofa $c_G$, whose global (and hence local) optimality is in any case
+established by Baek (2024); we assume Baek's resolution throughout, so
+the Gerver computation serves as a validation of the method and as the
+vehicle for explaining it.
+
+> **This is not a proof.** The results are conditional on three
+> explicitly identified non-rigorous ingredients (see *Honest scope*
+> below) and are presented as numerical evidence, not theorems in the
+> strict computer-assisted-proof sense.
 
 ## Result (summary)
 
 > Conditional on the existence of a finite trilinear-form bound $K_3$
 > for $D^3F$ at $c_G$ and on the working cross-term estimate stated
-> in the proof, there exist $\delta \ge 0.0456$ and $m \ge 4.34$ such
+> in the proof, there exist $\delta \ge 0.044$ and $m \ge 4.27$ such
 > that for every $\eta \in H^2$ with $\|\eta\|_{H^2} \le \delta$ and
 > $\eta \perp V_0$,
 >
 > $$F[c_G + \eta] \le F[c_G] - \frac{m}{2}\|\eta\|_{H^2}^2 + \frac{K_3}{6}\|\eta\|_{H^2}^3.$$
+>
+> The same framework applied to Romik's ambidextrous candidate
+> $\Sigma$ yields a full-space coercivity constant $m^R \ge 2.2$ under
+> the same three conditions.
 
-The result targets Open Problem 1 of Romik (2018), which asks for a
-proof that Gerver's sofa is a local maximum of the area functional.
+The work targets Open Problem 1 of Romik (2018), which asks for a
+proof that Gerver's and the ambidextrous sofa are local maxima of the
+area functional.
 
 ## Honest scope
 
-This is a partial result, not a full computer-assisted proof. Three
-items remain open and are flagged throughout the manuscript:
+This is numerical evidence under explicit conditions, not a full
+computer-assisted proof. Three items remain open and are flagged
+throughout the manuscript:
 
 1. **Floating-point Hessian.** The finite-dimensional second-variation
    matrix is evaluated with `shapely` (floating-point polygon
@@ -53,7 +73,7 @@ items remain open and are flagged throughout the manuscript:
 .
 ├── paper/
 │   ├── manuscript.tex          main paper
-│   ├── manuscript.pdf          compiled, 26 pages
+│   ├── manuscript.pdf          compiled, 30 pages
 │   ├── UNIQUENESS.tex          uniqueness appendix
 │   ├── OFFDIAG_RIGOROUS.tex    off-diagonal Hilbert-inequality appendix
 │   └── figures/

@@ -6,13 +6,15 @@
 %  "omitted; available in supplementary material" sentence in the proof
 %  of Theorem \ref{thm:tail-bound}.
 %
-%  All constants are tracked.  At N = 16 the final bound is
+%  All constants are tracked.  At N = 16 the worst-case bound is
 %
-%      ||Q||_{H^{2}, tail}^{16}  <=  0.0299  <  0.03
+%      ||Q||_{H^{2}, tail}^{16}  <=  0.267 (off-diag) + 0.005 (diag) <= 0.28
 %
-%  giving the coercivity margin
+%  giving the pre-cross-term coercivity margin
 %
-%      m  >=  m_{N} - 0.03  >=  4.6035 - 0.03  =  4.5735.
+%      m  >=  m_{N} - 0.28  >=  4.6035 - 0.28  =  4.32
+%
+%  and, after subtracting the cross-term placeholder 0.05, m >= 4.27.
 % =====================================================================
 
 \subsection{Rigorous off-diagonal estimate}\label{sec:offdiag-rigorous}
@@ -464,23 +466,22 @@ $N = 16$ is
    0.2609 + 0.006 \;=\; 0.267,
 \end{equation}
 which, combined with the diagonal contribution
-$\|Q\|_{H^{2},\mathrm{diag}}^{16} \leq 0.0042$ from
-Theorem~\ref{thm:hypV} and the block-decomposition factor of $4/\pi$
-already in \eqref{eq:final-numerical}, yields the consolidated
+$\|Q\|_{H^{2},\mathrm{diag}}^{16} \leq 0.005$ from
+Theorem~\ref{thm:hypV}, yields the
 total
 \begin{equation}\label{eq:total-tail}
    \|Q_{\infty}\|_{H^{2},\mathrm{tail}}^{16}
    \;\leq\;
    \underbrace{0.005}_{\text{diagonal}}
    \;+\;
-   \underbrace{0.200}_{\text{off-diagonal, four-block}}
+   \underbrace{0.267}_{\text{off-diagonal, eq.~\eqref{eq:final-numerical}}}
    \;\leq\;
-   0.205.
+   0.28.
 \end{equation}
 This is the rigorous figure used in the main coercivity statement.
 Further tightening (e.g.\ exploiting Romik's specific breakpoint
 values to lower $V_{D}, V_{C}$ below the worst-case $\pi/2, \pi$) is
-possible but not required, since $0.205 \ll m_{N} = 4.6035$.
+possible but not required, since $0.28 \ll m_{N} = 4.6035$.
 
 \subsection{Coercivity}
 
@@ -490,7 +491,7 @@ $H^{2}$-orthogonal complement of the first $N=16$ Fourier modes
 satisfies
 \begin{equation}\label{eq:tail-rigorous}
    \|Q_{\infty}\|_{H^{2},\mathrm{tail}}^{16}
-      \;\leq\; 0.205.
+      \;\leq\; 0.28.
 \end{equation}
 \end{theorem}
 
@@ -500,7 +501,7 @@ For all $\eta \in H^{2}([0,\pi/2]; \R^{2})$ with $\eta \perp V_{0}$,
    \langle Q_{\infty}\eta, \eta\rangle
    \;\leq\; -m \,\|\eta\|_{H^{2}}^{2},
    \qquad m \;\geq\; m_{N} - \|Q\|_{H^{2},\mathrm{tail}}^{16}
-   \;\geq\; 4.6035 - 0.205 \;=\; 4.398.
+   \;\geq\; 4.6035 - 0.28 \;=\; 4.32.
 \end{equation}
 \end{corollary}
 
@@ -508,14 +509,14 @@ For all $\eta \in H^{2}([0,\pi/2]; \R^{2})$ with $\eta \perp V_{0}$,
 The decomposition argument of the proof of Theorem~\ref{thm:main} in
 Section~\ref{sec:main-proof} applies with the explicit constant from
 Theorem~\ref{thm:tail-rigorous}: $\|Q\|_{H^{2},\mathrm{tail}}^{16}
-\leq 0.205$ and $m_{N} \geq 4.6035$ together yield $m \geq 4.398$.
+\leq 0.28$ and $m_{N} \geq 4.6035$ together yield $m \geq 4.32$.
 \end{proof}
 
 \subsection{Caveats and what is honest}\label{sec:offdiag-caveats}
 
 \begin{enumerate}
-\item \textbf{The bound $0.205$ is rigorous but conservative.}
-The rigorous figure $0.205$ is obtained using the worst-case
+\item \textbf{The bound $0.28$ is rigorous but conservative.}
+The rigorous figure $0.28$ is obtained using the worst-case
 jump-sum bounds $V_{D} \leq \pi/2$ and $V_{C} \leq \pi$ from
 Equation~\eqref{eq:VK-sharp}.  These follow only from the fact
 that the four arc-normal angle increments $\Delta\varphi_{j}$ sum
@@ -536,7 +537,7 @@ sources contribute to this slack:
    breakpoint angles gives the tighter values $V_{D} \approx 0.30$
    and $V_{C} \approx 0.60$, which would reduce the rigorous bound
    to roughly $0.05$.  We do not include this tightening in the
-   stated rigorous figure $0.205$, because the numerical jump-sum
+   stated rigorous figure $0.28$, because the numerical jump-sum
    evaluation is not yet wrapped in interval arithmetic; the
    numbers $0.30$ and $0.60$ are therefore reported as empirical
    observations consistent with the rigorous worst-case
@@ -557,14 +558,14 @@ check and as a marker for the tightening still available.
 discrete-Hilbert constants for the $(kl)/|k-l|$ kernel restricted to
 $k,l > N$ --- not difficult but lengthy --- or (b) exploiting the
 specific phase structure of the four-arc decomposition.  Neither is
-needed for the present theorem: $0.205 \ll 4.6035$.
+needed for the present theorem: $0.28 \ll 4.6035$.
 
 \item \textbf{Bottom line.}  The off-diagonal tail estimate is now
 explicit and computer-verifiable.  Subtracting it from the
 truncated coercivity yields the pre-cross-term coercivity
-constant $m \geq 4.398$; the cross-term placeholder
+constant $m \geq 4.32$; the cross-term placeholder
 \eqref{eq:cross-term-working} in the main-paper proof further
-reduces this to $m \geq 4.34$.  Both are comfortably bounded
+reduces this to $m \geq 4.27$.  Both are comfortably bounded
 away from zero.  The strict-local-maximality theorem
 (Theorem~\ref{thm:main}) is unaffected by the present
 off-diagonal estimate.
