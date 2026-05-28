@@ -4,10 +4,10 @@ title: "Strict local maximality of Gerver's moving sofa: a computer-assisted Sob
 authors:
   - family-names: Bonfioli
     given-names: Vico
-version: "0.1.0"
+version: "0.2.0"
 date-released: 2026-05-29
 license: MIT
-doi: "10.5281/zenodo.20434288"
+doi: "10.5281/zenodo.20434287"
 repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
 identifiers:
   - type: doi
@@ -31,6 +31,11 @@ abstract: >
   decomposes as Q_smooth + Q_jump, where Lemma 8 characterizes Q_smooth
   analytically but Q_jump (from the four contact-transition breakpoints)
   is captured only empirically by the polygon Hessian computation.
+  v0.2.0 honestly downgrades the Phase 1 precision claim from 60 to
+  16 digits, noting that the 13-variable Newton system is
+  ill-conditioned past digit 16 and identifying interval-validated
+  Newton as a follow-up item; the headline coercivity, uniqueness,
+  and eigenvalue-growth constants are unaffected.
 keywords:
   - moving sofa problem
   - Gerver's sofa
