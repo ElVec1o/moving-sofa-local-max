@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
-title: "Strict local maximality of Gerver's moving sofa: a computer-assisted Sobolev coercivity argument"
+title: "Computer-assisted Sobolev-coercivity evidence for local maximality of Gerver's sofa and Romik's ambidextrous moving-sofa candidate"
 authors:
   - family-names: Bonfioli
     given-names: Vico
-version: "0.2.0"
+version: "0.3.0"
 date-released: 2026-05-29
 license: MIT
 doi: "10.5281/zenodo.20434287"
@@ -20,28 +20,40 @@ identifiers:
     value: "10.5281/zenodo.20434288"
     description: "Version DOI (v0.1.0)"
 abstract: >
-  A computer-assisted argument that Joseph Gerver's 1992 candidate sofa
-  is a strict local maximum of the area functional on the Sobolev space
-  H^2 of corner trajectories, modulo translation symmetry. The
-  coercivity constant satisfies m >= 4.34 in the H^2-norm; the
-  trajectory is the unique critical point in an explicit H^2-ball of
-  radius >= 0.0456. Three ingredients are not yet rigorous and are
-  flagged throughout: (i) the finite-dimensional Hessian is evaluated
-  with a floating-point polygon-intersection oracle (Shapely) rather
-  than true interval arithmetic; (ii) the cross-term coupling between
-  low and high Fourier modes is bounded by a numerical placeholder
-  rather than an analytic estimate; (iii) the second variation Q
-  decomposes as Q_smooth + Q_jump, where Lemma 8 characterizes Q_smooth
-  analytically but Q_jump (from the four contact-transition breakpoints)
-  is captured only empirically by the polygon Hessian computation.
-  v0.2.0 honestly downgrades the Phase 1 precision claim from 60 to
-  16 digits, noting that the 13-variable Newton system is
-  ill-conditioned past digit 16 and identifying interval-validated
-  Newton as a follow-up item; the headline coercivity, uniqueness,
-  and eigenvalue-growth constants are unaffected.
+  Computer-assisted numerical evidence for a strict local maximum of the
+  moving-sofa area functional, on the Sobolev space H^2 of corner
+  trajectories (modulo translation symmetry). The headline new
+  contribution is the first quantitative local-maximality evidence for
+  Romik's ambidextrous candidate Sigma (the second half of Romik's 2018
+  Open Problem 1), which is implied by no prior work; the identical
+  apparatus is also developed on Gerver's sofa, whose global (hence
+  local) optimality is in any case established by Baek (2024). We stress
+  that these are NOT theorems in the strict computer-assisted-proof
+  sense: they are conditional on three explicitly identified
+  non-rigorous ingredients, flagged throughout. Conditional on these,
+  the Gerver evidence yields a coercivity constant m >= 4.27 in the
+  H^2-norm and a uniqueness radius delta >= 0.044; the ambidextrous
+  evidence yields m^R >= 2.2. The three ingredients are: (i) the
+  finite-dimensional Hessian is evaluated with a floating-point
+  polygon-intersection oracle (Shapely) rather than true interval
+  arithmetic; (ii) the cross-term coupling between low and high Fourier
+  modes is bounded by a numerical placeholder rather than an analytic
+  estimate; (iii) the second variation Q decomposes as Q_smooth +
+  Q_jump, where Lemma 8 characterizes Q_smooth analytically but the
+  dominant jump piece Q_jump (from the four contact-transition
+  breakpoints, whose locations move under perturbation) is captured only
+  empirically; a closed-form derivation of Q_jump is identified as the
+  principal remaining analytic item. v0.3.0 reframes the work from
+  "proof/theorem/certified" to honest conditional numerical evidence,
+  foregrounds the ambidextrous result, adds explicit Sobolev-space
+  definitions and a coercivity-implies-maximality discussion, assumes
+  Baek's global resolution throughout, and reconciles the constants
+  (m >= 4.27, tail <= 0.28, delta >= 0.044).
 keywords:
   - moving sofa problem
   - Gerver's sofa
+  - ambidextrous sofa
+  - Romik
   - local maximality
   - second variation
   - computer-assisted
