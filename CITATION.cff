@@ -49,9 +49,11 @@ abstract: >
   principal remaining analytic item. v0.4.0 trims the Richardson
   cross-validation material and reports a diagnostic sharpening the
   Q_jump target: its dominant diagonal contribution grows like a
-  mode-uniform k^2 (an effective ||eta'||^2 term) rather than oscillating
-  at the breakpoint frequencies, so Q_jump is not the finite-rank
-  point-supported operator one might first guess. Earlier, v0.3.0
+  mode-uniform k^2 that any closed form must reproduce. We note this
+  does not settle the rank of Q_jump, since the diagonal of a
+  finite-rank breakpoint-jet operator is itself dominated by a
+  mode-uniform k^2 term; resolving the rank requires the off-diagonal
+  operator together with an analytically assembled Q_smooth. Earlier, v0.3.0
   reframed the work from
   "proof/theorem/certified" to honest conditional numerical evidence,
   foregrounded the ambidextrous result, added explicit Sobolev-space

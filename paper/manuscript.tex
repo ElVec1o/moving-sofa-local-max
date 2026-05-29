@@ -995,20 +995,27 @@ basis $\sin(2k\theta)$, be a quadratic form in the jet
 $(\sin 2k b_{j},\, 2k\cos 2k b_{j})$, and would therefore oscillate in
 $k$ at the breakpoint frequencies $4 b_{j}$.  We tested this against
 the empirical diagonal: $E[k]/k^{2}$ is in fact nearly
-\emph{mode-uniform} ($\approx -5.9$ across $2 \leq k \leq 16$) rather
-than oscillatory, and a fit at the breakpoint frequencies is not
-statistically distinguishable from a fit at random frequencies, nor
-from a smooth $a + b/k$ model.  We read this as evidence that the
-dominant part of $Q_{\mathrm{jump}}$ is \emph{not} finite-rank
-point support but rather an effective differential-operator
-contribution (an additional multiple of $\|\eta'\|^{2}$), with the
-genuine breakpoint-jet terms present but subdominant.  This is a
-negative result for the cleanest structural hypothesis, but it
-sharpens the target: a closed-form $Q_{\mathrm{jump}}$ must reproduce
-the mode-uniform $k^{2}$ growth, not merely the four point
-contributions.  The diagonal alone cannot separate the two; a
-decisive test requires the full off-diagonal operator together with
-an assembled $Q_{\mathrm{smooth}}$.
+\emph{mode-uniform} ($\approx -5.9$ across $2 \leq k \leq 16$), with
+any oscillatory component at the breakpoint frequencies subdominant
+and not statistically distinguishable from a fit at random
+frequencies.  This does \emph{not}, however, refute the finite-rank
+hypothesis.  The diagonal of a finite-rank operator supported on the
+breakpoint $1$-jets is itself dominated by a mode-uniform $k^{2}$
+term: with jet weights $w_{j}$ the diagonal takes the form
+$k^{2}\bigl[\tfrac12\sum_{j} w_{j} + \tfrac12\sum_{j} w_{j}\cos(4 k
+b_{j})\bigr]$, whose constant (``DC'') part $\tfrac12\sum_{j} w_{j}$
+dominates the oscillatory ripples \emph{by construction}.  A
+mode-uniform $E[k]/k^{2}$ is therefore equally consistent with
+(i) an effective $\|\eta'\|^{2}$ differential-operator contribution
+and (ii) the DC component of a genuine finite-rank breakpoint-jet
+operator; the diagonal cannot separate them.  The rank of
+$Q_{\mathrm{jump}}$ thus remains open.  A decisive test requires the
+full off-diagonal operator together with an analytically assembled
+$Q_{\mathrm{smooth}}$ --- the latter requiring the per-arc
+active-normal map $\psi(\theta)$, which the smooth sum rule is
+\emph{independent of} (it follows from $D_{xx}+D_{yy}\equiv1$,
+$C_{xx}+C_{yy}\equiv0$ and so holds identically in $\psi$) and
+therefore does not determine.
 
 An arb-interval evaluation of the full $Q_{\mathrm{jump}}$ from
 Romik~\cite[\S4]{Romik2018}'s explicit five-phase contact-side
@@ -1585,11 +1592,15 @@ requires explicit case analysis of the contact-side transitions
 in Romik's $5$-phase decomposition.  A diagnostic reported in
 Section~\ref{sec:jump-piece} narrows the target: the diagonal
 excess attributable to $Q_{\mathrm{jump}}$ grows like a
-mode-uniform $k^{2}$ rather than oscillating at the breakpoint
-frequencies, so $Q_{\mathrm{jump}}$ is not the finite-rank
-point-supported operator one might first guess but carries a
-dominant effective $\|\eta'\|^{2}$ contribution that any closed
-form must reproduce.
+mode-uniform $k^{2}$, which any closed form must reproduce.  We
+caution that this mode-uniformity does \emph{not} settle the rank
+of $Q_{\mathrm{jump}}$: the diagonal of a finite-rank
+breakpoint-jet operator is itself dominated by a mode-uniform
+$k^{2}$ ``DC'' term, so the diagonal cannot distinguish a genuine
+finite-rank operator from an effective $\|\eta'\|^{2}$
+contribution.  Resolving the rank requires the full off-diagonal
+operator together with an analytically assembled
+$Q_{\mathrm{smooth}}$.
 \end{enumerate}
 
 The framework generalizes naturally to other
