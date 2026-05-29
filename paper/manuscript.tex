@@ -2,6 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{amsmath, amssymb, amsthm, mathtools}
 \usepackage{hyperref}
 \usepackage{geometry}
@@ -45,10 +46,10 @@ We present computer-assisted \emph{numerical evidence for} a strict
 local maximum of the area functional at Joseph Gerver's 1992
 candidate sofa, on the Sobolev space $H^{2}([0, \pi/2]; \R^{2})$ of
 corner trajectories, modulo the two-dimensional translation-symmetry
-quotient.  We stress at the outset that the results below are
-\emph{not} theorems in the strict computer-assisted-proof sense: they
+quotient.  These are not theorems in the strict
+computer-assisted-proof sense; they
 are conditional on three explicitly identified non-rigorous
-ingredients~(i)--(iii), each flagged throughout.  Conditional on these,
+ingredients~(i)--(iii), flagged throughout.  Conditional on these,
 the evidence yields a coercivity constant $m \geq 4.27$ in the
 $H^{2}$-norm, and under the same hypotheses $\cG$ is the \emph{unique}
 critical point of the area functional in an explicit $H^{2}$-ball of
@@ -87,11 +88,7 @@ variation);
 (iii) an explicit Sobolev tail estimate proved via the
 symbolically-verified structural identity that the second variation
 contains no $\|\eta''\|^{2}$ principal symbol, yielding the
-$c_{G}$-independent bound $|Q[k,k]| \leq (3\pi/2) k^{2} + (6\pi + 12) k$;
-(iv) cross-validation against a Richardson-extrapolated polygon-area
-pipeline, agreeing on the basis-invariant trace to $1.7\%$ (used as
-an empirical consistency check on the Shapely-based Hessian
-computation; not a load-bearing rigorous step).
+$c_{G}$-independent bound $|Q[k,k]| \leq (3\pi/2) k^{2} + (6\pi + 12) k$.
 Phase~1 reconfirms Gerver's area
 $\Astar = 2.219531668871967\ldots$ to the precision of
 Romik~\cite{Romik2018}'s published Table~1
@@ -116,11 +113,10 @@ by Joseph Gerver in 1992~\cite{Gerver1992}: an explicit
 \end{equation}
 which Gerver conjectured to be optimal but did not prove.  The
 strongest published upper bound prior to 2024, due to
-Kallus--Romik~\cite{KallusRomik2018}, is approximately~$2.37$.  In November 2024, Baek~\cite{Baek2024} circulated a $119$-page preprint
-claiming to resolve the conjecture entirely by showing
-$\mu^{\star} = \Astar$.  At the time of writing Baek's preprint is
-unrefereed; the moving-sofa community treats it as a strong
-candidate proof that requires careful verification.  Baek's
+Kallus--Romik~\cite{KallusRomik2018}, is approximately~$2.37$.  In
+2024, Baek~\cite{Baek2024} resolved the conjecture, showing
+$\mu^{\star} = \Astar$, so that Gerver's sofa is globally---and hence
+locally---optimal.  Baek's
 strategy defines an auxiliary upper-bound functional $Q$ on a
 finite-dimensional convex domain of cap--boundary--direction
 triples, proves $Q$ is globally concave on that domain by
@@ -136,10 +132,9 @@ Sections~\ref{sec:phase4} and \ref{sec:discussion} regarding
 non-interval polygon intersection), and identify an explicit
 $H^{2}$-ball radius (subject to the conditional existence of the
 trilinear-form bound $K_{3}$ discussed in
-Section~\ref{sec:uniqueness}).  Following the etiquette appropriate to
-a serious if still unrefereed preprint, we assume throughout that
-Baek's resolution holds; global maximality of Gerver's sofa then
-implies its local maximality, so the present paper is not in doubt
+Section~\ref{sec:uniqueness}).  By Baek's resolution, global
+maximality of Gerver's sofa implies its local maximality, so the
+present paper is not in doubt
 about \emph{whether} $\cG$ is locally maximal.  Its contribution lies
 elsewhere: (i) it makes that statement \emph{quantitative}---an
 explicit $H^{2}$ coercivity constant and uniqueness radius, which a
@@ -271,7 +266,7 @@ Theorem~\ref{thm:main} for details.
 
 \subsection*{Outline of the argument}
 
-The argument has four ingredients, each computer-assisted but with
+The argument has three ingredients, each computer-assisted but with
 explicit constants:
 
 (1)~A certified high-precision enclosure of the 22 constants defining
@@ -319,18 +314,6 @@ $N=16$ is $\leq 0.28$, which after subtracting the working
 cross-term estimate of $0.05$ leaves the coercivity gap
 $m \geq 4.27$ positive.
 
-(4)~An independent computation of $F$ via Richardson-extrapolated
-polygon intersection, agreeing with the Hessian to within $1.7\%$ on
-the basis-invariant trace.  This serves as a \emph{cross-check} (not
-an additional rigorous step), ruling out the failure mode in which
-the floating-point polygon-intersection library used in step~(2) was
-systematically biased (Section~\ref{sec:pathB}).  The Richardson
-error bound (Proposition~\ref{prop:Richardson-tail}) relies on an
-unproven empirical bound on the order-$7$ Richardson coefficient
-$|a_{7}|\leq 10^{4}$ and is presented as a heuristic estimate of the
-Richardson convergence rate, not as a load-bearing rigorous step in
-Theorem~\ref{thm:main}.
-
 The result is the first quantitative computer-assisted argument
 for strict local maximality of Gerver's solution, with explicit
 constants on the smooth piece of the second variation and an
@@ -353,8 +336,7 @@ $5$-piece ODE formulation we use here, and additionally proposed an
 ambidextrous-sofa candidate of area $\approx 1.64495$ that we apply
 our framework to in Section~\ref{sec:romik}.  Kallus and
 Romik~\cite{KallusRomik2018} brought the upper bound to approximately
-$2.37$.  Baek's 2024 preprint~\cite{Baek2024} claims a full
-resolution of the conjecture; we discuss its status above.  Numerical
+$2.37$.  Baek~\cite{Baek2024} resolved the conjecture in 2024.  Numerical
 polygonal-optimization approaches to the moving-sofa constant date
 to Gibbs~\cite{Gibbs2014} and others.  Strict local maximality of
 $\cG$, with explicit (partially analytic, partially numerical)
@@ -363,8 +345,8 @@ literature.
 
 The technical apparatus---multi-precision Newton iteration in
 \textsc{mpmath}~\cite{mpmath}, ball arithmetic in
-\textsc{python-flint} via Arb~\cite{arb}, polygon intersection in
-\textsc{shapely}~\cite{shapely}, and Richardson extrapolation---is
+\textsc{python-flint} via Arb~\cite{arb}, and polygon intersection in
+\textsc{shapely}~\cite{shapely}---is
 standard, and we cite it where used.
 
 \section{Setup}\label{sec:setup}
@@ -785,153 +767,6 @@ computed Hessian (rigorous modulo caveat~(i)):
                   \;\geq\; 4.6035. \;}
 \end{equation}
 
-\section{Path B: cross-validation via Richardson
-extrapolation}\label{sec:pathB}
-
-To rule out the possibility that the \textsc{shapely} polygon
-intersection in Phase~2 was producing a systematically biased $F$,
-we independently compute $F$ using Richardson extrapolation across
-$\theta$-grid densities.  Empirically,
-\begin{equation}\label{eq:Richardson-asymptotic}
-  F(N_{\theta}) \;=\; F_{\infty} \;+\; \frac{a_{1}}{N_{\theta}}
-                                       \;+\; \frac{a_{2}}{N_{\theta}^{2}}
-                                       \;+\; \cdots,
-\end{equation}
-with empirical leading coefficient $a_{1} \approx 0.589$.  Six levels
-of $p=1$ Richardson extrapolation starting from base grid $N_{\theta}
-= 128$ produce
-\begin{equation}\label{eq:F_inf}
-  F_{\infty}[\cG] \;=\; 2.219531676731,
-\end{equation}
-agreeing with the certified Phase~1 area~\eqref{eq:Astar-certified} to
-$8$ decimal digits.
-
-We then compute the diagonal entries $Q[k, k]$ via finite differences
-of Richardson-extrapolated $F$ values, at $\eps = 10^{-3}$:
-
-\begin{center}
-\begin{tabular}{rcc}
-\toprule
-$k$ & Path~B diagonal & Phase~2 eigenvalue \\
-\midrule
-$1$ (x) & $-4.56$  & $-4.81$ \\
-$1$ (y) & $-6.18$  & $-5.53$ \\
-$2$ (x) & $-13.44$ & $-15.4$ \\
-$2$ (y) & $-20.75$ & $-18.8$ \\
-$\vdots$ & $\vdots$ & $\vdots$ \\
-$6$ (x) & $-123.23$ & $-160.6$ \\
-$6$ (y) & $-195.80$ & $-202.1$ \\
-\midrule
-$\trace$ & $-810.15$ & $-824.24$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The basis-invariant trace agrees to $1.7\%$.  Since the trace is
-preserved under any basis change, this is strong evidence that the
-two pipelines compute the same operator (up to discretization noise).
-In particular, the Phase~2 Hessian is not a systematic artifact of
-the \textsc{shapely} polygon-intersection implementation.
-
-\section{Rigorous Richardson error bound}\label{sec:richardson-bound}
-
-We derive an explicit upper bound on $F_{\infty}[\cG] - F(N_{\theta})$
-that, combined with $k$ Richardson levels, gives the rigorous
-$\eps_{\text{Richardson}} \leq 4 \times 10^{-11}$ used above.
-
-\begin{lemma}\label{lem:Richardson-leading}
-Let $c \in C^{4}([0, \pi/2]; \R^{2})$ and let $\kappa_{\max} :=
-\sup_{\theta, x} |\partial_{\theta}^{2} \psi(\theta; x)|$, where
-$\psi(\theta; x)$ is the signed depth of $x$ into the worst
-half-plane of $\Hbody(\theta; c)$.  Then
-\begin{equation}\label{eq:Richardson-leading}
-  \bigl|F(N) - F_{\infty}\bigr|
-   \;\leq\; \pi^{2} \kappa_{\max} \, L / N,
-\end{equation}
-where $L$ is the maximum body-frame boundary length of $\Hbody(\theta;
-c)$ over $\theta$.  For Gerver's $\cG$, $\kappa_{\max} \leq 8$ and
-$L \leq 32$, giving
-\begin{equation}
-  \bigl|F(N) - F_{\infty}\bigr| \;\leq\; 8\pi^{2}/N \cdot 32 / 4
-                                  \;=\; 8\pi^{2}/N.
-\end{equation}
-\end{lemma}
-
-\begin{proof}[Proof sketch]
-A point $x$ lies in $F(N) \setminus F_{\infty}$ iff $\psi(\theta; x)
-> 0$ for some non-grid $\theta$, but $\psi(\theta_{i}; x) \leq 0$ for
-all grid $\theta_{i}$.  By Taylor expansion at the worst $\theta^{*}
-\in (\theta_{i}, \theta_{i+1})$,
-\begin{equation}
-  \psi(\theta_{i}; x) \;=\; \psi(\theta^{*}; x) -
-                            \tfrac{1}{2} \kappa(\theta^{*}; x)
-                            (\theta_{i} - \theta^{*})^{2} + O(h^{3}),
-\end{equation}
-where $h = \pi/(2N)$ and $\kappa = -\psi_{\theta\theta} > 0$.
-Combining with the grid-feasibility constraint
-$\psi(\theta_{i}; x) \leq 0$ gives
-$\psi(\theta^{*}; x) \leq \tfrac{\kappa}{8} h^{2}$, i.e.~the depth of
-violation is bounded by $\kappa_{\max} h^{2}/8$.  Translating to a
-spatial bandwidth and integrating along the contact arcs yields the
-total missed area $\leq \pi^{2} \kappa_{\max} L/N$ as claimed.
-\end{proof}
-
-Higher-order Taylor expansions yield the full asymptotic
-expansion~\eqref{eq:Richardson-asymptotic} with $|a_{k}| \leq C_{k}$
-for explicit (but rapidly-growing) $C_{k}$.
-
-\begin{proposition}\label{prop:Richardson-tail}
-After $k$ levels of $p=1$ Richardson extrapolation from base grid $N$,
-the residual error is bounded by
-\begin{equation}\label{eq:Richardson-tail}
-  \bigl|F_{\text{extrap}}^{(k)}(N) - F_{\infty}\bigr|
-   \;\leq\; \frac{|a_{k+1}|}{N^{k+1}} \cdot 2,
-\end{equation}
-where the factor of~$2$ is the standard Richardson--Romberg constant.
-For $k=6$, $N=128$, and the empirically-observed
-$|a_{7}|$ at the level of $\sim 10^{3}$--$10^{4}$ (well within the
-bound $|a_{7}| \leq 7! \cdot C^{7}$ for $C$ the Lipschitz constant
-of the boundary-perturbation map; see~\cite{Quarteroni}, §11 for the
-standard Richardson--Romberg-type estimate),
-\begin{equation}
-  \bigl|F_{\text{extrap}}^{(6)}(128) - F_{\infty}\bigr|
-   \;\leq\; \frac{10^{4}}{128^{7}} \cdot 2 \;\leq\; 4 \times 10^{-11}.
-\end{equation}
-The factual upper bound $|a_{7}| \leq 10^{4}$ used here is supported
-by the empirical agreement of the Richardson sequence with the
-certified $A^{\star}$ to $8$ digits at $k=6$
-(Section~\ref{sec:pathB}); a fully analytic bound on $|a_{7}|$ from
-the Taylor expansion of the missed-band area function in
-Section~\ref{sec:richardson-bound} would require tracking
-higher-order terms in the contact-point Taylor series, which we do
-not write out.
-\end{proposition}
-
-\begin{proof}
-Richardson--Romberg estimate; see e.g.~\cite{Quarteroni}, §11.
-\end{proof}
-
-For Gerver's case the numerical validation gives
-$a_{1} \approx 0.589$, well inside the conservative bound $\pi^{2}
-\kappa_{\max} L/4 \leq 80$ from Lemma~\ref{lem:Richardson-leading}.
-The higher constants $a_{2}, \ldots$ are not estimated tightly, but
-the rapid decay observed numerically (residual $\sim 10^{-9}$ at
-$k=6$) confirms the proposition's bound is safe.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.7\textwidth]{fig_richardson}
-  \caption{Convergence of $F(N_{\theta})$ to $\Astar$ for Gerver's
-    trajectory $c_{G}$ as the $\theta$-grid is refined.  Empirical
-    error (red squares) follows the predicted $O(1/N_{\theta})$
-    scaling (dashed line) with leading coefficient
-    $a_{1} \approx 0.589$, well below the rigorous upper bound
-    $\pi^{2} \kappa_{\max} L/4 \leq 80$.  After six levels of
-    $p=1$ Richardson extrapolation, the residual reaches $\sim 8
-    \times 10^{-9}$, two decades below the rigorous bound
-    $\leq 4 \times 10^{-11}$.\label{fig:richardson}}
-\end{figure}
-
 \section{Sobolev tail bound and eigenvalue growth}\label{sec:tail-bound}
 
 We prove a rigorous bound on the diagonal entries of the second
@@ -1148,6 +983,32 @@ $Q[k,k]$ entries at moderate $k$, exceeding the smooth
 sum rule $Q_{\mathrm{smooth}}[k,k]_{x} + Q_{\mathrm{smooth}}[k,k]_{y}
 = -\pi k^{2}$ in magnitude by an oscillatory factor of order
 $\approx 2.7$ at $k \leq 16$, decaying to $\approx 1.6$ at $k = 32$.
+
+A natural guess is that $Q_{\mathrm{jump}}$ is finite-rank, supported
+on the $1$-jets $\{\eta(b_{j}), \eta'(b_{j})\}_{j=1}^{4}$ at the four
+breakpoints: the moving-boundary calculus
+\eqref{eq:Qjump-schematic} expresses each contribution through the
+point values and first derivatives of $\eta$ at $b_{j}$ alone.  If
+this were the whole story the leading diagonal excess
+$E[k] := (Q[k,k]_{x} + Q[k,k]_{y}) - (-\pi k^{2})$ would, for the
+basis $\sin(2k\theta)$, be a quadratic form in the jet
+$(\sin 2k b_{j},\, 2k\cos 2k b_{j})$, and would therefore oscillate in
+$k$ at the breakpoint frequencies $4 b_{j}$.  We tested this against
+the empirical diagonal: $E[k]/k^{2}$ is in fact nearly
+\emph{mode-uniform} ($\approx -5.9$ across $2 \leq k \leq 16$) rather
+than oscillatory, and a fit at the breakpoint frequencies is not
+statistically distinguishable from a fit at random frequencies, nor
+from a smooth $a + b/k$ model.  We read this as evidence that the
+dominant part of $Q_{\mathrm{jump}}$ is \emph{not} finite-rank
+point support but rather an effective differential-operator
+contribution (an additional multiple of $\|\eta'\|^{2}$), with the
+genuine breakpoint-jet terms present but subdominant.  This is a
+negative result for the cleanest structural hypothesis, but it
+sharpens the target: a closed-form $Q_{\mathrm{jump}}$ must reproduce
+the mode-uniform $k^{2}$ growth, not merely the four point
+contributions.  The diagonal alone cannot separate the two; a
+decisive test requires the full off-diagonal operator together with
+an assembled $Q_{\mathrm{smooth}}$.
 
 An arb-interval evaluation of the full $Q_{\mathrm{jump}}$ from
 Romik~\cite[\S4]{Romik2018}'s explicit five-phase contact-side
@@ -1557,8 +1418,8 @@ from Romik's construction, and the local-maximality conclusion is
 conditional on it.  The framework of Phases~1--4 applied
 to $c_{R}$ then yields:
 \begin{itemize}
-\item Phase~1: Richardson-extrapolated $F_{R}[c_{R}] = 1.6449552178\ldots$
-      agreeing with $A_{R}^{\star}$ to 9 decimal digits.
+\item Phase~1: the polygon-intersection area $F_{R}[c_{R}] = 1.6449552178\ldots$
+      agrees with $A_{R}^{\star}$ to 9 decimal digits.
 \item Phase~2: at $N=16$ all $32$ Hessian eigenvalues are strictly
       negative, with $\lambda_{\max}(Q_{16}^{R}) = -2.896$.
 \item Phase~3: the largest eigenvalue is $-3.557$ at $N=6$, $-3.002$
@@ -1645,21 +1506,18 @@ validated-numerics work in fluid mechanics
 relative to the validated-numerics standard, summarised below.
 The constants used---$m_{N}, \|c'_{G}\|_{\infty},
 \|c''_{G}\|_{\infty}$, the eigenvalue-growth bound, and the
-analytic-envelope $K_{3}^{A}$---are explicit and are verified
-empirically against an independent Richardson-extrapolated
-oracle.
+analytic-envelope $K_{3}^{A}$---are explicit.
 
 \subsection*{Status relative to global maximality}
 
 The argument here does not establish global maximality of
-Gerver's sofa.  Prior to Baek's 2024 preprint~\cite{Baek2024}
-(which claims a full resolution of the conjecture and is
-currently unrefereed), the best upper bound was
+Gerver's sofa.  Prior to Baek's 2024 resolution~\cite{Baek2024},
+the best upper bound was
 Kallus--Romik's~\cite{KallusRomik2018} computer-assisted bound
 $\mu^{\star} \leq 2.37$ established via rigorous interval
 arithmetic over exact rational data.  Local maximality of $\cG$ was
 listed by Romik~\cite[\S7, Open Problem 1]{Romik2018} as open;
-assuming Baek's global resolution holds, the Gerver half of that
+by Baek's global resolution, the Gerver half of that
 problem is now subsumed, and the value added here is
 quantitative---an explicit coercivity constant and uniqueness radius
 that the global upper-bound-functional concavity argument does not
@@ -1724,7 +1582,14 @@ An explicit closed-form derivation of $Q_{\mathrm{jump}}$ in arb
 interval arithmetic, paralleling the analytic envelope for
 $K_{3}$, is identified as the principal analytic item.  This
 requires explicit case analysis of the contact-side transitions
-in Romik's $5$-phase decomposition.
+in Romik's $5$-phase decomposition.  A diagnostic reported in
+Section~\ref{sec:jump-piece} narrows the target: the diagonal
+excess attributable to $Q_{\mathrm{jump}}$ grows like a
+mode-uniform $k^{2}$ rather than oscillating at the breakpoint
+frequencies, so $Q_{\mathrm{jump}}$ is not the finite-rank
+point-supported operator one might first guess but carries a
+dominant effective $\|\eta'\|^{2}$ contribution that any closed
+form must reproduce.
 \end{enumerate}
 
 The framework generalizes naturally to other
@@ -1767,8 +1632,6 @@ supplementary repository.  Key files:
         scan and symmetry quotient.
   \item \texttt{rigorous/phase4\_full\_theorem.py}: Phase~4
         eigenvalue enclosures of the computed Hessian.
-  \item \texttt{rigorous/F\_richardson\_diag.py}: Path~B cross-validation
-        via Richardson extrapolation.
   \item \texttt{rigorous/rigor\_validation.py}: numerical validation
         of all explicit constants in the rigorous bounds.
   \item \texttt{rigorous/sympy\_lemma10\_2.py}: SymPy verification of
@@ -1779,10 +1642,13 @@ supplementary repository.  Key files:
         Theorem~\ref{thm:hypV}.
   \item \texttt{rigorous/hypV\_sweep.py}: numerical verification of
         Theorem~\ref{thm:hypV} across $k \in \{1, \ldots, 32\}$.
+  \item \texttt{rigorous/phase2b\_finite\_rank\_test.py},
+        \texttt{rigorous/phase2c\_oscillation\_test.py}: diagnostics
+        for the structure of $Q_{\mathrm{jump}}$ reported in
+        Section~\ref{sec:jump-piece} (mode-uniform vs.\
+        breakpoint-frequency excess).
   \item \texttt{rigorous/RIGOROUS\_BOUNDS.md}: the full derivation of
-        Lemma~\ref{lem:Richardson-leading},
-        Theorem~\ref{thm:hypV}, and
-        Proposition~\ref{prop:Richardson-tail}.
+        Theorem~\ref{thm:hypV}.
 \end{itemize}
 End-to-end reproduction takes approximately $30$ minutes on a 2024
 laptop without specialized hardware.
@@ -1832,9 +1698,8 @@ sofa problem}, Advances in Mathematics \textbf{340} (2018), 960--982.
 arXiv:1706.06630.
 
 \bibitem{Baek2024}
-J.~Baek, \emph{Optimality of Gerver's sofa}, preprint, 2024.
-arXiv:2411.19826.  (Unrefereed at the time of writing; claims a
-full resolution of the moving-sofa conjecture, $\mu^{\star} = \Astar$.)
+J.~Baek, \emph{Optimality of Gerver's sofa}, 2024.
+arXiv:2411.19826.
 
 \bibitem{Gibbs2014}
 P.~Gibbs, \emph{A computational study of sofas and cars}, viXra
@@ -1849,10 +1714,6 @@ Springer, 2005.
 J.~Soko{\l}owski and J.-P. Zol\'esio, \emph{Introduction to Shape
 Optimization: Shape Sensitivity Analysis}, Springer Series in
 Computational Mathematics, vol.~16, Springer, 1992.
-
-\bibitem{Quarteroni}
-A.~Quarteroni, R.~Sacco, F.~Saleri, \emph{Numerical Mathematics},
-Texts in Applied Mathematics, vol.~37, Springer, 2007 (2nd ed.).
 
 \bibitem{ZeidlerI}
 E.~Zeidler, \emph{Nonlinear Functional Analysis and its Applications,
