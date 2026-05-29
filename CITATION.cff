@@ -4,8 +4,8 @@ title: "Computer-assisted Sobolev-coercivity evidence for local maximality of Ge
 authors:
   - family-names: Bonfioli
     given-names: Vico
-version: "0.3.0"
-date-released: 2026-05-29
+version: "0.4.0"
+date-released: 2026-05-30
 license: MIT
 doi: "10.5281/zenodo.20434287"
 repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
@@ -46,11 +46,17 @@ abstract: >
   dominant jump piece Q_jump (from the four contact-transition
   breakpoints, whose locations move under perturbation) is captured only
   empirically; a closed-form derivation of Q_jump is identified as the
-  principal remaining analytic item. v0.3.0 reframes the work from
+  principal remaining analytic item. v0.4.0 trims the Richardson
+  cross-validation material and reports a diagnostic sharpening the
+  Q_jump target: its dominant diagonal contribution grows like a
+  mode-uniform k^2 (an effective ||eta'||^2 term) rather than oscillating
+  at the breakpoint frequencies, so Q_jump is not the finite-rank
+  point-supported operator one might first guess. Earlier, v0.3.0
+  reframed the work from
   "proof/theorem/certified" to honest conditional numerical evidence,
-  foregrounds the ambidextrous result, adds explicit Sobolev-space
-  definitions and a coercivity-implies-maximality discussion, assumes
-  Baek's global resolution throughout, and reconciles the constants
+  foregrounded the ambidextrous result, added explicit Sobolev-space
+  definitions and a coercivity-implies-maximality discussion, assumed
+  Baek's global resolution throughout, and reconciled the constants
   (m >= 4.27, tail <= 0.28, delta >= 0.044).
 keywords:
   - moving sofa problem

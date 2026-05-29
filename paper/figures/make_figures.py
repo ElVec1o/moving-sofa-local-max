@@ -1,9 +1,8 @@
-"""Generate three figures for the manuscript.
+"""Generate the manuscript figures.
 
 Outputs:
     fig_gerver_sofa.pdf
     fig_spectrum.pdf
-    fig_richardson.pdf
 """
 from __future__ import annotations
 
@@ -12,6 +11,12 @@ import sys
 import math
 
 import numpy as np
+import matplotlib
+# Embed scalable TrueType (Type 42) fonts rather than matplotlib's default
+# Type 3 bitmap fonts, which render slowly and at poor quality in some PDF
+# viewers (e.g. macOS Preview).
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 import matplotlib.pyplot as plt
 import mpmath as mp
 
@@ -127,53 +132,6 @@ def fig2():
     print("wrote", out)
 
 
-# ---------------------------------------------------------------------
-# Figure 3: Richardson convergence
-# ---------------------------------------------------------------------
-def fig3():
-    Nt = np.array([128, 256, 512, 1024, 2048, 4096, 8192], dtype=float)
-    F = np.array([
-        2.2241510870586, 2.2218360830367, 2.2206828298363,
-        2.2201069302319, 2.2198192432505, 2.2196754347305,
-        2.2196035466449,
-    ])
-    A_star = 2.219531668871967889
-    err = np.abs(F - A_star)
-
-    # O(1/N) reference line through the first point.
-    ref = err[0] * (Nt[0] / Nt)
-
-    fig, ax = plt.subplots(figsize=(6, 4.2))
-    ax.loglog(Nt, err, 's', color="#c0392b", markersize=7,
-              label=r"$|F(N_\theta) - A^{*}|$  (raw, level 0)")
-    ax.loglog(Nt, ref, '--', color="#7f8c8d", lw=1.4,
-              label=r"$\mathcal{O}(1/N_\theta)$ reference")
-
-    # Richardson-extrapolated converged value
-    rich_err = 8e-9
-    ax.axhline(rich_err, color="#1e8449", lw=1.2, linestyle=':',
-               label=r"Richardson level 6 error $\approx 8\times 10^{-9}$")
-    # Arrow showing cancellation gain
-    ax.annotate(
-        "Richardson cancellation\n(p=1, 6 levels)",
-        xy=(Nt[-1], rich_err), xytext=(Nt[1], err[-2] * 0.3),
-        fontsize=9, color="#1e8449",
-        arrowprops=dict(arrowstyle="->", color="#1e8449", lw=1.2),
-    )
-
-    ax.set_xlabel(r"$N_\theta$")
-    ax.set_ylabel("error")
-    ax.set_title("Polygon-intersection convergence ($p{=}1$) and Richardson cancellation")
-    ax.grid(True, which="both", alpha=0.25)
-    ax.legend(loc="lower left", fontsize=9)
-    fig.tight_layout()
-    out = os.path.join(OUT, "fig_richardson.pdf")
-    fig.savefig(out)
-    plt.close(fig)
-    print("wrote", out)
-
-
 if __name__ == "__main__":
     fig1()
     fig2()
-    fig3()
