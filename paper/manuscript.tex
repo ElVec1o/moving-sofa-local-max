@@ -33,8 +33,8 @@
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\Span}{span}
 
-\title{A rank-one degeneracy in the moving-sofa second variation,\\
-       and $H^{1}$ coercivity via the multi-contact principal symbol}
+\title{Two rank-one degeneracies in the moving-sofa second variation,\\
+       and a moving-breakpoint obstruction to local maximality}
 \author{Vico Bonfioli}
 \date{\today}
 
@@ -93,31 +93,43 @@ $H^{2}$ is by contrast \emph{impossible}: $Q[k,k]=O(k^{2})$ while
 $\|\varphi_{k}\|^{2}_{H^{2}}=O(k^{4})$, so the $H^{2}$ Rayleigh
 quotient tends to $0$ (Theorem~\ref{thm:no-h2}).
 
-The two norms are reconciled by a further structural fact.  All four
-contact paths are \emph{affine} in $(c,c')$, which forces the
-coefficient of $c''$ in the Green's-theorem integrand to be affine as
-well, hence $B_{2}=B_{3}=0$: the third variation contains no $\eta''$
-term and no breakpoint jet terms whatever, and in particular the
-cubic monomial $\eta'(b_{j})^{3}$ --- the only one whose growth
-defeats an $H^{1}$ estimate --- has coefficient exactly zero.  Thus
-$|R_{3}|\leq C\|\eta\|_{C^{1}}\|\eta\|^{2}_{H^{1}}
-\leq CS\|\eta\|_{H^{2}}\|\eta\|^{2}_{H^{1}}$, which is precisely the
-improved-Taylor hypothesis of the two-norm theorem of
-Ioffe~\cite{Ioffe1979} and Dambrine--Lamboley~\cite{DambrineLamboley}
-with weak norm $H^{1}$ and strong norm $H^{2}$.  Conditional on the
-two explicit constants and on the arithmetic caveat below, this gives
-a strict local maximum in a uniform $H^{2}$-ball with quadratic
-growth measured in $H^{1}$.
+A second rank-one degeneracy appears in the first-order coefficient:
+$C^{\top}C$ also has determinant zero, so $\|C\|_{\mathrm{op}}=2$
+exactly, and the G\aa rding inequality becomes fully explicit,
+$Q(\eta)\leq-\tfrac12\|\eta'\|^{2}_{L^{2}}+18\|\eta\|^{2}_{L^{2}}$.
 
-We are explicit about what is not rigorous.  The finite-dimensional
-Hessian is evaluated with a floating-point polygon-intersection
-oracle rather than interval arithmetic; and the constants $K$
-(G\aa rding) and $C$ (cubic remainder) are identified but not
-evaluated.  The same structural chain transfers to Romik's
-ambidextrous candidate $\Sigma$ $(A_{R}^{\star}\approx 1.64495)$ ---
-affineness holds for the reflected contact family as well --- but the
-contact counts $(n_{\mu},n_{\nu})$ there have not been tallied, so we
-draw no conclusion about $\Sigma$.
+The passage from this to a local maximum nevertheless fails, and we
+locate precisely where.  Since each contact path is affine in
+$(c,c')$, the Green's-theorem integrand is a product of two affine
+functions and hence \emph{quadratic} in the jet $(c,c',c'')$: within
+a fixed combinatorial cell $F$ is an exactly quadratic functional,
+and the entire third variation is carried by the four \emph{moving}
+breakpoints $b_{j}(c)$.  Among the monomials these produce, exactly
+one --- $\eta'(b_{j})^{3}$ --- grows fast enough to defeat an $H^{1}$
+estimate.  Measured against the area oracle, its coefficient is
+\emph{nonzero} ($\approx1.09$ and $\approx1.89$ in the two
+components, with control points vanishing identically and the two
+interior breakpoints exactly antisymmetric).  The improved-Taylor
+hypothesis of Ioffe~\cite{Ioffe1979} and
+Dambrine--Lamboley~\cite{DambrineLamboley} therefore fails in the
+pair $(H^{1},H^{2})$, and no strict-local-maximum conclusion follows.
+For $\cG$ this costs nothing --- local maximality is a consequence of
+Baek's~\cite{Baek2024} global resolution --- but it means the
+second-variation route does not independently establish it.
+
+For Romik's ambidextrous candidate $\Sigma$
+$(A_{R}^{\star}\approx1.64495)$ the obstruction is compounded: its
+multi-contact symbol is $\approx4I$ on the middle phase but
+degenerates at the end caps like $\lambda_{\min}\approx4.95\,
+\theta^{1.69}$, so no uniform G\aa rding constant exists there at all.
+Local maximality of $\Sigma$ --- the second half of Romik's Open
+Problem~1 --- accordingly remains open, and we identify two distinct
+reasons why.
+
+The finite-dimensional Hessian throughout is evaluated with a
+floating-point polygon-intersection oracle rather than interval
+arithmetic; this affects the numerical constants but none of the
+structural conclusions, which are symbolic.
 The supporting computations are:
 (i) a high-precision Newton enclosure of Gerver's analytic constants
 matching Romik~\cite{Romik2018}'s published Table~1 values
@@ -1599,9 +1611,63 @@ derivative of $B$ in $(c,c')$.  Hence
    D^{3}F[\eta,\eta,\eta]
    \;=\; \int_{0}^{\pi/2} A_{3}(\eta,\eta,\eta)\,d\theta ,
 \end{equation}
-a trilinear form in $(\eta,\eta')$ alone: the third variation contains
-\emph{no} $\eta''$ term, and therefore no breakpoint boundary terms.
+so the third variation of the integrand contains \emph{no} $\eta''$
+term.  In fact more is true: since $P$ is affine in $(c,c')$ and $P'$
+is affine in $(c,c',c'')$, the integrand $L=\tfrac12(P_{1}P_{2}'
+-P_{2}P_{1}')$ is a product of two affine functions, hence
+\emph{quadratic} in the jet $(c,c',c'')$, and
+\begin{equation}\label{eq:A3-zero}
+   A_{3} \;\equiv\; 0 .
+\end{equation}
+Within a fixed combinatorial cell --- fixed contact structure and
+fixed breakpoints --- $F$ is therefore an exactly quadratic functional
+of $c$.
 \end{lemma}
+
+\begin{remark}[What Lemma~\ref{lem:affine} does \emph{not} give]
+\label{rem:affine-scope}
+Lemma~\ref{lem:affine} governs the integrand only.  It does not
+control the contribution of the \emph{moving limits} $b_{j}(c)$, which
+is a separate mechanism: differentiating
+$\sum_{j}\int_{b_{j}(c)}^{b_{j+1}(c)}L_{j}$ three times produces terms
+in which jumps of $L$ and of its $\varepsilon$-derivatives at $b_{j}$
+multiply powers of $\delta b_{j}$, and $\delta b_{j}$ is linear in the
+$1$-jet $(\eta(b_{j}),\eta'(b_{j}))$.  Combined with
+\eqref{eq:A3-zero}, this says that the \emph{entire} third variation
+is carried by the four moving breakpoints.
+
+Consequently the coefficient of $\eta'(b_{j})^{3}$ --- by
+Remark~\ref{rem:fatal-cubic} the only monomial whose growth defeats
+the $H^{1}$ estimate --- is not controlled by
+Lemma~\ref{lem:affine}.  An earlier version of this manuscript
+asserted that it vanishes; that inference was invalid, and we
+withdraw it.  Theorem~\ref{thm:fatal-cubic} below shows that it does
+not vanish.
+\end{remark}
+
+\begin{theorem}[The fatal cubic does not vanish]\label{thm:fatal-cubic}
+Probing $D^{3}F$ along the localized odd direction with
+$\eta(b_{j})=0$, $\eta'(b_{j})=1$ and width $w$
+(\texttt{rigorous/phase2k\_fatal\_cubic.py}) gives, at
+$\varepsilon=10^{-3}$ and $w = 0.06, 0.04, 0.025$,
+\[
+  \begin{array}{lccc}
+    \text{breakpoint, } x: & 1.307 & 1.267 & 1.180\\
+    \text{breakpoint, } y: & \mp2.471 & \mp2.359 & \mp2.132\\
+    \text{control points:} & 0.000 & 0.000 & 0.000
+  \end{array}
+\]
+Extrapolating linearly in $w$ to $w\to0$ gives coefficients
+$\approx 1.09$ and $\approx 1.89$ respectively.  The control values
+vanish identically, confirming \eqref{eq:A3-zero}; the $y$-values at
+$b_{2}$ and $b_{3}$ are exact negatives of one another, as required by
+the symmetry $\theta\mapsto\pi/2-\theta$ of $\cG$.
+
+Consequently $|R_{3}(\eta)| \leq C\|\eta\|_{C^{1}}\|\eta\|^{2}_{H^{1}}$
+is \emph{false}, the improved-Taylor hypothesis of
+\cite{Ioffe1979,DambrineLamboley} fails in the pair
+$(H^{1},H^{2})$, and the chain \eqref{eq:final-chain} does not close.
+\end{theorem}
 
 \begin{proof}
 Affineness is immediate from the displayed formulas.  The
@@ -1660,23 +1726,48 @@ bounded.  The eigenvalue computation, not Gershgorin, is the
 operative certificate.
 \end{remark}
 
-Combining Theorem~\ref{thm:garding}, Remark~\ref{rem:closing} and
-Lemma~\ref{lem:affine} with the two-norm
+The quadratic side of the argument is complete and quantitative.  The
+matrix $C(\theta)$ of Lemma~\ref{lem:second-variation-structure}
+satisfies
+$C^{\top}C = \begin{psmallmatrix}2-2\cos\psi & -2\sin\psi\\
+-2\sin\psi & 2+2\cos\psi\end{psmallmatrix}$, of trace $4$ and
+determinant $0$ --- a second, independent rank-one degeneracy --- so
+its singular values are $\{2,0\}$ and $\|C\|_{\mathrm{op}} = 2$
+exactly.  Summing over at most three simultaneous wall contacts gives
+$\|C_{\mathrm{tot}}\|_{\infty}\leq6$, hence
+$K_{\varepsilon} = 9/\varepsilon$ and, at $\varepsilon=\tfrac12$,
+\begin{equation}\label{eq:garding-explicit}
+   Q(\eta) \;\leq\; -\tfrac12\|\eta'\|^{2}_{L^{2}}
+                    + 18\,\|\eta\|^{2}_{L^{2}} .
+\end{equation}
+One would then like to combine \eqref{eq:garding-explicit},
+Remark~\ref{rem:closing} and a cubic bound with the two-norm
 theorem~\cite{Ioffe1979,DambrineLamboley} in the pair
-$(\|\cdot\|_{H^{1}}, \|\cdot\|_{H^{2}})$ yields
+$(\|\cdot\|_{H^{1}},\|\cdot\|_{H^{2}})$ to obtain
 \begin{equation}\label{eq:final-chain}
    F[\cG+\eta] - F[\cG]
    \;\leq\; \Bigl(-\tfrac{m_{1}}{2} + CS\,\|\eta\|_{H^{2}}\Bigr)
             \|\eta\|^{2}_{H^{1}}
    \;<\; 0
-   \qquad\text{for } 0 < \|\eta\|_{H^{2}} < \frac{m_{1}}{2CS},
+   \qquad\text{for } 0 < \|\eta\|_{H^{2}} < \frac{m_{1}}{2CS} .
 \end{equation}
-a strict local maximum in a uniform $H^{2}$-ball with quadratic growth
-measured in $H^{1}$.  We stress that $C$ (the trilinear bound in
-\eqref{eq:D3F-nojet}) and $K_{\varepsilon}$ are identified but not
-evaluated here, and that $m_{1}$ rests on the floating-point oracle;
-\eqref{eq:final-chain} is therefore a conditional statement, and we do
-not present it as a theorem.
+By Theorem~\ref{thm:fatal-cubic} this is \emph{not} available: the
+required cubic bound is false, because the moving-breakpoint term
+$\eta'(b_{j})^{3}$ has nonzero coefficient.  We therefore do not
+assert \eqref{eq:final-chain}, and the two-norm difficulty is real for
+$\cG$ as well as for $\Sigma$.
+
+It is worth being precise about what has and has not been shown, since
+the two are easily confused.  The \emph{quadratic} obstruction is
+resolved: the one-contact symbol is rank one
+(Corollary~\ref{cor:rank-one}), the multi-contact symbol is uniformly
+positive with $\lambda_{\min}=1$
+(Proposition~\ref{prop:multicontact}), and the resulting G\aa rding
+inequality \eqref{eq:garding-explicit} is explicit.  What blocks the
+conclusion is the \emph{cubic} term, and it is now localized to four
+scalars at the four moving breakpoints, two of which we have measured.
+That is a sharper statement of the obstruction than the literature
+contains, but it is an obstruction nonetheless.
 
 \subsection{Remainder and radius}\label{sec:remainder}
 
@@ -1964,16 +2055,24 @@ this work regarded as the principal obstruction, is resolved by
 Lemma~\ref{lem:affine} and Proposition~\ref{prop:multicontact}.
 \begin{enumerate}
 \setcounter{enumi}{-1}
-\item \textbf{The two constants $C$ and $K_{\varepsilon}$.}
-The chain \eqref{eq:final-chain} is quantitative only once the
-trilinear bound $C$ of \eqref{eq:D3F-nojet} and the G\aa rding
-constant $K_{\varepsilon} = \|C\|^{2}_{\infty}/4\varepsilon$ of
-\eqref{eq:garding} are evaluated.  Both are explicit integrals of the
-$A_{3}$ and $C(\theta)$ coefficients over the five arcs; neither
-requires new theory, and both are bounded by the same
-Sobolev-embedding constants already computed for
-$K_{3}^{A}$.  We regard this as the principal remaining
-\emph{analytic} item, and it is bookkeeping rather than invention.
+\item \textbf{The moving-breakpoint cubic (the operative
+obstruction).}  The G\aa rding constant is settled:
+$\|C\|_{\mathrm{op}}=2$ exactly, giving \eqref{eq:garding-explicit}.
+The cubic side is not, and by Theorem~\ref{thm:fatal-cubic} it cannot
+be: the coefficient of $\eta'(b_{j})^{3}$ is nonzero, so the
+improved-Taylor hypothesis fails and no two-norm argument in the pair
+$(H^{1},H^{2})$ can close.  Overcoming this requires a genuinely
+different device --- a norm adapted to the breakpoint jets, a
+degenerate-coercivity framework, or a reformulation in which the
+breakpoints do not move (for instance by majorizing $F$ with the
+breakpoints frozen, in the spirit of Baek's concave majorant).  We
+regard this as the principal open problem raised by the present work,
+and note that it is now a concrete question about four scalars rather
+than a diffuse analytic difficulty.  An earlier version of this
+manuscript claimed these coefficients vanish, on the strength of
+Lemma~\ref{lem:affine}; that argument was invalid, since affineness
+constrains the integrand and not the moving limits, and the numerical
+verdict is the opposite.
 \item \textbf{Interval polygon-intersection oracle.}
 The finite-dimensional Hessian is currently evaluated with
 \textsc{shapely}, a floating-point polygon-intersection library.
