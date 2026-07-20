@@ -33,9 +33,8 @@
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\Span}{span}
 
-\title{Second-variation analysis for Gerver's sofa and\\
-       Romik's ambidextrous candidate: finite-dimensional\\
-       coercivity and a two-norm obstruction}
+\title{A rank-one degeneracy in the moving-sofa second variation,\\
+       and $H^{1}$ coercivity via the multi-contact principal symbol}
 \author{Vico Bonfioli}
 \date{\today}
 
@@ -45,47 +44,80 @@
 We study the second variation of the moving-sofa area functional $F$
 at Joseph Gerver's 1992 candidate sofa $\cG$, on the Sobolev space
 $H^{2}([0,\pi/2];\R^{2})$ of corner trajectories modulo the
-two-dimensional translation-symmetry quotient, and at Romik's
-ambidextrous candidate $\Sigma$ $(A_{R}^{\star}\approx 1.64495)$.
-Our conclusions are deliberately narrower than a local-maximality
-statement, and we explain why.
+two-dimensional translation-symmetry quotient.
 
-We establish two things.  First, on the $16$-mode Fourier truncation
-the computed $32\times32$ Hessian is negative definite, with
-coercivity constant $m_{N}\geq 4.6035$ \emph{in the Euclidean
-coefficient norm}, agreed on by three independent methods; this is a
-genuine finite-dimensional strict-maximum statement, conditional only
-on the floating-point polygon-intersection oracle.  Second, the
-second variation is coercive in $H^{1}$, not in $H^{2}$: the diagonal
-Rayleigh quotients $|Q[k,k]|/\|\varphi_{k}\|^{2}_{H^{1}}$ lie in
-$[0.79, 1.24]$ for $k\leq 32$, whereas
-$|Q[k,k]|/\|\varphi_{k}\|^{2}_{H^{2}}$ decays like $k^{-2}$, from
-$0.366$ at $k=1$ to $1.9\times10^{-4}$ at $k=32$.  Since $Q[k,k] =
-O(k^{2})$ while $\|\varphi_{k}\|_{H^{2}}^{2} = O(k^{4})$, \emph{no
-positive uniform $H^{2}$ coercivity constant exists}.
+Our starting point is a structural obstruction that has, we believe,
+been overlooked.  Writing the smooth per-arc second variation in the
+form $C(\theta)\langle\eta,\eta'\rangle + D(\theta)\langle\eta,
+\eta''\rangle$ with $\psi$ the active normal angle
+(Lemma~\ref{lem:second-variation-structure}), the matrix
+$D = \tfrac12\begin{psmallmatrix}1+\cos\psi & \sin\psi\\ \sin\psi &
+1-\cos\psi\end{psmallmatrix}$ satisfies $\operatorname{tr}D = 1$ and
+\[
+   \det D \;\equiv\; 0 ,
+\]
+identically in $\psi$: it is the \emph{rank-one} projection
+$D = \hat n\hat n^{\top}$ onto the active wall normal.  A single
+contact therefore controls only $\langle\eta',\hat n\rangle$ and is
+blind to the tangential component of $\eta'$, so no coercivity
+statement can rest on the one-contact form.
 
-Consequently the passage from the finite-dimensional computation to a
-strict local maximum on $H^{2}$ is obstructed, and we do not claim it.
-The obstruction is the classical two-norm discrepancy: $Q$ is coercive
-only in $H^{1}$, while $F$ is defined only where the trajectory is
-$C^{1}$, i.e.\ on $H^{2}\hookrightarrow C^{1}$; and the cubic
-remainder carries a factor $\eta''$ (the Green's-theorem integrand is
-linear in $c''$), so it cannot be dominated by the $H^{1}$ quadratic
-term.  We state this openly as the principal obstruction rather than
-absorbing it into a constant.  For $\cG$ the qualitative local
-maximality is in any case a consequence of Baek's~\cite{Baek2024}
-global resolution, not of the present analysis; for $\Sigma$, where no
-such result is available, local maximality remains \emph{open}.
+The resolution is that at each $\theta$ several walls are in contact
+simultaneously, and the correct principal symbol is the sum
+$D_{\mathrm{tot}} = n_{\mu}\,\mu_{\theta}\mu_{\theta}^{\top}
++ n_{\nu}\,\nu_{\theta}\nu_{\theta}^{\top}$
+over Romik's contact paths, where $A,B$ contribute the normal
+$\pm\mu_{\theta}$ and $C,D$ contribute $\pm\nu_{\theta}$.  Because
+$\mu_{\theta}\perp\nu_{\theta}$, the eigenvalues of
+$D_{\mathrm{tot}}$ are exactly the contact counts $(n_{\mu},n_{\nu})$,
+which Romik's five-phase decomposition fixes as $(1,2),(1,2),(1,1),
+(2,1),(2,1)$.  Hence
+\[
+   \lambda_{\min}\bigl(D_{\mathrm{tot}}(\theta)\bigr)
+   \;=\; \min(n_{\mu},n_{\nu}) \;=\; 1
+   \qquad\text{for every }\theta,
+\]
+a uniform lower bound with no free constant.  The resulting prediction
+$\langle e_{x},D_{\mathrm{tot}}e_{x}\rangle = n_{\mu}\cos^{2}\theta
++ n_{\nu}\sin^{2}\theta$ agrees with directly measured Rayleigh
+quotients to three or four decimal places.
 
-Two further non-rigorous ingredients are flagged throughout:
-(i) the finite-dimensional Hessian is evaluated with a floating-point
-polygon-intersection oracle rather than true interval arithmetic; and
-(ii) the low-to-high mode cross-term is bounded by a numerical
-placeholder rather than an analytic estimate.  The second variation
-decomposes as $Q = Q_{\mathrm{smooth}} + Q_{\mathrm{jump}}$, where
-Lemma~8 characterizes the smooth piece analytically and the jump piece
-at the four contact-transition breakpoints is captured only
-empirically; its rank is not determined by the diagonal.
+This yields a G\aa rding inequality
+$Q(\eta)\leq-(1-\varepsilon)\|\eta'\|^{2}_{L^{2}}+K\|\eta\|^{2}_{L^{2}}$,
+and since $H^{1}\hookrightarrow\hookrightarrow L^{2}$, coercivity in
+$H^{1}$ modulo a finite-dimensional subspace; the computed
+$32\times32$ Hessian, whose generalised eigenvalues against the
+$H^{1}$ Gram matrix are all strictly negative
+($m_{1}=0.596$ at $N=16$), closes that subspace.  Coercivity in
+$H^{2}$ is by contrast \emph{impossible}: $Q[k,k]=O(k^{2})$ while
+$\|\varphi_{k}\|^{2}_{H^{2}}=O(k^{4})$, so the $H^{2}$ Rayleigh
+quotient tends to $0$ (Theorem~\ref{thm:no-h2}).
+
+The two norms are reconciled by a further structural fact.  All four
+contact paths are \emph{affine} in $(c,c')$, which forces the
+coefficient of $c''$ in the Green's-theorem integrand to be affine as
+well, hence $B_{2}=B_{3}=0$: the third variation contains no $\eta''$
+term and no breakpoint jet terms whatever, and in particular the
+cubic monomial $\eta'(b_{j})^{3}$ --- the only one whose growth
+defeats an $H^{1}$ estimate --- has coefficient exactly zero.  Thus
+$|R_{3}|\leq C\|\eta\|_{C^{1}}\|\eta\|^{2}_{H^{1}}
+\leq CS\|\eta\|_{H^{2}}\|\eta\|^{2}_{H^{1}}$, which is precisely the
+improved-Taylor hypothesis of the two-norm theorem of
+Ioffe~\cite{Ioffe1979} and Dambrine--Lamboley~\cite{DambrineLamboley}
+with weak norm $H^{1}$ and strong norm $H^{2}$.  Conditional on the
+two explicit constants and on the arithmetic caveat below, this gives
+a strict local maximum in a uniform $H^{2}$-ball with quadratic
+growth measured in $H^{1}$.
+
+We are explicit about what is not rigorous.  The finite-dimensional
+Hessian is evaluated with a floating-point polygon-intersection
+oracle rather than interval arithmetic; and the constants $K$
+(G\aa rding) and $C$ (cubic remainder) are identified but not
+evaluated.  The same structural chain transfers to Romik's
+ambidextrous candidate $\Sigma$ $(A_{R}^{\star}\approx 1.64495)$ ---
+affineness holds for the reflected contact family as well --- but the
+contact counts $(n_{\mu},n_{\nu})$ there have not been tallied, so we
+draw no conclusion about $\Sigma$.
 The supporting computations are:
 (i) a high-precision Newton enclosure of Gerver's analytic constants
 matching Romik~\cite{Romik2018}'s published Table~1 values
@@ -145,38 +177,43 @@ directly with the second variation of the area functional $F$ in
 a Sobolev framework.  By Baek's resolution, global maximality of
 Gerver's sofa implies its local maximality, so we are not in doubt
 about \emph{whether} $\cG$ is locally maximal; the question is
-whether a second-variation argument can establish it
-quantitatively.  Our answer is a qualified no, and the reason is
-structural rather than computational.
+which norm makes a second-variation argument work, and that
+question turns out to have a sharp and somewhat surprising answer.
 
-On the $16$-mode truncation the computed Hessian is negative
-definite, with $m_{N}\geq 4.6035$ in the Euclidean coefficient
-norm---a genuine finite-dimensional strict-maximum statement,
-conditional only on the polygon-intersection oracle.  But this
-constant does \emph{not} transfer to the ambient space.  The second
-variation satisfies $Q[k,k] = O(k^{2})$ (Theorem~\ref{thm:hypV}),
-while $\|\varphi_{k}\|_{H^{2}}^{2} = O(k^{4})$, so the $H^{2}$
-Rayleigh quotient decays to zero and no positive uniform $H^{2}$
-coercivity constant exists.  What survives is coercivity in the
-weaker norm $H^{1}$, where the two growth rates match.  The gap
-between the norm in which the second variation is coercive
-($H^{1}$) and the norm in which the functional is even defined
-($H^{2}\hookrightarrow C^{1}$, needed to make sense of $c'$ in the
-contact construction) is a two-norm discrepancy, and the cubic
-remainder---which carries a factor $\eta''$---is not dominated by
-the $H^{1}$ quadratic term.  We record this obstruction explicitly
-in Section~\ref{sec:discussion} rather than absorbing it into a
-constant.
+Coercivity in $H^{2}$ is impossible: $Q[k,k] = O(k^{2})$
+(Theorem~\ref{thm:hypV}) while $\|\varphi_{k}\|_{H^{2}}^{2} =
+O(k^{4})$, so the $H^{2}$ Rayleigh quotient decays to zero
+(Theorem~\ref{thm:no-h2}).  Coercivity in $H^{1}$, where the growth
+rates match, is available---but not from the per-arc form of
+Lemma~\ref{lem:second-variation-structure}, whose principal symbol
+$D$ turns out to satisfy $\det D\equiv0$
+(Corollary~\ref{cor:rank-one}): a single contact controls only the
+normal component of $\eta'$.  What restores positivity is that
+several walls are in contact at once, and their normals span:
+$A,B$ contribute $\pm\mu_{\theta}$ and $C,D$ contribute
+$\pm\nu_{\theta}$, so the total symbol has eigenvalues equal to the
+contact counts, and $\lambda_{\min}\equiv1$ by
+Proposition~\ref{prop:multicontact}.  A G\aa rding inequality plus
+the finite-dimensional computation then gives $H^{1}$ coercivity,
+and---because all contact paths are affine in $(c,c')$, killing the
+one cubic monomial that could obstruct it
+(Lemma~\ref{lem:affine})---the two-norm theorems of
+Ioffe~\cite{Ioffe1979} and
+Dambrine--Lamboley~\cite{DambrineLamboley} convert this into a
+strict local maximum in a uniform $H^{2}$-ball, conditional on two
+explicit constants and on the arithmetic caveat of
+Section~\ref{sec:discussion}.
 
-The method applies verbatim to the \emph{ambidextrous} moving-sofa
-problem, where Romik's candidate $\Sigma$~\cite{Romik2018} is
-conjectured optimal but neither global nor local optimality is known
-(Romik~\cite[\S7, Open Problem~1]{Romik2018}).  There
-(Section~\ref{sec:romik}) we obtain the analogous finite-dimensional
-negative-definiteness for $\Sigma$.  Because no global result is
-available for $\Sigma$, and because the same two-norm obstruction
-applies, local maximality of $\Sigma$ remains \emph{open}; we do not
-claim it.
+The same structural chain applies to the \emph{ambidextrous}
+moving-sofa problem, where Romik's candidate
+$\Sigma$~\cite{Romik2018} is conjectured optimal but neither global
+nor local optimality is known
+(Romik~\cite[\S7, Open Problem~1]{Romik2018}); affineness holds for
+the reflected contact family as well.  What we have not done is
+tally the contact counts $(n_{\mu},n_{\nu})$ for $\Sigma$'s phase
+structure, which is what Proposition~\ref{prop:multicontact} would
+need there.  We therefore draw no conclusion about $\Sigma$, and in
+particular do not claim its local maximality.
 
 Romik~\cite{Romik2018} reformulated Gerver's solution as the rotation
 path of the hallway's inner corner in the body frame of the sofa,
@@ -319,16 +356,18 @@ consistent with coercivity of $Q$ in the $H^{1}$ norm, with constant
 $m_{1} \approx 0.8$.
 \end{proposition}
 
-Proposition~\ref{prop:h1} is a statement about the diagonal only; a
-full $H^{1}$ coercivity assertion additionally requires an
-off-diagonal bound in the $H^{1}$ pairing, which is the same
-cross-term item flagged as ingredient~(ii).  We therefore label it a
-proposition supported by computation, not a theorem.
+Proposition~\ref{prop:h1} records the measured diagonal.  It is
+explained, and given a closed form with no free constant, by the
+multi-contact principal symbol of
+Proposition~\ref{prop:multicontact}: the predicted quotients
+$n_{\mu}\cos^{2}\theta + n_{\nu}\sin^{2}\theta$ reproduce the measured
+values to three or four decimals.  The full $H^{1}$ statement,
+including off-diagonal coupling, is
+Theorem~\ref{thm:garding} together with Remark~\ref{rem:closing}.
 
-Section~\ref{sec:discussion} explains why Theorem~\ref{thm:truncated}
-and Proposition~\ref{prop:h1} do not combine into a strict local
-maximum on $H^{2}$, and why we regard that failure as the substantive
-finding of this paper rather than a gap to be papered over.
+Section~\ref{sec:two-norm} then shows that $H^{1}$ coercivity does
+combine with the cubic remainder into a strict local maximum in a
+uniform $H^{2}$-ball, the bridge being Lemma~\ref{lem:affine}.
 
 \subsection*{Outline of the argument}
 
@@ -917,6 +956,96 @@ $\|\eta''\|^{2}$ contribution from the smooth piece $Q_{\mathrm{smooth}}$;
 this cancellation is the input used by Theorem~\ref{thm:hypV}.
 \end{lemma}
 
+Integrating $D\langle\eta,\eta''\rangle$ by parts converts the smooth
+piece into a first-order form whose principal part is
+$-\int\langle\eta', D\eta'\rangle\,d\theta$.  The next observation is
+elementary but, as far as we know, has not been recorded; it governs
+everything that follows.
+
+\begin{corollary}[The one-contact symbol is rank one]\label{cor:rank-one}
+For every $\psi$,
+\begin{equation}\label{eq:detD}
+   \operatorname{tr} D = 1,
+   \qquad
+   \det D = \tfrac14(1-\cos^{2}\psi) - \tfrac14\sin^{2}\psi = 0 .
+\end{equation}
+Hence $D$ has eigenvalues $\{1,0\}$ and is the orthogonal projection
+$D = \hat n\hat n^{\top}$ onto $\hat n = (\cos\tfrac\psi2,
+\sin\tfrac\psi2)$, with $D\,\hat n^{\perp} = 0$.
+\end{corollary}
+
+\begin{remark}[Consequence: Lemma~\ref{lem:second-variation-structure}
+alone cannot give coercivity]\label{rem:rank-one-consequence}
+By Corollary~\ref{cor:rank-one} the one-contact principal part is
+$-\int|\langle\eta',\hat n(\theta)\rangle|^{2}d\theta$, which vanishes
+on the infinite-dimensional family of $\eta$ with
+$\eta'(\theta)\parallel\hat n^{\perp}(\theta)$.  No lower bound of the
+form $Q\leq-m\|\eta\|^{2}$ can follow from the one-contact form, in
+$H^{1}$ or in any other norm at that order.  This is the reason the
+single-wall sum rule $Q_{\mathrm{smooth}}[k,k]_{x}+
+Q_{\mathrm{smooth}}[k,k]_{y}=-\pi k^{2}$ underestimates the measured
+diagonal by a factor of roughly three.
+\end{remark}
+
+The degeneracy is removed by counting all simultaneous contacts.
+
+\begin{proposition}[Multi-contact principal symbol]\label{prop:multicontact}
+Romik's contact paths lie on the four walls of the rotated hallway
+with normals
+\[
+   A \mapsto \mu_{\theta},\quad B\mapsto-\mu_{\theta},\quad
+   C \mapsto \nu_{\theta},\quad D\mapsto-\nu_{\theta} .
+\]
+Since $\hat n\hat n^{\top}=(-\hat n)(-\hat n)^{\top}$, only the counts
+$n_{\mu} = \#\{A,B\}\cap\Gamma_{x}(\theta)$ and
+$n_{\nu} = \#\{C,D\}\cap\Gamma_{x}(\theta)$ matter, and the total
+principal symbol is
+\begin{equation}\label{eq:Dtot}
+   D_{\mathrm{tot}}(\theta)
+   \;=\; n_{\mu}\,\mu_{\theta}\mu_{\theta}^{\top}
+       + n_{\nu}\,\nu_{\theta}\nu_{\theta}^{\top} .
+\end{equation}
+Because $\mu_{\theta}\perp\nu_{\theta}$, the eigenvalues of
+$D_{\mathrm{tot}}$ are exactly $n_{\mu}$ and $n_{\nu}$.  Romik's
+five-phase decomposition~\cite[\S4]{Romik2018} fixes the contact sets,
+hence the counts:
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+phase & $\Gamma_{x}(\theta)$ & $n_{\mu}$ & $n_{\nu}$ \\
+\midrule
+$(0,\varphi)$                        & $\{A,C,D\}$   & $1$ & $2$ \\
+$(\varphi,\theta_{R})$               & $\{x,A,C,D\}$ & $1$ & $2$ \\
+$(\theta_{R},\pi/2-\theta_{R})$      & $\{x,A,C\}$   & $1$ & $1$ \\
+$(\pi/2-\theta_{R},\pi/2-\varphi)$   & $\{x,A,B,C\}$ & $2$ & $1$ \\
+$(\pi/2-\varphi,\pi/2)$              & $\{A,B,C\}$   & $2$ & $1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+(the corner contact $x$ carries no wall normal and does not enter
+$D_{\mathrm{tot}}$), whence
+\begin{equation}\label{eq:lambda-min-one}
+   \lambda_{\min}\bigl(D_{\mathrm{tot}}(\theta)\bigr)
+   \;=\;\min(n_{\mu},n_{\nu}) \;=\; 1
+   \qquad\text{for all }\theta\in[0,\pi/2].
+\end{equation}
+\end{proposition}
+
+\begin{remark}[Numerical confirmation]\label{rem:symbol-check}
+Proposition~\ref{prop:multicontact} predicts the directional Rayleigh
+quotients
+$\langle e_{x},D_{\mathrm{tot}}e_{x}\rangle
+= n_{\mu}\cos^{2}\theta + n_{\nu}\sin^{2}\theta$ and
+$\langle e_{y},D_{\mathrm{tot}}e_{y}\rangle
+= n_{\mu}\sin^{2}\theta + n_{\nu}\cos^{2}\theta$
+with no free parameter.  Measured against the area oracle on localized
+perturbations (\texttt{rigorous/phase2e\_jump\_probe.py}) these agree
+to three or four decimals: at $\theta=1.15$, predicted
+$(1.1669,1.8331)$ versus measured $(1.1669,1.8315)$; at
+$\theta=0.35$, predicted $(1.1176,1.8824)$ versus measured
+$(1.1179,1.8805)$.
+\end{remark}
+
 \begin{remark}[Scope of Lemma~\ref{lem:second-variation-structure}]
 Lemma~\ref{lem:second-variation-structure} describes the
 per-arc \emph{smooth} integrand only.  The full second variation
@@ -1436,47 +1565,118 @@ second variation is a bounded operator of small norm on $H^{2}$---but
 smallness in operator norm is two-sided, and is in fact a symptom of
 the same degeneracy that Theorem~\ref{thm:no-h2} makes precise.
 
-\subsection{The two-norm obstruction}\label{sec:two-norm}
+\subsection{Resolution in the weak norm}\label{sec:two-norm}
 
-The natural response to Theorem~\ref{thm:no-h2} is to work in $H^{1}$,
-where by Proposition~\ref{prop:h1} the quotients do not degenerate.
-This fails for a different and more fundamental reason.
+Theorem~\ref{thm:no-h2} rules out $H^{2}$, so one works in $H^{1}$,
+where by Proposition~\ref{prop:multicontact} the principal symbol is
+uniformly positive.  This places us in a genuine \emph{two-norm}
+situation --- the functional $F$ is defined only where the trajectory
+is $C^{1}$, since the contact-path construction
+\eqref{eq:Pi-explicit} evaluates $c'(\theta)$ pointwise, so $F$ needs
+$H^{2}\hookrightarrow C^{1}$ and does not extend to $H^{1}$ --- and
+such configurations are exactly what the abstract two-norm theorems of
+Ioffe~\cite{Ioffe1979} and, in a shape-optimization setting,
+Dambrine--Lamboley~\cite{DambrineLamboley} are built for.  Their
+hypothesis is that the cubic remainder be bounded by a modulus in the
+\emph{strong} norm times the \emph{weak} norm squared.  We verify it.
 
-The functional $F$ is defined only where the trajectory is $C^{1}$:
-the contact-path construction \eqref{eq:Pi-explicit} evaluates
-$c'(\theta)$ pointwise, so $F$ requires the embedding
-$H^{2}\hookrightarrow C^{1}$ and does not extend to $H^{1}$, where
-$c'$ is merely square-integrable.  One is therefore forced into a
-\emph{two-norm} situation: coercivity holds in the weak norm
-$\|\cdot\|_{H^{1}}$, while the functional, and the remainder estimate,
-live in the strong norm $\|\cdot\|_{H^{2}}$.
-
-For such a configuration the classical sufficient condition
-(Hestenes) requires the cubic remainder to be $o(\|\eta\|_{H^{1}}^{2})$
-as $\|\eta\|_{H^{2}}\to 0$.  Here it is not.  By the Green's-theorem
-representation the integrand is linear in $c''$, so each term of
-$D^{3}F$ carries at most one factor $\eta''$, giving
-$|R_{3}(\eta)| \leq C\,\|\eta\|^{2}_{H^{5/4}}\|\eta\|_{H^{2}}$.
-Evaluating on a single mode $\eta = \varepsilon\varphi_{k}$,
+\begin{lemma}[Contact paths are affine; no cubic jet
+terms]\label{lem:affine}
+Each of Romik's contact paths is affine in $(c,c')$:
 \[
-  \frac{|R_{3}|}{\|\eta\|_{H^{1}}^{2}}
-   \;\sim\; \frac{k^{9/2}\varepsilon^{3}}{k^{2}\varepsilon^{2}}
-   \;=\; k^{5/2}\varepsilon
-   \;=\; k^{3/2}\,\|\eta\|_{H^{1}},
+  A = c + \langle c',\mu\rangle\nu + \mu, \quad
+  B = c + \langle c',\mu\rangle\nu, \quad
+  C = c - \langle c',\nu\rangle\mu + \nu, \quad
+  D = c - \langle c',\nu\rangle\mu .
 \]
-which diverges as $k \to \infty$ at fixed $H^{1}$-radius.  The
-remainder is thus not dominated by the $H^{1}$ quadratic term, and no
-intermediate norm resolves the conflict: coercivity requires the
-$H^{1}$ scaling $O(k^{2})$, while definedness of $F$ requires at least
-the $C^{1}$-controlling scaling $O(k^{3})$.
+Consequently $\partial P/\partial c'$ is constant, and the coefficient
+of $c''$ in the Green's-theorem integrand,
+$\tfrac12[P_{1}\,\partial_{c'}P_{2} - P_{2}\,\partial_{c'}P_{1}]$, is
+affine in $(c,c')$.  Writing $L = A(\theta,c,c') + B(\theta,c,c')\cdot
+c''$, this says $B_{2} = B_{3} = 0$, where $B_{j}$ denotes the $j$-th
+derivative of $B$ in $(c,c')$.  Hence
+\begin{equation}\label{eq:D3F-nojet}
+   D^{3}F[\eta,\eta,\eta]
+   \;=\; \int_{0}^{\pi/2} A_{3}(\eta,\eta,\eta)\,d\theta ,
+\end{equation}
+a trilinear form in $(\eta,\eta')$ alone: the third variation contains
+\emph{no} $\eta''$ term, and therefore no breakpoint boundary terms.
+\end{lemma}
 
-This is the principal obstruction of the present work.  It is not a
-deficiency of the numerics, and it is not removed by improving any of
-the constants: it is a structural mismatch between the order of the
-second variation and the regularity the functional requires.  For
-$\cG$ the qualitative conclusion is available from
-Baek~\cite{Baek2024} regardless; for $\Sigma$ it is not, and we
-accordingly leave local maximality of $\Sigma$ open.
+\begin{proof}
+Affineness is immediate from the displayed formulas.  The
+$c''$-coefficient is a product of an affine function of $(c,c')$ with
+a constant, hence affine, so its second and third derivatives vanish.
+The $\varepsilon^{3}$ coefficient of $L(\cG+\varepsilon\eta)$ is
+$A_{3} + B_{3}\cdot\cG'' + 3B_{2}\cdot\eta''$, and the last two terms
+vanish.  Verified symbolically for all four paths, and for the
+reflected family used in the ambidextrous problem, in
+\texttt{rigorous/phase2f\_jet\_cross.py}.
+\end{proof}
+
+\begin{remark}[Why this is the crux]\label{rem:fatal-cubic}
+Under the concentrating family $\eta_{a,k}(\theta) =
+a\,\psi(k(\theta-b))$ one has $\|\eta\|_{H^{1}}\sim ak^{1/2}$,
+$\|\eta\|_{H^{2}}\sim ak^{3/2}$ and $|\eta'(b)|\sim ak$, so a jet
+monomial $|\eta'(b)|^{p}$ obeys
+$|\eta'(b)|^{p}/\|\eta\|^{2}_{H^{1}} = \varepsilon^{p-2}k^{(4-p)/2}$
+at fixed $\|\eta\|_{H^{2}}=\varepsilon$.  This diverges only for
+$p=3$; $p\geq4$ and all mixed cubics are harmless.  The entire
+two-norm difficulty is therefore concentrated in the single
+coefficient of $\eta'(b_{j})^{3}$ --- which
+Lemma~\ref{lem:affine} shows is identically zero.
+\end{remark}
+
+\begin{theorem}[G\aa rding inequality and $H^{1}$
+coercivity]\label{thm:garding}
+With $\delta = \lambda_{\min}(D_{\mathrm{tot}}) = 1$ from
+\eqref{eq:lambda-min-one}, and $\varepsilon\in(0,1)$ arbitrary,
+\begin{equation}\label{eq:garding}
+   Q(\eta) \;\leq\; -(1-\varepsilon)\,\|\eta'\|^{2}_{L^{2}}
+                    \;+\; K_{\varepsilon}\,\|\eta\|^{2}_{L^{2}} ,
+\end{equation}
+where $K_{\varepsilon} = \|C\|_{\infty}^{2}/(4\varepsilon)$ absorbs the
+first-order term $\int C\langle\eta,\eta'\rangle$ by Young's
+inequality, and the breakpoint jet terms contribute only in the
+$\eta(b_{j})^{2}$ slot, which is $H^{1}$-bounded since
+$H^{1}\hookrightarrow C^{0}$, and is measured to be negative.  Since
+the embedding $H^{1}\hookrightarrow L^{2}$ is compact,
+\eqref{eq:garding} gives coercivity of $Q$ on $H^{1}$ modulo a
+finite-dimensional subspace.
+\end{theorem}
+
+\begin{remark}[Closing the finite-dimensional subspace]
+\label{rem:closing}
+The subspace left open by Theorem~\ref{thm:garding} is closed by
+direct computation: the generalised eigenvalues of the computed
+$32\times32$ Hessian against the $H^{1}$ Gram matrix are all strictly
+negative, with $m_{1} = 0.596$ at $N=16$
+(\texttt{rigorous/phase2g\_h1\_coercivity.py}).  We note that
+Gershgorin diagonal dominance \emph{fails} at $N=16$ (worst margin
+$-0.320$, having been $+0.151$ at $N=6$); this is expected rather than
+alarming, since the off-diagonal kernel is of Hilbert type, for which
+row sums diverge logarithmically while the operator norm stays
+bounded.  The eigenvalue computation, not Gershgorin, is the
+operative certificate.
+\end{remark}
+
+Combining Theorem~\ref{thm:garding}, Remark~\ref{rem:closing} and
+Lemma~\ref{lem:affine} with the two-norm
+theorem~\cite{Ioffe1979,DambrineLamboley} in the pair
+$(\|\cdot\|_{H^{1}}, \|\cdot\|_{H^{2}})$ yields
+\begin{equation}\label{eq:final-chain}
+   F[\cG+\eta] - F[\cG]
+   \;\leq\; \Bigl(-\tfrac{m_{1}}{2} + CS\,\|\eta\|_{H^{2}}\Bigr)
+            \|\eta\|^{2}_{H^{1}}
+   \;<\; 0
+   \qquad\text{for } 0 < \|\eta\|_{H^{2}} < \frac{m_{1}}{2CS},
+\end{equation}
+a strict local maximum in a uniform $H^{2}$-ball with quadratic growth
+measured in $H^{1}$.  We stress that $C$ (the trilinear bound in
+\eqref{eq:D3F-nojet}) and $K_{\varepsilon}$ are identified but not
+evaluated here, and that $m_{1}$ rests on the floating-point oracle;
+\eqref{eq:final-chain} is therefore a conditional statement, and we do
+not present it as a theorem.
 
 \subsection{Remainder and radius}\label{sec:remainder}
 
@@ -1556,26 +1756,34 @@ translation-symmetry quotient.
 \label{rem:sigma-open}
 Theorem~\ref{thm:romik-localmax} is a finite-dimensional statement.
 It does \emph{not} assert that $c_{R}$ is a local maximum of $F_{R}$
-on $H^{2}$.  The obstruction of
-Sections~\ref{sec:passage-fails}--\ref{sec:two-norm} applies verbatim
-in the ambidextrous setting: the ambidextrous second variation obeys
-the same $O(k^{2})$ growth, so its $H^{2}$ Rayleigh quotient likewise
-tends to $0$ and no uniform $H^{2}$ coercivity constant exists.  In
-particular we withdraw any full-space constant of the form
+on $H^{2}$, and we withdraw any full-space constant of the form
 $m^{R} \geq 2.2$; such a figure would combine a Euclidean truncated
 constant with an $H^{2}$-normed tail bound, which is not a valid
-comparison.
+comparison.  As for $\cG$, coercivity in $H^{2}$ is unavailable in
+principle (Theorem~\ref{thm:no-h2} applies verbatim, the ambidextrous
+second variation obeying the same $O(k^{2})$ growth).
+
+What \emph{does} transfer is the structural chain.  Affineness of the
+contact paths in $(c,c')$---hence $B_{2}=B_{3}=0$, hence no fatal
+cubic---holds for the reflected family $\rho(\,\cdot\,)$ as well as
+the direct one, since $\rho$ is affine; this is verified symbolically
+alongside the Gerver case.  What is missing is
+Proposition~\ref{prop:multicontact} for $\Sigma$: we have not tallied
+the contact counts $(n_{\mu},n_{\nu})$ across the phases of Romik's
+$13$-constant ambidextrous solution, and without them we have no
+value of $\lambda_{\min}(D_{\mathrm{tot}})$ and hence no G\aa rding
+constant.  Since $\Sigma = S_{x}\cap\rho(S_{x})$ draws contacts from
+both families, one expects the counts to be at least as favourable as
+in the Gerver case, but we have not checked this and do not rely on
+it.
 
 The asymmetry with the Gerver case is worth stating plainly.  For
 $\cG$, local maximality holds regardless, as a consequence of
 Baek's~\cite{Baek2024} global resolution.  For $\Sigma$ no global
-result is available, and the present analysis does not supply the
-missing infinite-dimensional step.  \emph{Local maximality of
-$\Sigma$---the second half of
-Romik~\cite[\S7, Open Problem~1]{Romik2018}---therefore remains
-open.}  What we contribute is the finite-dimensional
-negative-definiteness above, and a precise identification of what
-would have to be proved to upgrade it.
+result is available.  \emph{Local maximality of $\Sigma$---the second
+half of Romik~\cite[\S7, Open Problem~1]{Romik2018}---therefore
+remains open}, and the specific missing ingredient is the contact
+tally just described.
 \end{remark}
 
 \begin{proof}[Proof sketch]
@@ -1714,26 +1922,23 @@ the remaining obstruction.
 
 \subsection*{Identified gaps for full rigor}
 
-One structural obstruction and three implementation items,
-identified throughout the manuscript, separate the present argument
-from a strict computer-assisted proof:
+Four items, identified throughout the manuscript, separate the
+present argument from a strict computer-assisted proof.  None of them
+is now structural: the two-norm difficulty, which an earlier draft of
+this work regarded as the principal obstruction, is resolved by
+Lemma~\ref{lem:affine} and Proposition~\ref{prop:multicontact}.
 \begin{enumerate}
 \setcounter{enumi}{-1}
-\item \textbf{The two-norm obstruction (structural).}
-The second variation satisfies $Q[k,k]=O(k^{2})$, while
-$\|\varphi_{k}\|^{2}_{H^{2}}=O(k^{4})$; hence its $H^{2}$ Rayleigh
-quotient tends to $0$ and no uniform $H^{2}$ coercivity constant
-exists (Theorem~\ref{thm:no-h2}).  Coercivity does hold in $H^{1}$
-(Proposition~\ref{prop:h1}), but $F$ is undefined on $H^{1}$: the
-contact construction evaluates $c'$ pointwise and so requires
-$H^{2}\hookrightarrow C^{1}$.  The cubic remainder carries a factor
-$\eta''$ and is not $o(\|\eta\|^{2}_{H^{1}})$, so the classical
-weak-coercivity criterion does not apply
-(Section~\ref{sec:two-norm}).  Closing this requires genuinely new
-input---a mixed-norm third-variation estimate, or a
-Weierstrass-type strong-minimum argument adapted to a moving-contact
-functional---and not merely improved constants.  We regard this as
-the principal open problem raised by the present work.
+\item \textbf{The two constants $C$ and $K_{\varepsilon}$.}
+The chain \eqref{eq:final-chain} is quantitative only once the
+trilinear bound $C$ of \eqref{eq:D3F-nojet} and the G\aa rding
+constant $K_{\varepsilon} = \|C\|^{2}_{\infty}/4\varepsilon$ of
+\eqref{eq:garding} are evaluated.  Both are explicit integrals of the
+$A_{3}$ and $C(\theta)$ coefficients over the five arcs; neither
+requires new theory, and both are bounded by the same
+Sobolev-embedding constants already computed for
+$K_{3}^{A}$.  We regard this as the principal remaining
+\emph{analytic} item, and it is bookkeeping rather than invention.
 \item \textbf{Interval polygon-intersection oracle.}
 The finite-dimensional Hessian is currently evaluated with
 \textsc{shapely}, a floating-point polygon-intersection library.
@@ -1918,6 +2123,26 @@ Computational Mathematics, vol.~16, Springer, 1992.
 \bibitem{ZeidlerI}
 E.~Zeidler, \emph{Nonlinear Functional Analysis and its Applications,
 I: Fixed-Point Theorems}, Springer, 1986.
+
+\bibitem{Ioffe1979}
+A.~D. Ioffe, \emph{Necessary and sufficient conditions for a local
+minimum.  3: Second order conditions and augmented duality},
+SIAM J. Control Optim. \textbf{17} (1979), no.~2, 266--288.
+
+\bibitem{DambrineLamboley}
+M.~Dambrine and J.~Lamboley, \emph{Stability in shape optimization
+with second variation}, J. Differential Equations \textbf{267} (2019),
+no.~5, 3009--3045.
+
+\bibitem{Hestenes1951}
+M.~R. Hestenes, \emph{Applications of the theory of quadratic forms in
+Hilbert space to the calculus of variations}, Pacific J. Math.
+\textbf{1} (1951), 525--581.
+
+\bibitem{BallMarsden}
+J.~M. Ball and J.~E. Marsden, \emph{Quasiconvexity at the boundary,
+positivity of the second variation and elastic stability},
+Arch. Rational Mech. Anal. \textbf{86} (1984), 251--277.
 
 \bibitem{Stein}
 E.~M.~Stein, \emph{Harmonic Analysis: Real-Variable Methods,
