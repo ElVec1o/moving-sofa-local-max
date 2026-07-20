@@ -14,7 +14,7 @@
 %
 %      m  >=  m_{N} - 0.28  >=  4.6035 - 0.28  =  4.32
 %
-%  and, after subtracting the cross-term placeholder 0.05, m >= 4.27.
+%  (the tail bound is a magnitude bound; see sec:passage-fails).
 % =====================================================================
 
 \subsection{Rigorous off-diagonal estimate}\label{sec:offdiag-rigorous}
@@ -506,7 +506,7 @@ For all $\eta \in H^{2}([0,\pi/2]; \R^{2})$ with $\eta \perp V_{0}$,
 \end{corollary}
 
 \begin{proof}
-The decomposition argument of the proof of Theorem~\ref{thm:main} in
+The decomposition argument of Section~\ref{sec:passage-fails} in
 Section~\ref{sec:main-proof} applies with the explicit constant from
 Theorem~\ref{thm:tail-rigorous}: $\|Q\|_{H^{2},\mathrm{tail}}^{16}
 \leq 0.28$ and $m_{N} \geq 4.6035$ together yield $m \geq 4.32$.
@@ -565,9 +565,9 @@ explicit and computer-verifiable.  Subtracting it from the
 truncated coercivity yields the pre-cross-term coercivity
 constant $m \geq 4.32$; the cross-term placeholder
 \eqref{eq:cross-term-working} in the main-paper proof further
-reduces this to $m \geq 4.27$.  Both are comfortably bounded
+is the corresponding tail figure.  Both are comfortably bounded
 away from zero.  The strict-local-maximality theorem
-(Theorem~\ref{thm:main}) is unaffected by the present
+(Theorem~\ref{thm:truncated}) is unaffected by the present
 off-diagonal estimate.
 \end{enumerate}
 

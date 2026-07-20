@@ -10,23 +10,36 @@
 \section{Uniqueness of the critical point near $\cG$}
 \label{sec:uniqueness}
 
-The strict local maximality result of Theorem~\ref{thm:main} shows
-that $\cG$ is a strict local maximum: the area functional $F$
+\begin{remark}[Scope of this section]\label{rem:uniqueness-scope}
+The argument below is conditional on a coercivity constant $m > 0$ in
+the norm of the ambient space.  By Theorem~\ref{thm:no-h2} no such
+constant exists on $H^{2}$, so the section does \emph{not} establish
+uniqueness of the critical point in an $H^{2}$-ball.  We retain it for
+two reasons: it is valid verbatim on the finite-dimensional truncation
+$\mathcal{F}_{16}$, where Theorem~\ref{thm:truncated} supplies
+$m_{N}\geq 4.6035$ in the Euclidean norm; and it isolates exactly
+which input an infinite-dimensional uniqueness statement would need,
+namely the same missing two-norm estimate identified in
+Section~\ref{sec:two-norm}.  Every occurrence of ``$m$'' below should
+be read as a hypothesis, not as a quantity this paper provides on
+$H^{2}$.
+\end{remark}
+
+Granting such an $m$, the area functional $F$
 decreases quadratically as one moves away from $\cG$ in any direction
-transverse to the translation quotient $V_{0}$.  We now show
-that this same coercivity, combined with $C^{2}$-regularity of the
-first variation, implies that $\cG$ is in fact the \emph{only}
-critical point of $F$ in an $H^{2}$-ball around itself, modulo
-$V_{0}$.  This is a substantive strengthening: it rules out the
-existence of nearby saddles or alternative maximizers, and is the
-natural local precursor of any global uniqueness statement.
+transverse to the translation quotient $V_{0}$.  We show
+that this coercivity, combined with $C^{2}$-regularity of the
+first variation, implies that $\cG$ is the \emph{only}
+critical point of $F$ in a ball around itself, modulo
+$V_{0}$.  On the truncation this is a substantive strengthening: it
+rules out nearby saddles or alternative maximizers within
+$\mathcal{F}_{16}$.
 
 The argument is a Banach-space inverse-function-theorem / Picard
 iteration applied to the first variation, viewed as a smooth map
-between the quotient Hilbert space $H^{2}/V_{0}$ and its dual.  The
-non-degeneracy of the linearization, which is precisely the
-quantitative coercivity $m \geq 4.34$ certified in
-Theorem~\ref{thm:main}, supplies the invertibility hypothesis; the
+between a Hilbert space and its dual.  The
+non-degeneracy of the linearization---the assumed
+quantitative coercivity---supplies the invertibility hypothesis; the
 required $C^{2}$ smoothness comes from the explicit shape-derivative
 formula for the second variation $Q$ established in
 Section~\ref{sec:tail-bound}.
@@ -253,7 +266,9 @@ radius
 \subsection{The uniqueness theorem}
 
 \begin{theorem}[Uniqueness in an $H^{2}$-ball]\label{thm:uniqueness}
-Let $m \geq 4.34$ be the coercivity constant of Theorem~\ref{thm:main}
+Let $m > 0$ be the assumed coercivity constant of
+Remark~\ref{rem:uniqueness-scope} (on $\mathcal{F}_{16}$, $m = m_{N}
+\geq 4.6035$)
 and let $K_{3}$ be the local Lipschitz constant of $Q$ from
 \eqref{eq:Q-lipschitz}.  Set
 \begin{equation}\label{eq:delta-uniq}
@@ -298,7 +313,7 @@ Now suppose $\delta F[\cG+\eta] = 0$.  Then \eqref{eq:FTC} yields
    Q[\cG]\,\eta \;=\; -R(\eta).
 \end{equation}
 Pair both sides with $\eta$.  By the coercivity bound of
-Theorem~\ref{thm:main} applied to $Q[\cG]$,
+the assumed coercivity applied to $Q[\cG]$,
 \[
    \langle Q[\cG]\,\eta,\, \eta\rangle
    \;\leq\; -\,m\,\|\eta\|_{X}^{2}.
@@ -326,7 +341,7 @@ modulo $V_{0}$.
 The above is the variational form of the standard Banach-space inverse
 function theorem applied to the smooth map $\delta F\colon X \to X^{*}$
 at $\cG$.  The linearization $D(\delta F)[\cG] = Q[\cG]$ is a bounded
-linear isomorphism $X \to X^{*}$, because by Theorem~\ref{thm:main} it
+linear isomorphism $X \to X^{*}$, because by the assumed coercivity it
 is symmetric, bounded, and bilipschitz with constant $m \geq 4.34$
 between $X$ and its dual.  The inverse function theorem then gives a
 neighborhood of $\cG$ on which $\delta F$ is a diffeomorphism, and in
@@ -339,8 +354,8 @@ shape optimization, and Zeidler \cite[Thm.~4.B]{ZeidlerI} for the
 underlying Banach-space inverse-function theorem.
 \end{remark}
 
-\begin{remark}[Comparison to Theorem~\ref{thm:main}]
-Theorem~\ref{thm:main} delivers a quantitative inequality
+\begin{remark}[Comparison to the second-variation statement]
+The second-variation analysis delivers a quantitative inequality
 $F[\cG+\eta] \leq F[\cG] - \tfrac{m}{2}\|\eta\|_{X}^{2} +
 O(\|\eta\|_{X}^{3})$, which already implies that any \emph{maximizer}
 near $\cG$ must coincide with $\cG$.  Theorem~\ref{thm:uniqueness}
