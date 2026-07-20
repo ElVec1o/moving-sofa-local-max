@@ -1,11 +1,11 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
-title: "Second-variation analysis for Gerver's sofa and Romik's ambidextrous candidate: finite-dimensional coercivity and a two-norm obstruction"
+title: "Two rank-one degeneracies in the moving-sofa second variation, and a moving-breakpoint obstruction to local maximality"
 authors:
   - family-names: Bonfioli
     given-names: Vico
-version: "0.5.0"
-date-released: 2026-05-30
+version: "0.7.0"
+date-released: 2026-07-21
 license: MIT
 doi: "10.5281/zenodo.20434287"
 repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
@@ -29,50 +29,59 @@ identifiers:
     value: "10.5281/zenodo.20434288"
     description: "Version DOI (v0.1.0)"
 abstract: >
-  A second-variation study of the moving-sofa area functional at Gerver's
-  sofa and at Romik's ambidextrous candidate Sigma, on the Sobolev space
-  H^2 of corner trajectories (modulo translation symmetry).
+  A structural analysis of the second variation of the moving-sofa area
+  functional at Gerver's sofa and at Romik's ambidextrous candidate
+  Sigma, on H^2 corner trajectories (modulo translation symmetry). The
+  conclusions are largely negative and precise: we identify exactly why
+  a second-variation argument does not establish local maximality, and
+  reduce the obstruction to a finite, explicitly located quantity.
 
-  IMPORTANT — v0.5.0 is a substantial correction of v0.1.0 through
-  v0.4.0. Those versions reported a coercivity constant m >= 4.27 "in
-  the H^2 norm" (and m^R >= 2.2 for Sigma, plus a uniqueness radius
-  delta >= 0.044) and concluded strict local maximality on H^2. That
-  conclusion was not supported. The constant m_N = 4.6035 is an
-  eigenvalue bound in the EUCLIDEAN coefficient norm, while the tail
-  bound 0.28 is an operator norm in the H^2 norm; subtracting one from
-  the other combines two different inner products. Those figures are
-  withdrawn.
+  VERSION NOTE. This work has been revised repeatedly as the analysis
+  sharpened; v0.7.0 supersedes all earlier versions. v0.1.0-v0.4.0
+  claimed a strict local maximum on H^2 with an explicit coercivity
+  constant; that was withdrawn in v0.5.0 (the constant mixed two inner
+  products). v0.6.0 argued the local maximum holds after all via an H^1
+  coercivity plus a two-norm theorem; v0.7.0 withdraws that too, because
+  the cubic-remainder hypothesis it relied on is false. Readers should
+  use v0.7.0.
 
-  What v0.5.0 establishes instead. (1) On the 16-mode truncation the
-  computed 32x32 Hessian is negative definite with m_N >= 4.6035 in the
-  Euclidean coefficient norm, for Gerver (and m_N^R >= 2.89 for Sigma) —
-  a genuine finite-dimensional strict-maximum statement, conditional
-  only on the floating-point polygon-intersection oracle. (2) No uniform
-  H^2 coercivity constant exists at all: since Q[k,k] = O(k^2) while the
-  H^2 norm of mode k grows like k^4, the H^2 Rayleigh quotient decays
-  like 1/k^2 (measured: 0.366 at k=1 down to 1.9e-4 at k=32), so the
-  infimum is 0. (3) Coercivity does hold in H^1, where the two growth
-  rates match (measured quotients in [0.79, 1.24] for k <= 32).
+  WHAT v0.7.0 ESTABLISHES.
+  (1) Rank-one degeneracy of the principal symbol. In Lemma 8's form
+  C<eta,eta'> + D<eta,eta''>, the matrix D has trace 1 and determinant
+  identically 0: it is the rank-one projection onto the binding wall's
+  normal. So the one-contact second variation is blind to the tangential
+  component of eta' -- and single-wall coercivity is impossible.
+  (2) Multi-contact repair. The true symbol sums over the walls binding
+  at each theta: D_tot = n_mu (mu mu^T) + n_nu (nu nu^T), with mu, nu
+  orthogonal, so its eigenvalues are exactly (n_mu, n_nu). From Romik's
+  five phases, min(n_mu, n_nu) = 1 everywhere for Gerver, giving a
+  uniform Garding constant lambda_min = 1 (matches the oracle to 3-4
+  decimals). A second rank-one degeneracy, C^T C with determinant 0,
+  gives ||C||_op = 2 exactly, so the Garding inequality is explicit:
+  Q <= -1/2 ||eta'||^2 + 18 ||eta||^2_{L^2}.
+  (3) F is piecewise-quadratic. Each contact path is affine in (c,c'),
+  so the Green integrand is quadratic in the jet (d^3 L/d eps^3 = 0):
+  within a fixed combinatorial cell F is exactly quadratic, and the
+  entire third variation is carried by the four MOVING breakpoints
+  b_j(c).
+  (4) The obstruction, located. Among the moving-breakpoint monomials,
+  exactly eta'(b_j)^3 grows fast enough to defeat an H^1 two-norm
+  estimate, and its coefficient is measured NONZERO (~1.09 and ~1.89 in
+  the two components; controls vanish identically; the two interior
+  breakpoints are exact negatives by symmetry). So the improved-Taylor
+  hypothesis of Ioffe / Dambrine-Lamboley fails in (H^1, H^2), and no
+  such argument closes -- for Gerver as well as Sigma.
+  (5) Sigma is doubly obstructed. Its multi-contact symbol is ~4I on the
+  middle phase but degenerates at the end caps like lambda_min ~ 4.95
+  theta^1.69, so no uniform Garding constant exists there at all.
 
-  The obstruction. The finite-dimensional result cannot be promoted to
-  local maximality on H^2. This is a two-norm discrepancy: Q is coercive
-  only in H^1, but F is defined only where the trajectory is C^1, i.e.
-  on H^2 -> C^1, and the cubic remainder carries a factor eta'' so it is
-  not dominated by the H^1 quadratic term. No intermediate norm bridges
-  the two. Closing this needs new input (a mixed-norm third-variation
-  estimate, or a Weierstrass-type strong-minimum argument), not better
-  constants.
-
-  Consequences. For Gerver, local maximality holds regardless via Baek's
-  (2024) global resolution — not via this analysis. For Sigma no global
-  result exists, so local maximality of Sigma (the second half of
-  Romik's 2018 Open Problem 1) REMAINS OPEN; this paper does not
-  establish it. Two implementation caveats also remain: the Hessian uses
-  a floating-point polygon-intersection oracle (Shapely) rather than
-  interval arithmetic, and the low-to-high mode cross-term uses a
-  numerical placeholder. The jump piece Q_jump at the four
-  contact-transition breakpoints is captured only empirically, and its
-  rank is not determined by the diagonal.
+  CONSEQUENCES. For Gerver, local maximality holds regardless via Baek
+  (2024) -- but not via this route. For Sigma no global result exists,
+  and local maximality of Sigma (second half of Romik's 2018 Open
+  Problem 1) REMAINS OPEN, now with two distinct located reasons. The
+  finite-dimensional Hessian uses a floating-point polygon oracle rather
+  than interval arithmetic; this affects numerical constants but not the
+  structural (symbolic) conclusions.
 keywords:
   - moving sofa problem
   - Gerver's sofa
