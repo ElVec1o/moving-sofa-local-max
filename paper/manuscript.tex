@@ -1763,27 +1763,62 @@ comparison.  As for $\cG$, coercivity in $H^{2}$ is unavailable in
 principle (Theorem~\ref{thm:no-h2} applies verbatim, the ambidextrous
 second variation obeying the same $O(k^{2})$ growth).
 
-What \emph{does} transfer is the structural chain.  Affineness of the
-contact paths in $(c,c')$---hence $B_{2}=B_{3}=0$, hence no fatal
-cubic---holds for the reflected family $\rho(\,\cdot\,)$ as well as
-the direct one, since $\rho$ is affine; this is verified symbolically
-alongside the Gerver case.  What is missing is
-Proposition~\ref{prop:multicontact} for $\Sigma$: we have not tallied
-the contact counts $(n_{\mu},n_{\nu})$ across the phases of Romik's
-$13$-constant ambidextrous solution, and without them we have no
-value of $\lambda_{\min}(D_{\mathrm{tot}})$ and hence no G\aa rding
-constant.  Since $\Sigma = S_{x}\cap\rho(S_{x})$ draws contacts from
-both families, one expects the counts to be at least as favourable as
-in the Gerver case, but we have not checked this and do not rely on
-it.
+Part of the structural chain transfers.  Affineness of the contact
+paths in $(c,c')$---hence $B_{2}=B_{3}=0$, hence no fatal cubic---holds
+for the reflected family $\rho(\,\cdot\,)$ as well as the direct one,
+since $\rho$ is affine; this is verified symbolically alongside the
+Gerver case.  The principal symbol, however, does \emph{not} transfer,
+and this is the substantive point.
 
-The asymmetry with the Gerver case is worth stating plainly.  For
-$\cG$, local maximality holds regardless, as a consequence of
-Baek's~\cite{Baek2024} global resolution.  For $\Sigma$ no global
-result is available.  \emph{Local maximality of $\Sigma$---the second
-half of Romik~\cite[\S7, Open Problem~1]{Romik2018}---therefore
-remains open}, and the specific missing ingredient is the contact
-tally just described.
+Because $\rho$ is the reflection across $y=1/2$, with linear part
+$\operatorname{diag}(1,-1)$, one has $\rho(\mu_{\theta}) =
+\mu_{-\theta}$: the reflected family contributes normals at angle
+$-\theta$, which are not orthogonal to the direct family's.  Measuring
+the directional quotients against the ambidextrous oracle
+(\texttt{rigorous/phase2i\_sigma\_symbol.py},
+\texttt{phase2j\_sigma\_endcaps.py}) gives a sharply two-regime
+picture:
+\begin{itemize}
+\item On the middle phase $\beta<\theta<\pi/2-\beta$
+      ($\beta \approx 0.2897$), which is about $64\%$ of the domain,
+      $D_{\mathrm{tot}} \approx 4\,I$: isotropic, with trace
+      $8.0000$ at every probed $\theta$.  Here
+      $\lambda_{\min}\approx 4$, four times the Gerver value.
+\item On the two end caps, one direction collapses.  Measured
+      $\lambda_{\min}$ runs
+      $0.537,\,0.236,\,0.141,\,0.088,\,0.046$ at
+      $\theta = 0.24,\,0.18,\,0.13,\,0.09,\,0.06$, mirrored to four
+      decimals at the far end.  A log--log fit gives
+      $\lambda_{\min}\approx 4.95\,\theta^{1.69}$, i.e.\ decay to zero
+      as $\theta\to0$.
+\end{itemize}
+
+\begin{remark}[Why $\Sigma$ is genuinely harder than $\cG$]
+\label{rem:sigma-harder}
+For $\cG$ the bound $\lambda_{\min}=\min(n_{\mu},n_{\nu})=1$ holds
+because the contact counts never drop below one in \emph{either}
+family on \emph{any} of the five phases---a structural feature of
+Gerver's contact set, and the reason a G\aa rding constant exists at
+all.  $\Sigma$ has no such feature at its end caps: there
+$\lambda_{\min}(D_{\mathrm{tot}}(\theta))\to0$, so
+$\delta = \inf_{\theta}\lambda_{\min} = 0$ and
+\emph{no uniform G\aa rding constant exists}.  Theorem~\ref{thm:garding}
+therefore has no analogue for $\Sigma$, and the chain leading to
+\eqref{eq:final-chain} does not close.  The second variation at
+$\Sigma$ is degenerate-elliptic rather than elliptic; a weighted or
+degenerate-coercivity framework would be required, which we do not
+develop here.
+\end{remark}
+
+The asymmetry with the Gerver case is thus sharper than a difference
+in what has been checked.  For $\cG$, local maximality holds
+regardless, as a consequence of Baek's~\cite{Baek2024} global
+resolution.  For $\Sigma$ no global result is available, and the
+present method provably does not supply one.  \emph{Local maximality
+of $\Sigma$---the second half of
+Romik~\cite[\S7, Open Problem~1]{Romik2018}---remains open}, and we
+can now say precisely why: the principal symbol degenerates at the
+end caps like $\theta^{1.69}$.
 \end{remark}
 
 \begin{proof}[Proof sketch]
