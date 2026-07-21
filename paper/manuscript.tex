@@ -1768,10 +1768,15 @@ $\|\varepsilon\eta\|_{H^{2}}\leq0.4$ at $b_{2}$
 \]
 in each component: $g<0$ throughout the ball for every width tested, the
 worst value scaling like $w^{2}$ (the $H^{2}$ Rayleigh degeneracy of
-Theorem~\ref{thm:no-h2}) but staying strictly negative.  So $\cG$ is a
-local maximum along the localized directions at $b_{2}$, verified to $30$
-digits --- and, unlike the $C_{3},C_{4}$ margins, this statement does not
-depend on any finite-difference extraction.
+Theorem~\ref{thm:no-h2}) but staying strictly negative.  The same check
+at the other three breakpoints
+(\texttt{rigorous/phase2r\_all\_breakpoints.py}) gives $g<0$ throughout
+as well; the values at $b_{1}$ and $b_{4}$ agree to all printed digits,
+as the symmetry $\theta\mapsto\pi/2-\theta$ requires.  So $\cG$ is a
+local maximum along the localized directions at \emph{all four}
+breakpoints, verified to $30$ digits --- and, unlike the $C_{3},C_{4}$
+margins, this statement does not depend on any finite-difference
+extraction.
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
@@ -1787,22 +1792,21 @@ conditions there --- but we do not rest any numerical conclusion on its
 individually-extracted coefficients.
 
 A \emph{proof} remains open, and we are precise about the gap.  We have
-verified $g<0$ at high precision at the $b_{2}$ breakpoint over a family
+verified $g<0$ at high precision at all four breakpoints over a family
 of localized directions and over an $H^{2}$-ball; we have \emph{not}
-established it uniformly in the direction $\eta$, nor for all four
-breakpoints, nor with certified (interval) arithmetic in place of $30$-
-digit \textsc{mpmath}.  The natural route to close each of these is now
-concrete: a closed form for the ray coefficients via the second-order
-implicit-function response \eqref{eq:c34} through the contact-transition
-conditions of Section~\ref{sec:jump-piece} (for uniformity in $\eta$);
-the same computation at $b_{1},b_{3},b_{4}$ (the mirror symmetry
-$\theta\mapsto\pi/2-\theta$ pairs $b_{1}\!\leftrightarrow\!b_{4}$,
-$b_{2}\!\leftrightarrow\!b_{3}$, halving the work); and promotion of the
-oracle from \textsc{mpmath} to \textsc{arb} intervals.  For $\cG$ the
-statement is in any case a consequence of Baek~\cite{Baek2024}; the
-value of the reduction and of the exact oracle is that both apply where
-no global result exists, once the prior symbol degeneracy
-(Remark~\ref{rem:sigma-harder}) is overcome.
+established it uniformly in the direction $\eta$, nor with certified
+(interval) arithmetic in place of $30$-digit \textsc{mpmath}.  Two
+concrete steps close these.  For uniformity in $\eta$: the localized
+bumps are the worst case (a spread-out $\eta$ has a larger coercive bulk
+$Q$ relative to its breakpoint jets), so it suffices to control the
+narrow-bump limit, which a closed form for the ray coefficients via the
+second-order response \eqref{eq:c34} would make rigorous.  For
+certification: promotion of the oracle from \textsc{mpmath} to
+\textsc{arb} intervals turns each $30$-digit evaluation into a validated
+enclosure.  For $\cG$ the statement is in any case a consequence of
+Baek~\cite{Baek2024}; the value of the reduction and of the exact oracle
+is that both apply where no global result exists, once the prior symbol
+degeneracy (Remark~\ref{rem:sigma-harder}) is overcome.
 \end{remark}
 
 \begin{remark}[Why this is the crux]\label{rem:fatal-cubic}
