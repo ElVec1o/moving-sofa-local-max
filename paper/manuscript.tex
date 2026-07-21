@@ -1751,22 +1751,44 @@ tested width, out to $\varepsilon$ well past the crossover the cubic
 alone would predict: the genuine quartic stabilization $C_{4}<0$ is
 what rescues concavity.
 
-\begin{remark}[Status of the criterion]\label{rem:quartic-status}
-We do not prove \eqref{eq:quartic-crit} holds uniformly in the
-perturbation direction, and we caution that the margin is delicate.
-Under the concentrating normalization $\|\eta\|_{H^{2}}=1$, the
-perturbations that stress \eqref{eq:quartic-crit} change the area below
-the floating-point resolution of the Shapely oracle (measured
-$|\delta F|\approx 2\times10^{-7}$ at $w=0.005$, at the noise floor).
-Deciding the criterion in the worst directions therefore requires the
-interval-arithmetic oracle of Section~\ref{sec:discussion}, caveat~(i).
-What we assert is structural and, we believe, the right reformulation:
-local maximality of $\cG$ is equivalent to a finite family of quartic
-inequalities \eqref{eq:quartic-crit} at the four breakpoints, not to a
-coercivity estimate in any single Sobolev norm.  This is why the
-problem resists the standard second-variation machinery, and it is the
-sense in which the present analysis reduces the open question rather
-than resolving it.
+\begin{remark}[Status of the criterion, and a two-regime structure]
+\label{rem:quartic-status}
+Along a fixed ray the sign of $C_{4}$ depends on the width $w$ of the
+localized direction, and this produces two mechanisms, both consistent
+with local maximality.  For \emph{moderate} $w$ we measure $C_{4}>0$
+(e.g.\ $C_{4}=45.5,\,39.9,\,22.6$ at $w=0.05,0.04,0.03$): here
+$g/\varepsilon^{2}$ is an upward parabola that returns to zero only at
+large $\varepsilon$ --- at $w=0.05$, at $\|\varepsilon\eta\|_{H^{2}}
+\approx 1$, well outside any small ball --- so local maximality holds
+with an $O(1)$ radius.  For \emph{narrow} $w$ we measure $C_{4}<0$
+(e.g.\ $C_{4}\approx-76$ at $w=0.008$), and local maximality along the
+ray is governed by \eqref{eq:quartic-crit}, which holds by
+$\approx6\%$.  The narrow regime is the delicate one, and it is exactly
+where the method runs out: $C_{4}$'s signature in the area is
+$\sim10^{-6}$, only a few times the Shapely floor
+$\sim2\times10^{-7}$, so $C_{4}$ --- hence the $6\%$ margin --- cannot
+be resolved reliably by the floating-point oracle.  Under the
+concentrating normalization $\|\eta\|_{H^{2}}=1$ the stressing
+perturbations move the area below the floor outright
+($|\delta F|\approx2\times10^{-7}$ at $w=0.005$).
+
+We therefore do \emph{not} prove \eqref{eq:quartic-crit} uniformly, and
+we are explicit that we cannot: a rigorous decision requires either the
+interval-arithmetic oracle of Section~\ref{sec:discussion}, caveat~(i),
+or a closed form for $C_{3}(\eta),C_{4}(\eta)$ obtained by carrying the
+second-order implicit-function response \eqref{eq:c34} through the
+explicit contact-transition conditions at all four breakpoints --- both
+substantial undertakings.  What we assert is structural and, we
+believe, the right reformulation: local maximality of $\cG$ is
+controlled by a finite family of scale-resolved quartic conditions at
+the four breakpoints, not by a coercivity estimate in any single
+Sobolev norm.  This is why the problem resists the standard
+second-variation machinery, and it is the precise sense in which the
+present analysis reduces the open question rather than resolving it.
+For $\cG$ the question is settled independently by
+Baek~\cite{Baek2024}; the value of the reduction is that it applies
+equally where no global result exists, once the prior symbol
+degeneracy (Remark~\ref{rem:sigma-harder}) is overcome.
 \end{remark}
 
 \begin{remark}[Why this is the crux]\label{rem:fatal-cubic}
