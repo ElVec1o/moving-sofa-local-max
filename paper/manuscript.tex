@@ -1786,10 +1786,16 @@ response, divided by $w^{2}$, converges to a width-independent profile
      \frac{F[\cG+\varepsilon\hat\eta] - F[\cG]}{w^{2}} ,
 \end{equation}
 the limit existing to all printed digits across $w = 10^{-2}$ to
-$1.25\times10^{-3}$.  At $b_{1}$ it is $G(\varepsilon) = -0.100\,
-\varepsilon^{2}$ to six digits; at $b_{2}$, $-0.107\,\varepsilon^{2}$;
-both are strictly negative on the whole sampled ball
-$\varepsilon\in(0,0.6]$, in both components.
+$1.25\times10^{-3}$.  Fitting $G(\varepsilon)=b\varepsilon^{2}+
+c\varepsilon^{3}+d\varepsilon^{4}$ to the converged profile, at $b_{1}$
+one finds $b = -0.10015$ and $c = d = 0$ to the fit residual
+($2\times10^{-8}$): the profile is a \emph{pure negative quadratic},
+with no cubic term.  At $b_{2}$, $b=-0.1075$ with a small cubic
+$c/b\approx 4\%$ (partly convergence residual at the coarser width).
+Both profiles are strictly negative on the whole sampled ball
+$\varepsilon\in(0,0.6]$, in both components.  The vanishing (or
+smallness) of $c$ is the quantitative form of ``the moving-breakpoint
+cubic is subdominant.''
 
 The point is that this limit is exactly the rescaled coercive form.  By
 Proposition~\ref{prop:multicontact} the multi-contact symbol at the
