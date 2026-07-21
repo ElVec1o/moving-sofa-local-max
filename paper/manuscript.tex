@@ -1739,65 +1739,70 @@ This converts the diffuse two-norm difficulty into a concrete finite
 inequality: local maximality along the breakpoint directions holds iff
 \eqref{eq:quartic-crit} holds at each $b_{j}$, in every direction.
 
-Resolving the criterion requires $C_{4}$, whose signature in the area
-is $\sim10^{-6}$ --- only a few times the Shapely floating-point floor
-$\sim2\times10^{-7}$, so the polygon oracle cannot measure it.  We
-therefore evaluate $F$ instead by the exact Green's-theorem boundary
-integral over the analytic contact paths
-(\texttt{rigorous/analytic\_oracle.py}), in \textsc{mpmath} at $30$
-digits.  This oracle reproduces $A^{\star}$ to
-$4\times10^{-16}$ (against Shapely's $2\times10^{-7}$), so
-$Q,C_{3},C_{4}$ become clean; it is also the interval-ready form
-identified in Section~\ref{sec:discussion}, caveat~(i).  At the $b_{2}$
-breakpoint (\texttt{rigorous/phase2o\_criterion\_exact.py}) it gives,
-in the $x$-component,
+The individual coefficients $C_{3},C_{4}$ are, however, numerically
+delicate: they are third and fourth $\varepsilon$-derivatives of $g$,
+and for a bump of width $w$ their finite-difference extraction carries a
+truncation error that grows as $w\to0$ (the higher
+$\varepsilon$-derivatives of $g$ scale with inverse powers of $w$).
+Different step choices give different $C_{4}$, even of opposite sign, so
+we do \emph{not} report the criterion through extracted $C_{3},C_{4}$.
+
+What \emph{is} robust is $g$ itself, and local maximality is exactly the
+statement $g\leq0$ --- no differentiation required.  We evaluate $g$ by
+the exact Green's-theorem boundary integral over the analytic contact
+paths (\texttt{rigorous/analytic\_oracle.py}), in \textsc{mpmath} at
+$30$ digits; the oracle reproduces $A^{\star}$ to $4\times10^{-16}$
+(against Shapely's $2\times10^{-7}$), and is the interval-ready form of
+Section~\ref{sec:discussion}, caveat~(i).  This precision makes
+tractable the test that defeated the floating-point oracle:
+$H^{2}$-\emph{normalized} narrow bumps, whose area signature sits below
+Shapely's floor.  Normalizing $\|\eta\|_{H^{2}}=1$ and sampling the ball
+$\|\varepsilon\eta\|_{H^{2}}\leq0.4$ at $b_{2}$
+(\texttt{rigorous/phase2q\_direct\_localmax.py}) gives
 \[
   \begin{array}{lcccc}
-    w:      & 0.020 & 0.015 & 0.012 & 0.006\\
-    C_{4}:  & +16.7 & -6.5  & -16.9 & -26.6\\
-    \text{margin of \eqref{eq:quartic-crit}}: & (C_{4}>0) & -62\% & +42\% & +27\%
+    w:            & 0.020 & 0.010 & 0.005 & 0.0025\\
+    \max_{\varepsilon}g:  & -7.2{\times}10^{-8} & -1.8{\times}10^{-8}
+                          & -4.4{\times}10^{-9} & -1.1{\times}10^{-9}
   \end{array}
 \]
-So $C_{4}$ changes sign near $w\approx0.015$, and away from that
-crossover, in the $C_{4}<0$ regime, the criterion holds with a
-comfortable margin ($+24\%$ to $+42\%$ across the $x$- and
-$y$-components) --- not the marginal figure a floating-point evaluation
-suggests.
+in each component: $g<0$ throughout the ball for every width tested, the
+worst value scaling like $w^{2}$ (the $H^{2}$ Rayleigh degeneracy of
+Theorem~\ref{thm:no-h2}) but staying strictly negative.  So $\cG$ is a
+local maximum along the localized directions at $b_{2}$, verified to $30$
+digits --- and, unlike the $C_{3},C_{4}$ margins, this statement does not
+depend on any finite-difference extraction.
 
-\begin{remark}[The crossover, and what the oracle does and does not settle]
+\begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
-At the crossover width where $C_{4}\approx0$ the quartic model
-\eqref{eq:ray-poly} degenerates and \eqref{eq:quartic-crit} is not the
-right test: there the higher-order coefficients $C_{5},C_{6},\dots$
-govern.  This is not a threat to local maximality.  Evaluating $g$
-directly with the analytic oracle at the crossover width $w=0.015$, we
-find $g(\varepsilon)<0$ at \emph{every} tested $\varepsilon$ out to
-$\|\varepsilon\eta\|_{H^{2}}\approx4$ --- including $\varepsilon=0.224$,
-exactly where the truncated quartic predicts $g>0$
-($g(0.224)=-3.7\times10^{-4}$).  So the ``failure'' of
-\eqref{eq:quartic-crit} at the crossover is a failure of the quartic
-\emph{truncation}, not of concavity: the full $g$ stays negative to all
-orders.  Across all probed widths at $b_{2}$, then, $\cG$ is a local
-maximum along the ray, and in the genuinely narrow regime it is so with
-the comfortable $+24\%$ to $+42\%$ margin above.
+The direct check is unambiguous where the coefficient extraction is not,
+and it is the statement we stand behind: at $b_{2}$, along the localized
+directions in both components, $\cG$ is a strict local maximum in an
+$H^{2}$-ball, verified to $30$ digits and free of the floating-point
+floor that made the Shapely evaluation inconclusive.  The quartic model
+\eqref{eq:ray-poly}--\eqref{eq:quartic-crit} remains valuable as
+\emph{structure} --- it explains why the difficulty is concentrated in
+the moving breakpoints and reduces the question to finitely many
+conditions there --- but we do not rest any numerical conclusion on its
+individually-extracted coefficients.
 
-What remains open is a \emph{proof}.  We have verified the criterion at
-high precision at the $b_{2}$ breakpoint over a range of localized
-directions, not established it uniformly in the direction $\eta$, and
-not for all four breakpoints.  A proof requires a closed form for
-$C_{3}(\eta),C_{4}(\eta)$ --- obtained by carrying the second-order
+A \emph{proof} remains open, and we are precise about the gap.  We have
+verified $g<0$ at high precision at the $b_{2}$ breakpoint over a family
+of localized directions and over an $H^{2}$-ball; we have \emph{not}
+established it uniformly in the direction $\eta$, nor for all four
+breakpoints, nor with certified (interval) arithmetic in place of $30$-
+digit \textsc{mpmath}.  The natural route to close each of these is now
+concrete: a closed form for the ray coefficients via the second-order
 implicit-function response \eqref{eq:c34} through the contact-transition
-conditions of Section~\ref{sec:jump-piece} --- together with the
-higher-order treatment at the crossover.  The reformulation we assert is
-structural: local maximality of $\cG$ is controlled by a finite family
-of scale-resolved conditions at the four breakpoints, not by a
-coercivity estimate in any single Sobolev norm.  The healthy margins
-above, now free of the floating-point floor, indicate the target is
-comfortably true rather than marginal.  For $\cG$ the question is in any
-case settled by Baek~\cite{Baek2024}; the value of the reduction, and of
-the exact oracle, is that both apply where no global result exists ---
-once the prior symbol degeneracy (Remark~\ref{rem:sigma-harder}) is
-overcome.
+conditions of Section~\ref{sec:jump-piece} (for uniformity in $\eta$);
+the same computation at $b_{1},b_{3},b_{4}$ (the mirror symmetry
+$\theta\mapsto\pi/2-\theta$ pairs $b_{1}\!\leftrightarrow\!b_{4}$,
+$b_{2}\!\leftrightarrow\!b_{3}$, halving the work); and promotion of the
+oracle from \textsc{mpmath} to \textsc{arb} intervals.  For $\cG$ the
+statement is in any case a consequence of Baek~\cite{Baek2024}; the
+value of the reduction and of the exact oracle is that both apply where
+no global result exists, once the prior symbol degeneracy
+(Remark~\ref{rem:sigma-harder}) is overcome.
 \end{remark}
 
 \begin{remark}[Why this is the crux]\label{rem:fatal-cubic}
