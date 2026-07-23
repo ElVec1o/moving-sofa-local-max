@@ -17,6 +17,7 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
 
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
@@ -1815,19 +1816,57 @@ $G$, which the convergence of \eqref{eq:blowup} shows is absent), and
 the leading behavior of $g$ is the negative quadratic supplied by the
 proved coercivity.
 
-This is how a proof should go, and it isolates exactly the one missing
-estimate.  Writing $g(\varepsilon\hat\eta) = \tfrac12 Q(\hat\eta)
-\varepsilon^{2} + R(\varepsilon)$, the local maximum follows once
-$R(\varepsilon) = o(w^{2}\varepsilon^{2})$ uniformly on the ball --- i.e.\
-once the moving-breakpoint remainder is controlled against the coercive
-quadratic in the blow-up.  The blow-up profile \eqref{eq:blowup} makes
-this a boundary-layer estimate at a single point rather than a global
-Sobolev inequality, and its target is a \emph{negative} quantity with
-room to spare ($-0.107$ against the bound $-0.100$).  We regard
-establishing \eqref{eq:blowup} and this subdominance rigorously ---
-together with the passage from the worst-case localized bumps to general
-$\eta$, and \textsc{arb}-interval certification --- as the concrete
-remaining path to a theorem.
+This is how a proof should go, and it isolates exactly one missing
+estimate, which we state as the finishing lemma.
+
+\begin{conjecture}[Boundary-layer subdominance --- the finishing lemma]
+\label{conj:subdominance}
+Fix a breakpoint $b_{j}$ and the localized family
+$\hat\eta_{w}=\eta_{w}/\|\eta_{w}\|_{H^{2}}$,
+$\eta_{w}(\theta)=w\,\sigma e^{-\sigma^{2}}$, $\sigma=(\theta-b_{j})/w$,
+in a fixed unit direction $\hat e$.  Then:
+\begin{enumerate}
+\item[(i)] the rescaled response
+$g_{w}(\varepsilon):=w^{-2}\bigl(F[\cG+\varepsilon\hat\eta_{w}]-F[\cG]\bigr)$
+converges, as $w\to0$, uniformly for $\varepsilon$ in compact
+subsets of $\R$, to a limit $G_{j,\hat e}(\varepsilon)$;
+\item[(ii)] $G_{j,\hat e}(\varepsilon)
+= \tfrac12\,\Lambda_{j}(\hat e)\,\varepsilon^{2}+o(\varepsilon^{2})$
+with $\Lambda_{j}(\hat e)
+= -\tfrac{I_{1}}{I_{2}}\,\langle\hat e,D_{\mathrm{tot}}(b_{j})\hat e\rangle
+\leq -\tfrac15<0$ (by Proposition~\ref{prop:multicontact});
+\item[(iii)] $G_{j,\hat e}(\varepsilon)<0$ for
+$0<\varepsilon\leq\rho$, some $\rho>0$ independent of $j,\hat e$.
+\end{enumerate}
+Equivalently, the moving-breakpoint contribution to $D^{3}F$ and higher
+along $\hat\eta_{w}$ is $o(w^{2})$: the cubic that is fatal for
+unnormalized bumps is subdominant in the correct scaling.
+\end{conjecture}
+
+Every clause is verified to $30$ digits at all four breakpoints and both
+components (Sections above); clause~(ii)'s leading coefficient is
+\emph{proved} (it is the G\aa rding inequality
+\eqref{eq:blowup-garding}).  What is open is (i)--(iii) as $w\to0$
+\emph{statements}, i.e.\ the matched-asymptotic passage to the limit.
+Granting Conjecture~\ref{conj:subdominance}, together with the reduction
+of general $\eta$ to the worst-case localized bumps (a spread-out $\eta$
+has strictly larger coercive bulk relative to its breakpoint jets) and
+\textsc{arb}-interval certification of the finite data, yields
+$F[\cG+\eta]<F[\cG]$ on a punctured $H^{2}$-ball: a strict local maximum.
+We regard Conjecture~\ref{conj:subdominance} as the precise remaining
+content of the theorem, and note that its target is a \emph{negative}
+quantity with margin ($-0.107$ against the proved bound $-0.100$ at
+$b_{2}$; exact equality at $b_{1}$).
+
+The obstruction to proving it directly is a cancellation we can exhibit
+but not yet explain: the moving breakpoint \emph{a priori} contributes an
+$O(w)$ term to $Q(\hat\eta_{w})$ --- through
+$\Delta(\partial_{\theta}J)\,(\delta b)^{2}$ with a nonzero jump of the
+boundary-integrand derivative (the sofa boundary has a genuine corner at
+each breakpoint, Section~\ref{sec:blowup}) --- yet the oracle finds
+$Q(\hat\eta_{w})=O(w^{2})$.  Some structural identity forces this
+$O(w)$ term to cancel; identifying it is, we believe, the key to
+Conjecture~\ref{conj:subdominance}.
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
