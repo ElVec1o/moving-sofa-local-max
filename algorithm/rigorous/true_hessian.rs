@@ -213,10 +213,29 @@ fn solve_junction(pert: &Pert, which: u8, t0: f64, s0: f64) -> (f64, f64) {
     (t, s)
 }
 
+fn junctions_continued(pert: &Pert, nsteps: usize) -> (f64, f64, f64, f64) {
+    // eps-continuation: walk eps from 0 to pert.eps in nsteps, warm-starting
+    // each junction Newton from the previous solution.  This tracks the
+    // ORIGINAL root branch through the multi-crossing landscape and prevents
+    // basin jumps (the corruption seen without it).
+    let (mut bd, mut bx2) = (THETA, PI2 - PHI);
+    let (mut bb, mut bx1) = (PI2 - THETA, PHI);
+    for i in 1..=nsteps {
+        let p = Pert {
+            terms: pert.terms.clone(),
+            eps: pert.eps * (i as f64) / (nsteps as f64),
+        };
+        let (a, b) = solve_junction(&p, 3, bd, bx2);
+        bd = a; bx2 = b;
+        let (c, d) = solve_junction(&p, 1, bb, bx1);
+        bb = c; bx1 = d;
+    }
+    (bd, bx2, bx1, bb)
+}
+
 fn area(pert: &Pert, gl: &([f64; 40], [f64; 40])) -> f64 {
     let (xs, ws) = gl;
-    let (bd, bx2) = solve_junction(pert, 3, THETA, PI2 - PHI);
-    let (bb, bx1) = solve_junction(pert, 1, PI2 - THETA, PHI);
+    let (bd, bx2, bx1, bb) = junctions_continued(pert, 16);
     let kinks = [PHI, THETA, PI2 - THETA, PI2 - PHI];
     let mut extra: Vec<f64> = Vec::new();
     for &(_, k, _) in &pert.terms { let _ = k; }
@@ -254,10 +273,22 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     let kmax: usize = if args.len() > 1 { args[1].parse().unwrap() } else { 24 };
     let h: f64 = if args.len() > 2 { args[2].parse().unwrap() } else { 1e-3 };
-    let n = 2 * kmax;
     let gl = gl40();
-    let modes: Vec<(usize, f64)> =
-        (0..2).flat_map(|c| (1..=kmax).map(move |k| (c, k as f64))).collect();
+    // Endpoint-slope-free basis: v_k = sin(2kt) + a_k sin(2t) + b_k sin(4t)
+    // with v'(0) = v'(pi/2) = 0 (a_k = -k(1-(-1)^k)/2, b_k = -k(1+(-1)^k)/4),
+    // k = 3..K.  On this subspace all endpoint jets vanish, the outer corners
+    // are inert, and the chord-closed analytic oracle EQUALS the true F.
+    let mut modes: Vec<Vec<(usize, f64, f64)>> = Vec::new();
+    for c in 0..2usize {
+        for k in 3..=kmax {
+            let kf = k as f64;
+            let sgn = if k % 2 == 0 { 1.0 } else { -1.0 };
+            let a = -kf * (1.0 - sgn) / 2.0;
+            let b = -kf * (1.0 + sgn) / 4.0;
+            modes.push(vec![(c, kf, 1.0), (c, 1.0, a), (c, 2.0, b)]);
+        }
+    }
+    let n = modes.len();
 
     let a0 = area(&Pert { terms: vec![], eps: 0.0 }, &gl);
     println!("A(c_G) = {:.15}  (target 2.219531668871968)", a0);
@@ -283,18 +314,25 @@ fn main() {
         if !row_done {
             for j in i..n {
                 if q[i][j].is_finite() { done += 1.0; continue; }
-                let (ci, ki) = modes[i];
-                let (cj, kj) = modes[j];
+                let merge = |si: f64, sj: f64| -> Vec<(usize, f64, f64)> {
+                    let mut v: Vec<(usize, f64, f64)> = Vec::new();
+                    for &(c, k, a) in &modes[i] { v.push((c, k, si * a)); }
+                    for &(c, k, a) in &modes[j] { v.push((c, k, sj * a)); }
+                    v
+                };
+                let mc = merge(1.0, 1.0).iter().map(|&(_, _, a)| a.abs())
+                    .fold(0.0f64, f64::max);
+                let hh = h / (1.0 + mc);
                 let val = if i == j {
-                    let gp = g(vec![(ci, ki, 1.0)], h);
-                    let gm = g(vec![(ci, ki, 1.0)], -h);
-                    (gp + gm) / (h * h)
+                    let gp = g(merge(1.0, 0.0), hh);
+                    let gm = g(merge(1.0, 0.0), -hh);
+                    (gp + gm) / (hh * hh)
                 } else {
-                    let gpp = g(vec![(ci, ki, 1.0), (cj, kj, 1.0)], h);
-                    let gmm = g(vec![(ci, ki, 1.0), (cj, kj, 1.0)], -h);
-                    let gpm = g(vec![(ci, ki, 1.0), (cj, kj, -1.0)], h);
-                    let gmp = g(vec![(ci, ki, 1.0), (cj, kj, -1.0)], -h);
-                    (gpp + gmm - gpm - gmp) / (4.0 * h * h)
+                    let gpp = g(merge(1.0, 1.0), hh);
+                    let gmm = g(merge(1.0, 1.0), -hh);
+                    let gpm = g(merge(1.0, -1.0), hh);
+                    let gmp = g(merge(1.0, -1.0), -hh);
+                    (gpp + gmm - gpm - gmp) / (4.0 * hh * hh)
                 };
                 q[i][j] = val;
                 q[j][i] = val;
