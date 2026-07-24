@@ -2580,19 +2580,32 @@ Danskin-type argument plus computation;
 (ii) the uniformization of the per-direction ball over the
 $H^{2}$-sphere;
 (iii) $K\to\infty$ control of the true-Hessian blocks.  This is now
-substantially advanced: a Rust port of the exact oracle
-(\texttt{rigorous/true\_hessian.rs}; $\varepsilon$-continuation
-junction tracking, scale-aware stencils, $A^{\star}$ reproduced to
-$15$ digits, seconds per block) evaluates the true form on the
-endpoint-slope-free subspace --- where the analytic oracle coincides
-with $F$ exactly --- and finds the $H^{1}$ margin \emph{flat}:
-$m_{1} = 0.8049$ at $K=16$ and $0.7966$ at $K=24$, in sharp contrast
-to the frozen form's decay to indefiniteness, and matching the
-$0.79$--$1.24$ diagonal quotients measured independently.  This is
-precisely the robustness the affine-family envelope predicts.
-Extending past $K=32$ requires fold-aware continuation of the
-junction branch (isolated corrupted entries appear there;
-documented);
+numerically settled.  A Rust port of the exact oracle
+(\texttt{rigorous/true\_hessian.rs}; $\varepsilon$-continuation and
+side-resolved junction tracking, scale-aware stencils, $A^{\star}$
+reproduced to $15$ digits, seconds per block) evaluates the true form
+on the endpoint-slope-free subspace --- where the analytic oracle
+coincides with $F$ exactly --- and, with stencil steps below the
+pair-direction transition scale, the ladder is negative definite
+throughout:
+\[
+   m_{1}(K) = 0.8053,\ 0.7967,\ 0.7904,\ 0.7810,\ 0.7754
+   \quad\text{at}\quad K = 16, 24, 32, 48, 64
+\]
+($28$ to $124$ modes), with shrinking decrements fitting
+$m_{1}(K)\approx m_{\infty}+c/K$, $m_{\infty}\approx0.765>0$: the
+true-Hessian $H^{1}$ margin converges to a positive limit, matching
+the independently measured $0.79$--$1.24$ diagonal quotients and the
+robustness the affine-family envelope predicts.  Every anomaly met on
+the way was traced and closed: junction basin jumps
+($\varepsilon$-continuation), the outer-corner chord artifact (the
+slope-free subspace), kink-stalled Newton (side-resolved solving),
+and finally stencil steps straddling the combinatorial transition of
+\emph{pair} directions (steps reduced below it; the resulting matrix
+reproduces the independent $25$-digit \textsc{mpmath} probe along the
+adversarial direction to four digits, $-1.5421$ vs $-1.5426$).  What
+remains here is only the analytic tail estimate beyond the computed
+range;
 (iv) interval quadrature of the closed-form entry integrands ---
 the spectral half of certification is already done in \textsc{arb}
 (preceding paragraph).
