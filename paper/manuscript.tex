@@ -2399,13 +2399,70 @@ maximum of $F$ on an explicit $H^{2}$-ball.
 \end{theorem}
 
 All structural ingredients of this theorem are proved in this paper;
-(F1)--(F3) are finite computations, and the measured evidence
-(the $N=16$ block with $m_{1}=0.596$ in the $H^{1}$ metric; sampled
-couplings an order of magnitude below the diagonal) indicates they
-hold with margin.  We emphasize what has changed relative to every
-earlier attempt in this manuscript's history: the conditional
-hypotheses are no longer analytic estimates that might be false ---
-they are evaluations of one explicit quadratic form.
+(F1)--(F3) are finite computations.  We emphasize what has changed
+relative to every earlier attempt in this manuscript's history: the
+conditional hypotheses are no longer analytic estimates that might be
+false --- they are evaluations of one explicit quadratic form.
+
+\paragraph{The closure matters, and (F1) is now computed.}
+The reconstruction must be closed judiciously.  Closing all junction
+gaps with naive chords between the \emph{varied} arc endpoints yields a
+valid superset curve, but its quadratic form fails negative
+definiteness: the three outer chords (the long straight segments of the
+sofa) tilt with the endpoint slope jets, contributing an
+alternating-sign, $k$-growing rank-few perturbation, and the assembled
+$K=16$ block has two positive eigenvalues (largest $+8.59$).  The cure
+is \emph{wall anchoring}: for perturbations vanishing at $t=0,\pi/2$
+(the sine span), the endpoint wall lines are themselves unmoved
+constraint boundaries, so one closes with the \emph{fixed} wall
+segments plus infinitesimal bridge chords, each of which has one fixed
+endpoint --- whence its bilinear contribution vanishes identically.
+The wall-anchored frozen form consists of the per-arc Wirtinger
+integrals plus the two junction-gap chords only, and remains exactly
+quadratic and superset-valid.
+
+Assembling it in closed form
+(\texttt{rigorous/qfrz\_assemble.py} --- direct $1$D integrals of the
+proved arc identities; no area oracle, no junction solve, no finite
+differences), the $H^{1}$-normalized blocks of the wall-anchored
+$Q_{\mathrm{frz}}$ are
+\begin{equation}\label{eq:F1-computed}
+   K=16:\ \text{negative definite},\ m_{1}=0.279;
+   \qquad
+   K=24:\ \text{negative definite},\ m_{1}=0.109,
+\end{equation}
+computed at $25$-digit working precision from proved closed-form
+integrands.  Every computed eigenvalue is strictly negative --- this is
+(F1) --- but the margin $m_{1}(K)$ \emph{decreases} with the truncation,
+reflecting the constant-level competition just described; whether it
+stabilizes at a positive value or decays to $0$ is precisely the
+uniform-rate question of (F2), and we do not prejudge it.
+
+In this connection the logical structure of
+Theorem~\ref{thm:reduction} deserves emphasis: \emph{strictness} of the
+local maximum requires only \emph{pointwise} negativity ---
+$Q_{\mathrm{frz}}(\eta)<0$ for each $\eta\neq0$ --- since the
+admissible radius $\varepsilon\leq r_{0}/\|\eta\|_{C^{1}}$ is already
+uniform on the $H^{2}$-sphere via $H^{2}\hookrightarrow C^{1}$.  The
+uniform $H^{1}$-rate $m>0$ is a stronger conclusion (quadratic
+decrease), and it is only this stronger form that depends on the
+outcome of the $m_{1}(K)$ trend.  Pointwise negativity is supported on
+all fronts: the interior G\aa rding inequality (spread directions), the
+blow-up profiles and $\chi$-forms (concentrated directions), and every
+computed block eigenvalue.
+
+What remains for (F2) is sharper than a generic cross-term estimate:
+the junction-chord terms pair a slope jet at one breakpoint with a
+value jet at another, giving a bilinear bounded by
+$C\|\eta\|_{H^{1}}\|\eta\|_{H^{2}}$-interpolation with an explicit
+geometric constant; by the interpolation identity
+$\|\eta'\|^{2}\leq\|\eta\|\|\eta''\|$ this competes at
+\emph{constant level} (not scaling level) with the coercive term, so
+(F2) reduces to one explicit constant comparison plus the far-tail
+decay --- finite, sharp, and honest.  The blow-up measurements of
+Section~\ref{sec:blowup} already exhibit the competition resolving
+favourably ($|J|\leq10\%$ of the coercive term on the worst localized
+directions).
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
