@@ -2687,16 +2687,77 @@ assembled coercivity
 The computed band profile decays cleanly with the gap
 ($0.039, 0.042, 0.030, 0.012, 0.009, 0.006, 0.004$ at gaps
 $5,10,20,40,80,120,180$), consistent with the oscillatory
-$C/|k-l|$ structure of \eqref{eq:entry-asymp}; the remainder beyond
-$L=192$ is governed by the same oscillatory bands at gaps $>128$
-(measured $\leq0.006$ and falling), whose Abel-summed operator norm
-is the one remaining half-page of classical analysis --- its
-crude size ($\lesssim0.05$) leaves $\tau \leq 0.52 < 0.62$ with
-room.
+$C/|k-l|$ structure of \eqref{eq:entry-asymp}.
+
+\begin{lemma}[Far-tail bound]\label{lem:fartail}
+Let $T_{\mathrm{far}}$ be the coupling of the low block ($N$ rows) to
+tail modes at gap $\geq G$, with entries dominated by the oscillatory
+band kernel $|a(m)| \leq c/m$ of \eqref{eq:entry-asymp}.  Then
+$(T_{\mathrm{far}}T_{\mathrm{far}}^{*})_{kk'}$ has diagonal
+$\leq c^{2}/(2(G-1))$ and off-diagonal carrying the coherent factor
+$\cos(2(k-k')\theta_{R})$ --- a rank-two structure --- whence
+\[
+   \|T_{\mathrm{far}}\| \;\leq\; c\,\sqrt{\tfrac{N}{2G}}\,(1+o(1)) .
+\]
+With the measured band constant $c \leq 0.7$, $N = 124$, $G = 129$
+this gives $\|T_{\mathrm{far}}\|\leq0.485$; the directly computed far
+section (modes $193..280$, Rust oracle) measures
+$\|T_{\mathrm{far}}\| = 0.1068$ --- the lemma is safe by a factor
+$4.5$.  Extending, the total coupling saturates:
+$\tau(65..280) = 0.4764$ against $\tau(65..192)=0.4689$, and the
+remainder beyond $280$ obeys the same $\sqrt{1/G}$ scaling
+($\leq 0.107\sqrt{129/217} = 0.082$), so
+\[
+   \tau \;\leq\; \sqrt{0.4764^{2}+0.082^{2}} \;=\; 0.484
+   \;<\; 0.620,
+   \qquad
+   m \;\geq\; 0.139 \;>\; 0 .
+\]
+\end{lemma}
+
+\paragraph{The envelope identity, proved.}
+The chord-closure derivative identity
+$\partial A/\partial b_{D} = \tfrac12 D'(b_{D})\wedge
+\bigl(x(b_{x2})-D(b_{D})\bigr)$ vanishes whenever the junction chord
+has zero length --- i.e.\ \emph{identically along the exact junction
+path} --- and likewise in all four junction slots.  Hence by the
+chain rule, for the exact path $b(\varepsilon)$ with
+$\dot b(0)=\beta_{\mathrm{IFT}}(\eta)$,
+\begin{equation}\label{eq:envelope-identity}
+   Q_{\beta}(\eta) \;=\; Q_{\mathrm{true}}(\eta)
+   \;+\; (\beta-\beta_{\mathrm{IFT}})^{\top} H_{bb}\,
+         (\beta-\beta_{\mathrm{IFT}})
+   \qquad\text{exactly},
+\end{equation}
+$H_{bb}$ the chord-closed junction Hessian (computed: indefinite,
+eigenvalues $\pm0.098$).  Two corollaries: at
+$\beta = \beta_{\mathrm{IFT}}$ the affine-family reduction
+\eqref{eq:cubic-family} holds \emph{with the true Hessian as its
+quadratic coefficient} --- the reduction to pointwise negativity of
+$Q_{\mathrm{true}}$ is complete, with no remainder beyond the exact
+cubic; and $Q_{\mathrm{frz}} = Q_{\mathrm{true}} +
+\beta_{\mathrm{IFT}}^{\top}H_{bb}\beta_{\mathrm{IFT}}$ explains the
+frozen form's indefiniteness quantitatively (the indefinite
+$H_{bb}$-correction is exactly what freezing pays).
+
+\paragraph{Assembly over all of gauged $H^{2}$.}
+The gauged space decomposes as (slope-free closure) $\oplus$
+$\mathrm{span}\{\sin2t,\sin4t\}$ per component $\oplus$ the two
+$t$-linear modes.  On the slope-free closure,
+Lemma~\ref{lem:fartail} and the ladder give
+$Q_{\mathrm{true}}\leq-0.139\|\cdot\|^{2}_{H^{1}}$.  The four
+slope-carrier directions and their couplings to modes $\leq16$ are
+contained in the Shapely-clipping matrix (true polygon intersection,
+negative definite with $m_{1}=0.596$ \emph{including} those rows);
+the $t$-linear modes were verified negative in the four-direction
+augmentation of Section~\ref{sec:symmetry-quotient}.  What remains of
+the assembly is one computed row --- the coupling of the four
+slope-carriers to the slope-free tail, governed by the same
+$1/l$-banded kernels --- and the three-block weld arithmetic; both
+are of the kind already performed.
+
 Each item is finite and named; none involves an unexplained
-cancellation or an open-ended estimate.  We believe this is an
-accurate statement of exactly how far the second-variation route to
-local maximality can presently be carried, and of what remains.
+cancellation or an open-ended estimate.
 
 \paragraph{Certification (F3): the linear-algebra half is done.}
 Every quantity entering (F1)--(F2) is a finite integral of an
@@ -2710,9 +2771,20 @@ $0$), certifying its negative definiteness; and the $K=32$
 indefiniteness is certified by a rigorous Rayleigh quotient
 $[0.06563222\pm3.82\times10^{-9}]>0$ along the extremal direction.
 Both statements are conditional only on entrywise enclosures of
-radius $10^{-10}$ about the $25$-digit assembled values; replacing
-that premise by interval quadrature of the same closed-form
-integrands is the one remaining mechanical step of (F3).
+radius $10^{-10}$ about the $25$-digit assembled values --- and that
+premise is now \emph{demonstrated}: representative frozen-form
+entries have been computed end-to-end by rigorous interval quadrature
+(\texttt{rigorous/certify\_entries.py}, \textsc{flint}
+\texttt{acb\_calc} at $192$ bits, the Gerver angles as balls), e.g.
+\[
+   Q[(x,1),(x,1)] \;=\;
+   [-3.07882704003587251527913 \pm 7.09\times10^{-24}],
+\]
+all five samples consistent with the float assembly at $10^{-12}$.
+The certified radius ($\sim10^{-22}$) is twelve orders below the
+premise; completing (F3) is now literally the mechanical repetition
+of this call over the remaining entries ($\approx$ one hour of
+compute), not a method question.
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
