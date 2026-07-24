@@ -59,12 +59,17 @@ generally.
   rank-2 cosine Toeplitz and S a PSD Gram; Schur's product theorem gives
   ‖T_far‖ ≤ c·√((N/2+σ)/(2(G−1))) with explicit σ — the first coupling
   bound in this problem landing at the measured scale.
-- **[P] N9. The weighted cap framework (Σ).** Cap degeneracy = stationary
-  contacts (N4) ⟹ the regular μ-slot mask vanishes on cap phases; exact
-  weight w_μ = min(1, sin²θ/sin²β, cos²θ/sin²β), w_ν = 1; anomalous
-  stationary-contact responses are one-signed favourable (N1). Reduces
-  degenerate-elliptic Σ-coercivity to the standard ladder in a weighted
-  metric.
+- **[P] N9. The weighted cap framework (Σ) — mechanism PROVED.** Cap
+  degeneracy = stationary contacts (N4): on the cap phases the only MOVING
+  contacts of each family are its two ν-slot arcs (mask table computed:
+  `sigma_masks.py`; both families' tables coincide by ρ-invariance). The
+  two families' ν-frames at parameter θ point along ν_{±θ}, an angle 2θ
+  apart, and the frame-pair Gram ν_θν_θᵀ + ν_{−θ}ν_{−θ}ᵀ has eigenvalues
+  {2cos²θ, 2sin²θ} — the ambidextrous structure repairs its own cap
+  degeneracy at exactly rate sin²θ. Hence the weight
+  w_μ = min(1, sin²θ/sin²β, cos²θ/sin²β), w_ν = 1, with the anomalous
+  stationary-contact responses one-signed favourable (N1). Core identity
+  machine-verified (Lean: `frame_pair_identity`, `frame_pair_coercive`).
 - **[K→ ] N10. Certified cell-wise QP (the global machine).** Trajectory
   space carves into combinatorial cells (junction-branch charts); frozen
   reconstructions give exact quadratic upper envelopes per region (N1+N2)
@@ -111,8 +116,12 @@ generally.
   coercivity). *(in progress)*
 - **[ ] S4.** Σ analytic oracle (both families; the Rust port pattern) — for
   precision beyond Shapely and for certification.
-- **[ ] S5.** Σ interior Gårding in the weighted metric (the N5/N6 proofs
-  carry over; write with the weight).
+- **[P/ ] S5.** Σ interior Gårding in the weighted metric — proof route now
+  COMPLETE: mask table computed (`sigma_masks.py`: corner on [β, π/2−β]
+  exactly, one inner wall per cap, outer walls full-range, both families
+  identical); cap coverage = the two families' ν-slot pairs, controlled by
+  the frame-pair mechanism (N9, Lean-verified core) with modulus 2sin²θ.
+  Remaining: assemble the write-up with explicit C₀.
 - **[ ] S6.** Σ tail weld (weighted analogues of the Part-II items).
 - **[ ] S7.** Statement: "Σ is a strict local maximum of the ambidextrous
   functional" (computer-assisted, same standard as Part II) — **the first
@@ -160,6 +169,9 @@ informal proof is short and self-contained.
   `lamA_const`, `lamD_const`, cap law `lamA_zero_iff` (λ_A ≡ 0 ⟺ SOL1 form
   c = −1). Full N4/N5 (F3) still open: needs Fourier-product API or
   Mathlib `deriv` + the analytic bridge for the formal derivative.
+- **[P] F3b.** N9-core (ambidextrous frame-pair mechanism) — **DONE,
+  machine-verified**: `frame_pair_identity` ((cu+sv)²+(cu−sv)² = 2c²u²+2s²v²)
+  and `frame_pair_coercive` (2m(u²+v²) ≤ 2c²u²+2s²v² for m ≤ c², m ≤ s²).
 - **[ ] F4.** N7, N3, N6 — short symbolic proofs.
 - **[ ] F5.** The certified-numerics interface: import arb enclosures as
   Lean facts (the established `interval_cases`-style bridge or trust-tagged
