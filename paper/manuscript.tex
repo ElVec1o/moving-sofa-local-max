@@ -2804,9 +2804,16 @@ entries have been computed end-to-end by rigorous interval quadrature
 \]
 all five samples consistent with the float assembly at $10^{-12}$.
 The certified radius ($\sim10^{-22}$) is twelve orders below the
-premise; completing (F3) is now literally the mechanical repetition
-of this call over the remaining entries ($\approx$ one hour of
-compute), not a method question.
+premise --- and the full sweep is now \emph{done}
+(\texttt{rigorous/certify\_sweep.py}): all $528$ entries of the
+$K=16$ frozen block certified by interval quadrature, and the leading
+principal minor test re-run on the resulting \emph{ball} matrix at
+$256$ bits: \textbf{the negative definiteness of the $K=16$ frozen
+block is now unconditionally certified} --- no enclosure premise, no
+floating point anywhere in the chain from the Gerver angles to the
+sign of every minor.  This completes (F3) for the frozen block; the
+same sweep applied to the remaining computed matrices is identical
+mechanical repetition.
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
