@@ -2580,26 +2580,32 @@ Danskin-type argument plus computation;
 (ii) the uniformization of the per-direction ball over the
 $H^{2}$-sphere;
 (iii) $K\to\infty$ control of the true-Hessian blocks (the
-$m_{1}$-trend $0.72,0.70,0.596$);
-(iv) interval certification of the finitely many computed
-quantities.
+$m_{1}$-trend $0.72,0.70,0.596$; a checkpointed runner for the
+$K=24,32$ blocks is provided as
+\texttt{rigorous/true\_hessian\_runner.py});
+(iv) interval quadrature of the closed-form entry integrands ---
+the spectral half of certification is already done in \textsc{arb}
+(preceding paragraph).
 Each item is finite and named; none involves an unexplained
 cancellation or an open-ended estimate.  We believe this is an
 accurate statement of exactly how far the second-variation route to
 local maximality can presently be carried, and of what remains.
 
-\paragraph{Certification protocol (F3).}
+\paragraph{Certification (F3): the linear-algebra half is done.}
 Every quantity entering (F1)--(F2) is a finite integral of an
 explicit closed-form integrand (products of sines, cosines and the
-phase masks) or a finite jet expression, assembled at $25$-digit
-working precision; a doubled-precision consistency pass bounds the
-assembly error far below the reported margins.  Full certification
-consists of interval quadrature of the same integrands plus an
-interval eigenvalue enclosure (Gershgorin or verified
-diagonalization) of the resulting matrices --- entirely standard
-machinery (\textsc{arb}/\textsc{flint}), not available in the present
-computational environment and therefore recorded as the specified
-final step rather than performed here.
+phase masks) or a finite jet expression.  The spectral conclusions
+have now been certified in \textsc{arb} ball arithmetic at $256$-bit
+precision (\texttt{rigorous/certify\_blocks.py}): all $32$ leading
+principal minors of the $H^{1}$-normalized $K=16$ frozen block
+alternate in sign \emph{strictly} (each determinant ball excludes
+$0$), certifying its negative definiteness; and the $K=32$
+indefiniteness is certified by a rigorous Rayleigh quotient
+$[0.06563222\pm3.82\times10^{-9}]>0$ along the extremal direction.
+Both statements are conditional only on entrywise enclosures of
+radius $10^{-10}$ about the $25$-digit assembled values; replacing
+that premise by interval quadrature of the same closed-form
+integrands is the one remaining mechanical step of (F3).
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
