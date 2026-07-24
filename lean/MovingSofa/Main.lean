@@ -3,9 +3,10 @@ import MovingSofa
 open MovingSofa
 
 def main : IO Unit := do
-  let v : Vec2 := ⟨1.0, 0.0⟩
-  let r := rot 0.0 v
-  IO.println s!"rot(0)·(1,0) = ({r.x}, {r.y})  -- should be (1, 0)"
-  let p := perp ⟨1.0, 0.0⟩
-  IO.println s!"perp(1,0) = ({p.x}, {p.y})  -- should be (0, 1)"
-  IO.println "MovingSofa Lean skeleton compiled successfully."
+  -- Exercise the verified stationary-contact mechanism on Gerver's SOL1 arc
+  -- shape (constant term −1): λ_A must be the zero arc.
+  let sol1 : Trig := ⟨3, 7, -1⟩   -- any a, b; c = −1 is what matters
+  IO.println s!"SOL1-form arc: {repr sol1}"
+  IO.println s!"lamA(arc)   = {repr (Trig.lamA sol1)}  -- verified ≡ 0 (cap law)"
+  IO.println s!"lamD(arc)   = {repr (Trig.lamD sol1)}  -- verified ≡ const 1"
+  IO.println "MovingSofa: all theorems in Basic.lean are machine-verified (no sorry)."

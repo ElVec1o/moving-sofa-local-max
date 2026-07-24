@@ -1,142 +1,166 @@
 /-
-Moving sofa — minimal formalization skeleton
+Moving sofa — formalization track (paper/PROGRAM.md, Part VI)
 
-This file is a proof-of-concept that the Gerver local-maximality
-proof can be formalized in Lean 4.  It compiles, but does NOT yet
-constitute a machine-verified proof of any nontrivial theorem of the
-moving-sofa problem.
+This file contains MACHINE-VERIFIED lemmas: every `theorem` below carries a
+real proof term — no `sorry`, no placeholder `True := trivial`.
 
-What IS demonstrated here:
-  • The 2D vector / rotation infrastructure compiles in Lean 4.30.
-  • A statement of the contact-point formula's structural shape.
-  • Skeleton theorems with placeholder proofs (`trivial` / `sorry`).
+Formalized here:
+  • F1  — the superset principle N1 (set-theoretic core + monotone-area
+          corollary + the certified-upper-envelope form used by the global
+          machine).  This is the load-bearing one-sidedness that makes every
+          reconstruction bound in the project an upper bound.
+  • F3a — the stationary-contact mechanism (corollary of the rotating-frame
+          identities N4), on the coefficient module of trigonometric arcs:
+          v + v'' collapses to the constant term, so the envelope speeds
+          λ_A = v₁ + v₁'' + 1 and λ_D = −(v₂ + v₂'') are IDENTICALLY constant
+          on trigonometric phases, and λ_A ≡ 0 iff the arc is in SOL1 normal
+          form (constant −1) — Gerver phase 1 and Σ's first arc.  This is the
+          exact source of every cap degeneracy met in the project.
 
-What is NOT yet formalized:
-  • Real numbers (we use `Float` for now; real formalization needs
-    Mathlib's `Real`).
-  • The Gerver constants (would require Mathlib's
-    `analysis.special_functions` and high-precision arithmetic).
-  • The body-frame intersection-area functional F[c].
-  • The second-variation kernel cancellation (Lemma 10.2).
-  • The Hessian eigenvalue enclosures (Phase 4).
-  • The Sobolev tail bound.
+Deliberately NOT yet formalized (tracked in PROGRAM.md):
+  • F1b — the plane-topology inclusion "the chord-closed frozen reconstruction
+          contains the true body" (needs interior/frontier: Mathlib).
+  • F2  — exact-degree reduction N2 (polynomial algebra over arc integrals).
+  • F3  — the full rotating-frame identities N4 (needs a Fourier-module
+          product API or Mathlib `deriv`), and the analytic bridge
+          eval ∘ D = d/dt ∘ eval for the formal derivative below.
+  • F5  — the arb-enclosure import interface.
 
-Honest assessment:  this file demonstrates the Lean infrastructure is
-set up and the project is amenable to formalization with the right
-time investment (~3-6 months for a Lean expert to deliver the full
-proof, less if working in Mathlib-with-Real and using
-existing shape-calculus infrastructure).
+The former Float-based demo skeleton was removed: Float carries no proofs,
+and placeholder theorems misrepresent the state of verification.
 -/
 
 namespace MovingSofa
 
-/-! ### Vector infrastructure (Float-based for proof-of-concept) -/
+/-! ## F1 — the superset principle (N1)
 
-/-- 2D vector type with Float components. -/
-structure Vec2 where
-  x : Float
-  y : Float
-  deriving Repr
+Sets are predicates; no imports needed.  `famInter H P` is the intersection
+of the subfamily {H t : P t} of a constraint family H : ι → Set α.  The
+moving-sofa instance: α = ℝ², ι = rotation angles (plus wall labels),
+H t = the hallway constraint set at angle t, `fullInter H` = the sofa body.
+A frozen reconstruction keeps only finitely many constraints — a subfamily. -/
 
-namespace Vec2
+def SetP (α : Type _) := α → Prop
 
-def add (u v : Vec2) : Vec2 := ⟨u.x + v.x, u.y + v.y⟩
-def smul (a : Float) (v : Vec2) : Vec2 := ⟨a * v.x, a * v.y⟩
-def dot (u v : Vec2) : Float := u.x * v.x + u.y * v.y
-def zero : Vec2 := ⟨0, 0⟩
+/-- Subset relation for predicate-sets. -/
+def SetP.Subset {α : Type _} (S R : SetP α) : Prop := ∀ ⦃x⦄, S x → R x
 
-instance : Add Vec2 := ⟨add⟩
-instance : HSMul Float Vec2 Vec2 := ⟨smul⟩
+/-- Intersection of the subfamily of `H` selected by `P`. -/
+def famInter {α ι : Type _} (H : ι → SetP α) (P : ι → Prop) : SetP α :=
+  fun x => ∀ t, P t → H t x
 
-end Vec2
+/-- The full intersection (the true body). -/
+def fullInter {α ι : Type _} (H : ι → SetP α) : SetP α :=
+  famInter H (fun _ => True)
 
-/-! ### Rotation and the perpendicular operator -/
+/-- **N1a.** Keeping fewer constraints can only enlarge the intersection. -/
+theorem famInter_antitone {α ι : Type _} (H : ι → SetP α) {P Q : ι → Prop}
+    (hPQ : ∀ t, P t → Q t) :
+    SetP.Subset (famInter H Q) (famInter H P) :=
+  fun _ hx t hPt => hx t (hPQ t hPt)
 
-/-- 2D rotation matrix action R(θ)·v. -/
-def rot (θ : Float) (v : Vec2) : Vec2 :=
-  let c := θ.cos
-  let s := θ.sin
-  ⟨c * v.x - s * v.y, s * v.x + c * v.y⟩
+/-- **N1b (superset principle).** Every subfamily reconstruction contains
+    the true body. -/
+theorem superset_principle {α ι : Type _} (H : ι → SetP α) (P : ι → Prop) :
+    SetP.Subset (fullInter H) (famInter H P) :=
+  famInter_antitone H (fun _ _ => True.intro)
 
-/-- The π/2 rotation: R(π/2)·v = (-v.y, v.x). -/
-def perp (v : Vec2) : Vec2 := ⟨-v.y, v.x⟩
+/-- **N1c.** Monotone-area corollary: for any area functional `μ` that is
+    monotone under inclusion (Lebesgue measure is), the reconstruction area
+    bounds the true area.  `β` is any ordered value type (ℝ in the paper). -/
+theorem area_bound {α ι β : Type _} [LE β]
+    (μ : SetP α → β)
+    (mono : ∀ {S R : SetP α}, SetP.Subset S R → μ S ≤ μ R)
+    (H : ι → SetP α) (P : ι → Prop) :
+    μ (fullInter H) ≤ μ (famInter H P) :=
+  mono (superset_principle H P)
 
-/-! ### Contact-point formula (Lemma 10.1) -/
+/-- **N1d (certified upper envelope).**  Along ANY deformation ε ↦ H ε of the
+    constraint family, a per-ε subfamily choice gives an upper bound for the
+    true area at EVERY deformation parameter simultaneously — the exact
+    statement consumed by the frozen-reconstruction ray/cell certificates
+    (the frozen area being a polynomial in ε is N2/F2, separate). -/
+theorem certified_upper_envelope {α ι E β : Type _} [LE β]
+    (μ : SetP α → β)
+    (mono : ∀ {S R : SetP α}, SetP.Subset S R → μ S ≤ μ R)
+    (H : E → ι → SetP α) (P : E → ι → Prop) :
+    ∀ ε, μ (fullInter (H ε)) ≤ μ (famInter (H ε) (P ε)) :=
+  fun ε => area_bound μ (fun h => mono h) (H ε) (P ε)
 
-/--
-The contact-point formula from the manuscript:
+/-! ## F3a — the stationary-contact mechanism (N4 corollary)
 
-  P(θ; c) := c(θ) + γ · n(θ) + ⟨c'(θ), n(θ)⟩ · n'(θ)
+Trigonometric arcs  v(t) = a·cos t + b·sin t + c  as coefficient triples
+over ℤ (the identity is coefficient-linear; ℤ suffices to exhibit it and
+keeps every proof decidable).  Formal derivative:
+  v' = −a·sin t + b·cos t   ⟹   D(a, b, c) = (b, −a, 0).
+The rotating-frame envelope speeds proved in the manuscript are
+  λ_A = v₁ + v₁'' + 1,   λ_B = λ_A − 1,   λ_D = −(v₂ + v₂''),   λ_C = λ_D − 1,
+so the operator  v ↦ v + D(D v)  is the whole story: on trigonometric
+phases it collapses to the constant term, making every envelope speed
+identically constant there — and identically ZERO exactly on SOL1-form
+arcs.  A stationary contact contributes no mask measure to the second
+variation: this is the cap-degeneracy mechanism (Gerver phases 1/5,
+Σ phases 1/3) and the origin of the Σ weight w_μ. -/
 
-where n(θ) = R(θ)·n_world is the body-frame normal of the active
-hallway side, and n'(θ) = R(π/2)·n(θ).
--/
-def contactPoint (θ : Float) (cθ cpθ : Vec2) (γ : Float)
-    (n_world : Vec2) : Vec2 :=
-  let n_θ := rot θ n_world
-  let np_θ := perp n_θ
-  let cprime_dot_n := Vec2.dot cpθ n_θ
-  cθ + (γ * 1.0 : Float) • n_θ + cprime_dot_n • np_θ
-  -- Simplified placeholder; correct expression is c + γ·n + (c'·n)·n'
+/-- Trigonometric arc `a·cos t + b·sin t + c` as a coefficient triple. -/
+structure Trig where
+  a : Int
+  b : Int
+  c : Int
+deriving Repr, DecidableEq
 
-/-! ### Theorem skeleta -/
+namespace Trig
 
-/--
-**Skeleton theorem (no real proof here):**
-Under the contact-point formula's structural representation, the
-second variation δ²F at a critical trajectory c_G has the form
+/-- Formal derivative:  (a·cos + b·sin + c)' = b·cos − a·sin. -/
+def D (v : Trig) : Trig := ⟨v.b, -v.a, 0⟩
 
-  ∫ (D(θ) ⟨η, η''⟩ + C(θ) ⟨η, η'⟩) dθ
+/-- Constant arc. -/
+def const (c : Int) : Trig := ⟨0, 0, c⟩
 
-with NO ‖η''‖² principal symbol.
+instance : Add Trig := ⟨fun u v => ⟨u.a + v.a, u.b + v.b, u.c + v.c⟩⟩
 
-This is Lemma 10.2 of the manuscript.  Symbolic verification (in
-SymPy) is in `algorithm/rigorous/sympy_lemma10_2.py`.  Formalization
-in Lean requires:
-  1. Mathlib's `Real`, `Polynomial`, and `MvPolynomial` for the
-     algebraic manipulations.
-  2. A definition of F as an envelope-intersection-area functional.
-  3. Computation of δ²F using directional derivatives on
-     Sobolev-space perturbations.
+/-- The rotating-frame speed operator  L v = v + v''. -/
+def L (v : Trig) : Trig := v + D (D v)
 
-Estimated formalization time:  2-4 weeks for the structural identity
-alone; full Phase-1 to Phase-4 chain would be 3-6 months.
--/
-theorem second_variation_no_eta_pp_squared_PLACEHOLDER : True := trivial
+/-- **Stationary-contact mechanism.**  On every trigonometric arc the speed
+    operator collapses to the constant term:  v + v'' = const c. -/
+theorem stationary_contact (v : Trig) : L v = const v.c := by
+  cases v with
+  | mk a b c =>
+    show Trig.mk (a + -a) (b + -b) (c + 0) = Trig.mk 0 0 c
+    rw [Int.add_right_neg a, Int.add_right_neg b, Int.add_zero c]
 
-/--
-**Skeleton theorem (no real proof here):**
-The truncated Hessian Q_N=16 at Gerver's c_G has all 32 eigenvalues
-strictly negative, with the largest enclosed by
+/-- Envelope speed of the A-contact:  λ_A = v₁ + v₁'' + 1  (as an arc). -/
+def lamA (v : Trig) : Trig := L v + const 1
 
-  λ_max(Q_16) ≤ -4.6035
+/-- λ_A is identically constant on trigonometric phases. -/
+theorem lamA_const (v : Trig) : lamA v = const (v.c + 1) := by
+  rw [lamA, stationary_contact]
+  show Trig.mk (0 + 0) (0 + 0) (v.c + 1) = Trig.mk 0 0 (v.c + 1)
+  rw [Int.add_zero]
 
-at 128-bit precision.
+/-- **The cap law.**  λ_A vanishes identically iff the arc is in SOL1 normal
+    form (constant term −1) — Gerver's phase 1 and Σ's first arc both are. -/
+theorem lamA_zero_iff (v : Trig) : lamA v = const 0 ↔ v.c = -1 := by
+  rw [lamA_const]
+  constructor
+  · intro h
+    have hc := congrArg Trig.c h
+    simp only [const] at hc
+    omega
+  · intro h
+    rw [h]
+    rfl
 
-This is Theorem 1.2 (truncated coercivity) of the manuscript.
-Numerical verification is in `algorithm/rigorous/phase4_full_theorem.py`.
-Formalization requires:
-  1. python-flint / arb interval arithmetic embedded in Lean (e.g.
-     via Mathlib's interval-arithmetic library or a Lean-native
-     implementation).
-  2. The matrix entries computed in arb intervals.
-  3. The Gershgorin / Frobenius-Weyl eigenvalue enclosure.
+/-- Envelope speed of the D-contact:  λ_D = −(v₂ + v₂''). -/
+def lamD (v : Trig) : Trig := ⟨-(L v).a, -(L v).b, -(L v).c⟩
 
-Estimated formalization time:  4-6 weeks once Mathlib has the
-needed interval-arithmetic infrastructure.
--/
-theorem truncated_coercivity_PLACEHOLDER : True := trivial
+/-- λ_D is identically constant on trigonometric phases. -/
+theorem lamD_const (v : Trig) : lamD v = const (-v.c) := by
+  rw [lamD, stationary_contact]
+  show Trig.mk (-(0:Int)) (-(0:Int)) (-v.c) = Trig.mk 0 0 (-v.c)
+  rw [Int.neg_zero]
 
-/--
-**Skeleton theorem (no real proof here):**
-The main theorem: c_G is a strict local maximum of F in
-H²([0, π/2]; ℝ²) modulo translation symmetry, with coercivity
-constant m ≥ 4.59.
-
-Combines the truncated coercivity, the Sobolev tail bound, and the
-Taylor remainder estimate.  Formalization estimate: 6-8 weeks once
-the above two skeleta are complete.
--/
-theorem strict_local_max_PLACEHOLDER : True := trivial
+end Trig
 
 end MovingSofa
