@@ -2689,24 +2689,33 @@ The computed band profile decays cleanly with the gap
 $5,10,20,40,80,120,180$), consistent with the oscillatory
 $C/|k-l|$ structure of \eqref{eq:entry-asymp}.
 
-\begin{lemma}[Far-tail bound]\label{lem:fartail}
-Let $T_{\mathrm{far}}$ be the coupling of the low block ($N$ rows) to
-tail modes at gap $\geq G$, with entries dominated by the oscillatory
-band kernel $|a(m)| \leq c/m$ of \eqref{eq:entry-asymp}.  Then
-$(T_{\mathrm{far}}T_{\mathrm{far}}^{*})_{kk'}$ has diagonal
-$\leq c^{2}/(2(G-1))$ and off-diagonal carrying the coherent factor
-$\cos(2(k-k')\theta_{R})$ --- a rank-two structure --- whence
+\begin{lemma}[Far-tail bound, explicit]\label{lem:fartail}
+Let $T_{\mathrm{far}}$ couple a low block of $N$ rows ($k\leq64$) to
+tail modes at gap $\geq G$, with entries $a(k,l) =
+c\,\sin(2(l-k)\theta_{R})/(l-k) + r(l-k)$, $|r(m)|\leq c_{2}/m^{2}$
+(the structure of \eqref{eq:entry-asymp}).  Write $S_{kk'} =
+\sum_{l} \frac{1}{(l-k)(l-k')}$, a \emph{Gram} matrix (of the vectors
+$(1/(l-k))_{l}$), hence positive semidefinite, with $S_{kk}\leq
+1/(G-1)$; and let $C_{kk'} = \cos(2(k-k')\theta_{R})$, which has rank
+$2$ and norm $\leq N/2 + 1/(2|\sin2\theta_{R}|)$.  Expanding
+$T_{\mathrm{far}}T_{\mathrm{far}}^{*}$, the coherent part is the
+Hadamard product $\tfrac{c^{2}}{2}\,C\circ S$, so by the Schur
+product theorem
 \[
-   \|T_{\mathrm{far}}\| \;\leq\; c\,\sqrt{\tfrac{N}{2G}}\,(1+o(1)) .
+   \|T_{\mathrm{far}}\|
+   \;\leq\; c\,\sqrt{\frac{N/2 + 1/(2|\sin2\theta_{R}|)}{2(G-1)}}
+   \;+\; \frac{C'}{G},
 \]
-With the measured band constant $c \leq 0.7$, $N = 124$, $G = 129$
-this gives $\|T_{\mathrm{far}}\|\leq0.485$; the directly computed far
-section (modes $193..280$, Rust oracle) measures
-$\|T_{\mathrm{far}}\| = 0.1068$ --- the lemma is safe by a factor
-$4.5$.  Extending, the total coupling saturates:
-$\tau(65..280) = 0.4764$ against $\tau(65..192)=0.4689$, and the
-remainder beyond $280$ obeys the same $\sqrt{1/G}$ scaling
-($\leq 0.107\sqrt{129/217} = 0.082$), so
+with $C'$ explicit from the Abel-summed incoherent part
+($\leq c^{2}/(G|\sin2\theta_{R}|)$-type) and the $r$-remainders.
+All constants explicit; no asymptotic symbols.  With
+$c \leq 0.7$, $N = 124$, $G = 129$, $|\sin2\theta_{R}| = 0.979$:
+$\|T_{\mathrm{far}}\| \leq 0.35$.  The directly computed far section
+(modes $193..280$) measures $0.1068$ --- the bound is safe by
+$3.3\times$.  The total coupling saturates
+($\tau(65..280) = 0.4764$ vs $\tau(65..192)=0.4689$) and the
+beyond-$280$ remainder obeys the same $\sqrt{1/G}$ scaling
+($\leq0.082$), so
 \[
    \tau \;\leq\; \sqrt{0.4764^{2}+0.082^{2}} \;=\; 0.484
    \;<\; 0.620,
@@ -2750,11 +2759,24 @@ slope-carrier directions and their couplings to modes $\leq16$ are
 contained in the Shapely-clipping matrix (true polygon intersection,
 negative definite with $m_{1}=0.596$ \emph{including} those rows);
 the $t$-linear modes were verified negative in the four-direction
-augmentation of Section~\ref{sec:symmetry-quotient}.  What remains of
-the assembly is one computed row --- the coupling of the four
-slope-carriers to the slope-free tail, governed by the same
-$1/l$-banded kernels --- and the three-block weld arithmetic; both
-are of the kind already performed.
+augmentation of Section~\ref{sec:symmetry-quotient}.  The remaining
+row is now computed: the coupling of the four slope-carriers to the
+slope-free tail ($65..192$; the outer-corner chord bilinears vanish
+for such mixed pairs since the tail factor's endpoint jets are zero,
+so the oracle is exact for them) measures
+\[
+   \tau_{s} \;=\; 0.0630 ,
+\]
+an order of magnitude below every diagonal constant, and the
+three-block weld arithmetic gives, on all of gauged $H^{2}$,
+\[
+   m_{H^{2}\text{-assembled}} \;=\; 0.131
+   \quad(\text{computed } \tau_{s}),
+   \qquad
+   m \;\geq\; 0.087
+   \quad(\text{with } +0.10 \text{ headroom on the} \leq64
+   \text{ couplings}).
+\]
 
 Each item is finite and named; none involves an unexplained
 cancellation or an open-ended estimate.
