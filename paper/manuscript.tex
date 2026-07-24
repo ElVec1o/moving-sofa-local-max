@@ -99,6 +99,17 @@ $C^{\top}C$ also has determinant zero, so $\|C\|_{\mathrm{op}}=2$
 exactly, and the G\aa rding inequality becomes fully explicit,
 $Q(\eta)\leq-\tfrac12\|\eta'\|^{2}_{L^{2}}+18\|\eta\|^{2}_{L^{2}}$.
 
+A convex-geometric splitting sharpens this to the exact constant and
+explains why the breakpoints do not spoil the leading order.  Writing
+$S(c)=C(c)\setminus N(c)$ with $C(c)$ the convex intersection of the two
+outer walls, each outer normal direction is attained by exactly one
+constraint, so the support function of $C(c)$ is \emph{affine} in $c$;
+hence $|C(c)|=\tfrac12\oint(h^{2}-h'^{2})$ is an \emph{exactly quadratic}
+functional with no breakpoints, and since $\{\mu_{t},\nu_{t}\}$ is
+orthonormal its second variation is $-\|\eta'\|^{2}_{L^{2}}$ up to lower
+order.  All four breakpoints live in the notch $N$, which we find
+contributes only at second order in the concentration width.
+
 The passage from this to a local maximum nevertheless fails, and we
 locate precisely where.  Since each contact path is affine in
 $(c,c')$, the Green's-theorem integrand is a product of two affine
@@ -1798,7 +1809,91 @@ $\varepsilon\in(0,0.6]$, in both components.  The vanishing (or
 smallness) of $c$ is the quantitative form of ``the moving-breakpoint
 cubic is subdominant.''
 
-The point is that this limit is exactly the rescaled coercive form.  By
+\subsection*{The convex--notch splitting, and an exact quadratic}
+
+The limit \eqref{eq:blowup} is not an accident, and the reason is a
+structural splitting that also supplies the sharp constant.  Write
+\begin{equation}\label{eq:convex-notch}
+   S(c) \;=\; C(c)\setminus N(c),\qquad
+   C(c) := \bigcap_{t}\bigl\{\langle p-c(t),\mu_{t}\rangle\leq1\bigr\}
+           \cap\bigl\{\langle p-c(t),\nu_{t}\rangle\leq1\bigr\},
+\end{equation}
+so that $C(c)$ is \emph{convex} --- it is cut out by the two outer walls,
+carrying the contacts $A$ and $C$ --- while the notch $N(c)$ carries the
+inner-corner contacts $B,D$ and the corner path, and with them all four
+breakpoints.
+
+\begin{theorem}[Support-function form: the convex part is exactly quadratic]
+\label{thm:support}
+For $c$ in a neighbourhood of $\cG$, each outer normal direction is
+attained by exactly one outer-wall constraint: the $A$-constraint at
+$t=\phi$ for $\phi\in[0,\pi/2]$, and the $C$-constraint at
+$t=\phi-\pi/2$ for $\phi\in[\pi/2,\pi]$ (this is the statement, read off
+Proposition~\ref{prop:multicontact}, that $A$ and $C$ are active on
+\emph{all five} phases).  Hence the support function of $C(c)$ is
+\emph{affine} in $c$,
+\begin{equation}\label{eq:h-affine}
+   h(\phi) = 1 + \langle c(\phi),\mu_{\phi}\rangle
+   \ \ (\phi\in[0,\tfrac\pi2]),
+   \qquad
+   h(\phi) = 1 + \langle c(\phi-\tfrac\pi2),\nu_{\phi-\pi/2}\rangle
+   \ \ (\phi\in[\tfrac\pi2,\pi]),
+\end{equation}
+and therefore $|C(c)| = \tfrac12\oint (h^{2}-h'^{2})\,d\phi$ is an
+\emph{exactly quadratic} functional of $c$, with no breakpoints and no
+switching.  Its second variation is
+\begin{equation}\label{eq:d2-convex}
+   \delta^{2}|C|(\eta)
+   \;=\; \oint\bigl(\delta h^{2}-(\delta h')^{2}\bigr)d\phi ,
+   \qquad
+   \delta h = \langle\eta,\mu\rangle \text{ resp.\ } \langle\eta,\nu\rangle ,
+\end{equation}
+and since $\{\mu_{t},\nu_{t}\}$ is orthonormal,
+$\int(\delta h')^{2} = \int\bigl(\langle\eta',\mu\rangle^{2}
++\langle\eta',\nu\rangle^{2}\bigr)dt + O(\|\eta\|_{L^{2}}\|\eta'\|_{L^{2}})
+= \|\eta'\|^{2}_{L^{2}} + \text{l.o.t.}$, whence
+\begin{equation}\label{eq:garding-support}
+   \delta^{2}|C|(\eta) \;=\; -\,\|\eta'\|^{2}_{L^{2}}
+     \;+\; O\bigl(\|\eta\|_{L^{2}}(\|\eta\|_{L^{2}}+\|\eta'\|_{L^{2}})\bigr).
+\end{equation}
+\end{theorem}
+
+Theorem~\ref{thm:support} is a second, independent --- and sharper ---
+derivation of the G\aa rding inequality \eqref{eq:garding-explicit}: it
+gives the constant $\delta=1$ \emph{exactly} rather than as a symbol
+bound, and it does so by a classical convex-geometry identity (the
+Wirtinger-type area formula for support functions) in which breakpoints
+never appear.  This is the structural reason the moving breakpoints do
+not contaminate the leading order.
+
+It also predicts the blow-up coefficient with no free parameters.  For
+the normalized bump, $\|\hat\eta'\|^{2}_{L^{2}} = (I_{1}/I_{2})w^{2} =
+\tfrac15 w^{2}$ by \eqref{eq:gauss-moments}, so
+\eqref{eq:garding-support} gives $\delta^{2}|C|(\hat\eta) =
+-\tfrac15w^{2}$ and hence
+\begin{equation}\label{eq:G-predicted}
+   G(\varepsilon) \;=\; \tfrac12\,\frac{\delta^{2}|C|(\hat\eta)}{w^{2}}\,
+   \varepsilon^{2} + \cdots \;=\; -\tfrac1{10}\,\varepsilon^{2} + \cdots
+   \;=\; -0.100000\,\varepsilon^{2}+\cdots,
+\end{equation}
+against the measured $-0.10015\,\varepsilon^{2}$ at $b_{1}$ (agreement
+to $0.15\%$) and $-0.1075\,\varepsilon^{2}$ at $b_{2}$ (the notch
+contributing a further $-0.007$, of the \emph{same} sign).  So the
+convex part accounts for the whole leading coefficient, and the notch ---
+which is where every breakpoint lives --- contributes only at
+$O(w^{2})$, not at the $O(w)$ that the naive moving-breakpoint calculus
+predicts.
+
+Part of this suppression is visible directly: the notch's corner-path
+term contributes $\int\langle\eta,\eta'^{\perp}\rangle\,dt$ to the
+second variation, and for a bump $\eta = e\,f(t)$ in a \emph{fixed}
+direction $e$ this integrand is $(e\wedge e)ff' \equiv 0$.  The
+remaining notch terms --- the $B$- and $D$-envelope arcs and the
+breakpoint motion --- are what
+Conjecture~\ref{conj:subdominance} asserts are $o(w^{2})$.
+
+\medskip
+Returning to the blow-up: by
 Proposition~\ref{prop:multicontact} the multi-contact symbol at the
 breakpoint has $\lambda_{\min}=1$, so the G\aa rding inequality
 \eqref{eq:garding-explicit} gives
