@@ -2427,16 +2427,23 @@ proved arc identities; no area oracle, no junction solve, no finite
 differences), the $H^{1}$-normalized blocks of the wall-anchored
 $Q_{\mathrm{frz}}$ are
 \begin{equation}\label{eq:F1-computed}
-   K=16:\ \text{negative definite},\ m_{1}=0.279;
-   \qquad
-   K=24:\ \text{negative definite},\ m_{1}=0.109,
+   K=16:\ m_{1}=+0.279;\qquad
+   K=24:\ m_{1}=+0.109;\qquad
+   K=32:\ \text{\emph{indefinite}},\ \lambda_{\max}=+0.066,
 \end{equation}
 computed at $25$-digit working precision from proved closed-form
-integrands.  Every computed eigenvalue is strictly negative --- this is
-(F1) --- but the margin $m_{1}(K)$ \emph{decreases} with the truncation,
-reflecting the constant-level competition just described; whether it
-stabilizes at a positive value or decays to $0$ is precisely the
-uniform-rate question of (F2), and we do not prejudge it.
+integrands.  The margin decays through zero: at $K=32$ the wall-anchored
+frozen form acquires a (low-frequency-dominated) positive direction.
+This is a definitive structural finding, and we state it plainly:
+\emph{no single frozen reconstruction certifies local maximality}.
+The frozen curve wastes exactly the area that the true boundary
+recovers by junction motion, and for some directions that waste
+exceeds the quadratic gain.  (By Lemma~\ref{lem:superset} this is
+perfectly consistent with local maximality --- an upper bound that
+fails to be negative is inconclusive, not contradictory; the
+\emph{true} Hessian blocks, which include the junction response,
+remain robustly negative: $m_{1} = 0.72, 0.70, 0.596$ at
+$K = 6, 8, 16$.)
 
 In this connection the logical structure of
 Theorem~\ref{thm:reduction} deserves emphasis: \emph{strictness} of the
@@ -2446,23 +2453,89 @@ admissible radius $\varepsilon\leq r_{0}/\|\eta\|_{C^{1}}$ is already
 uniform on the $H^{2}$-sphere via $H^{2}\hookrightarrow C^{1}$.  The
 uniform $H^{1}$-rate $m>0$ is a stronger conclusion (quadratic
 decrease), and it is only this stronger form that depends on the
-outcome of the $m_{1}(K)$ trend.  Pointwise negativity is supported on
-all fronts: the interior G\aa rding inequality (spread directions), the
-blow-up profiles and $\chi$-forms (concentrated directions), and every
-computed block eigenvalue.
+outcome of the $m_{1}(K)$ trend.  Pointwise negativity is supported by
+the interior G\aa rding inequality (spread directions), the blow-up
+profiles and $\chi$-forms (concentrated directions), and the computed
+\emph{true}-Hessian blocks; for the frozen form itself the $K=32$
+indefiniteness below shows that pointwise negativity must be sought
+through the affine-junction family, not through any single frozen
+reconstruction.
 
-What remains for (F2) is sharper than a generic cross-term estimate:
-the junction-chord terms pair a slope jet at one breakpoint with a
-value jet at another, giving a bilinear bounded by
-$C\|\eta\|_{H^{1}}\|\eta\|_{H^{2}}$-interpolation with an explicit
-geometric constant; by the interpolation identity
-$\|\eta'\|^{2}\leq\|\eta\|\|\eta''\|$ this competes at
-\emph{constant level} (not scaling level) with the coercive term, so
-(F2) reduces to one explicit constant comparison plus the far-tail
-decay --- finite, sharp, and honest.  The blow-up measurements of
-Section~\ref{sec:blowup} already exhibit the competition resolving
-favourably ($|J|\leq10\%$ of the coercive term on the worst localized
-directions).
+A natural first guess is that the junction-chord terms (slope jet at
+one breakpoint against value jet at another, an
+$\|\eta\|_{H^{1}}\|\eta\|_{H^{2}}$-interpolation bilinear) drive the
+$m_{1}(K)$ decay.  The data refute this: assembling the chord matrix
+separately, the arcs-only spectrum nearly coincides with the full one
+($m_{1} = 0.294$ vs $0.279$ at $K=16$; $0.136$ vs $0.109$ at $K=24$),
+and the extremal eigenvector is \emph{low-frequency} (dominated by the
+$(x,k{=}1)$ mode with admixtures of $x_{3},x_{7},y_{14}$), not a
+high-frequency edge vector.  The decay is a property of the arc form's
+low--mid frequency coupling, and whether $m_{1}(K)$ stabilizes at a
+positive value or tends to $0$ is a genuinely open trend that we
+report as measured.
+
+\paragraph{The affine-junction family: the correct architecture.}
+Pointwise negativity --- which by the discussion above is what
+strictness requires --- does not need any single reconstruction to
+work for every direction: if $\{\Gamma^{(\beta)}\}$ is a family of
+valid reconstructions, Lemma~\ref{lem:superset} gives
+$g_{\mathrm{true}}(\varepsilon)\leq\min_{\beta}g_{\Gamma^{(\beta)}}
+(\varepsilon)$, and strictness follows once every $\eta\neq0$ has
+\emph{some} member negative.  Two candidate families must be
+dismissed first, and we record why.  Extending the arc \emph{masks}
+(the $D$-arc to $[0,\theta_{R}+\delta]$) produces forms that are
+quadratic and constraint-built, but the reconstruction no longer
+coincides with $S(\cG)$ at $\varepsilon=0$: it acquires an additive
+area offset (or, on the other side, loses the superset property), so
+it cannot certify a \emph{local} statement.  Naive chords between
+varied endpoints were dismissed earlier.
+
+The correct family moves the junction \emph{parameters affinely}:
+for fixed $\beta\in\R^{4}$ let $\Gamma^{(\beta)}_{\varepsilon}$ use
+the arc limits $b^{0}+\varepsilon\beta$, chord-closing the residual
+gaps.  At $\varepsilon=0$ this is exactly $S(\cG)$ (no offset); it is
+superset-valid for every $\beta$; and since the integrands are
+quadratic in $\varepsilon$ while the limits are affine, the enclosed
+area is an \emph{exact cubic} in $\varepsilon$:
+\begin{equation}\label{eq:cubic-family}
+   g_{\Gamma^{(\beta)}}(\varepsilon)
+   \;=\; \tfrac12\,Q_{\beta}(\eta)\,\varepsilon^{2}
+        + \tfrac16\,c_{\beta}(\eta)\,\varepsilon^{3},
+\end{equation}
+with \emph{no} higher terms --- the reduction theorem survives in
+cubic form, still with no analytic remainder.  The quadratic
+coefficient $Q_{\beta}(\eta)$ is a quadratic-in-$\beta$ perturbation
+of $Q_{\mathrm{frz}}$ whose $\beta$-optimum recovers precisely the
+junction response that freezing discards: at the
+implicit-function-theorem shift $\beta=\beta_{\mathrm{IFT}}(\eta)$
+the form $Q_{\beta}(\eta)$ reproduces the \emph{true} second
+variation --- the object whose computed blocks are negative with the
+robust margins above.  In other words, the family's envelope
+$\min_{\beta}Q_{\beta}$ \emph{is} (up to the favourable superset
+slack) the true Hessian, and each member is a closed-form cubic.
+
+Strict local maximality along $\eta$ then requires only
+$Q_{\beta(\eta)}(\eta)<0$ together with the explicit per-direction
+ball $\varepsilon < 3|Q_{\beta}|/|c_{\beta}|$ from
+\eqref{eq:cubic-family}; uniformizing that ball over the
+$H^{2}$-sphere (the coefficients $c_{\beta}$ vanish at matching
+order on the concentrating directions, as the pure-quadratic blow-up
+profiles of Section~\ref{sec:blowup} already exhibit) is the
+remaining bookkeeping step, together with the $K\to\infty$ control of
+the true-Hessian blocks.
+
+\paragraph{Certification protocol (F3).}
+Every quantity entering (F1)--(F2) is a finite integral of an
+explicit closed-form integrand (products of sines, cosines and the
+phase masks) or a finite jet expression, assembled at $25$-digit
+working precision; a doubled-precision consistency pass bounds the
+assembly error far below the reported margins.  Full certification
+consists of interval quadrature of the same integrands plus an
+interval eigenvalue enclosure (Gershgorin or verified
+diagonalization) of the resulting matrices --- entirely standard
+machinery (\textsc{arb}/\textsc{flint}), not available in the present
+computational environment and therefore recorded as the specified
+final step rather than performed here.
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
