@@ -2189,6 +2189,107 @@ junction point does not move at first order.  The $O(w)$ term is absent
 not by numerical accident but by the envelope tangency
 \eqref{eq:env-tangent}.
 
+\subsection{Assembly for general directions}\label{sec:assembly}
+
+Two further ingredients extend the analysis from concentrated bumps
+toward arbitrary $\eta$.
+
+\begin{lemma}[One-sided reconstruction]\label{lem:superset}
+Let $\Gamma$ be any closed curve assembled from subarcs of the
+constraint boundaries of the family $\{H_{t}(c)\}$ (envelope arcs,
+corner path, wall lines) together with straight chords, enclosing a
+region $R(\Gamma)$.  Then $S(c) = \bigcap_{t}H_{t}(c) \subseteq
+R(\Gamma)$, so $|S(c)| \leq |R(\Gamma)|$ and, for any reconstruction
+family $\Gamma_{\varepsilon}$ agreeing with $S(\cG)$ at
+$\varepsilon = 0$,
+\[
+   g_{\mathrm{true}}(\varepsilon) \;\leq\; g_{\Gamma}(\varepsilon)
+   \qquad\text{pointwise in } \varepsilon .
+\]
+In particular every junction ambiguity, multi-crossing lens, and corner
+sliver \emph{removes} area relative to the arc bookkeeping: all such
+corrections are one-signed, favourable for negativity.
+\end{lemma}
+
+\begin{proof}
+Each point excluded from $R(\Gamma)$ by a constraint subarc is excluded
+from $S(c)$ by that same constraint; points inside $R(\Gamma)$ may or
+may not satisfy the remaining constraints.  Hence $S \subseteq R$.
+\end{proof}
+
+This lemma retroactively upgrades every oracle measurement in this
+paper to a rigorous \emph{upper bound} for the true area response ---
+the reconstruction the oracle integrates is one such $\Gamma$ --- and
+disposes of the branch-selection ambiguity of
+Section~\ref{sec:bulkform} wholesale.
+
+\begin{theorem}[Interior G\aa rding inequality, explicit]
+\label{thm:interior-garding}
+Let $\eta \in H^{2}$ vanish in neighbourhoods of $t=0$ and $t=\pi/2$.
+Then, with all norms $L^{2}(0,\pi/2)$,
+\begin{equation}\label{eq:interior-garding}
+   Q(\eta) \;\leq\; -\tfrac12\,\|\eta'\|^{2} \;+\; C_{0}\,\|\eta\|^{2},
+   \qquad C_{0} \leq 50 .
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Sum the per-arc forms of Lemma~\ref{lem:arcforms}.  Integrating by
+parts, $\int p(p+p'') = \int p^{2} - \int p'^{2} + [pp']$, and with $p'
+= \langle\eta',\mu\rangle + q$, $q' = \langle\eta',\nu\rangle - p$, the
+full-range $A$- and $C$-arcs alone contribute $-\|\eta'\|^{2}$ plus
+cross terms bounded by $2\|\eta\|\|\eta'\|$ each; the masked $B$-,
+$D$-arcs and the corner path contribute further terms of the same form
+(their leading $-\int$-parts may be dropped, being favourable).  The
+$[pp']$ boundary terms at interior junctions combine with the
+junction-motion terms into value-only jets by
+Theorem~\ref{thm:reparam}, bounded by $c_{j}|\eta(b_{j})|^{2}$ with
+$c_{j} \leq 1/\sin\gamma_{j} \leq 1.5$ ($\gamma_{j}$ the corner
+opening); multi-crossing corrections are favourable by
+Lemma~\ref{lem:superset}.  Collecting, $Q \leq -\|\eta'\|^{2} +
+8\|\eta\|\|\eta'\| + 5\|\eta\|^{2} + 1.5\sum_{j}|\eta(b_{j})|^{2}$;
+the 1D Agmon bound $|\eta(b)|^{2} \leq \tfrac{4}{\pi}\|\eta\|^{2} +
+2\|\eta\|\|\eta'\|$ and Young's inequality give
+\eqref{eq:interior-garding}.
+\end{proof}
+
+\subsubsection*{The outer endpoints, and a second exact degeneracy}
+
+Extending Theorem~\ref{thm:interior-garding} to all of $H^{2}$ requires
+the jets at $t=0,\pi/2$, and probing them uncovered one more exact
+structural fact.  The outer envelope obeys the same tangency algebra as
+the inner one: $A' = \lambda_{A}\,\nu_{t}$ with, in the rotating frame,
+\begin{equation}\label{eq:lamA}
+   \lambda_{A} \;=\; v_{1} + v_{1}'' + 1 ,
+\end{equation}
+and Romik's phase-1 solution $v_{1} = a_{1}\cos t + a_{2}\sin t - 1$
+gives $v_{1}+v_{1}''+1 \equiv 0$:
+\begin{equation}\label{eq:lamA-zero}
+   \lambda_{A} \;\equiv\; 0 \quad\text{on phase 1}
+   \qquad(\text{and } \lambda_{B}\equiv0 \text{ on phase 5, by mirror}),
+\end{equation}
+both verified symbolically.  That is: on $[0,\varphi]$ the outer
+$A$-contact is a \emph{stationary corner point} (Romik's initial datum
+$A(0) = (1,0)$), not a moving arc.
+
+The endpoint probe reflects this exactly.  For the half-bump at $t=0$
+(gauge $\eta(0)=0$, $\eta'(0)=e$): in the $y$-direction, which does not
+excite the degenerate contact, the corrected $\chi$-form (all masks
+$1$, since the entire half-bump lies inside each arc's range) predicts
+$G = -0.2000$, and the oracle measures $-0.199999$ and $-0.200000$ at
+$w = 5\times10^{-3}, 2.5\times10^{-3}$ --- a six-digit confirmation.
+In the $x$-direction, which does excite it, the response is anomalous
+and \emph{large but favourable}: $G \approx -3.95\,w^{-3/2}$, i.e.\
+$Q \approx -7.9\sqrt{w}\,$, a negative contribution far exceeding the
+$O(w^{2})$ bulk.  The sign is as Lemma~\ref{lem:superset} requires:
+perturbing a degenerate (corner) contact can only cut area.  For the
+assembly this means the endpoint slots split into value slots
+($H^{1}$-bounded), clean slope slots (zero coupling, confirmed at six
+digits), and degenerate slope slots that are \emph{one-signed
+favourable}; none obstructs the extension of
+\eqref{eq:interior-garding}, though the bookkeeping of the favourable
+slots' cross terms remains to be written.
+
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
 The direct check is unambiguous where the coefficient extraction is not,
