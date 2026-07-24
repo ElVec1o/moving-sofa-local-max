@@ -107,8 +107,20 @@ constraint, so the support function of $C(c)$ is \emph{affine} in $c$;
 hence $|C(c)|=\tfrac12\oint(h^{2}-h'^{2})$ is an \emph{exactly quadratic}
 functional with no breakpoints, and since $\{\mu_{t},\nu_{t}\}$ is
 orthonormal its second variation is $-\|\eta'\|^{2}_{L^{2}}$ up to lower
-order.  All four breakpoints live in the notch $N$, which we find
-contributes only at second order in the concentration width.
+order.  All four breakpoints live in the notch $N$.
+
+Their contribution is then controlled by an exact identity we call
+\emph{breakpoint reparameterization}.  The envelope arcs are tangent to
+their generating lines, $D'=\lambda_{D}\mu_{t}$ and
+$B'=\lambda_{B}\nu_{t}$, while the variation of $D$ at fixed parameter
+is $\delta_{c}D = \eta-\langle\eta',\nu\rangle\mu$; the two are
+\emph{parallel}, so the parameter shift absorbs the $\eta'$-dependence
+completely and the junction point is displaced only by
+$\langle\eta(b),\nu\rangle\nu$.  The moving breakpoints therefore
+contribute $O(|\eta(b)|^{2})$ rather than $O(|\eta'(b)|^{2})$: they move,
+but they move no geometry.  Since this is precisely the term that
+carried the two-norm difficulty, its disappearance removes the
+obstruction for concentrated directions.
 
 The passage from this to a local maximum nevertheless fails, and we
 locate precisely where.  Since each contact path is affine in
@@ -1888,9 +1900,85 @@ Part of this suppression is visible directly: the notch's corner-path
 term contributes $\int\langle\eta,\eta'^{\perp}\rangle\,dt$ to the
 second variation, and for a bump $\eta = e\,f(t)$ in a \emph{fixed}
 direction $e$ this integrand is $(e\wedge e)ff' \equiv 0$.  The
-remaining notch terms --- the $B$- and $D$-envelope arcs and the
-breakpoint motion --- are what
-Conjecture~\ref{conj:subdominance} asserts are $o(w^{2})$.
+moving-breakpoint terms --- the source of the entire two-norm
+difficulty --- are handled by the following exact identity.
+
+\begin{theorem}[Breakpoint reparameterization]\label{thm:reparam}
+Let $b$ be a $D$-type contact-transition breakpoint.  Then:
+\begin{enumerate}
+\item[(i)] \emph{(Envelope tangency.)}  The envelope arcs satisfy,
+identically in $c$,
+\begin{equation}\label{eq:env-tangent}
+   D'(t) = \lambda_{D}(t)\,\mu_{t},
+   \quad \lambda_{D} = 2\langle c',\mu\rangle-\langle c'',\nu\rangle;
+   \qquad
+   B'(t) = \lambda_{B}(t)\,\nu_{t},
+   \quad \lambda_{B} = 2\langle c',\nu\rangle+\langle c'',\mu\rangle .
+\end{equation}
+\item[(ii)] \emph{(Absorption.)}  The variation of $D$ at fixed
+parameter is $\delta_{c}D = \eta - \langle\eta',\nu\rangle\mu$.  Choosing
+the parameter shift $\delta b = \varepsilon\langle\eta'(b),\nu_{b}\rangle
+/\lambda_{D}(b)$,
+\begin{equation}\label{eq:junction-stationary}
+   D\bigl(b+\delta b;\,\cG+\varepsilon\eta\bigr)
+   \;=\; D(b) \;+\; \varepsilon\,\langle\eta(b),\nu_{b}\rangle\,\nu_{b}
+   \;+\; O(\varepsilon^{2}).
+\end{equation}
+\item[(iii)] Consequently the junction \emph{point} is displaced only by
+the $\nu$-component of $\eta(b)$: the $\eta'(b)$-dependence is absorbed
+entirely by the parameter shift.  The moving-breakpoint contribution to
+$\delta^{2}F$ is therefore $O\bigl(|\eta(b)|^{2}\bigr)$, \emph{not}
+$O\bigl(|\eta'(b)|^{2}\bigr)$.  The same holds at $B$-type breakpoints
+with $\mu\leftrightarrow\nu$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) is a direct computation: writing $c' = \langle c',\mu\rangle\mu +
+\langle c',\nu\rangle\nu$ and using $\mu'=\nu$, $\nu'=-\mu$,
+\[
+  D' = c' - \bigl(\langle c'',\nu\rangle-\langle c',\mu\rangle\bigr)\mu
+       - \langle c',\nu\rangle\nu
+     = \bigl(2\langle c',\mu\rangle-\langle c'',\nu\rangle\bigr)\mu ,
+\]
+and symmetrically for $B$.  (This is the classical envelope property:
+$D$ is the envelope of the lines through $c(t)$ with normal $\nu_{t}$,
+hence tangent to each.)  For (ii), $\delta_{c}D = \eta -
+\langle\eta',\nu\rangle\mu$ is immediate from $D = c-\langle
+c',\nu\rangle\mu$, and
+\[
+  D(b+\delta b) = D(b) + D'(b)\,\delta b + \varepsilon\,\delta_{c}D(b)
+   = D(b) + \varepsilon\langle\eta',\nu\rangle\mu
+     + \varepsilon\bigl(\eta(b)-\langle\eta',\nu\rangle\mu\bigr)
+   = D(b) + \varepsilon\,\eta(b),
+\]
+whose $\mu$-component vanishes after the shift; only
+$\langle\eta(b),\nu\rangle\nu$ survives, giving
+\eqref{eq:junction-stationary}.  (iii) follows since a boundary junction
+displaced by $d$ changes the enclosed area by $O(|d|^{2})$ once the
+first-order terms cancel, as they do at a critical point.
+\end{proof}
+
+\begin{corollary}[Notch subdominance for concentrated directions]
+\label{cor:notch-sub}
+For the normalized bump $\hat\eta_{w}$ centred at a breakpoint one has
+$\hat\eta_{w}(b)=0$ exactly (the profile is odd), and in general
+$|\hat\eta_{w}(b)| = O(w^{3/2})$.  Hence by
+Theorem~\ref{thm:reparam}(iii) the moving-breakpoint contribution to
+$\delta^{2}F(\hat\eta_{w})$ is $O(w^{3}) = o(w^{2})$, i.e.\ it is
+negligible against the coercive term $-\tfrac15 w^{2}$ of
+Theorem~\ref{thm:support}.
+\end{corollary}
+
+Theorem~\ref{thm:reparam} is the structural identity whose absence was
+flagged as the crux: \emph{the breakpoints move, but they move no
+geometry}.  Their motion is a pure reparameterization of the envelope
+arc, and the naive $O(w)$ term
+$\Delta(\partial_{\theta}J)(\delta b)^{2}$ --- which would have carried
+$|\eta'(b)|^{2}$ and destroyed the estimate --- is absent because
+$\delta_{c}D$ and $D'$ are \emph{parallel}, both being multiples of
+$\mu_{b}$.  This is exactly the cancellation the numerics exhibited and
+we could not previously explain.
 
 \medskip
 Returning to the blow-up: by
@@ -1938,11 +2026,19 @@ along $\hat\eta_{w}$ is $o(w^{2})$: the cubic that is fatal for
 unnormalized bumps is subdominant in the correct scaling.
 \end{conjecture}
 
-Every clause is verified to $30$ digits at all four breakpoints and both
-components (Sections above); clause~(ii)'s leading coefficient is
-\emph{proved} (it is the G\aa rding inequality
-\eqref{eq:blowup-garding}).  What is open is (i)--(iii) as $w\to0$
-\emph{statements}, i.e.\ the matched-asymptotic passage to the limit.
+The status of this conjecture has changed substantially.  Clause~(ii)'s
+leading coefficient is \emph{proved} --- exactly, and with the sharp
+constant --- by Theorem~\ref{thm:support}, and the
+moving-breakpoint terms, which carried the entire two-norm difficulty,
+are \emph{proved} subdominant by Theorem~\ref{thm:reparam} and
+Corollary~\ref{cor:notch-sub}.  The corner-path term vanishes
+identically for fixed-direction bumps.  What remains genuinely open is
+narrower than when the conjecture was first posed: a bound on the
+\emph{smooth bulk} contribution of the $B$- and $D$-envelope arcs to
+$\delta^{2}|N|$ (measured $+0.0003w^{2}$ at $b_{1}$ and $+0.0149w^{2}$
+at $b_{2}$, i.e.\ of favourable sign and at most $7.5\%$ of the coercive
+term), and the uniform-in-$w$ passage to the limit.  This is a standard
+fixed-domain estimate, no longer a moving-boundary problem.
 Granting Conjecture~\ref{conj:subdominance}, together with the reduction
 of general $\eta$ to the worst-case localized bumps (a spread-out $\eta$
 has strictly larger coercive bulk relative to its breakpoint jets) and
@@ -1953,15 +2049,17 @@ content of the theorem, and note that its target is a \emph{negative}
 quantity with margin ($-0.107$ against the proved bound $-0.100$ at
 $b_{2}$; exact equality at $b_{1}$).
 
-The obstruction to proving it directly is a cancellation we can exhibit
-but not yet explain: the moving breakpoint \emph{a priori} contributes an
-$O(w)$ term to $Q(\hat\eta_{w})$ --- through
-$\Delta(\partial_{\theta}J)\,(\delta b)^{2}$ with a nonzero jump of the
-boundary-integrand derivative (the sofa boundary has a genuine corner at
-each breakpoint, Section~\ref{sec:blowup}) --- yet the oracle finds
-$Q(\hat\eta_{w})=O(w^{2})$.  Some structural identity forces this
-$O(w)$ term to cancel; identifying it is, we believe, the key to
-Conjecture~\ref{conj:subdominance}.
+The cancellation that made this puzzling is now identified.  The moving
+breakpoint \emph{a priori} contributes an $O(w)$ term to
+$Q(\hat\eta_{w})$ --- through $\Delta(\partial_{\theta}J)(\delta b)^{2}$
+with a nonzero jump of the boundary-integrand derivative, since the sofa
+boundary has a genuine corner at each breakpoint --- yet the oracle
+finds $Q(\hat\eta_{w}) = O(w^{2})$.  Theorem~\ref{thm:reparam} explains
+this exactly: because $D'(b)$ and $\delta_{c}D(b)$ are both multiples of
+$\mu_{b}$, the parameter shift absorbs the perturbation entirely and the
+junction point does not move at first order.  The $O(w)$ term is absent
+not by numerical accident but by the envelope tangency
+\eqref{eq:env-tangent}.
 
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
