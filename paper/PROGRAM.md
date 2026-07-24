@@ -150,10 +150,16 @@ generally.
 Ordered by dependency; each item is Lean-ready in the sense that its
 informal proof is short and self-contained.
 
-- **[ ] F1.** N1 (superset lemma) — set inclusion, elementary.
+- **[P] F1.** N1 (superset lemma) — **DONE, machine-verified** (Lean 4.30,
+  `lean/MovingSofa`, zero sorry): `famInter_antitone`, `superset_principle`,
+  `area_bound`, `certified_upper_envelope`. Remaining sub-item F1b: the
+  plane-topology chord-closure inclusion (Mathlib).
 - **[ ] F2.** N2 (exact-degree) — polynomial algebra over integrals.
-- **[ ] F3.** N4/N5 (frame identities, arc forms) — computer algebra,
-  already sympy-verified; port to Lean's `polyrith`/`ring`.
+- **[P] F3a.** N4-corollary (stationary-contact mechanism) — **DONE,
+  machine-verified**: on the trig coefficient module, `v + v'' = const c`,
+  `lamA_const`, `lamD_const`, cap law `lamA_zero_iff` (λ_A ≡ 0 ⟺ SOL1 form
+  c = −1). Full N4/N5 (F3) still open: needs Fourier-product API or
+  Mathlib `deriv` + the analytic bridge for the formal derivative.
 - **[ ] F4.** N7, N3, N6 — short symbolic proofs.
 - **[ ] F5.** The certified-numerics interface: import arb enclosures as
   Lean facts (the established `interval_cases`-style bridge or trust-tagged
