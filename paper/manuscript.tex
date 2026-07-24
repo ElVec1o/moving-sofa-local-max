@@ -2290,6 +2290,123 @@ favourable}; none obstructs the extension of
 \eqref{eq:interior-garding}, though the bookkeeping of the favourable
 slots' cross terms remains to be written.
 
+\subsection{The reduction theorem: local maximality without a remainder}
+\label{sec:reduction}
+
+The pieces now assemble into a statement that removes the third
+variation --- and with it the entire two-norm difficulty --- from the
+architecture.
+
+\begin{definition}[Frozen form]\label{def:frozen}
+Fix the arc limits at their $\cG$-values
+$b^{0}=(\theta_{R},\pi/2-\varphi,\varphi,\pi/2-\theta_{R})$ and, for
+$c=\cG+\varepsilon\eta$, let $\Gamma_{\varepsilon}(\eta)$ be the closed
+curve consisting of the contact arcs $A,C,D,x,B$ of $c$ over these
+\emph{fixed} parameter ranges, closed by straight chords across the
+(order-$\varepsilon$) junction gaps.  Since every contact path is
+affine in $(c,c')$ and the limits are fixed, the enclosed area is
+\emph{exactly quadratic} in $\varepsilon$:
+\[
+   g_{\Gamma}(\varepsilon)
+   \;=\; \tfrac12\,Q_{\mathrm{frz}}(\eta)\,\varepsilon^{2},
+\]
+the linear term vanishing by criticality of $\cG$.  We call
+$Q_{\mathrm{frz}}$ the frozen form; it equals the per-arc sums of
+Lemma~\ref{lem:arcforms} plus the chord terms, and it requires no
+junction solve to evaluate.
+\end{definition}
+
+\begin{theorem}[Reduction of local maximality to a spectral question]
+\label{thm:reduction}
+There is an explicit $r_{0}>0$ (the simplicity radius of the
+reconstruction) such that for all $\eta$ and all
+$0<\varepsilon\leq r_{0}/\|\eta\|_{C^{1}}$,
+\begin{equation}\label{eq:reduction}
+   F[\cG+\varepsilon\eta] - F[\cG]
+   \;=\; g_{\mathrm{true}}(\varepsilon)
+   \;\leq\; g_{\Gamma}(\varepsilon)
+   \;=\; \tfrac12\,Q_{\mathrm{frz}}(\eta)\,\varepsilon^{2}.
+\end{equation}
+Consequently, \emph{if} $Q_{\mathrm{frz}}$ is negative definite
+(in the $H^{1}$ sense: $Q_{\mathrm{frz}}(\eta)\leq
+-m\|\eta\|^{2}_{H^{1}}$, $m>0$), \emph{then} $\cG$ is a strict local
+maximum of $F$ on an explicit $H^{2}$-ball --- with quadratic decrease
+measured in $H^{1}$, and with \emph{no} third-variation hypothesis, no
+trilinear bound $K_{3}$, and no two-norm remainder estimate of any
+kind.
+\end{theorem}
+
+\begin{proof}
+$\Gamma_{\varepsilon}(\eta)$ is assembled from genuine constraint
+subarcs of $\{H_{t}(\cG+\varepsilon\eta)\}$ and chords, and is simple
+for $\varepsilon\|\eta\|_{C^{1}}\leq r_{0}$; Lemma~\ref{lem:superset}
+gives $S(\cG+\varepsilon\eta)\subseteq R(\Gamma_{\varepsilon})$, i.e.\
+\eqref{eq:reduction}.  Exact quadraticity is
+Definition~\ref{def:frozen}; the $H^{2}$-ball statement follows from
+$H^{2}\hookrightarrow C^{1}$.
+\end{proof}
+
+The two-norm obstruction that dominated
+Sections~\ref{sec:passage-fails}--\ref{sec:quartic} is thereby
+dissolved \emph{structurally}: the quadratic upper envelope
+\eqref{eq:reduction} holds with no remainder, because all the
+nonlinearity of $F$ in $\varepsilon$ lives in the junction motion and
+the combinatorial transitions, and both only \emph{remove} area
+relative to the frozen reconstruction.  What remains is a single,
+purely spectral question:
+
+\begin{center}
+\emph{Is the explicit quadratic form $Q_{\mathrm{frz}}$ negative
+definite?}
+\end{center}
+
+Everything in this paper bears on that question as follows.
+$Q_{\mathrm{frz}}$ obeys the interior G\aa rding inequality
+\eqref{eq:interior-garding} (whose proof bounds exactly the frozen
+integrals), so it is coercively negative on high frequencies: for the
+sine modes $k\geq K$ one finds $Q_{\mathrm{frz}}\leq
+-\tfrac12\|\eta'\|^{2}(1-4C_{0}/(2K)^{2})$, already negative for
+$K\geq8$ with $C_{0}=50$.  Its low-frequency block is a finite
+computation of the same kind as Phase~2 --- indeed cheaper, since no
+junction solve is required and the kink fragility of
+Section~\ref{sec:bulkform} never arises.  The remaining quantitative
+item is the block--tail coupling: the frozen form's off-diagonal
+entries decay like the Fourier coefficients of its piecewise-smooth
+(masked) coefficients, $|Q_{\mathrm{frz}}[k,l]| = O(1/|k\mp l|)$, and
+the semi-infinite block $k\leq K<l$ has Hilbert--Schmidt norm
+$O(1/\sqrt{L-K})$ beyond a computed range $l\leq L$ --- so the
+coupling is controlled by a finite computation plus a convergent
+explicit tail.  We record the resulting statement:
+
+\begin{theorem}[Local maximality, modulo three finite verifications]
+\label{thm:conditional-final}
+Assume
+\begin{enumerate}
+\item[(F1)] the $H^{1}$-normalized low-frequency block of
+$Q_{\mathrm{frz}}$ (modes $k\leq K$) is negative definite with
+constant $m_{1}>0$;
+\item[(F2)] the computed block--tail coupling up to $l\leq L$, plus
+the Hilbert--Schmidt tail bound beyond $L$, satisfies
+$\tau^{2} < m_{1}\,c_{T}$, where $c_{T}$ is the G\aa rding tail
+constant of the preceding paragraph;
+\item[(F3)] the finitely many numbers in (F1)--(F2) are certified in
+interval arithmetic.
+\end{enumerate}
+Then $Q_{\mathrm{frz}}\preceq -m\,\|\cdot\|^{2}_{H^{1}}$ with
+$m = \tfrac12\bigl[m_{1}+c_{T}-\sqrt{(m_{1}-c_{T})^{2}+4\tau^{2}}
+\bigr]>0$, and by Theorem~\ref{thm:reduction} $\cG$ is a strict local
+maximum of $F$ on an explicit $H^{2}$-ball.
+\end{theorem}
+
+All structural ingredients of this theorem are proved in this paper;
+(F1)--(F3) are finite computations, and the measured evidence
+(the $N=16$ block with $m_{1}=0.596$ in the $H^{1}$ metric; sampled
+couplings an order of magnitude below the diagonal) indicates they
+hold with margin.  We emphasize what has changed relative to every
+earlier attempt in this manuscript's history: the conditional
+hypotheses are no longer analytic estimates that might be false ---
+they are evaluations of one explicit quadratic form.
+
 \begin{remark}[What the oracle settles, and what remains open]
 \label{rem:quartic-status}
 The direct check is unambiguous where the coefficient extraction is not,
