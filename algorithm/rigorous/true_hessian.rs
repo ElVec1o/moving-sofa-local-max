@@ -224,7 +224,16 @@ fn solve_junction(pert: &Pert, which: u8, t0: f64, s0: f64) -> (f64, f64) {
     let w = 0.25;
     let (ta, sa, ra) = solve_junction_clamped(pert, which, t0.min(tk), s0, tk - w, tk);
     let (tb, sb, rb) = solve_junction_clamped(pert, which, t0.max(tk), s0, tk, tk + w);
-    if ra <= rb { (ta, sa) } else { (tb, sb) }
+    // BRANCH CONTINUITY: among converged sides, take the root CLOSEST to the
+    // warm start t0 (residual-based choice can jump to a second crossing when
+    // both sides converge -- the multi-crossing branch bug in new clothing).
+    let ok_a = ra < 1e-11;
+    let ok_b = rb < 1e-11;
+    if ok_a && ok_b {
+        if (ta - t0).abs() <= (tb - t0).abs() { (ta, sa) } else { (tb, sb) }
+    } else if ok_a { (ta, sa) }
+    else if ok_b { (tb, sb) }
+    else if ra <= rb { (ta, sa) } else { (tb, sb) }
 }
 
 #[allow(dead_code)]
@@ -327,6 +336,24 @@ fn area(pert: &Pert, gl: &([f64; 40], [f64; 40])) -> f64 {
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
+    if args.len() > 1 && args[1] == "probe" {
+        // ./true_hessian probe <eps> <terms-file: lines "comp k coeff">
+        let eps: f64 = args[2].parse().unwrap();
+        let txt = std::fs::read_to_string(&args[3]).unwrap();
+        let mut terms: Vec<(usize, f64, f64)> = Vec::new();
+        for line in txt.lines() {
+            let f: Vec<f64> = line.split_whitespace()
+                .map(|x| x.parse().unwrap()).collect();
+            terms.push((f[0] as usize, f[1], f[2]));
+        }
+        let gl = gl40();
+        let pert = Pert { terms, eps };
+        let (bd, bx2, bx1, bb) = junctions_continued(&pert, 16);
+        println!("junctions: bd={:.15} bx2={:.15} bx1={:.15} bb={:.15}",
+                 bd, bx2, bx1, bb);
+        println!("area = {:.17}", area(&pert, &gl));
+        return;
+    }
     let kmax: usize = if args.len() > 1 { args[1].parse().unwrap() } else { 24 };
     let h: f64 = if args.len() > 2 { args[2].parse().unwrap() } else { 1e-3 };
     let gl = gl40();
