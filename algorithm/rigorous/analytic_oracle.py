@@ -69,7 +69,72 @@ def contact_wd(traj, t, which):
         return base, dbase
 
 
-def area(traj, p, dps=30, b0=None):
+def _env_val_tan(traj, t, which):
+    """Envelope point and its EXACT tangent D' = lam_D mu (resp. B' = lam_B nu).
+
+    Uses the proved envelope-tangency identity, evaluated one-sided through the
+    phase selector: no finite differences, hence no kink-straddling."""
+    x, xp, xpp = traj(t)
+    c, s = mp.cos(t), mp.sin(t)
+    mu = (c, s); nu = (-s, c)
+    if which == "D":
+        dnu = xp[0]*nu[0] + xp[1]*nu[1]
+        P = (x[0] - dnu*mu[0], x[1] - dnu*mu[1])
+        lam = 2*(xp[0]*mu[0] + xp[1]*mu[1]) - (xpp[0]*nu[0] + xpp[1]*nu[1])
+        dP = (lam*mu[0], lam*mu[1])
+    else:  # B
+        dmu = xp[0]*mu[0] + xp[1]*mu[1]
+        P = (x[0] + dmu*nu[0], x[1] + dmu*nu[1])
+        lam = 2*(xp[0]*nu[0] + xp[1]*nu[1]) + (xpp[0]*mu[0] + xpp[1]*mu[1])
+        dP = (lam*nu[0], lam*nu[1])
+    return P, dP
+
+
+def _solve_junction(traj, which, t0, s0, dps):
+    """Damped 2x2 Newton for  Env(t) = x(s)  with the analytic Jacobian
+    [Env'(t), -x'(s)].  Kink-aware: derivatives are one-sided via the phase
+    selector; steps may cross phase boundaries freely."""
+    tol = mp.mpf(10) ** (-(dps - 6))
+    t, s = mp.mpf(t0), mp.mpf(s0)
+
+    def resid(t, s):
+        P, _ = _env_val_tan(traj, t, which)
+        X = traj(s)[0]
+        return (P[0]-X[0], P[1]-X[1])
+
+    R = resid(t, s)
+    nR = mp.sqrt(R[0]*R[0] + R[1]*R[1])
+    for _ in range(80):
+        if nR < tol:
+            return t, s
+        _, dP = _env_val_tan(traj, t, which)
+        Xp = traj(s)[1]
+        a, b = dP[0], -Xp[0]
+        c_, d = dP[1], -Xp[1]
+        det = a*d - b*c_
+        dt = (-R[0]*d + R[1]*b) / det
+        ds = (c_*R[0] - a*R[1]) / det
+        lam = mp.mpf(1)
+        while lam > mp.mpf('1e-8'):
+            t2, s2 = t + lam*dt, s + lam*ds
+            R2 = resid(t2, s2)
+            nR2 = mp.sqrt(R2[0]*R2[0] + R2[1]*R2[1])
+            if nR2 < nR:
+                t, s, R, nR = t2, s2, R2, nR2
+                break
+            lam /= 2
+        else:
+            break
+    if nR < mp.mpf(10) ** (-(dps//2)):
+        return t, s          # accept a slightly looser but genuine root
+    raise ValueError(f"junction {which} failed: residual {mp.nstr(nR,3)}")
+
+
+def area(traj, p, dps=30, b0=None, extra_nodes=None):
+    """extra_nodes: additional quadrature nodes (e.g. the support scales of a
+    narrow bump).  Without them, mp.quad's fixed panels can under-resolve a
+    perturbation much narrower than the panel, corrupting tiny-w areas at
+    exactly the order of the signal."""
     pi2 = mp.pi / 2
     half = mp.mpf('0.5')
 
@@ -79,18 +144,9 @@ def area(traj, p, dps=30, b0=None):
     if b0 is None:
         b0 = [p['theta'], pi2 - p['phi'], p['phi'], pi2 - p['theta']]
 
-    def junc(bD, bx2, bx1, bB):
-        D = val(bD, "D"); x2 = traj(bx2)[0]; x1 = traj(bx1)[0]; B = val(bB, "B")
-        return [D[0]-x2[0], D[1]-x2[1], x1[0]-B[0], x1[1]-B[1]]
-    try:
-        sol = mp.findroot(lambda a, b, c, d: junc(a, b, c, d),
-                          [mp.mpf(v) for v in b0], tol=mp.mpf(10)**(-(dps-4)))
-    except ValueError:
-        # retry with looser tolerance (still ~1e-12 relative): findroot can
-        # stall just above an over-tight tol when the Jacobian is stiff
-        sol = mp.findroot(lambda a, b, c, d: junc(a, b, c, d),
-                          [mp.mpf(v) for v in b0], tol=mp.mpf(10)**(-12))
-    bD, bx2, bx1, bB = [sol[i] for i in range(4)]
+    # decoupled junction pairs, kink-aware Newton with analytic Jacobians
+    bD, bx2 = _solve_junction(traj, "D", b0[0], b0[1], dps)
+    bx1, bB = _solve_junction(traj, "B", b0[3], b0[2], dps)[::-1]
 
     def integ(which):
         def f(t):
@@ -104,8 +160,11 @@ def area(traj, p, dps=30, b0=None):
 
     # c_G'' jumps at the four phase boundaries; the contact-path derivative
     # (hence the Green integrand) is kinked there, so mp.quad needs them as
-    # interior nodes.  Clip the fixed kink set to each arc's range.
+    # interior nodes.  Clip the fixed kink set to each arc's range, and merge
+    # any caller-supplied bump-support nodes.
     kinks = [p['phi'], p['theta'], pi2-p['theta'], pi2-p['phi']]
+    if extra_nodes:
+        kinks = sorted(set(list(kinks) + [mp.mpf(x) for x in extra_nodes]))
 
     def nds(lo, hi):
         return [lo] + [k for k in kinks if lo < k < hi] + [hi]
