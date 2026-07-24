@@ -364,17 +364,26 @@ fn main() {
         let h: f64 = args[4].parse().unwrap();
         let gl = gl40();
         let mut lows: Vec<Vec<(usize, f64, f64)>> = Vec::new();
-        for c in 0..2usize {
-            for k in 3..=k0 {
-                let kf = k as f64;
-                let sgn = if k % 2 == 0 { 1.0 } else { -1.0 };
-                lows.push(vec![(c, kf, 1.0), (c, 1.0, -kf * (1.0 - sgn) / 2.0),
-                               (c, 2.0, -kf * (1.0 + sgn) / 4.0)]);
+        if k0 == 0 {
+            // slope-carrier rows: pure sin(2t), sin(4t) per component
+            for c in 0..2usize {
+                lows.push(vec![(c, 1.0, 1.0)]);
+                lows.push(vec![(c, 2.0, 1.0)]);
+            }
+        } else {
+            for c in 0..2usize {
+                for k in 3..=k0 {
+                    let kf = k as f64;
+                    let sgn = if k % 2 == 0 { 1.0 } else { -1.0 };
+                    lows.push(vec![(c, kf, 1.0), (c, 1.0, -kf * (1.0 - sgn) / 2.0),
+                                   (c, 2.0, -kf * (1.0 + sgn) / 4.0)]);
+                }
             }
         }
+        let tail_start = if k0 == 0 { 65 } else { k0 + 1 };
         let mut tails: Vec<Vec<(usize, f64, f64)>> = Vec::new();
         for c in 0..2usize {
-            for l in (k0 + 1)..=lmax {
+            for l in tail_start..=lmax {
                 let lf = l as f64;
                 tails.push(vec![(c, lf, 1.0), (c, lf + 2.0, -lf / (lf + 2.0))]);
             }
