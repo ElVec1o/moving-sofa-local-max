@@ -2524,6 +2524,70 @@ profiles of Section~\ref{sec:blowup} already exhibit) is the
 remaining bookkeeping step, together with the $K\to\infty$ control of
 the true-Hessian blocks.
 
+\paragraph{Validation on the critical direction.}
+The architecture is tested exactly where it must be: on the
+direction $\eta^{*}$ realizing the frozen form's positive eigenvalue
+at $K=32$.  Feeding the full $64$-mode combination $\eta^{*}$ to the
+kink-aware exact oracle and taking the (exact-quadratic-safe) second
+difference,
+\[
+   \frac{Q_{\mathrm{frz}}(\eta^{*})}{\|\eta^{*}\|^{2}_{H^{1}}}
+   = +0.0656 ,
+   \qquad
+   \frac{Q_{\mathrm{true}}(\eta^{*})}{\|\eta^{*}\|^{2}_{H^{1}}}
+   = -1.3954 :
+\]
+the true functional is \emph{strongly} negative along the very
+direction that defeats the frozen reconstruction --- the junction
+response supplies $1.46$ units of negativity that freezing discards.
+This is precisely the gap the affine family recovers through its
+envelope, and it confirms both halves of the picture: the single
+frozen form fails for a real structural reason, and the failure is
+repaired by the degrees of freedom the family restores.
+
+\subsection{Status of the proof}\label{sec:status}
+
+We close with an exact inventory.
+
+\emph{Proved (symbolic or elementary, no numerics):}
+the support-function splitting and exact quadraticity of the convex
+part with the sharp G\aa rding constant
+(Theorem~\ref{thm:support}); the per-arc Wirtinger forms, envelope
+tangency identities $\lambda_{D}=-(v_{2}+v_{2}'')$,
+$\lambda_{A}=v_{1}+v_{1}''+1$, and the phase-1 outer degeneracy
+$\lambda_{A}\equiv0$ (Lemma~\ref{lem:arcforms} and
+Section~\ref{sec:assembly}); the breakpoint reparameterization
+theorem (Theorem~\ref{thm:reparam}); the one-sided reconstruction
+lemma (Lemma~\ref{lem:superset}); the interior G\aa rding inequality
+with explicit constants (Theorem~\ref{thm:interior-garding}); the
+reduction theorem in quadratic and cubic form
+(Theorem~\ref{thm:reduction}, \eqref{eq:cubic-family}) --- in
+particular, \emph{no analytic remainder appears anywhere in the
+architecture}.
+
+\emph{Computed (exact assemblies and the high-precision oracle,
+certification pending):} the frozen blocks
+\eqref{eq:F1-computed} and their indefiniteness at $K=32$; the
+true-Hessian blocks ($m_{1}=0.72,0.70,0.596$ at $K=6,8,16$); the
+blow-up profiles with their six-digit parameter-free $\chi$-form
+matches; the critical-direction validation above.
+
+\emph{Remaining for a complete proof:}
+(i) closed-form assembly of $Q_{\beta}$ and $c_{\beta}$ for the
+affine family, making the envelope identity
+$\min_{\beta}Q_{\beta}=Q_{\mathrm{true}}$ a theorem rather than a
+Danskin-type argument plus computation;
+(ii) the uniformization of the per-direction ball over the
+$H^{2}$-sphere;
+(iii) $K\to\infty$ control of the true-Hessian blocks (the
+$m_{1}$-trend $0.72,0.70,0.596$);
+(iv) interval certification of the finitely many computed
+quantities.
+Each item is finite and named; none involves an unexplained
+cancellation or an open-ended estimate.  We believe this is an
+accurate statement of exactly how far the second-variation route to
+local maximality can presently be carried, and of what remains.
+
 \paragraph{Certification protocol (F3).}
 Every quantity entering (F1)--(F2) is a finite integral of an
 explicit closed-form integrand (products of sines, cosines and the
