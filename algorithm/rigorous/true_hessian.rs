@@ -354,6 +354,83 @@ fn main() {
         println!("area = {:.17}", area(&pert, &gl));
         return;
     }
+    if args.len() > 1 && args[1] == "cross" {
+        // ./true_hessian cross <K0> <L> <h>: rectangular coupling block
+        // rows: slope-free low modes v_k (k=3..K0, both comps);
+        // cols: tail modes w_l = sin2lt - (l/(l+2)) sin(2(l+2)t), l=K0+1..L
+        //       (slope-free, frequencies >= K0+1: exactly G-orthogonal to lows).
+        let k0: usize = args[2].parse().unwrap();
+        let lmax: usize = args[3].parse().unwrap();
+        let h: f64 = args[4].parse().unwrap();
+        let gl = gl40();
+        let mut lows: Vec<Vec<(usize, f64, f64)>> = Vec::new();
+        for c in 0..2usize {
+            for k in 3..=k0 {
+                let kf = k as f64;
+                let sgn = if k % 2 == 0 { 1.0 } else { -1.0 };
+                lows.push(vec![(c, kf, 1.0), (c, 1.0, -kf * (1.0 - sgn) / 2.0),
+                               (c, 2.0, -kf * (1.0 + sgn) / 4.0)]);
+            }
+        }
+        let mut tails: Vec<Vec<(usize, f64, f64)>> = Vec::new();
+        for c in 0..2usize {
+            for l in (k0 + 1)..=lmax {
+                let lf = l as f64;
+                tails.push(vec![(c, lf, 1.0), (c, lf + 2.0, -lf / (lf + 2.0))]);
+            }
+        }
+        let (nr, nc) = (lows.len(), tails.len());
+        let a0 = area(&Pert { terms: vec![], eps: 0.0 }, &gl);
+        println!("A0 = {:.15}; cross block {} x {}", a0, nr, nc);
+        let save = format!("cross_K{}_L{}.txt", k0, lmax);
+        let mut q = vec![vec![f64::NAN; nc]; nr];
+        if let Ok(txt) = std::fs::read_to_string(&save) {
+            for (i, line) in txt.lines().enumerate() {
+                for (j, tok) in line.split_whitespace().enumerate() {
+                    if let Ok(v) = tok.parse::<f64>() { q[i][j] = v; }
+                }
+            }
+            println!("resumed");
+        }
+        let g = |terms: Vec<(usize, f64, f64)>, eps: f64| -> f64 {
+            area(&Pert { terms, eps }, &gl) - a0
+        };
+        let t0 = std::time::Instant::now();
+        for i in 0..nr {
+            if q[i].iter().all(|v| v.is_finite()) { continue; }
+            for j in 0..nc {
+                if q[i][j].is_finite() { continue; }
+                let merge = |sj: f64| -> Vec<(usize, f64, f64)> {
+                    let mut v: Vec<(usize, f64, f64)> = lows[i].clone();
+                    for &(c, k, a) in &tails[j] { v.push((c, k, sj * a)); }
+                    v
+                };
+                let mc = merge(1.0).iter().map(|&(_, _, a)| a.abs())
+                    .fold(0.0f64, f64::max);
+                let fmax = merge(1.0).iter().map(|&(_, k, _)| k)
+                    .fold(1.0f64, f64::max);
+                // respect the H^2 scale: the stencil must keep eps*||eta''||
+                // small (else the envelope speeds lam are corrupted O(1))
+                let hh = (h / (1.0 + mc)).min(0.02 / (4.0 * fmax * fmax));
+                let gpp = g(merge(1.0), hh);
+                let gmm = g(merge(1.0), -hh);
+                let gpm = g(merge(-1.0), hh);
+                let gmp = g(merge(-1.0), -hh);
+                q[i][j] = (gpp + gmm - gpm - gmp) / (4.0 * hh * hh);
+            }
+            let txt: String = q.iter().map(|row| row.iter()
+                .map(|v| format!("{:.17e}", v)).collect::<Vec<_>>().join(" "))
+                .collect::<Vec<_>>().join("
+");
+            std::fs::write(&save, txt).unwrap();
+            let el = t0.elapsed().as_secs_f64();
+            let frac = (i + 1) as f64 / nr as f64;
+            println!("row {:>3}/{}  elapsed {:6.1}s  ETA {:6.1}s",
+                     i + 1, nr, el, el / frac * (1.0 - frac));
+        }
+        println!("saved {}", save);
+        return;
+    }
     let kmax: usize = if args.len() > 1 { args[1].parse().unwrap() } else { 24 };
     let h: f64 = if args.len() > 2 { args[2].parse().unwrap() } else { 1e-3 };
     let gl = gl40();
