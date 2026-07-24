@@ -17,12 +17,14 @@
 **Certified cell-wise quadratic programming over the contact-combinatorics
 complex.** Three facts proved in this project make it possible:
 
-1. **Exact per-cell quadraticity** (proved): every contact path is affine in
-   (c, c'), so on each *combinatorial cell* (fixed contact structure, fixed
-   arc/junction combinatorics) the area functional is EXACTLY QUADRATIC in
-   the trajectory — globally, not just near c_G. The moving-sofa area is a
-   piecewise-quadratic function on trajectory space with an enumerable cell
-   complex.
+1. **Exact quadraticity of frozen reconstructions** (proved; stated
+   precisely): the TRUE area with solved junctions is analytic-but-not-
+   quadratic within a cell; what is EXACTLY quadratic is any FROZEN
+   reconstruction (fixed junction parameters + chords), and by the superset
+   lemma it upper-bounds the true area pointwise. That is exactly what a
+   certified global bound machine needs: quadratic UPPER ENVELOPES per
+   region, with the superset slack shrinking as O(diam^2) under subdivision
+   (junction refreezing at region centers).
 2. **The superset principle** (proved): any constraint-arc reconstruction
    bounds the true area from above, pointwise along rays — certified upper
    bounds per cell come for free.
@@ -69,6 +71,49 @@ extends without new ideas; the cost is combinatorial size.
 - **G4 — Σ global:** run the machine on the doubled complex; combined with
   G1's local control at Σ, conclude global optimality of Σ. THE FINAL
   GLOBAL PROOF.
+
+## G3 SEED: DEMONSTRATED (this session)
+
+`algorithm/rigorous/ray_global.py` + the Rust `fray` mode implement the
+machine in miniature along rays: on each subinterval, junctions are frozen at
+the midpoint, three evaluations determine the EXACT upper-bound parabola
+(frozen area is exactly quadratic in eps), and adaptive subdivision certifies
+`sup < A*`. Results:
+
+    ray  eta = e_x sin 2t:  CERTIFIED  area(c_G + eps eta) < A*
+                            for all eps in [0.01, 0.60] -- ONE piece,
+                            worst sup 2.219483 vs A* = 2.219532.
+    ray  eta = e_y sin 2t:  CERTIFIED on [0.01, 0.60] -- 4 pieces.
+
+Spliced with the local theorem (m > 0 on eps <= 0.01), this is a certified
+GLOBAL statement along these slices. Caveats to discharge in G3 proper:
+f64 -> interval arithmetic; Gamma-simplicity verification per piece; and the
+real object is region-wise (not ray-wise) subdivision of trajectory space.
+
+## Why this method vs Baek's (honest comparison)
+
+Baek's proof is complete, global, and unconditional for the one-hallway
+problem -- on achievement, it wins outright; nothing here matches a finished
+119-page theorem. The claim of superiority is scoped and threefold:
+
+1. **Transferability.** Baek's engine is a single globally concave majorant
+   built on the one-hallway contact structure; no ambidextrous analogue is
+   known, and the shared-body coupling of two motions is a genuine obstruction
+   to constructing one. The cell-QP machine needs only per-region frozen
+   quadratic bounds -- proved here for BOTH hallway families -- so it extends
+   to Sigma without a new miracle.
+2. **Quantitative output.** Concavity yields optimality but no modulus; this
+   machinery produces explicit coercivity constants (m >= 0.087-0.131 on
+   gauged H^2), explicit margins per region, and uniqueness radii.
+3. **Mechanized certification.** Every object in the chain is a closed-form
+   integral or a finite jet expression, already running under interval
+   arithmetic (arb); the endgame is a machine-checkable certificate, where a
+   long human proof is the harder artifact to audit.
+
+Where Baek's method remains stronger: one idea covers all of trajectory space
+at once (no combinatorial explosion), and it is DONE. The programs are
+complementary: his result anchors Gerver; this machinery is the only current
+path to Sigma and to certified, quantitative statements.
 
 ## First concrete steps (next sessions)
 

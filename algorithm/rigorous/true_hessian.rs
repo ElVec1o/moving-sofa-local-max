@@ -336,6 +336,73 @@ fn area(pert: &Pert, gl: &([f64; 40], [f64; 40])) -> f64 {
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
+    if args.len() > 1 && args[1] == "fray" {
+        // ./true_hessian fray <terms-file> <eps_mid> <e1> <e2> <e3>
+        // Frozen-reconstruction areas: junctions solved ONCE at eps_mid, then
+        // the chord-closed area (fixed limits + junction-gap chords) at e1..e3.
+        // The result is EXACTLY quadratic in eps => 3 values determine the
+        // certified upper-bound parabola on the subinterval (superset lemma).
+        let txt = std::fs::read_to_string(&args[2]).unwrap();
+        let mut terms: Vec<(usize, f64, f64)> = Vec::new();
+        for line in txt.lines() {
+            let f: Vec<f64> = line.split_whitespace()
+                .map(|x| x.parse().unwrap()).collect();
+            terms.push((f[0] as usize, f[1], f[2]));
+        }
+        let em: f64 = args[3].parse().unwrap();
+        let gl = gl40();
+        let pmid = Pert { terms: terms.clone(), eps: em };
+        let (bd, bx2, bx1, bb) = junctions_continued(&pmid, 16);
+        for a in 4..7 {
+            let e: f64 = args[a].parse().unwrap();
+            let p = Pert { terms: terms.clone(), eps: e };
+            // frozen-limit arcs + junction-gap chords
+            let (xs, ws) = &gl;
+            let kinks = [PHI, THETA, PI2 - THETA, PI2 - PHI];
+            let kmaxf = p.terms.iter().map(|&(_, k, _)| k).fold(1.0f64, f64::max);
+            let dxmax = (std::f64::consts::PI / kmaxf) * 2.0;
+            let panels = |lo: f64, hi: f64| -> Vec<f64> {
+                let mut v = vec![lo];
+                for &k in kinks.iter() { if k > lo && k < hi { v.push(k); } }
+                v.push(hi);
+                v.sort_by(|a, b| a.partial_cmp(b).unwrap());
+                let mut out = vec![v[0]];
+                for w in v.windows(2) {
+                    let (a2, b2) = (w[0], w[1]);
+                    if b2 <= a2 { continue; }
+                    let ns = ((b2 - a2) / dxmax).ceil().max(1.0) as usize;
+                    for m in 1..=ns { out.push(a2 + (b2 - a2) * (m as f64) / (ns as f64)); }
+                }
+                out
+            };
+            let pr = &p;
+            let wg = |which: u8, t: f64| -> f64 {
+                let j = traj(t, pr);
+                let (pv, dp) = contact(t, &j, which);
+                pv[0] * dp[1] - pv[1] * dp[0]
+            };
+            let xw = |t: f64| -> f64 {
+                let j = traj(t, pr);
+                j.x[0] * j.xp[1] - j.x[1] * j.xp[0]
+            };
+            let ia = integrate(&|t| wg(0, t), &panels(0.0, PI2), xs, ws);
+            let ic = integrate(&|t| wg(2, t), &panels(0.0, PI2), xs, ws);
+            let id = integrate(&|t| wg(3, t), &panels(0.0, bd), xs, ws);
+            let ix = integrate(&xw, &panels(bx1, bx2), xs, ws);
+            let ib = integrate(&|t| wg(1, t), &panels(bb, PI2), xs, ws);
+            let cv = |t: f64, w: u8| contact(t, &traj(t, pr), w).0;
+            let xv = |t: f64| traj(t, pr).x;
+            let seg = |p0: [f64; 2], p1: [f64; 2]| 0.5 * (p0[0]*p1[1] - p1[0]*p0[1]);
+            let mut a_ = 0.5 * (ia + ic + id - ix + ib)
+                + seg(cv(PI2, 0), cv(0.0, 2))
+                + seg(cv(PI2, 2), cv(0.0, 3))
+                + seg(cv(PI2, 1), cv(0.0, 0));
+            a_ += seg(cv(bd, 3), xv(bx2));      // D-end -> x junction chord
+            a_ += seg(xv(bx1), cv(bb, 1));      // x -> B junction chord
+            println!("{:.17}", a_);
+        }
+        return;
+    }
     if args.len() > 1 && args[1] == "probe" {
         // ./true_hessian probe <eps> <terms-file: lines "comp k coeff">
         let eps: f64 = args[2].parse().unwrap();
