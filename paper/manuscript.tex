@@ -2659,21 +2659,40 @@ the $K=64$ matrix is \emph{stable across every split}:
    \quad\text{at}\quad K_{0} = 24, 32, 48,
 \]
 with $\tau^{2} \leq 0.215$ against $m_{N}c_{T} \geq 0.78$ on the
-computed windows --- the weld closes with a factor $\geq3.6$ of
-margin wherever it can be checked, and the band structure of
-\eqref{eq:entry-asymp} (entries $\lesssim C/|k-l|$ with oscillation)
-is what keeps $\tau$ bounded as the window grows.  What remains to
-make the $l>64$ coupling fully analytic is mechanical: compute the
-cross block to a buffer $l\leq L$ with the Rust oracle (minutes at
-$L\sim300$) and bound the remainder by the banded Hilbert--Schmidt
-estimate, whose gap factor $1/\sqrt{L-64}$ makes it small.  With
-$\tau_{\mathrm{far}}$ at its measured plateau $\approx0.45$, the
-assembled coercivity constant is
+computed windows.
+
+\emph{The buffer computation, done.}  The coupling to the genuine
+tail is computed directly.  Take the tail basis
+$w_{l} = \sin 2lt - \tfrac{l}{l+2}\sin\bigl(2(l+2)t\bigr)$,
+$l = 65,\dots,192$: slope-free by construction, with frequencies
+$\geq65$ only --- hence \emph{exactly} $G$-orthogonal to the
+$K_{0}=64$ block, and lying in the pure high-frequency sine span, so
+the proved constant \eqref{eq:cT} applies to it verbatim.  The
+$124\times256$ rectangular block (Rust oracle, $73$ seconds, stencil
+steps respecting the $H^{2}$ scale of each direction,
+$hh \leq 0.02/(2f_{\max})^{2}$, which keeps the envelope speeds
+uncorrupted while staying above the $f64$ noise floor) gives
+\begin{equation}\label{eq:tau-computed}
+   \tau(\text{low}\leq64 \to \text{tail } 65..192) \;=\; 0.4689 ,
+   \qquad
+   \tau^{2} = 0.220 \;<\; m_{N}\,c_{T} = 0.385 :
+\end{equation}
+\emph{the weld closes against the proved tail constant}, with
+assembled coercivity
 \[
    m \;=\; \tfrac12\Bigl[m_{N}+c_{T}
    -\sqrt{(m_{N}-c_{T})^{2}+4\tau^{2}}\Bigr]
-   \;\approx\; 0.24 \;>\; 0 .
+   \;=\; 0.147 \;>\; 0 .
 \]
+The computed band profile decays cleanly with the gap
+($0.039, 0.042, 0.030, 0.012, 0.009, 0.006, 0.004$ at gaps
+$5,10,20,40,80,120,180$), consistent with the oscillatory
+$C/|k-l|$ structure of \eqref{eq:entry-asymp}; the remainder beyond
+$L=192$ is governed by the same oscillatory bands at gaps $>128$
+(measured $\leq0.006$ and falling), whose Abel-summed operator norm
+is the one remaining half-page of classical analysis --- its
+crude size ($\lesssim0.05$) leaves $\tau \leq 0.52 < 0.62$ with
+room.
 Each item is finite and named; none involves an unexplained
 cancellation or an open-ended estimate.  We believe this is an
 accurate statement of exactly how far the second-variation route to
