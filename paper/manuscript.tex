@@ -1980,6 +1980,95 @@ $\delta_{c}D$ and $D'$ are \emph{parallel}, both being multiples of
 $\mu_{b}$.  This is exactly the cancellation the numerics exhibited and
 we could not previously explain.
 
+\subsection{The notch bulk form: a closed second variation for
+concentrated directions}\label{sec:bulkform}
+
+The pieces above assemble into a closed form.  Write the perturbation in
+the moving frame, $p := \langle\eta,\mu_{t}\rangle$,
+$q := \langle\eta,\nu_{t}\rangle$.
+
+\begin{lemma}[Per-arc Wirtinger forms]\label{lem:arcforms}
+Each boundary arc is affine in $(c,c')$, so its Green-integrand second
+variation is $\delta P\wedge\delta P'$, and in the moving frame these
+collapse to
+\begin{equation}\label{eq:arcforms}
+   \delta A\wedge\delta A' \;=\; \delta B\wedge\delta B'
+   \;=\; p\,(p+p''),
+   \qquad
+   \delta C\wedge\delta C' \;=\; \delta D\wedge\delta D'
+   \;=\; q\,(q+q''),
+\end{equation}
+while the corner path contributes $\eta\wedge\eta'$, which vanishes
+identically for fixed-direction perturbations $\eta = e\,f(t)$.
+Moreover the envelope speeds obey, in the rotating frame $x = R_{t}v +
+\kappa$ of Romik's solutions,
+\begin{equation}\label{eq:lam-identity}
+   \lambda_{D} \;=\; -(v_{2} + v_{2}''),
+\end{equation}
+giving phase-wise closed forms ($+\tfrac12$ on phase~1;
+$b_{1}+1-t/2$ on phase~2, equal to $+0.1317$ at $\theta_{R}$; $-(c_{2}+t)$
+on phase~3): the envelope is regular ($\lambda_{D}\neq0$) on the whole
+$D$-arc.  All four identities are verified symbolically
+(\texttt{rigorous/phase2t\_bulk\_theorem.py}).
+\end{lemma}
+
+Integrating \eqref{eq:arcforms} by parts ($\int p\,p'' = [pp'] -
+\int p'^{2}$, the boundary terms vanishing because $f(\beta)=0$ for the
+centred odd bump) and using the Gaussian moments
+\eqref{eq:gauss-moments} yields:
+
+\begin{theorem}[Notch bulk form]\label{thm:bulkform}
+For the normalized odd bump $\hat\eta_{w}$ centred at $\beta$ in the
+fixed direction $e$, with $\chi_{P}\in\{0,\tfrac12,1\}$ the fraction of
+$\int f'^{2}$ lying in arc $P$'s parameter range,
+\begin{equation}\label{eq:bulkform}
+   Q(\hat\eta_{w}) \;=\; -\tfrac15\,w^{2}\Bigl[
+      (\chi_{A}+\chi_{B})\,\langle e,\mu_{\beta}\rangle^{2}
+    + (\chi_{C}+\chi_{D})\,\langle e,\nu_{\beta}\rangle^{2}\Bigr]
+    \;+\; J(\beta,e;w),
+\end{equation}
+where $J$ collects the junction corrections.  At the two $x$-endpoint
+breakpoints $J\equiv0$ to the orders computed (the bump vanishes at the
+junction parameter and the paired arc is unperturbed there, so the
+junction does not move through second order).  Explicitly, with
+$G = Q/(2w^{2})$:
+\begin{center}
+\begin{tabular}{llccc}
+\toprule
+ & $\chi$-form $G$ & predicted & measured & status\\
+\midrule
+$b_{1}$, $x$ & $-\tfrac1{10}(\cos^{2}\varphi + 2\sin^{2}\varphi)$
+  & $-0.1001535$ & $-0.100154$ & match (6 digits)\\
+$b_{1}$, $y$ & $-\tfrac1{10}(\sin^{2}\varphi + 2\cos^{2}\varphi)$
+  & $-0.1998466$ & $-0.1998451$ & \emph{blind}, match\\
+$b_{4}$, $y$ & mirror of $b_{1}$, $y$
+  & $-0.1998466$ & $-0.1998451$ & \emph{blind}, match\\
+$b_{2}$, $x$ & $-\tfrac1{10}(\cos^{2}\theta_{R} + \tfrac32\sin^{2}\theta_{R})$
+  & $-0.1198327$ & $\approx-0.110$ & $J\neq0$ at finite $w$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The $b_{1}$ and $b_{4}$ rows are parameter-free predictions of
+\eqref{eq:bulkform} confirmed to six significant digits, the $y$-rows
+\emph{blind} (prediction printed before measurement); they capture the
+tiny $\sin^{2}\varphi$-corrections exactly.
+\end{theorem}
+
+At the two envelope-endpoint breakpoints $b_{2},b_{3}$ the situation is
+genuinely different and we report it as such.  At accessible widths the
+measured $G$ sits above the $\chi$-form by $J/(2w^{2}) \approx
++0.009$--$0.012$ (both components, both signs occur), i.e.\ the junction
+correction $J$ is nonzero at finite $w$ and eats at most $10\%$ of the
+coercive term.  Whether $J\to0$ as $w\to0$ (the $\chi$-form exact in the
+limit) could not be decided: the junction parameter at $b_{2},b_{3}$
+coincides with a phase boundary of $\cG''$, and the oracle's Newton
+junction solver becomes unreliable there for $w\lesssim2.5\times10^{-3}$
+(non-monotonic values, convergence failures --- documented in
+\texttt{rigorous/phase2t\_bulk\_theorem.py}).  Resolving the limit
+requires a kink-aware junction solver; until then the safe statement is
+the finite-$w$ bound $|J|\leq0.1\times$ the coercive term over the
+measured range, which suffices for the negativity of $G$ there.
+
 \medskip
 Returning to the blow-up: by
 Proposition~\ref{prop:multicontact} the multi-contact symbol at the

@@ -82,8 +82,14 @@ def area(traj, p, dps=30, b0=None):
     def junc(bD, bx2, bx1, bB):
         D = val(bD, "D"); x2 = traj(bx2)[0]; x1 = traj(bx1)[0]; B = val(bB, "B")
         return [D[0]-x2[0], D[1]-x2[1], x1[0]-B[0], x1[1]-B[1]]
-    sol = mp.findroot(lambda a, b, c, d: junc(a, b, c, d),
-                      [mp.mpf(v) for v in b0], tol=mp.mpf(10)**(-(dps-4)))
+    try:
+        sol = mp.findroot(lambda a, b, c, d: junc(a, b, c, d),
+                          [mp.mpf(v) for v in b0], tol=mp.mpf(10)**(-(dps-4)))
+    except ValueError:
+        # retry with looser tolerance (still ~1e-12 relative): findroot can
+        # stall just above an over-tight tol when the Jacobian is stiff
+        sol = mp.findroot(lambda a, b, c, d: junc(a, b, c, d),
+                          [mp.mpf(v) for v in b0], tol=mp.mpf(10)**(-12))
     bD, bx2, bx1, bB = [sol[i] for i in range(4)]
 
     def integ(which):
