@@ -182,8 +182,53 @@ fn integrate<F: Fn(f64) -> f64>(f: &F, panels: &[f64], xs: &[f64; 40], ws: &[f64
     tot
 }
 
+fn solve_junction_clamped(pert: &Pert, which: u8, t0: f64, s0: f64,
+                          tlo: f64, thi: f64) -> (f64, f64, f64) {
+    // Env(t) = x(s) with t CLAMPED to one smooth phase side [tlo, thi]:
+    // within a phase the residual is smooth and Newton is quadratic.
+    let (mut t, mut s) = (t0.max(tlo).min(thi), s0);
+    let clamp = |v: f64| v.max(tlo).min(thi);
+    let res = |t: f64, s: f64| -> [f64; 2] {
+        let (p, _) = contact(t, &traj(t, pert), which);
+        let xj = traj(s, pert);
+        [p[0] - xj.x[0], p[1] - xj.x[1]]
+    };
+    let mut r = res(t, s);
+    let mut nr = (r[0] * r[0] + r[1] * r[1]).sqrt();
+    for _ in 0..60 {
+        if nr < 1e-13 { break; }
+        let (_, dp) = contact(t, &traj(t, pert), which);
+        let xp = traj(s, pert).xp;
+        let (a, b, c, d) = (dp[0], -xp[0], dp[1], -xp[1]);
+        let det = a * d - b * c;
+        let dt = (-r[0] * d + r[1] * b) / det;
+        let ds = (c * r[0] - a * r[1]) / det;
+        let mut lam = 1.0;
+        loop {
+            let (t2, s2) = (clamp(t + lam * dt), s + lam * ds);
+            let r2 = res(t2, s2);
+            let nr2 = (r2[0] * r2[0] + r2[1] * r2[1]).sqrt();
+            if nr2 < nr { t = t2; s = s2; r = r2; nr = nr2; break; }
+            lam *= 0.5;
+            if lam < 1e-10 { return (t, s, nr); }
+        }
+    }
+    (t, s, nr)
+}
+
 fn solve_junction(pert: &Pert, which: u8, t0: f64, s0: f64) -> (f64, f64) {
-    // Env(t) = x(s): damped Newton, analytic Jacobian [Env', -x']
+    // side-resolved: the base junction parameter sits EXACTLY on a phase kink
+    // of c_G'', so solve clamped to each smooth side and keep the converged
+    // side (the piecewise residual defeats plain Newton at the kink).
+    let tk = if which == 3 { THETA } else { PI2 - THETA }; // D- vs B-junction kink
+    let w = 0.25;
+    let (ta, sa, ra) = solve_junction_clamped(pert, which, t0.min(tk), s0, tk - w, tk);
+    let (tb, sb, rb) = solve_junction_clamped(pert, which, t0.max(tk), s0, tk, tk + w);
+    if ra <= rb { (ta, sa) } else { (tb, sb) }
+}
+
+#[allow(dead_code)]
+fn solve_junction_old(pert: &Pert, which: u8, t0: f64, s0: f64) -> (f64, f64) {
     let (mut t, mut s) = (t0, s0);
     let res = |t: f64, s: f64| -> [f64; 2] {
         let (p, _) = contact(t, &traj(t, pert), which);
@@ -239,13 +284,24 @@ fn area(pert: &Pert, gl: &([f64; 40], [f64; 40])) -> f64 {
     let kinks = [PHI, THETA, PI2 - THETA, PI2 - PHI];
     let mut extra: Vec<f64> = Vec::new();
     for &(_, k, _) in &pert.terms { let _ = k; }
+    // frequency-aware panels: subpanel length <= 2 wavelengths of the highest
+    // perturbation mode, so GL40 keeps >= 20 nodes per wavelength.
+    let kmaxf = pert.terms.iter().map(|&(_, k, _)| k).fold(1.0f64, f64::max);
+    let dxmax = (std::f64::consts::PI / kmaxf) * 2.0;
     let panels = |lo: f64, hi: f64| -> Vec<f64> {
         let mut v = vec![lo];
         for &k in kinks.iter() { if k > lo && k < hi { v.push(k); } }
         for &e in extra.iter() { if e > lo && e < hi { v.push(e); } }
         v.push(hi);
         v.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        v
+        let mut out = vec![v[0]];
+        for w in v.windows(2) {
+            let (a, b) = (w[0], w[1]);
+            if b <= a { continue; }
+            let nsub = ((b - a) / dxmax).ceil().max(1.0) as usize;
+            for m in 1..=nsub { out.push(a + (b - a) * (m as f64) / (nsub as f64)); }
+        }
+        out
     };
     let wedge = |which: u8| move |t: f64| -> f64 {
         let j = traj(t, pert);
