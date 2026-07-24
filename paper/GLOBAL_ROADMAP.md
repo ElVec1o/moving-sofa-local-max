@@ -115,6 +115,46 @@ at once (no combinatorial explosion), and it is DONE. The programs are
 complementary: his result anchors Gerver; this machinery is the only current
 path to Sigma and to certified, quantitative statements.
 
+## SESSION RESULTS (G1 + G2 + G3 advanced together)
+
+**G3 -- the ray theorem is now CERTIFIED IN ARB.**
+`ray_global_certified.py`: the frozen reconstruction needs NO root-finding
+(any fixed b0 is superset-valid), so the whole chain runs in rigorous ball
+arithmetic: Gerver constants as balls, acb_calc arc integrals, exact
+parabola in ball coefficients, rigorous sup per piece:
+
+    area(c_G + eps * e_x sin 2t) < A*  for all eps in [0.01, 0.60]
+    CERTIFIED in arb, 5 pieces  (side condition: curve simplicity, float-checked).
+
+Spliced with the (certified-block) local theorem on [0, 0.01]: the first
+fully rigorous global-slice optimality statement from this machinery.
+
+**G2 -- first cell map.** Junction parameters along the x1-ray are
+piecewise-smooth with TRANSITIONS at eps ~ 0.02, 0.04, 0.16, 0.58: only ~4
+combinatorial cells across the entire ray, and the chart boundary at ~0.60
+is visible (junction parameter diverges). The complex is COARSE -- excellent
+news for branch-and-bound feasibility.
+
+**G1 -- the Sigma cap law, DERIVED.** Contact-activity diagram: near the cap
+the direct family has A, C, D positionally on the boundary and B inactive
+until exactly beta = 0.2897. Envelope speeds via the proved rotating-frame
+identities on Romik's Sigma trajectory:
+
+    theta < beta:  lam_A == 0 IDENTICALLY;  lam_B = -1, lam_C = -1/2, lam_D = +1/2
+    at beta:       lam_A ignites (jumps to 0.77)
+
+The cap degeneracy is the SAME mechanism as Gerver's phase 1: the
+trigonometric first-arc solution makes the outer mu-contact a STATIONARY
+POINT (zero mask measure) on the whole first phase. Hence the regular
+mu-slot weight near the caps is sin^2(theta) -- exact exponent 2 -- and the
+measured 1.37-1.69 window fits are the mix of this clean theta^2 law with
+the anomalous (one-signed favourable, superset-safe) stationary-contact
+response. The weighted Garding framework for Sigma now has its exact weight:
+    w(theta) = min(1, c sin^2 theta, c sin^2(pi/2 - theta)) in the mu-slot,
+    full weight in the nu-slot,
+and the G1 task reduces to re-running the (already-built) ladder machinery
+in this weighted metric.
+
 ## First concrete steps (next sessions)
 
 1. G1: derive the weighted symbol at Σ's caps; candidate weight
