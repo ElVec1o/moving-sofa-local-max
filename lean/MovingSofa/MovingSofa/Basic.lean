@@ -16,6 +16,13 @@ Formalized here:
           on trigonometric phases, and λ_A ≡ 0 iff the arc is in SOL1 normal
           form (constant −1) — Gerver phase 1 and Σ's first arc.  This is the
           exact source of every cap degeneracy met in the project.
+  • F3b — the ambidextrous frame-pair mechanism (N9 core): the identity
+          (cu+sv)² + (cu−sv)² = 2c²u² + 2s²v² and the coercivity bound
+          2m(u²+v²) ≤ 2c²u² + 2s²v² for any common lower bound m of c², s² —
+          instantiated at (c,s) = (cos θ, sin θ) this is the exact modulus
+          2·min(sin²θ, cos²θ) by which the two hallway families' ν-frames
+          (an angle 2θ apart) jointly control the full gradient on Σ's cap
+          phases: the origin of the weight w_μ.
 
 Deliberately NOT yet formalized (tracked in PROGRAM.md):
   • F1b — the plane-topology inclusion "the chord-closed frozen reconstruction
@@ -162,5 +169,66 @@ theorem lamD_const (v : Trig) : lamD v = const (-v.c) := by
   rw [Int.neg_zero]
 
 end Trig
+
+/-! ## F3b — the ambidextrous frame-pair mechanism (N9 core)
+
+On Σ's cap phases, each hallway family's only MOVING contacts are its two
+ν-slot arcs, and the two families' ν-frames at parameter θ point in
+directions ν_{±θ}, an angle 2θ apart.  The pair of masked Wirtinger forms
+therefore controls the full gradient with modulus 2·min(sin²θ, cos²θ):
+writing (u,v) for the components of η′ in the bisector frame and
+(c,s) = (cos θ, sin θ), the coverage is
+
+    ⟨η′, ν_θ⟩² + ⟨η′, ν_{−θ}⟩²  =  (c·u + s·v)² + (c·u − s·v)²
+                                =  2c²u² + 2s²v²  ≥  2·min(c²,s²)·(u²+v²).
+
+This is the exact origin of the Σ weight w_μ = min(1, sin²θ/sin²β,
+cos²θ/sin²β): the ambidextrous structure repairs its own cap degeneracy at
+rate sin²θ.  Machine-verified below over ℤ (the identity and the bound are
+coefficient-algebra; the instantiation c = cos θ, s = sin θ is analytic
+bridging, tracked as F3). -/
+
+/-- **Frame-pair identity.**  (cu+sv)² + (cu−sv)² = 2(cu)² + 2(sv)². -/
+theorem frame_pair_identity (c s u v : Int) :
+    (c*u + s*v)*(c*u + s*v) + (c*u - s*v)*(c*u - s*v)
+      = 2*((c*u)*(c*u)) + 2*((s*v)*(s*v)) := by
+  have h1 : (c*u + s*v)*(c*u + s*v)
+      = (c*u)*(c*u) + (c*u)*(s*v) + ((s*v)*(c*u) + (s*v)*(s*v)) := by
+    rw [Int.add_mul, Int.mul_add, Int.mul_add]
+  have h2 : (c*u - s*v)*(c*u - s*v)
+      = (c*u)*(c*u) - (c*u)*(s*v) - ((s*v)*(c*u) - (s*v)*(s*v)) := by
+    rw [Int.sub_mul, Int.mul_sub, Int.mul_sub]
+  rw [h1, h2]
+  omega
+
+/-- **Frame-pair coercivity** (hypothesis form: `m` any common lower bound of
+    c² and s²; instantiate m = min(c², s²) = min(cos²θ, sin²θ)):
+    2m(u² + v²) ≤ 2c²u² + 2s²v² — the weighted-modulus bound. -/
+theorem frame_pair_coercive (c s u v m : Int)
+    (hmc : m ≤ c*c) (hms : m ≤ s*s) :
+    2*m*(u*u + v*v) ≤ 2*((c*u)*(c*u)) + 2*((s*v)*(s*v)) := by
+  have hcu : (c*u)*(c*u) = (c*c)*(u*u) := by
+    rw [Int.mul_assoc, Int.mul_comm u (c*u), Int.mul_assoc c u u,
+        ← Int.mul_assoc c c (u*u)]
+  have hsv : (s*v)*(s*v) = (s*s)*(v*v) := by
+    rw [Int.mul_assoc, Int.mul_comm v (s*v), Int.mul_assoc s v v,
+        ← Int.mul_assoc s s (v*v)]
+  rw [hcu, hsv]
+  have sq_nonneg : ∀ w : Int, (0:Int) ≤ w*w := by
+    intro w
+    rw [← Int.natAbs_mul_self]
+    exact Int.natCast_nonneg _
+  have hu2 : (0:Int) ≤ u*u := sq_nonneg u
+  have hv2 : (0:Int) ≤ v*v := sq_nonneg v
+  -- (c²−m)·u² ≥ 0 and (s²−m)·v² ≥ 0, expanded, then linear arithmetic
+  have t1 : (0:Int) ≤ (c*c - m)*(u*u) :=
+    Int.mul_nonneg (Int.sub_nonneg.mpr hmc) hu2
+  have t2 : (0:Int) ≤ (s*s - m)*(v*v) :=
+    Int.mul_nonneg (Int.sub_nonneg.mpr hms) hv2
+  have e0 : 2*m*(u*u + v*v) = 2*(m*(u*u + v*v)) := Int.mul_assoc _ _ _
+  have e1 : (c*c - m)*(u*u) = (c*c)*(u*u) - m*(u*u) := Int.sub_mul _ _ _
+  have e2 : (s*s - m)*(v*v) = (s*s)*(v*v) - m*(v*v) := Int.sub_mul _ _ _
+  have e3 : m*(u*u + v*v) = m*(u*u) + m*(v*v) := Int.mul_add _ _ _
+  omega
 
 end MovingSofa
