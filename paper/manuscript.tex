@@ -2579,10 +2579,20 @@ $\min_{\beta}Q_{\beta}=Q_{\mathrm{true}}$ a theorem rather than a
 Danskin-type argument plus computation;
 (ii) the uniformization of the per-direction ball over the
 $H^{2}$-sphere;
-(iii) $K\to\infty$ control of the true-Hessian blocks (the
-$m_{1}$-trend $0.72,0.70,0.596$; a checkpointed runner for the
-$K=24,32$ blocks is provided as
-\texttt{rigorous/true\_hessian\_runner.py});
+(iii) $K\to\infty$ control of the true-Hessian blocks.  This is now
+substantially advanced: a Rust port of the exact oracle
+(\texttt{rigorous/true\_hessian.rs}; $\varepsilon$-continuation
+junction tracking, scale-aware stencils, $A^{\star}$ reproduced to
+$15$ digits, seconds per block) evaluates the true form on the
+endpoint-slope-free subspace --- where the analytic oracle coincides
+with $F$ exactly --- and finds the $H^{1}$ margin \emph{flat}:
+$m_{1} = 0.8049$ at $K=16$ and $0.7966$ at $K=24$, in sharp contrast
+to the frozen form's decay to indefiniteness, and matching the
+$0.79$--$1.24$ diagonal quotients measured independently.  This is
+precisely the robustness the affine-family envelope predicts.
+Extending past $K=32$ requires fold-aware continuation of the
+junction branch (isolated corrupted entries appear there;
+documented);
 (iv) interval quadrature of the closed-form entry integrands ---
 the spectral half of certification is already done in \textsc{arb}
 (preceding paragraph).
