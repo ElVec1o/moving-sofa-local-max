@@ -1748,10 +1748,15 @@ $Q$ and $C_{3}$ converge cleanly, but the putative $C_{4}=g''''(0)$
 probe there).  So $g$ is $C^{3}$ but not $C^{4}$ along these directions:
 the moving breakpoint injects a mild non-smoothness at fourth order, and
 there is no well-defined quartic coefficient to build a criterion on.
-This is itself informative --- it is the analytic fingerprint of the
-moving breakpoint --- but it means the Taylor route stalls at third
-order, and a decision about local maximality must be made from $g$
-directly rather than from its coefficients.
+The mechanism is identified in Section~\ref{sec:bulkform}: at the
+envelope-endpoint breakpoints the perturbed envelope arc and corner path
+begin to cross multiply beyond a combinatorial threshold
+$\varepsilon^{*}(w)\sim\sqrt{I_{2}w}$ \eqref{eq:eps-star}, so
+$g(\varepsilon)$ is piecewise-analytic with a genuine transition point
+--- the boundary's arc combinatorics change --- rather than classically
+smooth.  The Taylor route therefore stalls at third order, and a
+decision about local maximality must be made from $g$ directly rather
+than from its coefficients.
 
 That is, in fact, all one needs.  Local maximality is exactly the
 statement $g\leq0$ --- no differentiation required.  We evaluate $g$ by
@@ -2055,19 +2060,53 @@ tiny $\sin^{2}\varphi$-corrections exactly.
 \end{theorem}
 
 At the two envelope-endpoint breakpoints $b_{2},b_{3}$ the situation is
-genuinely different and we report it as such.  At accessible widths the
-measured $G$ sits above the $\chi$-form by $J/(2w^{2}) \approx
-+0.009$--$0.012$ (both components, both signs occur), i.e.\ the junction
-correction $J$ is nonzero at finite $w$ and eats at most $10\%$ of the
-coercive term.  Whether $J\to0$ as $w\to0$ (the $\chi$-form exact in the
-limit) could not be decided: the junction parameter at $b_{2},b_{3}$
-coincides with a phase boundary of $\cG''$, and the oracle's Newton
-junction solver becomes unreliable there for $w\lesssim2.5\times10^{-3}$
-(non-monotonic values, convergence failures --- documented in
-\texttt{rigorous/phase2t\_bulk\_theorem.py}).  Resolving the limit
-requires a kink-aware junction solver; until then the safe statement is
-the finite-$w$ bound $|J|\leq0.1\times$ the coercive term over the
-measured range, which suffices for the negativity of $G$ there.
+genuinely different, and resolving it uncovered a combinatorial
+phenomenon.  A kink-aware junction solver (analytic Jacobians from the
+envelope-tangency identity \eqref{eq:env-tangent}, one-sided through the
+phase selector; \texttt{rigorous/analytic\_oracle.py}) converges at all
+widths down to $w=1.5\times10^{-4}$ and reproduces the
+$b_{2}$/$b_{3}$ mirror symmetry to all printed digits.  The measured
+$G$ then falls into two deterministic clusters:
+$\approx-0.107$ (near the $\chi_{D}=\tfrac12$ form $-0.1198$, and
+agreeing with the independent Shapely clipping oracle where the latter
+can resolve) and $\approx-0.137$ (near the $\chi_{D}=1$ form
+$-0.1397$).
+
+The mechanism is that the perturbed envelope arc and corner path can
+cross \emph{more than once}.  The bump imparts a wiggle of slope
+$\sim\varepsilon/\sqrt{I_{2}w}$ to one curve at a corner of fixed
+opening; once this exceeds the corner slope --- i.e.\ beyond the
+combinatorial threshold
+\begin{equation}\label{eq:eps-star}
+   \varepsilon^{*}(w) \;\sim\; \sqrt{I_{2}\,w},
+\end{equation}
+--- multiple junction roots exist, and a Newton solver lands in one
+basin or another depending on $(w,\varepsilon)$.  This has two
+consequences, one practical and one structural.
+
+Practically, the branch ambiguity is immaterial for negativity:
+whichever root is selected, the reconstructed boundary uses genuine
+constraint arcs, so the reconstructed region \emph{contains} the true
+intersection $S(c)=\bigcap_{t}H_{t}(c)$; hence every measured $g$ is an
+\emph{upper bound} for the true $g$.  All measured values, over both
+clusters, all widths $w\in[1.5\times10^{-4},10^{-2}]$ and both
+$\varepsilon$, satisfy $g \leq -0.106\,\varepsilon^{2}w^{2}$: the true
+$g$ is negative a fortiori, in every regime.
+
+Structurally, \eqref{eq:eps-star} explains the regularity anomaly of
+Section~\ref{sec:quartic}: at fixed $w$ the function
+$g(\varepsilon)$ undergoes a genuine combinatorial transition at
+$\varepsilon^{*}(w)$ --- the boundary's arc structure changes as extra
+crossings switch on, with the excess lens regions cut from the
+intersection --- so $g$ is piecewise-analytic in $\varepsilon$ with a
+transition point, which is precisely what the divergent fourth-order
+difference stencils detected.  And since $\varepsilon^{*}(w)\to0$ as
+$w\to0$, a fixed-$\varepsilon$ blow-up limit at $b_{2},b_{3}$
+necessarily mixes regimes: the clean $w$-independent profile seen at
+$b_{1},b_{4}$ (where the junction does not move and no threshold
+exists) is replaced at $b_{2},b_{3}$ by a two-regime family, each
+regime bracketed by an explicit $\chi$-form and all of it strictly
+negative.
 
 \medskip
 Returning to the blow-up: by
