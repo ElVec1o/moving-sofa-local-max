@@ -725,7 +725,7 @@ def main():
             print(f"  [{a:.5f},{b:.5f}] {m_}")
         print("PARTIAL certificate — gaps listed above")
     else:
-        print("UNCONDITIONAL RAY THEOREM CERTIFIED on [0.01,0.60]")
+        print(f"UNCONDITIONAL RAY THEOREM CERTIFIED on [{lo},{hi}]")
 
 
 if __name__ == "__main__":
