@@ -295,7 +295,14 @@ Q_rel(η*) = −6.79, stencil-stable.
 First data: Q_rel(cap bump) = −16.62; **released ladder K=10:
 NEG DEF, m_rel_L² = 4.576** (bulk spectrum matching the full form's —
 min −1587 vs −1589 — confirming the release touches only cap behavior).
-K = 16, 24 in the chain.
+
+**K=16: NEG DEF, m_rel_L² = 0.91074 — the Lemma 7a prediction
+CONFIRMED.** The margin relaxed from 4.58 toward the Hardy-derived
+cap-sector structural constant ≈ 1 (prediction committed before the
+datum), remaining strictly positive: the cap-self-similar directions
+entered the span and found the floor where the exact identity says it
+is. K=24 (running) sharpens the floor estimate; the corner corrections
+account for the ≈ 0.09 deficit from 1.
 
 ## 8c. Tail control for the released functional (S6-released)
 
