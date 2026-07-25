@@ -2346,6 +2346,32 @@ Definition~\ref{def:frozen}; the $H^{2}$-ball statement follows from
 $H^{2}\hookrightarrow C^{1}$.
 \end{proof}
 
+\begin{remark}[Structure-following forms and the fan kink]
+\label{rem:structure-following}
+The true functional $F$ is \emph{not} twice differentiable at $\cG$
+along cap directions: the phase-1 contact family is a stationary wall
+fan ($\lambda_{A}\equiv0$ on $[0,\varphi]$), and a perturbation whose
+phase-1 wall displacement cuts inward bites the body along the envelope
+of the cutting walls.  The bite has depth $O(\varepsilon)$ and width
+$O(\sqrt{\varepsilon})$, so the cutting-side response obeys a
+\emph{three-halves law} $F[\cG-\varepsilon\eta]-F[\cG]\approx
+-c\,\varepsilon^{3/2}$ (measured $c\approx20$ for a cap-wide bump,
+stable across $\varepsilon\in[5\cdot10^{-4},2\cdot10^{-3}]$), while the
+releasing side is quadratic.  The kink is therefore one-signed
+\emph{favourable}: super-quadratic decrease on one side, quadratic on
+the other.  Every smooth oracle used in this paper --- the analytic and
+Rust jet oracles, and every frozen reconstruction --- computes a
+\emph{structure-following} functional that keeps the contact-arc
+structure regardless of detachment; by Lemma~\ref{lem:superset} such a
+functional dominates $F$ pointwise with equality at $\cG$, so its
+(genuine, symmetric) Hessian dominates both one-sided second variations
+of $F$.  Negative definiteness of the computed forms therefore implies
+strict local maximality of the true $F$, with the cutting side strictly
+better than quadratic.  All ladder computations in this paper are to be
+read in this sense.
+\end{remark}
+
+
 The two-norm obstruction that dominated
 Sections~\ref{sec:passage-fails}--\ref{sec:quartic} is thereby
 dissolved \emph{structurally}: the quadratic upper envelope
