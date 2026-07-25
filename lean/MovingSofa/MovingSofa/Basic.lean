@@ -28,6 +28,11 @@ Formalized here:
           normal is a combination of the extremes, the algebraic heart of
           the fan-release theorem that removes the cap kink from the
           certified Σ objective.
+  • F4c — the ν-slot collapse identity (Lemma 7a): q² − q′² + s²η′²
+          + (scη²)′ = 0 as a polynomial identity — the zeroth-order bulk
+          of the ν-slot Wirtinger form cancels exactly; with Hardy's
+          inequality this closes the cap tail sector of the Σ-local
+          theorem at structural constant 1.
   • F3b — the ambidextrous frame-pair mechanism (N9 core): the identity
           (cu+sv)² + (cu−sv)² = 2c²u² + 2s²v² and the coercivity bound
           2m(u²+v²) ≤ 2c²u² + 2s²v² for any common lower bound m of c², s² —
@@ -264,6 +269,50 @@ theorem fan_combination_y (sa ca sb cb st ct : Int) :
     rw [Int.mul_comm (st*ca) sb, Int.mul_comm st ca, ← Int.mul_assoc]
   have c3 : cb*st*sa = cb*sa*st := by
     rw [Int.mul_assoc, Int.mul_comm st sa, ← Int.mul_assoc]
+  omega
+
+/-! ## F4c — the ν-slot collapse identity (Lemma 7a core)
+
+The tail-closing identity of the Σ-local theorem: for q = −η·s (the
+ν-projection of an x-polarized perturbation), with D(s) = c, D(c) = −s,
+D(η) = η′ (symbols; the analytic bridge is F3):
+
+    q² − q′² + s²·η′² + (s·c·η²)′ = 0
+
+identically as a POLYNOMIAL in (η, η′, s, c) — the zeroth-order bulk of
+the ν-slot Wirtinger form cancels exactly, leaving −∫s²η′² plus pure
+boundary terms. Expanding q′ = −η′s − ηc and (scη²)′ =
+(c² − s²)η² + 2scηη′, the claim is: -/
+
+/-- **ν-slot collapse.**  (ηs)² − (η′s + ηc)² + s²η′²
+    + ((c² − s²)η² + 2scηη′) = 0. -/
+theorem nu_slot_collapse (η η' s c : Int) :
+    (η*s)*(η*s) - (η'*s + η*c)*(η'*s + η*c) + (s*s)*(η'*η')
+      + ((c*c - s*s)*(η*η) + 2*((s*c)*(η*η'))) = 0 := by
+  have h1 : (η*s)*(η*s) = (s*s)*(η*η) := by
+    rw [Int.mul_assoc, Int.mul_comm s (η*s), Int.mul_assoc η s s,
+        ← Int.mul_assoc η η (s*s), Int.mul_comm (η*η) (s*s)]
+  have h2 : (η'*s + η*c)*(η'*s + η*c)
+      = (η'*s)*(η'*s) + (η'*s)*(η*c) + ((η*c)*(η'*s) + (η*c)*(η*c)) := by
+    rw [Int.add_mul, Int.mul_add, Int.mul_add]
+  have h3 : (η'*s)*(η'*s) = (s*s)*(η'*η') := by
+    rw [Int.mul_assoc, Int.mul_comm s (η'*s), Int.mul_assoc η' s s,
+        ← Int.mul_assoc η' η' (s*s), Int.mul_comm (η'*η') (s*s)]
+  have h4 : (η*c)*(η*c) = (c*c)*(η*η) := by
+    rw [Int.mul_assoc, Int.mul_comm c (η*c), Int.mul_assoc η c c,
+        ← Int.mul_assoc η η (c*c), Int.mul_comm (η*η) (c*c)]
+  have h5 : (η'*s)*(η*c) = (s*c)*(η*η') := by
+    rw [Int.mul_assoc η' s (η*c), ← Int.mul_assoc s η c,
+        Int.mul_comm s η, Int.mul_assoc η s c,
+        ← Int.mul_assoc η' η (s*c), Int.mul_comm η' η,
+        Int.mul_comm (η*η') (s*c)]
+  have h6 : (η*c)*(η'*s) = (s*c)*(η*η') := by
+    rw [Int.mul_assoc η c (η'*s), ← Int.mul_assoc c η' s,
+        Int.mul_comm c η', Int.mul_assoc η' c s,
+        ← Int.mul_assoc η η' (c*s), Int.mul_comm c s,
+        Int.mul_comm (η*η') (s*c)]
+  have h7 : (c*c - s*s)*(η*η) = (c*c)*(η*η) - (s*s)*(η*η) :=
+    Int.sub_mul _ _ _
   omega
 
 /-! ## F3b — the ambidextrous frame-pair mechanism (N9 core)

@@ -256,6 +256,8 @@ informal proof is short and self-contained.
 - **[P] F4b.** S7″ fan-combination identity — **DONE, machine-verified**:
   `fan_combination_x`, `fan_combination_y` (interior fan normals are
   combinations of the extremes; the algebraic heart of the fan release).
+- **[P] F4c.** Lemma 7a ν-slot collapse — **DONE, machine-verified**:
+  `nu_slot_collapse` (the exact identity closing the Σ cap tail sector).
 - **[ ] F4.** N7, N3, N6 — short symbolic proofs.
 - **[ ] F5.** The certified-numerics interface: import arb enclosures as
   Lean facts (the established `interval_cases`-style bridge or trust-tagged
