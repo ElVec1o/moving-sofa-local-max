@@ -245,6 +245,43 @@ each ingredient:
    junctions (β, transitions at ~0.37–0.42·π/2 flickers, π/2−β) — the
    gauge audit is part of S6.
 
+## 8b. The fan-release theorem (S7″) — the delivering route
+
+**Lemma 5 (fan redundancy).** [P; algebraic core Lean-verified] Let
+P ∈ ℝ² and 0 < b − a < π. Then
+⋂_{t∈[a,b]} {x : ⟨x−P, μ_t⟩ ≤ 0} = {⟨x−P, μ_a⟩ ≤ 0} ∩ {⟨x−P, μ_b⟩ ≤ 0}.
+
+*Proof.* ⊆ is trivial. For ⊇: the positive-combination identity
+sin(b−a)·μ_t = sin(b−t)·μ_a + sin(t−a)·μ_b (a polynomial identity in the
+six sine/cosine symbols — `fan_combination` in `lean/MovingSofa`), with
+both coefficients ≥ 0 for t ∈ [a,b] and sin(b−a) > 0, exhibits every
+interior normal as a nonnegative combination of the extremes. ∎
+
+**Theorem 6 (fan release).** [P + computational verification] Let F_rel
+be the ambidextrous functional with the cap-interior stationary-wall
+constraints removed (first cap: the outer μ-wall for t ∈ (0,β); last
+cap: the outer ν-wall for t ∈ (π/2−β, π/2); both families inherit the
+release through ρ). Then:
+
+1. F_rel ≥ F everywhere (superset principle N1: fewer constraints);
+2. F_rel(c_R) = F(c_R) (Lemma 5: at c_R the released walls all pass
+   through the frozen contact point, so the extremes already cut the
+   same wedge — verified numerically to 2·10⁻¹⁰);
+3. F_rel is C² near c_R along cap directions (the stationary-fan kink
+   is the ONLY source of one-sidedness there; with two transversal
+   walls the corner responds smoothly — verified: fwd/bwd = 1.0000 at
+   stencil sizes 2e-4/1e-4/5e-5, where F itself has ratio 0.12);
+4. hence the one-sided second variations satisfy Q ≤ Q_rel along every
+   ray, and
+
+   **Q_rel ≤ −m‖η‖²_{L²}  ⟹  Σ is a strict local maximum of the
+   ambidextrous functional, with L² modulus m.**
+
+No branch enumeration, no kink in the certified object; the discarded
+wedge-bite terms are one-signed favourable and never need to be
+computed. First datum: Q_rel(cap bump) = −16.62, stencil-stable to five
+digits. The released ladder (K = 10, 16, 24) is the S7″ computation.
+
 ## 9. What remains for the Σ-local theorem (S7)
 
 - S3: K=24 discriminating run (in progress); then K=32 if needed.
