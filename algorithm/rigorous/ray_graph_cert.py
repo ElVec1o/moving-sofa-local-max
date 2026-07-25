@@ -44,6 +44,20 @@ def pidx(t):
     return 4
 
 
+def vel_hull(F, name, t0, t1, ph, nsub=8):
+    """Velocity enclosure over [t0,t1] as hull of subpanel balls — avoids
+    the interval dependency blow-up of one wide t-ball."""
+    vx = vy = None
+    for i in range(nsub):
+        a = t0 + (t1-t0)*i/nsub; b = t0 + (t1-t0)*(i+1)/nsub
+        tb = arb(0.5*(a+b)) + arb(0, 0.5*(b-a))
+        _, gp = F[name](tb, ph)
+        gx, gy = gp[0].real, gp[1].real
+        vx = gx if vx is None else vx.union(gx)
+        vy = gy if vy is None else vy.union(gy)
+    return [vx, vy]
+
+
 def get_fns(cval, km, eb):
     def arc(which):
         def g(tb, ph):
@@ -100,6 +114,78 @@ def build_traversal(comp, kmode, e1, e2):
     spans = {'A': (0.0, PH[5]), 'C': (0.0, PH[5]), 'D': (0.0, bd),
              'X': (bx1, bx2), 'B': (bb, PH[5])}
     runs = {n: cert_runs(F, n, *spans[n], ARCDIR[n]) for n in spans}
+    # shave certified-run ends: nodes must sit where the speed is robustly
+    # signed, not at the marginal frontier where |lambda| ~ 0 (pocket edges,
+    # junction ends). Shaved margins become chord-covered.
+    SH, SHMIN = 0.12, 5e-3
+    for nm in runs:
+        shaved = []
+        for a, b, ok in runs[nm]:
+            L = b - a
+            if ok and L > 2*SHMIN and SH*L > SHMIN:
+                m_ = SH*L
+                shaved += [(a, a+m_, False), (a+m_, b-m_, True), (b-m_, b, False)]
+            else:
+                shaved.append((a, b, ok))
+        merged_r = []
+        for a, b, ok in shaved:
+            if merged_r and merged_r[-1][2] == ok:
+                merged_r[-1] = (merged_r[-1][0], b, ok)
+            else:
+                merged_r.append((a, b, ok))
+        runs[nm] = merged_r
+
+    # adaptive pocket widening: a reversal pocket RETRACES the envelope, so
+    # the flanking kept-arcs overlap as sets unless the chord spans enough
+    # net displacement. Widen each failed run into its certified neighbours
+    # until the chord direction ball certifies against both flank windows.
+    def wvel(nm, t0, t1, sgn):
+        ph = pidx(0.5*(t0+t1))
+        t0c = max(t0, PH[ph] if ph > 0 else -1.0); t1c = min(t1, PH[ph+1])
+        v = vel_hull(F, nm, t0c, t1c, ph)
+        return [sgn*v[0], sgn*v[1]]
+
+    def epoint(nm, t):
+        g, _ = F[nm](arb(t), pidx(min(t, PH[5]-1e-12)))
+        return g
+
+    for nm in runs:
+        rs = runs[nm]
+        for q, (a, b, ok) in enumerate(rs):
+            if ok:
+                continue
+            has_l = q > 0 and rs[q-1][2]
+            has_r = q+1 < len(rs) and rs[q+1][2]
+            if not (has_l or has_r):
+                continue
+            for frac in (0.0, 0.15, 0.3, 0.45):
+                el = frac*(rs[q-1][1]-rs[q-1][0]) if has_l else 0.0
+                er = frac*(rs[q+1][1]-rs[q+1][0]) if has_r else 0.0
+                aa, bb_ = a-el, b+er
+                P = epoint(nm, aa); Q_ = epoint(nm, bb_)
+                cv = [(Q_[0]-P[0]).real, (Q_[1]-P[1]).real]
+                fc = (float(cv[0].mid()), float(cv[1].mid()))
+                nc = math.hypot(*fc)
+                if nc < 1e-14:
+                    continue
+                d = (fc[0]/nc, fc[1]/nc)
+                okd = bool(cv[0]*arb(d[0]) + cv[1]*arb(d[1]) > 0)
+                wl = 0.1*(rs[q-1][1]-rs[q-1][0]) if has_l else 0.0
+                wr_ = 0.1*(rs[q+1][1]-rs[q+1][0]) if has_r else 0.0
+                if okd and has_l:
+                    vl = wvel(nm, aa-wl, aa, 1)
+                    okd &= bool(vl[0]*arb(d[0]) + vl[1]*arb(d[1]) > 0)
+                if okd and has_r:
+                    vr = wvel(nm, bb_, bb_+wr_, 1)
+                    okd &= bool(vr[0]*arb(d[0]) + vr[1]*arb(d[1]) > 0)
+                if okd:
+                    if has_l:
+                        rs[q-1] = (rs[q-1][0], aa, True)
+                    if has_r:
+                        rs[q+1] = (bb_, rs[q+1][1], True)
+                    rs[q] = (aa, bb_, False)
+                    break
+        runs[nm] = [(a, b, ok) for a, b, ok in rs if b - a > 1e-12]
 
     def seq(name, forward=True):
         rs = runs[name] if forward else list(reversed(runs[name]))
@@ -295,10 +381,102 @@ def simplicity_certify(trav, cval, km, e1, e2, nseg0=60, maxref=4):
                          max(float(v.mid())+abs(float(v.rad())) for v in ys))))
         return out
 
+    def quad_sign(fn):
+        """Certified sign over the WHOLE eps-piece of an exactly-quadratic-
+        in-eps quantity: exact ball parabola through fn(e1), fn(mid), fn(e2).
+        Returns +1, -1, or 0 (undecided). Kills the eps-ball dependency."""
+        m_ = 0.5*(e1+e2); h = arb(e2-e1)
+        f1, fm, f2 = fn(arb(e1)), fn(arb(m_)), fn(arb(e2))
+        A2 = 2*(f1 - 2*fm + f2)/(h*h)
+        A1 = (f2 - f1)/h
+        cands = [f1, f2]
+        if float(A2.mid()) != 0.0:
+            ev = m_ - float((A1/A2).mid())
+            if e1 < ev < e2:
+                cands.append(fm + A1*arb(ev-m_) + A2*arb(ev-m_)**2/2)
+        lo = min(float(c.mid()) - abs(float(c.rad())) for c in cands)
+        hi = max(float(c.mid()) + abs(float(c.rad())) for c in cands)
+        if lo > 0:
+            return 1
+        if hi < 0:
+            return -1
+        return 0
+
+    def chord_chord_sep(pa, pb):
+        def mk(ref1, ref2, ref3):
+            def fn(ee):
+                Fe = get_fns(cval, km, ee)
+                A = ept(Fe, ref1); B = ept(Fe, ref2); C = ept(Fe, ref3)
+                return ((B[0]-A[0])*(C[1]-A[1])
+                        - (B[1]-A[1])*(C[0]-A[0])).real
+            return fn
+        for (r1, r2), (r3, r4) in (((pa[1], pa[2]), (pb[1], pb[2])),
+                                   ((pb[1], pb[2]), (pa[1], pa[2]))):
+            s1 = quad_sign(mk(r1, r2, r3))
+            if s1 != 0 and s1 == quad_sign(mk(r1, r2, r4)):
+                return True
+        return False
+
+    def arc_line_sep(parc, pchord, trange=None):
+        """Arc strictly one side of the chord's line, certified per t-panel
+        with the eps-dependence handled by exact quadraticity. `trange`
+        restricts to a parameter subrange (excludes shared-node windows)."""
+        _, name, lo, hi = parc
+        a, b = (lo, hi) if lo < hi else (hi, lo)
+        if trange is not None:
+            a = max(a, trange[0]); b = min(b, trange[1])
+            if b <= a + 1e-14:
+                return True
+        cuts = [a] + [k for k in PH[1:5] if a < k < b] + [b]
+        for c0, c1 in zip(cuts, cuts[1:]):
+            nsub = max(3, int(24*(c1-c0)/(b-a+1e-12)))
+            ph = pidx(0.5*(c0+c1))
+            for i in range(nsub):
+                t0 = c0 + (c1-c0)*i/nsub; t1 = c0 + (c1-c0)*(i+1)/nsub
+                tb = arb(0.5*(t0+t1)) + arb(0, 0.5*(t1-t0))
+                def mkq(expr):
+                    def fn(ee, tb=tb, ph=ph):
+                        Fe = get_fns(cval, km, ee)
+                        P = ept(Fe, pchord[1]); Q = ept(Fe, pchord[2])
+                        g, _ = Fe[name](tb, ph)
+                        return expr(P, Q, g)
+                    return fn
+                s = quad_sign(mkq(lambda P, Q, g:
+                    ((Q[0]-P[0])*(g[1]-P[1])
+                     - (Q[1]-P[1])*(g[0]-P[0])).real))
+                if s != 0:
+                    continue
+                # side undecided: panel may be clear of the SEGMENT axially
+                # (beyond an endpoint, at positive distance from it)
+                uu = quad_sign(mkq(lambda P, Q, g:
+                    ((g[0]-P[0])*(Q[0]-P[0]) + (g[1]-P[1])*(Q[1]-P[1])).real))
+                uv = quad_sign(mkq(lambda P, Q, g:
+                    ((g[0]-Q[0])*(Q[0]-P[0]) + (g[1]-Q[1])*(Q[1]-P[1])).real))
+                if uu == -1:      # projection before P
+                    dp = quad_sign(mkq(lambda P, Q, g:
+                        ((g[0]-P[0])**2 + (g[1]-P[1])**2).real))
+                    if dp == 1:
+                        continue
+                if uv == 1:       # projection past Q
+                    dq = quad_sign(mkq(lambda P, Q, g:
+                        ((g[0]-Q[0])**2 + (g[1]-Q[1])**2).real))
+                    if dq == 1:
+                        continue
+                return False
+        return True
+
     def pair_sep(ci, cj, pi_, pj_, depth=0):
         """Disjointness with local zoom: on overlap, re-cell the offending
         parameter windows at 8x resolution, recurse."""
         if boxes_disjoint(ci, cj):
+            return True
+        if pi_[0] == 'chord' and pj_[0] == 'chord' and chord_chord_sep(pi_, pj_):
+            return True
+        if pi_[0] == 'arc' and pj_[0] == 'chord' and ci and arc_line_sep(
+                pi_, pj_, (min(c[0] for c in ci), max(c[1] for c in ci))):
+            return True
+        if pi_[0] == 'chord' and pj_[0] == 'arc' and cj and arc_line_sep(
+                pj_, pi_, (min(c[0] for c in cj), max(c[1] for c in cj))):
             return True
         if depth >= maxref:
             return False
@@ -317,8 +495,68 @@ def simplicity_certify(trav, cval, km, e1, e2, nseg0=60, maxref=4):
                 return False
         return pair_sep(zi + keep_i, zj + keep_j, pi_, pj_, depth+1)
 
+    # ---- monotone chains: certify a common direction d per maximal group
+    # of consecutive pieces (all traversal-velocity hull balls dot d > 0).
+    # A d-monotone subchain is globally injective, so ALL internal pairs —
+    # adjacent tangent-continuation chords, osculating junction flanks,
+    # reversal-pocket flanks — are exempt at once. ----
+    def piece_hulls(k):
+        p = trav[k]
+        if p[0] == 'chord':
+            P = ept(F, p[1]); Q = ept(F, p[2])
+            return [[(Q[0]-P[0]).real, (Q[1]-P[1]).real]]
+        _, name, lo, hi = p
+        fw = 1 if hi > lo else -1
+        a, b = (lo, hi) if lo < hi else (hi, lo)
+        out = []
+        for i5 in range(5):
+            aa = max(PH[i5], a); bb_ = min(PH[i5+1], b)
+            if bb_ <= aa + 1e-14:
+                continue
+            v = vel_hull(F, name, aa, bb_, i5)
+            out.append([fw*v[0], fw*v[1]])
+        return out
+
+    hulls = [piece_hulls(k) for k in range(n)]
+    fdirs = []
+    for hs in hulls:
+        sx = sum(float(h[0].mid()) for h in hs)
+        sy = sum(float(h[1].mid()) for h in hs)
+        nv = math.hypot(sx, sy)
+        fdirs.append((sx/nv, sy/nv) if nv > 1e-14 else (1.0, 0.0))
+
+    def cert_chain(members):
+        dx = sum(fdirs[k][0] for k in members)
+        dy = sum(fdirs[k][1] for k in members)
+        nd = math.hypot(dx, dy)
+        if nd < 1e-14:
+            return False
+        d = (dx/nd, dy/nd)
+        for k in members:
+            for h in hulls[k]:
+                if not bool(h[0]*arb(d[0]) + h[1]*arb(d[1]) > 0):
+                    return False
+        return True
+
+    chains = []
+    cur = [0]
+    for k in range(1, n):
+        if cert_chain(cur + [k]):
+            cur.append(k)
+        else:
+            chains.append(cur); cur = [k]
+    chains.append(cur)
+    if len(chains) > 1 and cert_chain(chains[-1] + chains[0]):
+        chains[0] = chains[-1] + chains[0]; chains.pop()
+    cid = {}
+    for ci, ch in enumerate(chains):
+        for k in ch:
+            cid[k] = ci
+
     for i in range(n):
         for j in range(i+1, n):
+            if cid[i] == cid[j]:
+                continue
             adjacent = (j == i+1) or (i == 0 and j == n-1)
             if adjacent:
                 continue
@@ -345,9 +583,12 @@ def simplicity_certify(trav, cval, km, e1, e2, nseg0=60, maxref=4):
                 twin = (tstart, tstart + fw*w) if fw > 0 else (tstart + fw*w, tstart)
                 sgn = fw
             ta, tb_ = min(twin), max(twin)
-            tb = arb(0.5*(ta+tb_)) + arb(0, 0.5*(tb_-ta))
-            _, gp = F[name](tb, pidx(0.5*(ta+tb_)))
-            return [sgn*gp[0].real, sgn*gp[1].real], ('arc', ta, tb_)
+            anchor = hi if at_end else lo
+            ph = pidx(anchor - 1e-12 if anchor > ta else anchor + 1e-12)
+            ta = max(ta, PH[ph] if ph > 0 else -1.0)
+            tb_ = min(tb_, PH[ph+1])
+            v = vel_hull(F, name, ta, tb_, ph)
+            return [sgn*v[0], sgn*v[1]], ('arc', ta, tb_)
         P = ept(F, piece[1]); Q = ept(F, piece[2])
         dch = [Q[0]-P[0], Q[1]-P[1]]
         sgn = -1 if at_end else 1
@@ -363,29 +604,35 @@ def simplicity_certify(trav, cval, km, e1, e2, nseg0=60, maxref=4):
             (near if (p0 >= wa - 1e-15 and p1 <= wb + 1e-15) else far).append((p0, p1, box))
         return near, far
 
-    WFRAC = 0.08
     for i in range(n):
         j = (i+1) % n
+        if cid[i] == cid[j]:
+            continue
         pa, pb = trav[i], trav[j]
-        va, wina = window_vel(pa, True, WFRAC)
-        vb, winb = window_vel(pb, False, WFRAC)
-        fa = (float(va[0].mid()), float(va[1].mid()))
-        fb = (float(vb[0].mid()), float(vb[1].mid()))
-        na_, nb_ = math.hypot(*fa), math.hypot(*fb)
-        if na_ < 1e-14 or nb_ < 1e-14:
-            return False, f'zero germ at node {i}->{j}'
-        d = (fa[0]/na_ - fb[0]/nb_, fa[1]/na_ - fb[1]/nb_)
-        da = va[0]*arb(d[0]) + va[1]*arb(d[1])
-        db = vb[0]*arb(d[0]) + vb[1]*arb(d[1])
-        if not (bool(da > 0) and bool(db < 0)):
-            return False, f'node half-plane cert failed at piece {i}->{j}'
-        # far parts must avoid the other piece entirely
-        neari, fari = split_cells(cells[i], wina)
-        nearj, farj = split_cells(cells[j], winb)
-        if not boxes_disjoint(fari, cells[j]):
-            return False, f'adjacent far-cells overlap at {i}->{j} (i-far vs j)'
-        if not boxes_disjoint(farj, cells[i]):
-            return False, f'adjacent far-cells overlap at {i}->{j} (j-far vs i)'
+        node_ok = False; last = 'no window size worked'
+        for WFRAC in (0.08, 0.16, 0.28, 0.04):
+            va, wina = window_vel(pa, True, WFRAC)
+            vb, winb = window_vel(pb, False, WFRAC)
+            fa = (float(va[0].mid()), float(va[1].mid()))
+            fb = (float(vb[0].mid()), float(vb[1].mid()))
+            na_, nb_ = math.hypot(*fa), math.hypot(*fb)
+            if na_ < 1e-14 or nb_ < 1e-14:
+                last = f'zero germ at node {i}->{j}'; continue
+            d = (fa[0]/na_ - fb[0]/nb_, fa[1]/na_ - fb[1]/nb_)
+            da = va[0]*arb(d[0]) + va[1]*arb(d[1])
+            db = vb[0]*arb(d[0]) + vb[1]*arb(d[1])
+            if not (bool(da > 0) and bool(db < 0)):
+                last = f'node half-plane cert failed at piece {i}->{j}'; continue
+            neari, fari = split_cells(cells[i], wina)
+            nearj, farj = split_cells(cells[j], winb)
+            if not pair_sep(fari, cells[j], trav[i], trav[j]):
+                last = f'adjacent far-cells overlap at {i}->{j} (i-far vs j)'; continue
+            if not pair_sep(farj, cells[i], trav[j], trav[i]):
+                last = f'adjacent far-cells overlap at {i}->{j} (j-far vs i)'; continue
+            node_ok = True
+            break
+        if not node_ok:
+            return False, last
     # orientation: winding around an interior point in (0, 4pi) => CCW
     xs = [0.5*(c[2][0]+c[2][1]) for cl in cells for c in cl]
     ys = [0.5*(c[2][2]+c[2][3]) for cl in cells for c in cl]
@@ -429,15 +676,16 @@ def main():
     while stack:
         a, b = stack.pop(0)
         trav, (cval, km, _, _), nfix = build_traversal(comp, 1, a, b)
-        okA2, sup = area_certify(trav, cval, km, a, b)
-        if not okA2:
-            if b - a < MINW:
-                gaps.append((a, b, f'area sup={sup:.6f}')); continue
-            m = 0.5*(a+b); stack = [(a, m), (m, b)] + stack; continue
         okS, msg = simplicity_certify(trav, cval, km, a, b)
         if not okS:
             if b - a < MINW:
                 gaps.append((a, b, msg)); continue
+            print(f"  [{a:.5f},{b:.5f}] subdividing: {msg}", flush=True)
+            m = 0.5*(a+b); stack = [(a, m), (m, b)] + stack; continue
+        okA2, sup = area_certify(trav, cval, km, a, b)
+        if not okA2:
+            if b - a < MINW:
+                gaps.append((a, b, f'area sup={sup:.6f}')); continue
             m = 0.5*(a+b); stack = [(a, m), (m, b)] + stack; continue
         certified.append((a, b))
         print(f"  [{a:.5f},{b:.5f}] chordfix={nfix} sup={sup:.6f} SIMPLE",
