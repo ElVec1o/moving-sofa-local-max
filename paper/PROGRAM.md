@@ -122,11 +122,12 @@ generally.
   [0.01, 0.2578] ∪ [0.2727, 0.3926]** (30 pieces; area + simplicity +
   winding in ball arithmetic — includes the local-splice region, so the
   spliced local+slice statement is now unconditional on ε ≤ 0.2578).
-  UPDATE: the [0.2578, 0.2727] window is now CERTIFIED (head-collapse
-  fallback) — the x-ray certificate is CONTIGUOUS on **[0.01, 0.3926]**.
-  Remaining window [0.3926, 0.60] re-sweeping with the collapse layout
-  (the standard layout genuinely self-intersects there — see
-  L2-CORRECTION). y-ray sweep in progress. Found en route:
+  FINAL x-ray RESULT: **CERTIFIED on [0.01, 0.59352] ∪ [0.59838, 0.60]**
+  (both gap windows closed by the head-collapse layout; the remaining
+  4.9·10⁻³ sliver at 0.594–0.598 straddles the ε≈0.58 combinatorial
+  cell transition, where the midpoint-frozen reconstruction is maximally
+  awkward — chaseable later with transition-anchored b0 if wanted).
+  y-ray sweep in progress. Found en route:
   reversal pockets RETRACE the envelope (chord cuts must span positive
   net displacement — implemented), and the winding form of the superset
   lemma (wind ≥ 1 on S, ≥ 0 off) is the right side condition for
