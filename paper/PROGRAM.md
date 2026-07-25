@@ -109,6 +109,14 @@ generally.
 - **[ ] L1.** Certified sweep of the remaining computed matrices (true-Hessian
   blocks, cross blocks) — identical mechanical repetition of the done K=16
   sweep. *(compute-hours)*
+- **[!] L2-CORRECTION.** The wrap chord of the standard frozen layout
+  GENUINELY CROSSES the swung A-arc at ε ≈ 0.45 (verified: one true
+  sign-crossing within the segment span) — the frozen curve is
+  non-simple on ≈ [0.393, 0.60], so the ORIGINAL arb ray claim's
+  float-simplicity check was inadequate there and that portion is
+  WITHDRAWN. The certified x-ray statement is exactly the sweep result
+  below. Fix in progress: head-collapse layout (absorb A-head + pocket
+  into the wrap chord, ending at the tail arc's own endpoint).
 - **[C/ ] L2.** Γ-simplicity certification of the x-ray certificate
   (`ray_graph_cert.py`), full sweep run: **CERTIFIED on
   [0.01, 0.2578] ∪ [0.2727, 0.3926]** (30 pieces; area + simplicity +

@@ -98,12 +98,13 @@ def cert_runs(F, name, lo, hi, want, minw=2e-3):
     return runs
 
 
-def build_traversal(comp, kmode, e1, e2):
+def build_traversal(comp, kmode, e1, e2, collapse=False):
     """Traversal pieces in order. Arc: ('arc',name,lo,hi) (lo>hi = backward).
     Chord: ('chord',(name1,t1),(name2,t2)) with symbolic endpoint refs."""
     m = 0.5*(e1+e2)
-    open('/tmp/rterms.txt', 'w').write(f"{0 if comp=='x' else 1} {kmode} 1.0\n")
-    out = subprocess.run(['./true_hessian', 'probe', str(m), '/tmp/rterms.txt'],
+    tf = f'/tmp/rterms_{comp}.txt'
+    open(tf, 'w').write(f"{0 if comp=='x' else 1} {kmode} 1.0\n")
+    out = subprocess.run(['./true_hessian', 'probe', str(m), tf],
                          capture_output=True, text=True).stdout
     bd, bx2, bx1, bb = [float(x.split('=')[1]) for x in out.split()[1:5]]
     cval = 0 if comp == 'x' else 1
@@ -114,6 +115,19 @@ def build_traversal(comp, kmode, e1, e2):
     spans = {'A': (0.0, PH[5]), 'C': (0.0, PH[5]), 'D': (0.0, bd),
              'X': (bx1, bx2), 'B': (bb, PH[5])}
     runs = {n: cert_runs(F, n, *spans[n], ARCDIR[n]) for n in spans}
+    if collapse:
+        # head-collapse: keep only the LAST maximal certified run of A (all
+        # earlier territory joins the wrap chord) and the FIRST of C (later
+        # territory joins the C->D bridge). Removes the large-eps crossing
+        # of long bridges with swung arc sections.
+        ra = runs['A']
+        li = max((q for q, r in enumerate(ra) if r[2]), default=None)
+        if li is not None:
+            runs['A'] = ([(ra[0][0], ra[li][0], False)] if li > 0 else []) + ra[li:]
+        rc = runs['C']
+        fi = min((q for q, r in enumerate(rc) if r[2]), default=None)
+        if fi is not None:
+            runs['C'] = rc[:fi+1] + ([(rc[fi][1], rc[-1][1], False)] if fi < len(rc)-1 else [])
     # shave certified-run ends: nodes must sit where the speed is robustly
     # signed, not at the marginal frontier where |lambda| ~ 0 (pocket edges,
     # junction ends). Shaved margins become chord-covered.
@@ -668,8 +682,10 @@ def simplicity_certify(trav, cval, km, e1, e2, nseg0=60, maxref=4):
 
 def main():
     comp = sys.argv[1] if len(sys.argv) > 1 else 'x'
+    lo = float(sys.argv[2]) if len(sys.argv) > 2 else 0.01
+    hi = float(sys.argv[3]) if len(sys.argv) > 3 else 0.60
     from ray_global_certified import certify_ray
-    okA, pieces, bad = certify_ray(comp, 1, 0.01, 0.60)
+    okA, pieces, bad = certify_ray(comp, 1, lo, hi)
     print(f"area subdivision: {len(pieces)} pieces")
     stack = sorted(pieces); certified = []; gaps = []
     MINW = 2e-3
@@ -677,6 +693,11 @@ def main():
         a, b = stack.pop(0)
         trav, (cval, km, _, _), nfix = build_traversal(comp, 1, a, b)
         okS, msg = simplicity_certify(trav, cval, km, a, b)
+        if not okS:
+            trav2, _, nfix2 = build_traversal(comp, 1, a, b, collapse=True)
+            okS2, msg2 = simplicity_certify(trav2, cval, km, a, b)
+            if okS2:
+                trav, nfix, okS, msg = trav2, nfix2, True, 'ok(collapsed)'
         if not okS:
             if b - a < MINW:
                 gaps.append((a, b, msg)); continue

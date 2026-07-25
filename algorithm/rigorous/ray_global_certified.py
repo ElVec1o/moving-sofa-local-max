@@ -108,7 +108,7 @@ def certify_ray(comp, kmode, lo, hi, maxdepth=10):
     while stack:
         a,b,d=stack.pop(); m=(a+b)/2
         # frozen b0 from the float solver at the midpoint (any b0 valid)
-        tf='/tmp/rterms.txt'
+        tf=f'/tmp/rterms_{comp}.txt'
         open(tf,'w').write(f"{0 if comp=='x' else 1} {kmode} 1.0\n")
         out=subprocess.run([BIN,'probe',str(m),tf],capture_output=True,text=True).stdout
         b0=[float(x.split('=')[1]) for x in out.split()[1:5]]
