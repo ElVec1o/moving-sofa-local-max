@@ -22,6 +22,12 @@ Formalized here:
   • F4a — soundness core of the monotone-chain simplicity certificate
           (N10): positive projected steps ⟹ strictly monotone partial sums
           ⟹ path injectivity.
+  • F4b — the fan-combination identity (S7″/Lemma 5 core):
+          sin(b−a)·μ_t = sin(b−t)·μ_a + sin(t−a)·μ_b as a polynomial
+          identity in the six sine/cosine symbols — every interior fan
+          normal is a combination of the extremes, the algebraic heart of
+          the fan-release theorem that removes the cap kink from the
+          certified Σ objective.
   • F3b — the ambidextrous frame-pair mechanism (N9 core): the identity
           (cu+sv)² + (cu−sv)² = 2c²u² + 2s²v² and the coercivity bound
           2m(u²+v²) ≤ 2c²u² + 2s²v² for any common lower bound m of c², s² —
@@ -215,6 +221,50 @@ theorem chain_injective (step : Nat → Int) (hpos : ∀ n, 0 < step n) :
   · exact absurd h (Int.ne_of_lt (psum_strict_mono step hpos i j hij))
   · exact hij
   · exact absurd h.symm (Int.ne_of_lt (psum_strict_mono step hpos j i hij))
+
+/-! ## F4b — the fan-combination identity (S7″ / Lemma 5 core)
+
+The fan-release theorem rests on: every interior normal of a wall fan is
+a nonnegative combination of the two extreme normals,
+  sin(b−a)·μ_t = sin(b−t)·μ_a + sin(t−a)·μ_b.
+Writing (sa,ca), (sb,cb), (st,ct) for the sine/cosine symbols and
+expanding the subtraction formulas, this is a POLYNOMIAL identity in six
+variables, machine-verified componentwise below (the analytic bridge —
+that these symbols are the actual sines/cosines — is Mathlib-track F3). -/
+
+/-- x-component: (sb·ct − cb·st)·ca + (st·ca − ct·sa)·cb
+                 = (sb·ca − cb·sa)·ct. -/
+theorem fan_combination_x (sa ca sb cb st ct : Int) :
+    (sb*ct - cb*st)*ca + (st*ca - ct*sa)*cb
+      = (sb*ca - cb*sa)*ct := by
+  have e1 : (sb*ct - cb*st)*ca = sb*ct*ca - cb*st*ca := Int.sub_mul _ _ _
+  have e2 : (st*ca - ct*sa)*cb = st*ca*cb - ct*sa*cb := Int.sub_mul _ _ _
+  have e3 : (sb*ca - cb*sa)*ct = sb*ca*ct - cb*sa*ct := Int.sub_mul _ _ _
+  rw [e1, e2, e3]
+  have c1 : sb*ct*ca = sb*ca*ct := by
+    rw [Int.mul_assoc, Int.mul_comm ct ca, ← Int.mul_assoc]
+  have c2 : cb*st*ca = st*ca*cb := by
+    rw [Int.mul_comm cb st, Int.mul_assoc, Int.mul_comm cb ca, ← Int.mul_assoc]
+  have c3 : ct*sa*cb = cb*sa*ct := by
+    rw [Int.mul_comm ct sa, Int.mul_comm (sa*ct) cb, ← Int.mul_assoc]
+  omega
+
+/-- y-component: (sb·ct − cb·st)·sa + (st·ca − ct·sa)·sb
+                 = (sb·ca − cb·sa)·st. -/
+theorem fan_combination_y (sa ca sb cb st ct : Int) :
+    (sb*ct - cb*st)*sa + (st*ca - ct*sa)*sb
+      = (sb*ca - cb*sa)*st := by
+  have e1 : (sb*ct - cb*st)*sa = sb*ct*sa - cb*st*sa := Int.sub_mul _ _ _
+  have e2 : (st*ca - ct*sa)*sb = st*ca*sb - ct*sa*sb := Int.sub_mul _ _ _
+  have e3 : (sb*ca - cb*sa)*st = sb*ca*st - cb*sa*st := Int.sub_mul _ _ _
+  rw [e1, e2, e3]
+  have c1 : sb*ct*sa = ct*sa*sb := by
+    rw [Int.mul_comm sb ct, Int.mul_assoc, Int.mul_comm sb sa, ← Int.mul_assoc]
+  have c2 : st*ca*sb = sb*ca*st := by
+    rw [Int.mul_comm (st*ca) sb, Int.mul_comm st ca, ← Int.mul_assoc]
+  have c3 : cb*st*sa = cb*sa*st := by
+    rw [Int.mul_assoc, Int.mul_comm st sa, ← Int.mul_assoc]
+  omega
 
 /-! ## F3b — the ambidextrous frame-pair mechanism (N9 core)
 

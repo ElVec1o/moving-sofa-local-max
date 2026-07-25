@@ -148,11 +148,22 @@ generally.
   dominates the weighted coverage there): true, not delivering. Kept as
   a bulk instrument; the delivering frame for the caps is the cell-wise
   L² statement (S7′).
-- **[ ] S7′ (reframes S7).** Cell-wise piecewise-quadratic Σ-local
-  theorem: finitely many cap-ignition branches at c_R (the N10 cell
-  structure evaluated AT the candidate); per-branch
-  Q_cell ≤ −m_cell‖η‖²_{L²}. The ladder's FD-average margin
-  m_L² ≈ 3.5 is the branch average; S3b resolves the branches.
+- **[P/K→] S7″ (supersedes S7′ — the delivering route).** FAN RELEASE:
+  replace each cap's stationary wall fan by its two extreme walls. By N1,
+  F_rel ≥ F with EQUALITY at c_R (half-planes through a common point are
+  determined by their extreme normals — verified 2·10⁻¹⁰), and F_rel is
+  C² near c_R (fan kink gone: fwd/bwd = 1.0000 at three stencil sizes vs
+  0.12 for the full functional). Hence Q_rel ≥ Q one-sidedly, and
+  **Q_rel ≤ −m‖η‖²_{L²} ⟹ Σ strict local max, modulus m** — no branch
+  enumeration, no kink in the certified object. First datum:
+  Q_rel(cap bump) = −16.62 stencil-stable. Released ladder K=10/16/24
+  chained and running (`sigma_hessian_released.py`,
+  `sigma_rel_K{K}.npy`). The wedge-bite terms discarded on the
+  favourable side are the corner-fan support functional — N11 candidate
+  if needed quantitatively later.
+- **[~] S7′ (superseded by S7″).** Cell-wise branch enumeration — kept
+  as the fallback/refinement frame (branch data: −9/−43 per unit L²
+  along the worst mode; FD-average m_L² ≈ 3.5).
 - **[ ] S6.** Σ tail weld (weighted analogues of the Part-II items).
 - **[ ] S7.** Statement: "Σ is a strict local maximum of the ambidextrous
   functional" (computer-assisted, same standard as Part II) — **the first
@@ -209,6 +220,9 @@ informal proof is short and self-contained.
 - **[P] F4a.** N10 chain-soundness core — **DONE, machine-verified**:
   `psum_strict_mono`, `chain_injective` (positive steps ⟹ injective path),
   the discrete skeleton behind the monotone-chain simplicity certificate.
+- **[P] F4b.** S7″ fan-combination identity — **DONE, machine-verified**:
+  `fan_combination_x`, `fan_combination_y` (interior fan normals are
+  combinations of the extremes; the algebraic heart of the fan release).
 - **[ ] F4.** N7, N3, N6 — short symbolic proofs.
 - **[ ] F5.** The certified-numerics interface: import arb enclosures as
   Lean facts (the established `interval_cases`-style bridge or trust-tagged
