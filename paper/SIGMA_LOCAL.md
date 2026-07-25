@@ -282,6 +282,33 @@ wedge-bite terms are one-signed favourable and never need to be
 computed. First datum: Q_rel(cap bump) = −16.62, stencil-stable to five
 digits. The released ladder (K = 10, 16, 24) is the S7″ computation.
 
+## 8c. Tail control for the released functional (S6-released)
+
+The S7″ conclusion needs Q_rel ≤ −m‖η‖²_{L²} for ALL η, not just the
+computed span. Route (each step a Part-II pattern with the released
+structure):
+
+**Proposition 7 (interior Gårding for F_rel).** [P-route] The released
+boundary structure consists of the regular arcs (the same per-arc
+Wirtinger forms N5, masks from §2 with the cap fans removed) plus two
+transversal-wall corners per cap. Corner contributions are point
+evaluations: |corner terms| ≤ C_v(|η(0)|² + |η(β)|² + mirrored), absorbed
+via ‖η‖²_∞ ≤ δ‖η′‖² + C(δ)‖η‖². Hence explicit (c_rel, C_rel) with
+
+  Q_rel(η) ≤ −c_rel‖η′‖²_{L²} + C_rel‖η‖²_{L²}.
+
+**Corollary 8 (trivial L² tail).** For η supported on frequencies
+2k > K₀ := √(2C_rel/c_rel): Q_rel(η) ≤ −(c_rel K₀²/2)... i.e. high
+frequencies are automatically L²-coercive; only the K₀-cutoff block
+needs computation, and the block–tail coupling is bounded by the same
+Gårding structure constants (the Part-II weld verbatim, in L²
+normalization).
+
+So S7″ closes as: released ladder (computed, K-stable) + Proposition 7
+(to write with explicit constants) + the weld. No new mathematics is
+required beyond bookkeeping — the fan release moved all the difficulty
+into machinery that already exists.
+
 ## 9. What remains for the Σ-local theorem (S7)
 
 - S3: K=24 discriminating run (in progress); then K=32 if needed.
