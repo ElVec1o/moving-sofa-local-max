@@ -155,13 +155,66 @@ measured cap symbol exponents (1.37–1.69 by window) sit BELOW the clean
 sin²t law: the anomalous response only helps. The endpoint blow-up probe
 (G ~ −3.95/w^{1.5}) confirms the favourable sign.
 
-## 7. What remains for the Σ-local theorem (S7)
+## 7. The ladder data (S3) and the floor hypothesis
 
-- S3: K=16+ weighted ladder → K-uniform margin datum. (running)
+Weighted-metric generalized eigenvalues of the FD ambidextrous Hessian
+(basis sin(2kθ) per component; metric G_w = ∫ w_μ⟨u′,μ⟩⟨v′,μ⟩ +
+⟨u′,ν⟩⟨v′,ν⟩ + ⟨u,v⟩):
+
+| K  | modes | m_w (weighted) | unweighted | stencil check |
+|----|-------|----------------|------------|---------------|
+| 10 | 20    | 0.377          | 0.370      | —             |
+| 16 | 32    | 0.1606         | 0.157      | ε=1e-4 vs 1e-5: 0.16057 vs 0.16035 ✓ |
+
+All eigenvalues strictly negative at both K. The margin fell ≈ 1/K²
+between the two data points — but the top eigenvector diagnosis refutes
+the decay-to-zero reading: the offending mode is x-polarized,
+cap-concentrated (62% of L² mass in the caps), with weighted-derivative
+Rayleigh quotient ∫(w_μ⟨η′,μ⟩² + ⟨η′,ν⟩²)/‖η‖² = 101, and
+
+  Q(η*) = −0.127 × (weighted derivative energy).
+
+So Q tracks the weighted energy PROPORTIONALLY on the worst mode — the
+generalized eigenvalue is heading to a **floor ≈ 0.127** (the true
+weighted coercivity constant; compare the Theorem-4 structural constant
+sin²β = 0.084), while G_w grows with K. Discriminating experiment: K=24
+(running). Floor hypothesis predicts m_w(24) ≈ 0.13–0.14; genuine decay
+predicts ≈ 0.07.
+
+## 8. The weighted tail weld (S6) — transfer inventory
+
+The Part-II (Gerver) weld machinery in the weighted metric. Status of
+each ingredient:
+
+1. **Far-tail coupling bound (N8): carries over VERBATIM.** [P] The
+   Schur/PSD-Gram argument uses only the banded envelope
+   |a(k,l)| ≤ c/(l−k) of per-arc integrals of sine products; the weight
+   multiplies the μ-slot integrand and w_μ ≤ 1, so the same envelope
+   constant holds. No recomputation needed for the BOUND (the measured
+   coupling will differ; the bound stands).
+2. **Weld algebra: carries over VERBATIM.** [P] The Schur-complement
+   inequality m ≥ m_V − τ²/g_T is metric-independent linear algebra.
+3. **Tail-diagonal negativity: needs Σ computation.** [K target] The
+   Gerver tail section (0.107, with proved envelope c_T = 0.497) must be
+   recomputed with Σ's masks and the weight. The proof pattern is
+   unchanged: on the middle phase w ≡ 1 and the full Wirtinger coverage
+   applies; on the caps the frame-pair modulus (§4) supplies the weighted
+   coverage. Requires the Σ analytic oracle (S4) for precision beyond
+   Shapely.
+4. **Slope carriers.** Σ's basis needs the endpoint-slope-free
+   modification (v_k with the sin2t/sin4t corrections) only if the
+   junction-gauge analysis (N7 for Σ's junction set) shows the same
+   H²-gauge subtlety; the mask table (§2) shows Σ has FOUR interior
+   junctions (β, transitions at ~0.37–0.42·π/2 flickers, π/2−β) — the
+   gauge audit is part of S6.
+
+## 9. What remains for the Σ-local theorem (S7)
+
+- S3: K=24 discriminating run (in progress); then K=32 if needed.
 - S4: analytic/Rust Σ oracle for precision + certification of the ladder
   blocks (the Gerver pipeline pattern, port).
-- S6: weighted tail weld — the Part-II weld machinery with G_w in place of
-  G; the far-tail Schur bound (N8) is frame-agnostic and applies verbatim.
+- S5: assembly write-up with explicit C₀ (route complete, §5).
+- S6: items 3–4 above.
 - Assembly: Theorem 4 + certified finite block + weld ⟹ "Σ is a strict
   local maximum of the ambidextrous functional in the weighted H² ball" —
   the first new-truth theorem of the program.
