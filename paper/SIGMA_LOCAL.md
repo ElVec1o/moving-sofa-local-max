@@ -279,8 +279,23 @@ release through ρ). Then:
 
 No branch enumeration, no kink in the certified object; the discarded
 wedge-bite terms are one-signed favourable and never need to be
-computed. First datum: Q_rel(cap bump) = −16.62, stencil-stable to five
-digits. The released ladder (K = 10, 16, 24) is the S7″ computation.
+computed. Two supplementary facts:
+
+*Criticality transfers.* c_R is critical for F_rel: F_rel − F ≥ 0 is
+minimized at c_R and F is critical there, so both one-sided directional
+derivatives of F_rel vanish. (Measured residual linear responses
+~2·10⁻⁴ are polygonal-grid noise — they halve as ε doubles and cancel
+exactly in central stencils; the quadratic sum is ε-stable.)
+
+*Domination verified directionally.* Along the full form's worst K=24
+eigenvector: released branches (−1.6, −4.1) vs true branches
+(−5.2, −43) — released ≥ true on each side, as N1 requires, and
+Q_rel(η*) = −6.79, stencil-stable.
+
+First data: Q_rel(cap bump) = −16.62; **released ladder K=10:
+NEG DEF, m_rel_L² = 4.576** (bulk spectrum matching the full form's —
+min −1587 vs −1589 — confirming the release touches only cap behavior).
+K = 16, 24 in the chain.
 
 ## 8c. Tail control for the released functional (S6-released)
 
