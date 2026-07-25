@@ -219,8 +219,12 @@ generally.
 
 - **[ ] G4a.** Doubled-complex cell machine for the ambidextrous functional
   (both families; the per-cell structure already proved for the reflected
-  family).
-- **[ ] G4b.** Global run for Σ + splice with S7. **Result: global
+  family). NOTE the unification dividend: S7″'s released functional IS a
+  cell-machine object (a structure-following superset form), and N11 shows
+  every smooth certified object at a stationary-fan candidate is of this
+  kind — the local splice and the global cells now share one formal
+  framework and one certification pipeline.
+- **[ ] G4b.** Global run for Σ + splice with S7″. **Result: global
   optimality of Σ — the completion of the moving-sofa problem** (Romik's
   Open Problem 1, both halves; Gerver's half being Baek's).
 
