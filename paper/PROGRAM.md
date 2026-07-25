@@ -100,8 +100,16 @@ generally.
 - **[ ] L1.** Certified sweep of the remaining computed matrices (true-Hessian
   blocks, cross blocks) — identical mechanical repetition of the done K=16
   sweep. *(compute-hours)*
-- **[ ] L2.** Simplicity radius r₀ as an explicit certified constant
-  (currently float-checked). *(half-page + small compute)*
+- **[K→] L2.** Γ-simplicity certification of the ray certificates
+  (`ray_graph_cert.py`): monotone-chain framework + exact-quadratic-in-ε
+  separators + adaptive node windows; the local-splice piece
+  [0.01, 0.0469] passes the FULL certificate (area + simplicity +
+  winding); remaining ε-ranges under automatic subdivision. Found en
+  route: reversal pockets RETRACE the envelope (parameterized simplicity
+  is the wrong lens there; chord cuts must span positive net
+  displacement — implemented), and the winding-based Green inequality
+  (wind ≥ 1 on S, ≥ 0 off) is the right formal side condition for
+  non-simple frozen curves.
 - **[ ] L3.** Final assembly write-up pass: one theorem statement
   "c_G is a strict local maximum on the explicit H²-ball, computer-assisted,
   modulo [the shrinking list]", with the dependency graph printed.
@@ -111,10 +119,11 @@ generally.
 - **[P] S1.** Cap law: λ_A ≡ 0 on (0,β), mirrored on (π/2−β,π/2); full
   first-phase speed table (0,−1,−½,+½) exact (N4 + Romik's closed forms).
 - **[P] S2.** Exact weight w_μ, w_ν (N9).
-- **[K→] S3.** Weighted ladder for Q_Σ: K=10 NEG DEF m_w = 0.377;
-  K=16 NEG DEF m_w = 0.161 at ε=1e-4 (margin decayed — ε=1e-5 validation
-  rerun in progress per the romik_hessian stencil lesson; high-mode
-  entries at ε=1e-4 are borderline-nonlinear). *(in progress)*
+- **[K→] S3.** Weighted ladder for Q_Σ: K=10 NEG DEF m_w = 0.377; K=16
+  NEG DEF m_w = 0.1604 (stencil-validated: ε=1e-4 vs 1e-5 agree to 1e-3).
+  Top-eigenvector diagnosis: cap-concentrated x-polarized mode with
+  Q = −0.127 × (weighted energy) — margin heading to a **floor ≈ 0.127**,
+  not to zero (SIGMA_LOCAL.md §7). K=24 discriminator running.
 - **[ ] S4.** Σ analytic oracle (both families; the Rust port pattern) — for
   precision beyond Shapely and for certification.
 - **[P/ ] S5.** Σ interior Gårding in the weighted metric — proof route now
