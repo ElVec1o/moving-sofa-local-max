@@ -19,6 +19,9 @@ Formalized here:
   • F2a — exact-degree reduction (N2 core): bilinear ∘ affine = exact
           quadratic, with the three coefficients explicit — the algebraic
           reason no Taylor remainder exists anywhere in the frozen bounds.
+  • F4a — soundness core of the monotone-chain simplicity certificate
+          (N10): positive projected steps ⟹ strictly monotone partial sums
+          ⟹ path injectivity.
   • F3b — the ambidextrous frame-pair mechanism (N9 core): the identity
           (cu+sv)² + (cu−sv)² = 2c²u² + 2s²v² and the coercivity bound
           2m(u²+v²) ≤ 2c²u² + 2s²v² for any common lower bound m of c², s² —
@@ -172,6 +175,46 @@ theorem lamD_const (v : Trig) : lamD v = const (-v.c) := by
   rw [Int.neg_zero]
 
 end Trig
+
+/-! ## F4a — soundness core of the monotone-chain certificate (N10)
+
+The simplicity certificate for frozen reconstructions
+(`ray_graph_cert.py`) exempts consecutive traversal pieces whose
+velocity enclosures share a positive direction d: the projection onto d
+then advances strictly, so the concatenated path is injective.  The
+discrete soundness skeleton — positive steps ⟹ strictly monotone
+partial sums ⟹ injectivity — machine-verified: -/
+
+/-- Partial sums of a step sequence. -/
+def psum (step : Nat → Int) : Nat → Int
+  | 0 => 0
+  | n+1 => psum step n + step n
+
+/-- Positive steps give strictly increasing partial sums. -/
+theorem psum_strict_mono (step : Nat → Int) (hpos : ∀ n, 0 < step n) :
+    ∀ i j, i < j → psum step i < psum step j := by
+  intro i j hij
+  induction j with
+  | zero => omega
+  | succ k ih =>
+    have hk : psum step (k+1) = psum step k + step k := rfl
+    rcases Nat.lt_succ_iff_lt_or_eq.mp hij with h | h
+    · have := ih h
+      have := hpos k
+      omega
+    · subst h
+      have := hpos i
+      omega
+
+/-- **Chain injectivity.** A path whose d-projection has positive steps
+    visits no position twice. -/
+theorem chain_injective (step : Nat → Int) (hpos : ∀ n, 0 < step n) :
+    ∀ i j, psum step i = psum step j → i = j := by
+  intro i j h
+  rcases Nat.lt_trichotomy i j with hij | hij | hij
+  · exact absurd h (Int.ne_of_lt (psum_strict_mono step hpos i j hij))
+  · exact hij
+  · exact absurd h.symm (Int.ne_of_lt (psum_strict_mono step hpos j i hij))
 
 /-! ## F3b — the ambidextrous frame-pair mechanism (N9 core)
 

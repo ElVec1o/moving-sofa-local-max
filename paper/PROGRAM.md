@@ -185,6 +185,9 @@ informal proof is short and self-contained.
 - **[P] F3b.** N9-core (ambidextrous frame-pair mechanism) — **DONE,
   machine-verified**: `frame_pair_identity` ((cu+sv)²+(cu−sv)² = 2c²u²+2s²v²)
   and `frame_pair_coercive` (2m(u²+v²) ≤ 2c²u²+2s²v² for m ≤ c², m ≤ s²).
+- **[P] F4a.** N10 chain-soundness core — **DONE, machine-verified**:
+  `psum_strict_mono`, `chain_injective` (positive steps ⟹ injective path),
+  the discrete skeleton behind the monotone-chain simplicity certificate.
 - **[ ] F4.** N7, N3, N6 — short symbolic proofs.
 - **[ ] F5.** The certified-numerics interface: import arb enclosures as
   Lean facts (the established `interval_cases`-style bridge or trust-tagged
