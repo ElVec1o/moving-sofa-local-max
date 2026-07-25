@@ -159,31 +159,64 @@ measured cap symbol exponents (1.37–1.69 by window) sit BELOW the clean
 sin²t law: the anomalous response only helps. The endpoint blow-up probe
 (G ~ −3.95/w^{1.5}) confirms the favourable sign.
 
-## 7. The ladder data (S3) and the floor hypothesis
+## 7. The ladder data (S3): the discovery of the piecewise-quadratic
+##    structure and the L² invariant
 
 Weighted-metric generalized eigenvalues of the FD ambidextrous Hessian
-(basis sin(2kθ) per component; metric G_w = ∫ w_μ⟨u′,μ⟩⟨v′,μ⟩ +
-⟨u′,ν⟩⟨v′,ν⟩ + ⟨u,v⟩):
+(basis sin(2kθ) per component):
 
-| K  | modes | m_w (weighted) | unweighted | stencil check |
-|----|-------|----------------|------------|---------------|
-| 10 | 20    | 0.377          | 0.370      | —             |
-| 16 | 32    | 0.1606         | 0.157      | ε=1e-4 vs 1e-5: 0.16057 vs 0.16035 ✓ |
+| K  | modes | m_w (weighted H¹) | m_L² (pure L² metric) |
+|----|-------|-------------------|------------------------|
+| 10 | 20    | 0.377             | **3.979**              |
+| 16 | 32    | 0.1606 (validated ε=1e-4/1e-5) | **3.679**  |
+| 24 | 48    | 0.0560            | **3.582**              |
 
-All eigenvalues strictly negative at both K. The margin fell ≈ 1/K²
-between the two data points — but the top eigenvector diagnosis refutes
-the decay-to-zero reading: the offending mode is x-polarized,
-cap-concentrated (62% of L² mass in the caps), with weighted-derivative
-Rayleigh quotient ∫(w_μ⟨η′,μ⟩² + ⟨η′,ν⟩²)/‖η‖² = 101, and
+**The weighted-H¹ margin decays; the floor hypothesis (0.127 and then
+sin²β) was tested and REFUTED** — K=24's worst mode has weighted-energy
+ratio E/L² = 586 (correction term negligible) yet Q/E = −0.056 < sin²β.
+Theorem 4 is not contradicted (its C₀‖η‖² slack absorbs the data for
+C₀ ≳ 15) but it is VACUOUS on cap-oscillatory modes: the unweighted
+zeroth-order term dominates the weighted coverage exactly on
+self-similar cap concentrations. The weighted-H¹ frame does not deliver
+S7.
 
-  Q(η*) = −0.127 × (weighted derivative energy).
+**What is actually happening (three experiments):**
 
-So Q tracks the weighted energy PROPORTIONALLY on the worst mode — the
-generalized eigenvalue is heading to a **floor ≈ 0.127** (the true
-weighted coercivity constant; compare the Theorem-4 structural constant
-sin²β = 0.084), while G_w grows with K. Discriminating experiment: K=24
-(running). Floor hypothesis predicts m_w(24) ≈ 0.13–0.14; genuine decay
-predicts ≈ 0.07.
+1. *Smooth self-similar cap bumps are hyper-coercive*
+   (`sigma_cap_symbol.py`): L²-normalized bumps at scales δ =
+   0.9β..0.15β give Q/L² = −90 → −272, with Q/E_w growing to −2.07 as
+   δ → 0. No symbol degeneracy on smooth profiles.
+2. *The functional is KINKED at c_R*: the one-sided responses along
+   cap directions differ by a factor ≈ 8 (fwd/bwd = 0.12) — the
+   stationary A-contact ignites for one sign of the perturbation and
+   stays frozen for the other, exactly as the stationary-contact
+   mechanism (N4/S1) predicts. Q_Σ is PIECEWISE-QUADRATIC at c_R, not
+   twice differentiable.
+3. *Both branches are strictly negative along the worst mode*: the
+   K=24 worst eigenvector's profile is a two-branch parabola with
+   one-sided curvatures ≈ −9 and ≈ −43 per unit L² — strict decrease
+   in both directions. The small weighted-H¹ margin was a big negative
+   L²-response (−33·L²) divided by an enormous metric energy.
+
+**The K-stable invariant.** In the pure L² metric the ladder margin is
+stable: m_L² = 3.98 / 3.68 / 3.58 with shrinking decrements — the
+FD-average form satisfies Q ≤ −m‖η‖²_{L²}, m ≈ 3.5, uniformly in K so
+far. (High modes have −k²-type responses, min eigenvalues −1589/−4063/
+−9155: the bulk is H¹-coercive; the caps saturate at L² scale.)
+
+**Reframed target (S7′).** Σ-local maximality is a CELL-WISE statement:
+at c_R the second variation splits into finitely many combinatorial
+branches (cap-ignition sign patterns — the same cell structure as the
+global machine N10, evaluated AT the candidate); the theorem to prove
+is per-branch L²-coercivity
+
+  Q_cell(η) ≤ −m_cell ‖η‖²_{L²},   min over cells m_cell > 0,
+
+whose FD-average is what the ladder measures (average of branch forms).
+The branch-resolved ladder (one-sided stencils per ignition pattern) is
+the next computation (S3b). This unifies Part III with the cell-QP
+instrument: the local Σ theorem and the global program now run on the
+SAME piecewise-quadratic machinery.
 
 ## 8. The weighted tail weld (S6) — transfer inventory
 

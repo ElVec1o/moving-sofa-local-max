@@ -119,19 +119,30 @@ generally.
 - **[P] S1.** Cap law: λ_A ≡ 0 on (0,β), mirrored on (π/2−β,π/2); full
   first-phase speed table (0,−1,−½,+½) exact (N4 + Romik's closed forms).
 - **[P] S2.** Exact weight w_μ, w_ν (N9).
-- **[K→] S3.** Weighted ladder for Q_Σ: K=10 NEG DEF m_w = 0.377; K=16
-  NEG DEF m_w = 0.1604 (stencil-validated: ε=1e-4 vs 1e-5 agree to 1e-3).
-  Top-eigenvector diagnosis: cap-concentrated x-polarized mode with
-  Q = −0.127 × (weighted energy) — margin heading to a **floor ≈ 0.127**,
-  not to zero (SIGMA_LOCAL.md §7). K=24 discriminator running.
+- **[K] S3.** Ladder for Q_Σ at K = 10/16/24 (stencil-validated), with
+  the DISCOVERY SEQUENCE recorded in SIGMA_LOCAL.md §7: weighted-H¹
+  margins decay (0.377/0.160/0.056 — floor hypotheses tested and
+  refuted); smooth cap bumps are hyper-coercive (Q/L² to −272); the
+  functional is KINKED at c_R (one-sided branch ratio 0.12, the
+  stationary-contact ignition); both branches strictly negative along
+  the worst mode (−9 / −43 per unit L²); and the K-STABLE invariant is
+  **L²-coercivity: m_L² = 3.98 / 3.68 / 3.58**, limit ≈ 3.5.
+- **[ ] S3b.** Branch-resolved ladder: one-sided stencils per
+  cap-ignition sign pattern; per-cell L² margins (the object the
+  reframed S7′ needs). Extend L² ladder to K=32 for the limit.
 - **[ ] S4.** Σ analytic oracle (both families; the Rust port pattern) — for
   precision beyond Shapely and for certification.
-- **[P/ ] S5.** Σ interior Gårding in the weighted metric — proof route now
-  COMPLETE: mask table computed (`sigma_masks.py`: corner on [β, π/2−β]
-  exactly, one inner wall per cap, outer walls full-range, both families
-  identical); cap coverage = the two families' ν-slot pairs, controlled by
-  the frame-pair mechanism (N9, Lean-verified core) with modulus 2sin²θ.
-  Remaining: assemble the write-up with explicit C₀.
+- **[P°] S5.** Σ weighted interior Gårding (Theorem 4, SIGMA_LOCAL §5):
+  proof route complete and the statement stands — but S3's data shows it
+  is VACUOUS on cap-oscillatory modes (the unweighted C₀‖η‖² slack
+  dominates the weighted coverage there): true, not delivering. Kept as
+  a bulk instrument; the delivering frame for the caps is the cell-wise
+  L² statement (S7′).
+- **[ ] S7′ (reframes S7).** Cell-wise piecewise-quadratic Σ-local
+  theorem: finitely many cap-ignition branches at c_R (the N10 cell
+  structure evaluated AT the candidate); per-branch
+  Q_cell ≤ −m_cell‖η‖²_{L²}. The ladder's FD-average margin
+  m_L² ≈ 3.5 is the branch average; S3b resolves the branches.
 - **[ ] S6.** Σ tail weld (weighted analogues of the Part-II items).
 - **[ ] S7.** Statement: "Σ is a strict local maximum of the ambidextrous
   functional" (computer-assisted, same standard as Part II) — **the first
