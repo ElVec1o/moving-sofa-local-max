@@ -324,13 +324,33 @@ So S7″ closes as: released ladder (computed, K-stable) + Proposition 7
 required beyond bookkeeping — the fan release moved all the difficulty
 into machinery that already exists.
 
-## 9. What remains for the Σ-local theorem (S7)
+## 9. The Σ-local theorem: statement and dependency list (S7″ final form)
 
-- S3: K=24 discriminating run (in progress); then K=32 if needed.
-- S4: analytic/Rust Σ oracle for precision + certification of the ladder
-  blocks (the Gerver pipeline pattern, port).
-- S5: assembly write-up with explicit C₀ (route complete, §5).
-- S6: items 3–4 above.
-- Assembly: Theorem 4 + certified finite block + weld ⟹ "Σ is a strict
-  local maximum of the ambidextrous functional in the weighted H² ball" —
-  the first new-truth theorem of the program.
+**Theorem 9 (Σ is a strict local maximum — target form).** Let F be the
+ambidextrous area functional and c_R Romik's trajectory. Then there are
+explicit m > 0 and r > 0 such that for all perturbations η with
+0 < ‖η‖ ≤ r (in the reduction theorem's norm),
+
+  F[c_R + η] ≤ F[c_R] − m‖η‖²_{L²}.
+
+*Proof structure and current status of each input:*
+
+1. **Fan release** (Theorem 6): F ≤ F_rel, equality at c_R, F_rel
+   C² — [P], core Lean-verified, computationally validated.
+2. **Released ladder**: Q_rel negative definite on the K-block in the
+   L² metric, margins K-stable — [K]: m_rel = 4.576 (K=10); K=16, 24
+   pending in this chain. Certification of the block entries: [ ] (the
+   S4 closed-form/arb port).
+3. **Released interior Gårding** (Proposition 7): explicit
+   (c_rel, C_rel) — [ ] write-up; all machinery exists (N5–N7 + corner
+   absorption).
+4. **L² weld** (Corollary 8 + Part-II weld algebra): joins 2 and 3 into
+   Q_rel ≤ −m‖η‖²_{L²} for ALL η — [ ] mechanical.
+5. **Reduction to the functional statement**: the superset/reduction
+   chain (N1/N2, manuscript Theorem `thm:reduction` adapted to Σ's two
+   families) converts form-negativity into the area inequality — [P]
+   pattern; Σ-instantiation to write.
+
+With 2 complete at K=24 and stable, the theorem holds at computed level;
+certification upgrades [K] → [C] entrywise. This is the first
+new-truth theorem of the program (no prior result implies it).
