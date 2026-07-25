@@ -54,9 +54,13 @@ Three structural facts, all load-bearing:
    simultaneously, and the repair must come from frame geometry (§4), not
    from coverage counting.
 
-(The corner activity shows brief flickers near 0.37–0.42 and mirrored —
-distances hovering at the 2·10⁻⁴ threshold near Romik's interior phase
-transitions. Not load-bearing: the corner form provides no coverage in §5.)
+(The corner activity shows brief flickers near 0.37–0.42 and mirrored.
+Resolved by a fine probe at n=2401: the "detachments" are EVENLY-SPACED
+blips of uniform amplitude ~1·10⁻⁴ — polygonal-discretization beating
+(chord sagitta of the sampled intersection polygon), not geometry. The
+corner path is continuously active on [β, π/2−β]; definitive analytic
+confirmation lands with the S4 oracle. Not load-bearing either way: the
+corner form provides no coverage in §5.)
 
 ## 3. Cap speed law (S1) [P]
 
