@@ -127,9 +127,15 @@ generally.
   stationary-contact ignition); both branches strictly negative along
   the worst mode (−9 / −43 per unit L²); and the K-STABLE invariant is
   **L²-coercivity: m_L² = 3.98 / 3.68 / 3.58**, limit ≈ 3.5.
-- **[ ] S3b.** Branch-resolved ladder: one-sided stencils per
-  cap-ignition sign pattern; per-cell L² margins (the object the
-  reframed S7′ needs). Extend L² ladder to K=32 for the limit.
+- **[ ] S3b.** Branch-resolved ladder. Measurement design: since Q is
+  piecewise-quadratic, each branch form Q_cell is the EXACT Hessian at
+  any base point strictly inside its cone — so shift the base
+  c_R → c_R + δ·η_cell (η_cell deep in the cone, δ tiny) and run the
+  UNCHANGED central-difference ladder there: it captures Q_cell with no
+  one-sided stencils at all. Identify the ignition functionals ℓᵢ(η)
+  (cap-wall normal displacements) from the mask/N4 data to enumerate
+  cones; ~4 shifted ladders. Extend the L² ladder to K=32 for the
+  average-form limit.
 - **[ ] S4.** Σ analytic oracle (both families; the Rust port pattern) — for
   precision beyond Shapely and for certification.
 - **[P°] S5.** Σ weighted interior Gårding (Theorem 4, SIGMA_LOCAL §5):
