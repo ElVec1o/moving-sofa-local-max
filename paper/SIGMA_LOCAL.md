@@ -303,26 +303,53 @@ The S7″ conclusion needs Q_rel ≤ −m‖η‖²_{L²} for ALL η, not just t
 computed span. Route (each step a Part-II pattern with the released
 structure):
 
-**Proposition 7 (interior Gårding for F_rel).** [P-route] The released
-boundary structure consists of the regular arcs (the same per-arc
-Wirtinger forms N5, masks from §2 with the cap fans removed) plus two
-transversal-wall corners per cap. Corner contributions are point
-evaluations: |corner terms| ≤ C_v(|η(0)|² + |η(β)|² + mirrored), absorbed
-via ‖η‖²_∞ ≤ δ‖η′‖² + C(δ)‖η‖². Hence explicit (c_rel, C_rel) with
+**Lemma 7a (exact ν-slot collapse — no Gårding slack).** [P] For any arc
+carrying the q-form with q = ⟨η, ν_t⟩ and η = η_x·e_x (the cap-critical
+polarization): with s = sin t, c = cos t,
 
-  Q_rel(η) ≤ −c_rel‖η′‖²_{L²} + C_rel‖η‖²_{L²}.
+  q² − q′² = −s²(η_x′)² − sc·(η_x²)′ − cos2t·η_x²,
 
-**Corollary 8 (trivial L² tail).** For η supported on frequencies
-2k > K₀ := √(2C_rel/c_rel): Q_rel(η) ≤ −(c_rel K₀²/2)... i.e. high
-frequencies are automatically L²-coercive; only the K₀-cutoff block
-needs computation, and the block–tail coupling is bounded by the same
-Gårding structure constants (the Part-II weld verbatim, in L²
-normalization).
+and since (sc)′ = cos 2t the last two terms integrate to a pure boundary
+term. Hence over any mask interval [a,b]:
 
-So S7″ closes as: released ladder (computed, K-stable) + Proposition 7
-(to write with explicit constants) + the weld. No new mathematics is
-required beyond bookkeeping — the fan release moved all the difficulty
-into machinery that already exists.
+  ∫_a^b (q² − q′²) dt = −∫_a^b sin²t·(η_x′)² dt − [sin t cos t·η_x²]_a^b.
+
+The identity is EXACT — the ν-slot arcs deliver sin²-weighted μ-slot
+derivative coverage with no ε-splitting loss; all zeroth-order bulk
+terms cancel identically. (Mirror identity for the y-polarization with
+cos²t via the μ-slot arcs; mixed polarizations by polarization of the
+same algebra.)
+
+**Proposition 7 (released cap-sector coercivity).** [P-route, constants
+being fixed] Summing Lemma 7a over the four ν-slot arcs active near the
+first cap (direct C, D + reflected C̃, D̃; masks from §2), the released
+form obeys, on x-polarized η supported in the cap,
+
+  Q_rel(η) ≤ −4∫ sin²t·(η_x′)² dt + (junction/corner boundary terms),
+
+and Hardy's inequality inf ∫t²φ′²/∫φ² = 1/4 gives
+
+  Q_rel(η) ≤ −(1 − o(1))‖η‖²_{L²} + C_corner·(endpoint values²).
+
+So the cap sector is L²-coercive with structural constant ≥ 1 (before
+corner corrections), for ALL frequencies — the tail sector that
+defeated the weighted-H¹ frame is closed by an exact identity plus
+Hardy. The remaining constant-tracking: the corner/junction boundary
+terms (finitely many point evaluations, absorbed as in N7 with explicit
+C_corner) and the middle-phase assembly (full coverage, Part-II
+pattern).
+
+**Corollary 8 (L² weld).** Bulk frequencies are H¹-coercive
+(middle-phase full coverage); cap-concentrated directions are covered
+by Proposition 7 uniformly in frequency; the finite ladder block
+supplies the mixed/low span; the coupling is bounded by the same
+structure constants (Part-II weld algebra in L² normalization).
+
+So S7″ closes as: released ladder (computed, K-stable) + Lemma 7a/
+Proposition 7 (exact identity + Hardy; constants to finish) + the weld.
+The prediction for the ladder trend: m_rel(K) may relax from 4.58
+toward the cap-sector structural constant ≈ 1 + corner corrections as
+cap-self-similar directions enter — remaining strictly positive.
 
 ## 9. The Σ-local theorem: statement and dependency list (S7″ final form)
 
