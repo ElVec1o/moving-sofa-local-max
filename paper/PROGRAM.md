@@ -100,15 +100,19 @@ generally.
 - **[ ] L1.** Certified sweep of the remaining computed matrices (true-Hessian
   blocks, cross blocks) — identical mechanical repetition of the done K=16
   sweep. *(compute-hours)*
-- **[K→] L2.** Γ-simplicity certification of the ray certificates
-  (`ray_graph_cert.py`): monotone-chain framework + exact-quadratic-in-ε
-  separators + adaptive node windows; the local-splice piece
-  [0.01, 0.0469] passes the FULL certificate (area + simplicity +
-  winding); remaining ε-ranges under automatic subdivision. Found en
-  route: reversal pockets RETRACE the envelope (parameterized simplicity
-  is the wrong lens there; chord cuts must span positive net
-  displacement — implemented), and the winding-based Green inequality
-  (wind ≥ 1 on S, ≥ 0 off) is the right formal side condition for
+- **[C/ ] L2.** Γ-simplicity certification of the x-ray certificate
+  (`ray_graph_cert.py`), full sweep run: **CERTIFIED on
+  [0.01, 0.2578] ∪ [0.2727, 0.3926]** (30 pieces; area + simplicity +
+  winding in ball arithmetic — includes the local-splice region, so the
+  spliced local+slice statement is now unconditional on ε ≤ 0.2578).
+  Open windows: [0.2578, 0.2727] (A-arc/top-chord far-overlap case) and
+  [0.3926, 0.60] (long wrap-chord passes near the swung A-arc; the
+  ε≈0.4+ frozen curve may genuinely need a different chord layout —
+  split the wrap chord at an intermediate boundary anchor — or the
+  winding-correction bound). y-ray sweep not yet run. Found en route:
+  reversal pockets RETRACE the envelope (chord cuts must span positive
+  net displacement — implemented), and the winding form of the superset
+  lemma (wind ≥ 1 on S, ≥ 0 off) is the right side condition for
   non-simple frozen curves.
 - **[ ] L3.** Final assembly write-up pass: one theorem statement
   "c_G is a strict local maximum on the explicit H²-ball, computer-assisted,
