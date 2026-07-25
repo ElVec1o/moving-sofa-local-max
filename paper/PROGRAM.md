@@ -70,6 +70,15 @@ generally.
   w_μ = min(1, sin²θ/sin²β, cos²θ/sin²β), w_ν = 1, with the anomalous
   stationary-contact responses one-signed favourable (N1). Core identity
   machine-verified (Lean: `frame_pair_identity`, `frame_pair_coercive`).
+- **[P-mech/K] N11. The fan-bite 3/2-law.** At a stationary wall fan, the
+  cutting-side response of the TRUE area is super-quadratic:
+  F(−ε) − F₀ ≈ −c·ε^{3/2} (bite depth ε, width √ε from the envelope
+  geometry; measured c ≈ 20 at Gerver's phase-1 fan, constant across
+  ε = 5e-4..2e-3). Consequences: the true functional is only C^{1,1/2}
+  at stationary-fan candidates; the kink is one-signed FAVOURABLE; and
+  every smooth oracle (jet/structure-following, or fan-released) is a
+  superset upper form dominating both one-sided branches — the uniform
+  justification of the certified objects at both c_G and Σ.
 - **[K→ ] N10. Certified cell-wise QP (the global machine).** Trajectory
   space carves into combinatorial cells (junction-branch charts); frozen
   reconstructions give exact quadratic upper envelopes per region (N1+N2)
@@ -117,6 +126,17 @@ generally.
 - **[ ] L3.** Final assembly write-up pass: one theorem statement
   "c_G is a strict local maximum on the explicit H²-ball, computer-assisted,
   modulo [the shrinking list]", with the dependency graph printed.
+- **[P/K] L4 (audit, RESOLVED).** The true Gerver functional IS kinked at
+  c_G along phase-1 cap directions (polygon oracle, cap-wide bump:
+  releasing side quadratic ≈ −4·L², cutting side a 3/2-POWER LAW
+  F(−ε)−F₀ ≈ −20·ε^{3/2} — the fan bite has depth ε, width √ε:
+  super-quadratic, strictly favourable). The Part-II jet oracle is the
+  smooth STRUCTURE-FOLLOWING superset form (fwd/bwd symmetry verified
+  after removing an endpoint-leak linear term): by N1 it dominates both
+  one-sided true forms, so the manuscript's ladder-negativity chain is
+  VALID and strengthened — same architecture as the Σ fan release.
+  Manuscript needs the interpretive remark (terminology: "structure-
+  following Hessian"), queued with L3.
 
 ## Part III — Local theorem at Σ (G1) — the genuinely new result
 
