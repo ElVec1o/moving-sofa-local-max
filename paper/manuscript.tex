@@ -3369,6 +3369,27 @@ supplementary repository.  Key files:
         breakpoint-frequency excess).
   \item \texttt{rigorous/RIGOROUS\_BOUNDS.md}: the full derivation of
         Theorem~\ref{thm:hypV}.
+  \item \texttt{rigorous/ray\_graph\_cert.py}: ball-arithmetic
+        certification of the geometric side condition of
+        Theorem~\ref{thm:reduction} (simplicity of the reconstruction
+        curve) for frozen reconstructions along deformation rays:
+        speed-sign runs with chord replacement, monotone-chain
+        injectivity, chord--chord and arc--segment separators certified
+        through the exact quadratic $\varepsilon$-dependence, and a
+        winding-number enclosure fixing orientation.  Two structural
+        facts found en route: a reversal pocket of a contact arc
+        \emph{retraces} the envelope (so chord cuts must span positive
+        net displacement before the flanking arcs are disjoint as
+        sets), and for non-simple frozen curves the correct side
+        condition is the winding form of Lemma~\ref{lem:superset}
+        ($\operatorname{wind}_{\Gamma}\geq 1$ on $S$,
+        $\geq 0$ elsewhere), under which exact retraces cancel in the
+        Green functional.
+  \item \texttt{lean/MovingSofa}: machine-verified (Lean~4, no
+        \texttt{sorry}) cores of the superset principle, the
+        exact-degree reduction, the stationary-contact mechanism and
+        cap law, the ambidextrous frame-pair coercivity, and the
+        monotone-chain injectivity skeleton.
 \end{itemize}
 End-to-end reproduction takes approximately $30$ minutes on a 2024
 laptop without specialized hardware.
