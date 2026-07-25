@@ -111,9 +111,10 @@ generally.
 - **[P] S1.** Cap law: λ_A ≡ 0 on (0,β), mirrored on (π/2−β,π/2); full
   first-phase speed table (0,−1,−½,+½) exact (N4 + Romik's closed forms).
 - **[P] S2.** Exact weight w_μ, w_ν (N9).
-- **[K→] S3.** Weighted ladder for Q_Σ (running: sigma_hessian_weighted.py;
-  flat negative weighted margin at increasing K = the computed local-Σ
-  coercivity). *(in progress)*
+- **[K→] S3.** Weighted ladder for Q_Σ: K=10 NEG DEF m_w = 0.377;
+  K=16 NEG DEF m_w = 0.161 at ε=1e-4 (margin decayed — ε=1e-5 validation
+  rerun in progress per the romik_hessian stencil lesson; high-mode
+  entries at ε=1e-4 are borderline-nonlinear). *(in progress)*
 - **[ ] S4.** Σ analytic oracle (both families; the Rust port pattern) — for
   precision beyond Shapely and for certification.
 - **[P/ ] S5.** Σ interior Gårding in the weighted metric — proof route now
@@ -163,7 +164,10 @@ informal proof is short and self-contained.
   `lean/MovingSofa`, zero sorry): `famInter_antitone`, `superset_principle`,
   `area_bound`, `certified_upper_envelope`. Remaining sub-item F1b: the
   plane-topology chord-closure inclusion (Mathlib).
-- **[ ] F2.** N2 (exact-degree) — polynomial algebra over integrals.
+- **[P] F2a.** N2-core (exact-degree) — **DONE, machine-verified**:
+  `exact_degree` (bilinear ∘ affine = exact quadratic with explicit
+  coefficients). F2b (bridge: Green form bilinearity over arc integrals)
+  open — Mathlib integration calculus.
 - **[P] F3a.** N4-corollary (stationary-contact mechanism) — **DONE,
   machine-verified**: on the trig coefficient module, `v + v'' = const c`,
   `lamA_const`, `lamD_const`, cap law `lamA_zero_iff` (λ_A ≡ 0 ⟺ SOL1 form

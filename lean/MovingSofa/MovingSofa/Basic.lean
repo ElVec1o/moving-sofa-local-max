@@ -16,6 +16,9 @@ Formalized here:
           on trigonometric phases, and λ_A ≡ 0 iff the arc is in SOL1 normal
           form (constant −1) — Gerver phase 1 and Σ's first arc.  This is the
           exact source of every cap degeneracy met in the project.
+  • F2a — exact-degree reduction (N2 core): bilinear ∘ affine = exact
+          quadratic, with the three coefficients explicit — the algebraic
+          reason no Taylor remainder exists anywhere in the frozen bounds.
   • F3b — the ambidextrous frame-pair mechanism (N9 core): the identity
           (cu+sv)² + (cu−sv)² = 2c²u² + 2s²v² and the coercivity bound
           2m(u²+v²) ≤ 2c²u² + 2s²v² for any common lower bound m of c², s² —
@@ -187,6 +190,35 @@ cos²θ/sin²β): the ambidextrous structure repairs its own cap degeneracy at
 rate sin²θ.  Machine-verified below over ℤ (the identity and the bound are
 coefficient-algebra; the instantiation c = cos θ, s = sin θ is analytic
 bridging, tracked as F3). -/
+
+/-! ## F2a — exact-degree reduction (N2 core)
+
+The Green functional of a reconstruction is BILINEAR in the boundary jet,
+and a frozen reconstruction's jet is AFFINE in the deformation parameter;
+hence the frozen area is EXACTLY a quadratic polynomial — no Taylor
+remainder exists.  The algebraic engine, machine-verified over an abstract
+carrier with hypothesis-packaged bilinearity (instantiated in the paper by
+the Green form on boundary jets and by Int/ℝ-scaling): -/
+
+/-- **Exact-degree identity.**  For B bilinear (additive in each slot,
+    scalar-homogeneous) and the affine family x(ε) = x₀ + ε·d:
+    B(x(ε), x(ε)) = B(x₀,x₀) + ε·(B(x₀,d) + B(d,x₀)) + ε²·B(d,d). -/
+theorem exact_degree {M : Type _} (B : M → M → Int)
+    (add : M → M → M) (smul : Int → M → M)
+    (hL : ∀ u v w, B (add u v) w = B u w + B v w)
+    (hR : ∀ u v w, B u (add v w) = B u v + B u w)
+    (hLs : ∀ (n : Int) u w, B (smul n u) w = n * B u w)
+    (hRs : ∀ (n : Int) u w, B u (smul n w) = n * B u w)
+    (x0 d : M) (e : Int) :
+    B (add x0 (smul e d)) (add x0 (smul e d))
+      = B x0 x0 + e * (B x0 d + B d x0) + e * e * B d d := by
+  rw [hL, hR, hR, hRs, hLs, hRs, hLs]
+  have h : e * (B x0 d + B d x0) = e * B x0 d + e * B d x0 :=
+    Int.mul_add _ _ _
+  have h2 : e * (e * B d d) = e * e * B d d :=
+    (Int.mul_assoc e e (B d d)).symm
+  rw [h, h2]
+  simp [Int.add_assoc, Int.add_comm, Int.add_left_comm]
 
 /-- **Frame-pair identity.**  (cu+sv)² + (cu−sv)² = 2(cu)² + 2(sv)². -/
 theorem frame_pair_identity (c s u v : Int) :
