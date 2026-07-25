@@ -155,6 +155,46 @@ response. The weighted Garding framework for Sigma now has its exact weight:
 and the G1 task reduces to re-running the (already-built) ladder machinery
 in this weighted metric.
 
+## SESSION RESULTS II (the program formalized; N9 proved; S3 data; L2 machine)
+
+**The master ledger exists**: `paper/PROGRAM.md` — every lemma, computation
+and formalization target itemized with status tags; the novel-mathematics
+inventory N1–N10 stated formally as first-class results.
+
+**N9 upgraded to a proved mechanism.** The full Σ mask table
+(`sigma_masks.py`): corner path active on [β, π/2−β] EXACTLY, one inner
+wall per cap, outer walls full-range, the reflected family's table
+identical (ρ-invariance) — so both families degenerate at the caps
+simultaneously, and coverage counting alone cannot repair the cap. The
+repair is frame geometry: on a cap only the two ν-slot pairs move, the two
+families' ν-frames sit an angle 2θ apart, and their Gram has eigenvalues
+{2cos²θ, 2sin²θ}: **the ambidextrous structure repairs its own degeneracy
+at exactly rate sin²θ** — the weight w_μ derived, not fitted. The weighted
+interior Gårding theorem for Σ now has a complete proof route
+(`SIGMA_LOCAL.md`, Theorem 4: Q_Σ ≤ −sin²β ∫w|η′|² + C₀‖η‖²).
+
+**S3 (weighted Σ ladder).** K=10: m_w = 0.377; K=16: m_w = 0.1604
+(stencil-validated at two step sizes). Top-eigenvector diagnosis: the
+worst mode is cap-concentrated with Q = −0.127×(weighted energy) — the
+margin is heading to a floor ≈ 0.127, not to zero; K=24 discriminator
+running.
+
+**L2 (simplicity certification) built.** `ray_graph_cert.py`: the frozen
+reconstruction's simplicity certified in ball arithmetic — velocity-sign
+runs with chord replacement (shaved and adaptively widened: a reversal
+pocket RETRACES the envelope, so cuts must span positive net
+displacement), monotone-chain injectivity, chord–chord/arc–segment
+separators through the exact quadratic ε-dependence, adaptive node
+windows, winding enclosure. The local-splice piece [0.01, 0.0469] and
+onward pieces pass in full; the sweep is running. Found en route: for
+non-simple frozen curves the right side condition is the winding form of
+the superset lemma (wind ≥ 1 on S, ≥ 0 off; exact retraces cancel).
+
+**Formalization track live.** `lean/MovingSofa` (Lean 4, zero sorry):
+superset principle (F1), exact-degree core (F2a), stationary-contact
+mechanism + cap law (F3a), ambidextrous frame-pair coercivity (F3b),
+monotone-chain injectivity skeleton (F4a).
+
 ## First concrete steps (next sessions)
 
 1. G1: derive the weighted symbol at Σ's caps; candidate weight
