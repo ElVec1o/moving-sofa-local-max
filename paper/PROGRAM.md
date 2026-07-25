@@ -122,11 +122,11 @@ generally.
   [0.01, 0.2578] ∪ [0.2727, 0.3926]** (30 pieces; area + simplicity +
   winding in ball arithmetic — includes the local-splice region, so the
   spliced local+slice statement is now unconditional on ε ≤ 0.2578).
-  Open windows: [0.2578, 0.2727] (A-arc/top-chord far-overlap case) and
-  [0.3926, 0.60] (long wrap-chord passes near the swung A-arc; the
-  ε≈0.4+ frozen curve may genuinely need a different chord layout —
-  split the wrap chord at an intermediate boundary anchor — or the
-  winding-correction bound). y-ray sweep not yet run. Found en route:
+  UPDATE: the [0.2578, 0.2727] window is now CERTIFIED (head-collapse
+  fallback) — the x-ray certificate is CONTIGUOUS on **[0.01, 0.3926]**.
+  Remaining window [0.3926, 0.60] re-sweeping with the collapse layout
+  (the standard layout genuinely self-intersects there — see
+  L2-CORRECTION). y-ray sweep in progress. Found en route:
   reversal pockets RETRACE the envelope (chord cuts must span positive
   net displacement — implemented), and the winding form of the superset
   lemma (wind ≥ 1 on S, ≥ 0 off) is the right side condition for
