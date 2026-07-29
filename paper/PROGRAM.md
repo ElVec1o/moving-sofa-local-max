@@ -914,6 +914,45 @@ order one, and (iii) re-deriving what the envelope identity actually licenses.
 Part II's headline result is NOT withdrawn; it is marked at risk pending that
 audit.
 
+## PART II SIGN TEST — INCONCLUSIVE (oracle validity must be settled first)
+
+Systematic order test of D(ε) := dF_struct − dF_true across 9 modes and three
+amplitudes (`gerver_domination.py`), exact true area from `sigma_area` GERVER
+mode:
+
+| mode | D(2e-3) | local order | reading |
+|------|---------|-------------|---------|
+| e_x sin2t | −3.08e-7 | 2.09 | plausible |
+| e_x sin4t | **−6.46e-3** | **1.00** | implausible |
+| e_x sin6t | −2.91e-6 | 2.16 | plausible |
+| e_x sin10t | −8.14e-6 | 2.29 | plausible |
+| e_x sin16t | **−2.58e-2** | **1.01** | implausible |
+| e_y sin2t | +2.84e-7 | 1.04 | small, unclear |
+
+**Two findings, one of them not mathematics.** A discrepancy LINEAR in ε means
+one functional is not critical at c_G in that direction. F_true is critical, so
+a linear term of size 1e-2 must come from the structure-following oracle —
+and junction-solve failure on particular modes is a documented failure mode of
+`true_hessian` in this project (basin jumps, kink stalls, transition-straddling
+stencils, all fixed piecemeal). Those rows are almost certainly broken solves.
+
+**On the clean modes the discrepancy IS O(ε²)** — about 1.7% of the second
+variation, with structure-following slightly MORE negative than true
+(Q_struct ≈ −4.80 vs Q_true ≈ −4.65 for e_x sin2t). So the ε³ hypothesis
+formed from two data points is REFUTED by the third point. What this implies
+is narrow: on these modes both forms are clearly negative, so the CONCLUSION
+holds; what fails is the automatic implication Q_struct < 0 ⟹ Q_true < 0.
+
+**Status: INCONCLUSIVE.** The test cannot be read until the structure-following
+oracle is validated mode by mode against the independent mpmath analytic
+oracle, so that broken solves are separated from real discrepancies. Part II's
+flag stays open, neither confirmed nor cleared.
+
+**Method note for the log.** Twice now in this session an exponent was inferred
+from two amplitudes and was wrong (first the "3/2-law" of N11, now this ε³
+reading). Two points determine a slope and nothing else. Order claims need at
+least three amplitudes plus an independent check.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
