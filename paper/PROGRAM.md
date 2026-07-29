@@ -265,6 +265,17 @@ informal proof is short and self-contained.
 
 ---
 
+## Compute discipline (post-OOM, 2026-07-29)
+
+A machine OOM killed all running computations (three concurrent Python
+geometry processes + system load on 24 GB). Losses: the y-ray sweep's
+in-progress results (log-only; needs rerun) and /tmp logs. Survived: all
+checkpoints (sigma_rel_K24.npy at 20/48 rows — resumed). NEW RULES:
+one heavy computation at a time, nice'd, with an RSS guard (3 GB) and a
+system-memory floor (1.5 GB reclaimable) enforced by the monitor; heavy
+runs must checkpoint (all current ones do). Queue: K=24 released
+(running) → y-ray sweep rerun → K=32 released if wanted.
+
 ## Standing discipline
 
 - Every new claim enters this ledger with a status tag before it enters the
