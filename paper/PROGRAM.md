@@ -79,6 +79,37 @@ generally.
   every smooth oracle (jet/structure-following, or fan-released) is a
   superset upper form dominating both one-sided branches — the uniform
   justification of the certified objects at both c_G and Σ.
+- **[P/K] N12. THE FAN-BITE FUNCTIONAL — the object that closes the cap
+  sector.** At a stationary wall fan (λ ≡ 0 on an interval of half-width
+  β) every constraint line passes through ONE point P. In u = x − P the
+  perturbed constraints are ⟨u, μ_s⟩ ≤ ε·φ(s) with **no constant term**,
+  so the local body is EXACTLY K_ε = ε·K₁ (homogeneity; Lean:
+  `fan_homogeneity`). Hence the area lost to the interior lines relative
+  to the fan-released set is exactly
+  **F_rel − F = ε²·N(φ), N(φ) := |W₁ \ K₁| ≥ 0**,
+  positively homogeneous of degree 2 and one-signed but **not a quadratic
+  form** — N(φ) ≠ N(−φ) is the exact source of the kink. Properties:
+  * **(a) vanishing criterion** — N(φ) = 0 ⟺ d(s) := φ(β)cos s/cos β −
+    φ(s) ≤ 0 for all s, i.e. no interior line cuts inside the wedge apex.
+    So the released form is EXACT on one-signed cap perturbations
+    (verified: bumps give bite 0 to machine precision).
+  * **(b) elementary rigorous lower bound** (one interior cut is contained
+    in the bite): N(φ) ≥ max_s [d(s)]₊²·sin2β / (2 sin(β−s) sin(β+s)).
+  * **(c) all-active closed form** (when φ + φ″ ≥ 0):
+    N(φ) = φ(β)² tan β + ∫₀^β (φ′² − φ²) ds — the Wirtinger form again;
+    the constant case gives φ²(tan β − β), the exact area between a
+    circular arc and its two tangent lines.
+  * **(d) the reconciliation** Q_true = Q_rel − [N(φ) + N(−φ)].
+  * **(e) at Σ**: BOTH families' fans are frozen at the SAME point
+    (P_A = (1,½) for cap 1), so the fan is symmetric of half-width β with
+    φ(s) = ⟨η(|s|), μ_{|s|}⟩ even; and Σ's two caps bite on OPPOSITE
+    branches with equal magnitude.
+  * **VALIDATED**: on the released form's worst K=24 direction,
+    Q_rel = −0.201, bites 0/26.238 (cap 1) and 26.238/0 (cap 2), total
+    52.476, predicted Q_true = −52.68 vs **measured −52.39 (0.55%)**.
+    (`sigma_fanbite.py`.) This supersedes the empirical "3/2-law" reading
+    of N11: the true scaling is exactly quadratic with a
+    non-quadratic-form coefficient.
 - **[K→ ] N10. Certified cell-wise QP (the global machine).** Trajectory
   space carves into combinatorial cells (junction-branch charts); frozen
   reconstructions give exact quadratic upper envelopes per region (N1+N2)
@@ -234,15 +265,22 @@ generally.
   IS the true second variation.** The certifiable object is the right
   object — but the decaying cap margin is therefore GENUINE, not an
   artifact, and cannot be repaired by junction response.
-- **[ ] S7‴-c (the real remaining question).** The cap decay must be
-  read through N11: on cap-supported directions the true functional's
-  cutting branch decreases like −c·ε^{3/2}, which DOMINATES ε² — so a
-  near-zero quadratic form there is not an obstruction but a statement
-  that the quadratic majorant is not tight. The Σ-local theorem needs
-  the cap sector handled at the ε^{3/2} scale (N11 made quantitative at
-  Σ, with its constant) and the quadratic form used only off the caps.
-  This is the honest remaining gap; the K=16 envelope run has now
-  confirmed that no junction-response repair exists.
+- **[P/K] S7‴-c. CAP SECTOR RESOLVED by the fan-bite functional N12.**
+  The released form's flat directions are NOT flat for the true
+  functional: the discarded interior cap walls remove exactly
+  ε²·[N(φ)+N(−φ)], and on the worst K=24 released direction that is
+  52.48 against a released margin of 0.20 — predicting the true value to
+  0.55%. This reconciles, quantitatively, the two ladders measured
+  earlier: released margins 4.58/0.91/0.20 (decaying) vs the TRUE
+  Σ Hessian's L² margins 3.98/3.68/3.58 (K-STABLE) at K = 10/16/24. The
+  bite is exactly the difference, and the true form's K-stability is
+  therefore explained rather than merely observed.
+  Remaining to make it a theorem: the uniform lower bound
+  Q_rel(η) − N(φ_η) − N(−φ_η) ≤ −m‖η‖²_{L²} via the dichotomy
+  (i) η with cap oscillation ⟹ N ≳ (oscillation amplitude)² by N12(b);
+  (ii) η one-signed on the caps ⟹ N = 0 by N12(a) but Q_rel is then
+  strongly negative (measured −16.6 on cap bumps). Both halves are
+  finite explicit estimates on the closed-form objects.
 - **[✗→P] S7‴ (supersedes S7″ — the corrected object).** The fan release
   FAILED as sole certified object: released-ladder margins collapse
   (L²: 4.58/0.91/0.20; weighted E_w: 0.136/0.0062/0.0013 at K=10/16/24;
