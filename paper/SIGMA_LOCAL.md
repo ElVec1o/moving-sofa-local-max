@@ -458,11 +458,12 @@ subspaces, not a local-maximality theorem. **Σ-local remains open**, with
 the remaining gap now a single named, standard-shaped estimate rather than
 a structural unknown.
 
-**β-enclosure caveat.** The certification treats β as a ball of radius
-1e-16 around Romik's constant. Enclosing β rigorously from its defining
-equation is the standard Newton–Kantorovich step already performed for
-Gerver's constants (`gerver_arb.py`); it has not been redone for Romik's,
-and until it is, item 7 is certified *conditionally on that enclosure*.
+**β-enclosure: discharged.** Romik's β has a closed form,
+β = arctan(((√2+1)^{1/3} − (√2−1)^{1/3})/2), so it is enclosed directly in
+ball arithmetic — radius 5.8·10⁻⁹⁰ at 300 bits, no root-finding, no
+Newton–Kantorovich step needed. Re-running the certification with the exact
+enclosure gives entry radii 1.7·10⁻⁸⁵ and the same verdict: **item 7 is
+UNCONDITIONAL** (modulo the arb library itself).
 
 ### Why the two routes are worth keeping separate
 

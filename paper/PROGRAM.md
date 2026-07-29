@@ -215,10 +215,11 @@ generally.
   response null. No oracle, no junction solve, no floating point in the
   chain. **By N1 this certifies that the TRUE ambidextrous functional
   strictly decreases to second order in every direction of the span.**
-  Caveat recorded: β enters as a ball of radius 1e-16; enclosing β from
-  its defining equation (the `gerver_arb.py` Newton–Kantorovich pattern)
-  is NOT yet redone for Romik's constants, so the statement is certified
-  conditionally on that enclosure. The Σ analytic/Rust oracle originally
+  **CAVEAT DISCHARGED**: β has a CLOSED FORM,
+  β = arctan(((√2+1)^{1/3} − (√2−1)^{1/3})/2), so it is enclosed directly
+  in ball arithmetic (radius 5.8e-90 at 300 bits) with no root-finding.
+  Re-run with the exact enclosure: entry radii 1.7e-85, minors positive
+  through order 20 — **the certification is UNCONDITIONAL**. The Σ analytic/Rust oracle originally
   planned here is no longer needed for certification — the closed form
   superseded it.
 - **[P°] S5.** Σ weighted interior Gårding (Theorem 4, SIGMA_LOCAL §5):
