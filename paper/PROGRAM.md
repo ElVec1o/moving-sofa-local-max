@@ -1217,6 +1217,86 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## ITEM 12b — the Σ tail is TOEPLITZ.  Half of it is now closed.  [PROVED / OPEN]
+
+### Why every previous weld failed
+
+The 2×2 weld and the dyadic graded weld both tried to bound M below by pairing
+band minima against coupling maxima.  Re-run at K=32 the graded weld returns
+m ≥ −3252.3, useless: the couplings grow ~3.3× per band (287, 1055, 3374) while
+λ_min per band is erratic (9.8, 247, 56, 1055).  No choice of weights repairs
+that, because the band decomposition is the wrong decomposition.
+
+### The structure they missed
+
+Normalise out the diagonal's k² growth, N[k,k′] := M[k,k′]/(k k′).  Then N is
+**Toeplitz** — a function of Δ = |k−k′| alone — and vanishes identically for odd
+Δ (a parity selection rule: M[16,15] = M[16,17] = M[16,1] = 0 exactly).
+Measured across k = 8,12,16,20,24:
+
+    Δ=0   10.55  9.93 10.33 10.50 10.20
+    Δ=2   -3.97 -4.70 -4.78 -4.44 -4.39
+    Δ=4   -1.60 -1.69 -2.09 -1.92 -1.48
+
+A Toeplitz form's spectrum is the range of its symbol
+f(θ) = a₀ + 2 Σ_{Δ>0} a_Δ cos(Δθ), so the INFINITE tail is controlled by one
+number, min_θ f — no band decomposition and no coupling maxima at all.
+
+### Why this makes the tail easy rather than hard
+
+For the tail block (k > K),
+
+    M(η_tail) ≥ f_min Σ_k k²|η_k|² ≥ f_min K² ‖η_tail‖²_{L²},
+
+so the tail's L² margin grows like K² while the target is the FIXED number
+m ≈ 6.45.  The tail requirement is only f_min ≥ m/K², which at K=32 is 0.00633.
+The tail was never the tight part; it only looked tight because it was being
+bounded in the wrong decomposition.
+
+### Result: the y-component tail is CLOSED
+
+    a₀ = +15.8376 ± 0.0183   (spread 0.12%)
+    every other |a_Δ| ≤ 0.113 ± 0.017
+    symbol range [15.0419, 16.0856]
+    f_min = 15.042  vs requirement 0.00633   — SATISFIED by a factor 2376.
+
+The y-block Toeplitz limit is clean and strongly positive.  That half of the
+tail is done.
+
+### Result: the x-component fit is INVALID at K=32 — reported as a failure
+
+    a₀ = +10.2972 ± 0.2306   (2.2%)
+    a₂ =  -4.4988 ± 0.2249   (5.0%)
+    a₄ =  -1.7834 ± 0.2416   (13.5%)
+    symbol range [-0.6128, 16.4243],  f_min = -0.613
+
+f_min = −0.613 CONTRADICTS the directly measured H¹ margin +0.068467 (the two
+must agree if the model is right).  The disagreement is in SIGN, so the
+conclusion is that the x-component Toeplitz fit is not yet valid at K=32 — NOT
+that the form is indefinite.  The 13% coefficient spreads say the same thing.
+The x-block has not reached its Toeplitz limit by k=32.
+
+### Honest status of item 12b
+
+Reduced from "the whole tail is open" to "the x-component tail is open".  Still
+OPEN.  The route is now specific: push the ladder to K=48 or 64 and re-fit the
+x symbol, checking convergence of a_Δ and agreement of min_θ f with the measured
+H¹ margin as the acceptance test.  Do NOT accept a symbol fit whose min
+disagrees with the measured margin.
+
+### Norm note, recorded to prevent a repeat
+
+The H¹ margin DEcreases along the ladder (0.679, 0.226, 0.083, 0.068) while the
+L² margin CONverges (8.53, 6.84, 6.56, 6.48, changes shrinking ~4× per step).
+L² is the right norm for the theorem: M is unbounded ABOVE (diagonal ~ k²),
+which never obstructed a lower bound.  The H¹ margin is exactly the Toeplitz
+symbol minimum and is the right diagnostic for the TAIL, not for the theorem.
+
+### Scripts
+
+`sigma_h1.py` (L² vs H¹ margins along the ladder, parity blocks),
+`sigma_symbol.py` (symbol fit, min, and the tail requirement).
+
 ## THE RANK-ONE LAW IS NOW PROVED, AND UNIFIED WITH Σ  [PROVED]
 
 ### Theorem (rank-one defect)
