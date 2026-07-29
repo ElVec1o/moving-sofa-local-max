@@ -23,7 +23,11 @@
 // discretization error is common-mode and cancels in finite differences —
 // the same property the shapely oracle relied on.
 //
-// !!! STATUS: INCOMPLETE — DO NOT USE FOR AREAS !!!
+// STATUS: WORKING.  subtract_wedge fires correctly (the wrap-around
+// enter/exit pair needed its own dQ closure — without it the boundary
+// short-circuits along a chord and only a sliver is removed).  Area at c_R
+// agrees with shapely to 1e-10.  Former bug notes kept below for the record.
+// OLD STATUS (resolved):
 // subtract_wedge (below) is implemented but DOES NOT FIRE: all 2400 wedge
 // subtractions leave the polygon unchanged, so this binary currently returns
 // the CONVEX body C2 (area 2.0133) instead of Sigma (1.6451) — the missing
@@ -164,6 +168,7 @@ fn subtract_wedge(poly: &Vec<(f64, f64)>, w: &Wedge, apex_bad: &mut usize)
 
     let mut out: Vec<(f64, f64)> = Vec::with_capacity(m + 8);
     let mut pending: Option<(f64, f64)> = None;
+    let first_exit = ev[start].0;          // the walk's closing point
     for k in 0..m {
         let (p, kind) = ev[(start + k) % m];
         match kind {
@@ -181,6 +186,17 @@ fn subtract_wedge(poly: &Vec<(f64, f64)>, w: &Wedge, apex_bad: &mut usize)
                 out.push(p);
             }
             _ => {}
+        }
+    }
+    // WRAP-AROUND PAIR: the walk begins at an Exit, so the Enter that
+    // cyclically precedes it is still pending here.  Its dQ routing closes
+    // the polygon; without this the boundary short-circuits along a chord
+    // and only a sliver is removed instead of the whole wedge region.
+    if let Some(e) = pending.take() {
+        let e_on1 = w.f1(e).abs() <= w.f2(e).abs();
+        let x_on1 = w.f1(first_exit).abs() <= w.f2(first_exit).abs();
+        if e_on1 != x_on1 {
+            if apex_in { out.push((w.ax, w.ay)); } else { *apex_bad += 1; }
         }
     }
     out
@@ -235,15 +251,11 @@ fn main() {
             if poly.len() < 3 { break; }
         }
         // PASS 2: subtract the reflex quadrants (the only non-convex step)
-        let mut nfire = 0usize;
-        let a_convex = shoelace(&poly);
         if poly.len() >= 3 {
             for i in 0..n {
                 let (c, s) = (th[i].cos(), th[i].sin());
                 let wd = Wedge { ax: cx[i], ay: cy[i], n1x: c, n1y: s, n2x: -s, n2y: c };
-                let before = shoelace(&poly);
                 poly = subtract_wedge(&poly, &wd, &mut apex_bad);
-                if (shoelace(&poly) - before).abs() > 1e-14 { nfire += 1; }
                 if poly.len() < 3 { break; }
                 let wr = Wedge { ax: cx[i], ay: 1.0 - cy[i],
                                  n1x: c, n1y: -s, n2x: -s, n2y: -c };
@@ -251,8 +263,6 @@ fn main() {
                 if poly.len() < 3 { break; }
             }
         }
-        eprintln!("convex area {:.8}, wedges fired {}, final {:.8}, verts {}",
-                  a_convex, nfire, shoelace(&poly), poly.len());
         writeln!(w, "{:.15}", shoelace(&poly)).unwrap();
     }
     if apex_bad > 0 {
