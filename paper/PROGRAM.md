@@ -1000,6 +1000,56 @@ distinguishable: compare the first variation against the frozen form's, which
 is provably zero. That is the next test, and it decides whether Part II's
 ladder step needs repair or merely reinterpretation.
 
+## 🌊🌊🌊 THE SUPERSET SIDE CONDITION FAILS AT FIRST ORDER (Part II foundation)
+
+**Test.** First variation of the FROZEN reconstruction (junctions fixed at
+c_G) versus the structure-following one, ε = 2e-4:
+
+| mode | frozen dA/dε | struct dA/dε | |
+|------|--------------|--------------|---|
+| e_x sin2t | 2.2e-12 | 1.1e-12 | both zero |
+| e_x sin6t | −2.2e-12 | −1.9e-11 | both zero |
+| e_y sin4t | 3.3e-12 | 4.4e-12 | both zero |
+| **e_x sin4t** | **−3.227526** | **−3.227527** | **both NONZERO** |
+| **e_x sin16t** | **−12.91011** | **−12.91011** | **both NONZERO** |
+
+Two facts, both clean. (a) Frozen and structure-following first variations
+agree to SEVEN digits — the envelope identity N3 is confirmed directly:
+junction solving does not change the first variation. (b) Both are nonzero on
+the even-k x-modes, the ones antisymmetric under t → π/2 − t.
+
+**The consequence is structural.** If a reconstruction satisfies R(Γ) ⊇ S with
+equality at c_G, then A_rec − A_true ≥ 0 attains a minimum at c_G, so its first
+variation MUST vanish. It does not. Equality at c_G does hold (both give A*).
+Therefore **the reconstruction is NOT superset-valid for symmetry-breaking
+perturbations**: Γ_ε cuts into the body, at ARBITRARILY SMALL ε.
+
+**This is the same phenomenon as the L2-CORRECTION** logged earlier in this
+session, where the frozen curve was found to genuinely self-intersect at
+ε ≈ 0.45 along the x-ray. There it appeared at large ε; here it appears
+immediately. One mechanism — the swallowtail of the envelope unfolding —
+with the loop area entering linearly.
+
+**What this means for Part II.** The manuscript's reduction theorem
+(thm:reduction) applies Lemma superset to Γ_ε under an explicit side
+condition: simplicity of the reconstruction for ε‖η‖_{C¹} ≤ r₀. The present
+measurement says that side condition FAILS for symmetry-breaking directions
+at every ε > 0, i.e. r₀ = 0 for those η. So the reduction theorem does not
+cover them, and the chain that concludes local maximality from negative
+definiteness has a genuine hole on half the mode space.
+
+**Not withdrawn, but the burden has moved.** The K=16 certified frozen block
+and the ladder numbers are unaffected as COMPUTATIONS. What is affected is the
+theorem that consumes them. Establishing Part II now requires either (a) a
+repaired reconstruction that is superset-valid on symmetry-breaking modes, or
+(b) the winding-number form of the superset lemma (wind ≥ 1 on S, ≥ 0 off),
+already identified in the L2 work, which tolerates self-intersection and
+counts loops correctly.
+
+**Route (b) is the promising one** and it unifies the session's findings: the
+signed-loop correction is exactly N12's fan bite at a degenerate unfolding,
+and exactly this linear term at a generic one.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
