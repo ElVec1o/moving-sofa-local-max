@@ -1200,6 +1200,47 @@ question. The remaining work is to carry the δA_rec computation through in
 closed form — including the chord/segment terms, which the decomposition shows
 are large (S2 = +2.841 on sin4t) and which no hypothesis has yet addressed.
 
+## GERVER TRAVERSAL RE-DERIVED — the arc table is CORRECT
+
+Re-mapped ∂S the way ∂Σ was mapped, this time classifying probes that match no
+arc (tolerance 2e-3, 4000 probes):
+
+    X(corner) 1086 · D 95 · STRAIGHT y=0 (−1.4245,0)→(−2.2235,0) ·
+    C 639 · STRAIGHT y=1 (−1.4169,1)→(+0.1900,1) ·
+    A 638 · STRAIGHT y=0 (+0.9976,0)→(+0.1964,0) · B 94
+
+All three straight pieces have max deviation 0 (exactly straight). This
+reproduces the assembly's "three outer segments are FIXED wall lines", and the
+arc pairings across the segments — {C,D}, {A,C}, {A,B} — match the assumed
+closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
+
+**The arc table's structure is correct.** Fourth hypothesis eliminated (after
+basin jump, swallowtail, and mis-specified ranges).
+
+## THE REMAINING CANDIDATE, now sharply identified
+
+The reconstruction closes the three gaps with **CHORDS between arc endpoints**:
+seg(u,v) = ½(u ∧ v). The true boundary instead follows the **WALL LINE** there.
+At c_G the two coincide (the arc endpoints sit on the wall), so the areas agree
+— which is why A_rec(c_G) = A* exactly. Under perturbation the wall line moves,
+and if the arc endpoints drift off it, the chord no longer reproduces the true
+segment, giving a FIRST-ORDER area difference.
+
+This is consistent with every observation: no single arc term is the culprit
+(the defect lives in the closure, not the arcs); the segment terms are large in
+the decomposition (S2 = +2.841 on sin4t); and the discrepancy would cancel when
+the endpoint drifts cancel by symmetry — which is exactly the symmetric/
+antisymmetric split observed.
+
+**Test to run:** track the three arc-endpoint pairs under an antisymmetric
+perturbation and check whether they remain collinear with the moving wall line.
+If they do not, the chord closure is the defect and the repair is to close with
+the wall segment rather than the chord.
+
+**Σ is unaffected** and the reason is now clear: Σ's traversal was derived WITH
+its junction structure and its closures verified (Green area = A_R* to 2.6e-9),
+and its reconstruction's first variation is clean on every mode.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
