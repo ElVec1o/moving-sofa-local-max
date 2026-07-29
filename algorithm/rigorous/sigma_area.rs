@@ -23,6 +23,21 @@
 // discretization error is common-mode and cancels in finite differences —
 // the same property the shapely oracle relied on.
 //
+// !!! STATUS: INCOMPLETE — DO NOT USE FOR AREAS !!!
+// subtract_wedge (below) is implemented but DOES NOT FIRE: all 2400 wedge
+// subtractions leave the polygon unchanged, so this binary currently returns
+// the CONVEX body C2 (area 2.0133) instead of Sigma (1.6451) — the missing
+// 0.368 is exactly the notch.  Verified that the wedges MUST bite: 10/10
+// probe points placed just inside the corner path are simultaneously inside
+// C2 and inside some quadrant.  So the bug is in the event walk of
+// subtract_wedge, not in the geometry set-up (the wedge normals and the
+// reflected-wedge apex/normals were each re-derived and checked).
+// Curiously the FD along a high-frequency direction is already accurate
+// (-52.368 vs shapely -52.390, 0.04%) because the convex part carries that
+// direction's second variation; the smooth cap-bump direction, where the
+// notch matters, is 10% off.  Next step: instrument `any`/event counts per
+// wedge to find why no edge registers a crossing.
+//
 // stdin:  n m   /  n thetas  /  m blocks of n "cx cy" pairs
 // stdout: m areas
 //
@@ -50,51 +65,137 @@ fn clip(poly: &Vec<(f64, f64)>, h: HalfPlane) -> Vec<(f64, f64)> {
             out.push((a.0 + t * (b.0 - a.0), a.1 + t * (b.1 - a.1)));
         }
     }
-    out
-}
-
-/// y-extent of a convex polygon on the vertical line x = xq
-fn yspan(poly: &Vec<(f64, f64)>, xq: f64) -> Option<(f64, f64)> {
-    let n = poly.len();
-    if n < 3 { return None; }
-    let (mut lo, mut hi) = (f64::INFINITY, f64::NEG_INFINITY);
-    for i in 0..n {
-        let a = poly[i];
-        let b = poly[(i + 1) % n];
-        if (a.0 - xq) * (b.0 - xq) <= 0.0 && (a.0 - b.0).abs() > 1e-15 {
-            let t = (xq - a.0) / (b.0 - a.0);
-            if t >= -1e-12 && t <= 1.0 + 1e-12 {
-                let y = a.1 + t * (b.1 - a.1);
-                if y < lo { lo = y; }
-                if y > hi { hi = y; }
-            }
-        }
-        if (a.0 - xq).abs() < 1e-15 {
-            if a.1 < lo { lo = a.1; }
-            if a.1 > hi { hi = a.1; }
+    // drop duplicates: repeated vertices break the wedge event walk
+    let mut d: Vec<(f64, f64)> = Vec::with_capacity(out.len());
+    for p in out {
+        if d.last().map_or(true, |q: &(f64, f64)|
+              (q.0 - p.0).abs() > 1e-13 || (q.1 - p.1).abs() > 1e-13) {
+            d.push(p);
         }
     }
-    if hi > lo { Some((lo, hi)) } else { None }
+    while d.len() > 1 {
+        let f = d[0]; let l = *d.last().unwrap();
+        if (f.0 - l.0).abs() < 1e-13 && (f.1 - l.1).abs() < 1e-13 { d.pop(); } else { break; }
+    }
+    d
 }
 
-/// y-interval cut by the quadrant { <p-c,u> <= 0 } ^ { <p-c,v> <= 0 } on x=xq
+#[derive(Clone, Copy)]
+struct Wedge { ax: f64, ay: f64, n1x: f64, n1y: f64, n2x: f64, n2y: f64 }
+
+impl Wedge {
+    #[inline] fn f1(&self, p: (f64, f64)) -> f64 {
+        self.n1x * (p.0 - self.ax) + self.n1y * (p.1 - self.ay)
+    }
+    #[inline] fn f2(&self, p: (f64, f64)) -> f64 {
+        self.n2x * (p.0 - self.ax) + self.n2y * (p.1 - self.ay)
+    }
+    #[inline] fn inside(&self, p: (f64, f64)) -> bool {
+        self.f1(p) < 0.0 && self.f2(p) < 0.0
+    }
+}
+
 #[inline]
-fn quad_interval(cx: f64, cy: f64, ux: f64, uy: f64, vx: f64, vy: f64,
-                 xq: f64, ylo: f64, yhi: f64) -> Option<(f64, f64)> {
-    let (mut lo, mut hi) = (ylo, yhi);
-    for &(nx, ny) in [(ux, uy), (vx, vy)].iter() {
-        // nx*(xq-cx) + ny*(y-cy) <= 0
-        let r = -nx * (xq - cx) + ny * cy;         // ny*y <= r
-        if ny.abs() < 1e-14 {
-            if nx * (xq - cx) > 0.0 { return None; }
-        } else if ny > 0.0 {
-            let b = r / ny; if b < hi { hi = b; }
+fn lerp(u: (f64, f64), v: (f64, f64), t: f64) -> (f64, f64) {
+    (u.0 + t * (v.0 - u.0), u.1 + t * (v.1 - u.1))
+}
+
+/// parameter interval of edge u->v lying strictly inside the wedge
+fn inside_interval(w: &Wedge, u: (f64, f64), v: (f64, f64)) -> Option<(f64, f64)> {
+    let (mut lo, mut hi) = (0.0f64, 1.0f64);
+    for &(a, b) in [(w.f1(u), w.f1(v)), (w.f2(u), w.f2(v))].iter() {
+        let d = b - a;
+        if d.abs() < 1e-300 {
+            if a >= 0.0 { return None; }
         } else {
-            let b = r / ny; if b > lo { lo = b; }
+            let t = -a / d;
+            if d > 0.0 { if t < hi { hi = t; } } else if t > lo { lo = t; }
         }
         if hi <= lo { return None; }
     }
     Some((lo, hi))
+}
+
+fn point_in_poly(poly: &Vec<(f64, f64)>, p: (f64, f64)) -> bool {
+    let n = poly.len();
+    let mut c = false;
+    for i in 0..n {
+        let a = poly[i];
+        let b = poly[(i + 1) % n];
+        if ((a.1 > p.1) != (b.1 > p.1))
+            && (p.0 < (b.0 - a.0) * (p.1 - a.1) / (b.1 - a.1) + a.0) {
+            c = !c;
+        }
+    }
+    c
+}
+
+/// EXACT polygon-minus-convex-wedge.  The boundary of P \ Q is
+/// (dP outside Q) stitched with (dQ inside P): where the walk enters Q at E
+/// and leaves at X, the removed run is replaced by the wedge boundary from E
+/// to X — through the apex when E and X sit on different rays.  This restores
+/// the exactness the slice quadrature lacked: all error is now common-mode
+/// across an FD stencil and cancels under the 1/eps^2 amplification.
+fn subtract_wedge(poly: &Vec<(f64, f64)>, w: &Wedge, apex_bad: &mut usize)
+                  -> Vec<(f64, f64)> {
+    let n = poly.len();
+    if n < 3 { return vec![]; }
+
+    // events along dP: 0 = plain vertex (outside), 1 = enter Q, 2 = leave Q
+    let mut ev: Vec<((f64, f64), u8)> = Vec::with_capacity(2 * n + 8);
+    let mut any = false;
+    for i in 0..n {
+        let u = poly[i];
+        let v = poly[(i + 1) % n];
+        if !w.inside(u) { ev.push((u, 0)); }
+        if let Some((lo, hi)) = inside_interval(w, u, v) {
+            any = true;
+            if lo > 1e-14 { ev.push((lerp(u, v, lo), 1)); }
+            if hi < 1.0 - 1e-14 { ev.push((lerp(u, v, hi), 2)); }
+        }
+    }
+    if !any { return poly.clone(); }
+    if !ev.iter().any(|e| e.1 == 2) { return vec![]; }   // wholly inside Q
+
+    // rotate to start just after a "leave" event
+    let start = ev.iter().position(|e| e.1 == 2).unwrap();
+    let m = ev.len();
+    let apex_in = point_in_poly(poly, (w.ax, w.ay));
+
+    let mut out: Vec<(f64, f64)> = Vec::with_capacity(m + 8);
+    let mut pending: Option<(f64, f64)> = None;
+    for k in 0..m {
+        let (p, kind) = ev[(start + k) % m];
+        match kind {
+            0 => { if pending.is_none() { out.push(p); } }
+            1 => { pending = Some(p); out.push(p); }
+            2 => {
+                if let Some(e) = pending.take() {
+                    // route along dQ from e to p
+                    let e_on1 = w.f1(e).abs() <= w.f2(e).abs();
+                    let p_on1 = w.f1(p).abs() <= w.f2(p).abs();
+                    if e_on1 != p_on1 {
+                        if apex_in { out.push((w.ax, w.ay)); } else { *apex_bad += 1; }
+                    }
+                }
+                out.push(p);
+            }
+            _ => {}
+        }
+    }
+    out
+}
+
+fn shoelace(poly: &Vec<(f64, f64)>) -> f64 {
+    let n = poly.len();
+    if n < 3 { return 0.0; }
+    let mut a = 0.0;
+    for i in 0..n {
+        let p = poly[i];
+        let q = poly[(i + 1) % n];
+        a += p.0 * q.1 - q.0 * p.1;
+    }
+    (a * 0.5).abs()
 }
 
 fn main() {
@@ -104,78 +205,57 @@ fn main() {
     let n = it.next().unwrap() as usize;
     let m = it.next().unwrap() as usize;
     let th: Vec<f64> = (0..n).map(|_| it.next().unwrap()).collect();
-    let nx_q: usize = std::env::var("NXQ").ok()
-        .and_then(|s| s.parse().ok()).unwrap_or(4000);
 
     let stdout = io::stdout();
     let mut w = stdout.lock();
+    let mut apex_bad = 0usize;
 
     for _ in 0..m {
         let mut cx = vec![0.0; n];
         let mut cy = vec![0.0; n];
         for i in 0..n { cx[i] = it.next().unwrap(); cy[i] = it.next().unwrap(); }
 
-        // ---- convex part C2 = L_horiz ^ ⋂_t C_t ^ rho(same) --------------
         let mut poly: Vec<(f64, f64)> = vec![(-BIG, -BIG), (BIG, -BIG),
                                              (BIG, BIG), (-BIG, BIG)];
-        // L_horiz: 0 <= y <= 1, x <= 1   (rho-invariant)
+        // L_horiz (rho-invariant): 0 <= y <= 1, x <= 1
         poly = clip(&poly, HalfPlane { nx: 0.0, ny: -1.0, c: 0.0 });
         poly = clip(&poly, HalfPlane { nx: 0.0, ny: 1.0, c: 1.0 });
         poly = clip(&poly, HalfPlane { nx: 1.0, ny: 0.0, c: 1.0 });
+
+        // PASS 1: every half-plane first -- the subject stays CONVEX, so
+        // Sutherland-Hodgman is exact and produces no degenerate bridge edges.
         for i in 0..n {
             let (c, s) = (th[i].cos(), th[i].sin());
-            let (mx, my) = (c, s);            // mu
-            let (vx, vy) = (-s, c);           // nu
-            for &(nx0, ny0) in [(mx, my), (vx, vy)].iter() {
-                // direct: <p - c, n> <= 1
+            for &(nx0, ny0) in [(c, s), (-s, c)].iter() {
                 let d = nx0 * cx[i] + ny0 * cy[i] + 1.0;
                 poly = clip(&poly, HalfPlane { nx: nx0, ny: ny0, c: d });
-                // reflected: <rho p - c, n> <= 1,  rho p = (x, 1-y)
                 let d2 = nx0 * cx[i] + ny0 * cy[i] + 1.0 - ny0;
                 poly = clip(&poly, HalfPlane { nx: nx0, ny: -ny0, c: d2 });
             }
             if poly.len() < 3 { break; }
         }
-        if poly.len() < 3 { writeln!(w, "0.0").unwrap(); continue; }
-
-        let xmin = poly.iter().fold(f64::INFINITY, |a, p| a.min(p.0));
-        let xmax = poly.iter().fold(f64::NEG_INFINITY, |a, p| a.max(p.0));
-
-        // ---- integrate  |C2 slice| - |notch slice|  over x ---------------
-        // midpoint rule on a FIXED uniform grid: common-mode error cancels
-        // in finite differences.
-        let dx = (xmax - xmin) / nx_q as f64;
-        let mut area = 0.0;
-        let mut iv: Vec<(f64, f64)> = Vec::with_capacity(4 * n);
-        for q in 0..nx_q {
-            let xq = xmin + (q as f64 + 0.5) * dx;
-            let (ylo, yhi) = match yspan(&poly, xq) { Some(v) => v, None => continue };
-            iv.clear();
+        // PASS 2: subtract the reflex quadrants (the only non-convex step)
+        let mut nfire = 0usize;
+        let a_convex = shoelace(&poly);
+        if poly.len() >= 3 {
             for i in 0..n {
                 let (c, s) = (th[i].cos(), th[i].sin());
-                // direct quadrant: <p-c,mu> <=0 ^ <p-c,nu> <=0
-                if let Some(t) = quad_interval(cx[i], cy[i], c, s, -s, c, xq, ylo, yhi) {
-                    iv.push(t);
-                }
-                // reflected quadrant: apply rho to the direct one
-                // rho(p) in Q  <=>  p in rho(Q); rho maps y -> 1-y
-                if let Some(t) = quad_interval(cx[i], 1.0 - cy[i], c, -s, -s, -c,
-                                               xq, ylo, yhi) {
-                    iv.push(t);
-                }
+                let wd = Wedge { ax: cx[i], ay: cy[i], n1x: c, n1y: s, n2x: -s, n2y: c };
+                let before = shoelace(&poly);
+                poly = subtract_wedge(&poly, &wd, &mut apex_bad);
+                if (shoelace(&poly) - before).abs() > 1e-14 { nfire += 1; }
+                if poly.len() < 3 { break; }
+                let wr = Wedge { ax: cx[i], ay: 1.0 - cy[i],
+                                 n1x: c, n1y: -s, n2x: -s, n2y: -c };
+                poly = subtract_wedge(&poly, &wr, &mut apex_bad);
+                if poly.len() < 3 { break; }
             }
-            let mut covered = 0.0;
-            if !iv.is_empty() {
-                iv.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
-                let (mut cs, mut ce) = iv[0];
-                for k in 1..iv.len() {
-                    if iv[k].0 > ce { covered += ce - cs; cs = iv[k].0; ce = iv[k].1; }
-                    else if iv[k].1 > ce { ce = iv[k].1; }
-                }
-                covered += ce - cs;
-            }
-            area += (yhi - ylo - covered) * dx;
         }
-        writeln!(w, "{:.15}", area).unwrap();
+        eprintln!("convex area {:.8}, wedges fired {}, final {:.8}, verts {}",
+                  a_convex, nfire, shoelace(&poly), poly.len());
+        writeln!(w, "{:.15}", shoelace(&poly)).unwrap();
+    }
+    if apex_bad > 0 {
+        eprintln!("warning: {} apex-outside wedge routings (chorded)", apex_bad);
     }
 }

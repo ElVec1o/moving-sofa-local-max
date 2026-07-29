@@ -520,13 +520,23 @@ sits at KINKS THAT MOVE WITH ε, so it does not cancel, and the 1/ε² = 1e8
 amplification exposes it. This is a real property of the method, not a
 tuning issue.
 
-**Verdict and scope.** Usable now for smooth/moderate-frequency probes
-(1–2% at NXQ=30000) and for absolute areas. NOT usable for high-frequency
-Hessian entries. The exact fix is to keep the body as a polygon and
-implement `subtract_wedge` (polygon minus convex wedge: walk ∂P, re-route
-the inside-Q run along ∂Q through the apex) — that restores shapely's
-exactness at Rust speed. Scoped, ~100 lines, not attempted here rather
-than botched.
+**`subtract_wedge` ATTEMPTED — INCOMPLETE (honest status).** The exact
+polygon-minus-wedge routine is written (event walk along ∂P, re-routing
+the inside-Q run along ∂Q through the apex, with an apex-in-polygon test)
+and the pipeline was restructured into a convex pass followed by a wedge
+pass so Sutherland–Hodgman only ever sees convex subjects. **It does not
+fire**: all 2400 wedge subtractions leave the polygon unchanged, so the
+binary currently returns the convex body C2 (2.0133) rather than Σ
+(1.6451) — the missing 0.368 is exactly the notch. Verified that the
+wedges MUST bite (10/10 probe points just inside the corner path are
+simultaneously inside C2 and inside some quadrant), and the wedge normals
+and reflected-wedge apex/normals were each re-derived and confirmed. So
+the bug is in the event walk, not the geometry set-up. Diagnostic left in
+the source. Note one informative accident: the high-frequency FD is
+already accurate (−52.368 vs −52.390, 0.04%) because the convex part
+carries that direction's second variation, while the smooth cap-bump
+direction — where the notch matters — is 10% off. **The oracle is NOT
+usable for areas in this state**; shapely remains the reference.
 
 **What is now Rust/C end to end**: the closed-form assembler
 (`sigma_struct.rs`, 0.5 s for K=64), the interval certification
