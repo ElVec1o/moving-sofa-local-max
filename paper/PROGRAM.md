@@ -1108,6 +1108,48 @@ compare against the classical first-variation formula δA = ∮ v_n ds for the
 true body, term by term. The difference is then an explicit expression whose
 vanishing on symmetric modes should be visible.
 
+## Σ RECONSTRUCTION IS CLEAN — this session's Σ results are unaffected 🔥
+
+Safety check (task 3): first variation of the Σ reconstruction vs the true Σ
+area, all modes k = 1..6 in both components, ε = 2e-4.
+
+**Every dA_rec/dε is ~1e-6 or smaller** (quadrature noise) — symmetric and
+antisymmetric modes alike. (The true column scatters up to 2e-3, which is
+polygon discretization at n=1201; the reconstruction column is uniformly
+tiny.) So the Gerver defect does NOT appear in Σ, and the Σ results of this
+session — N9, N12, the interpolation estimate, Lemma T, Prop 7', the K-stable
+symmetric coercivity ≈6.45 — do not inherit it.
+
+**Why the difference is itself the lead.** Σ's traversal was DERIVED
+empirically (mask table + arc matching + junction solve) and validated (Green
+area = A_R* to 2.6e-9, junction residuals ~1e-10). Gerver's arc table was
+inherited. A wrong range or orientation would cancel at c_G by its t → π/2 − t
+symmetry and fail off it — exactly the observed pattern.
+
+## Gerver traversal map — a lead, not yet a verdict
+
+Mapping ∂S the way ∂Σ was mapped (700 boundary probes, n=2401):
+
+    measured:  X [0.0458, 1.5296] · D [0.619, 0] · C [1.516, 0] ·
+               X [0.9746, 0.5989] · A [1.5708, 0.0550] · B [1.5708, 0.9117]
+    assumed :  A [0, PI2] · C [0, PI2] · D [0, TH=0.6813] ·
+               B [PI2-TH=0.8895, PI2] · X [PHI=0.0392, PI2-PHI]
+
+Two discrepancies worth chasing: (a) the corner path X appears in TWO runs, the
+second traversed backwards over [0.599, 0.975], where the assumed table has it
+once; (b) the arc endpoints differ from the assumed ones (A from 0.055 not 0,
+C to 1.516 not PI2) — though A's start is expected, since the phase-1 fan is
+stationary on [0, PHI] and the table extends it there deliberately.
+
+**Not conclusive**: 700 probes is coarse and nearest-arc matching can
+mis-assign points where two arcs run close together. The doubled X run must be
+confirmed at higher resolution before any claim. But if real, a duplicated or
+mis-oriented corner segment is exactly the kind of error that cancels on
+symmetric perturbations and not on antisymmetric ones.
+
+**Task 1 (closed-form δA_rec vs ∮v_n ds) is NOT done.** The empirical lead
+above is a substitute for direction, not for the derivation.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
