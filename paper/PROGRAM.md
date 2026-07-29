@@ -1217,6 +1217,103 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## PART II DEFECT — FULLY DIAGNOSED.  It is exactly RANK ONE.  [HEURISTIC]
+
+Seven hypotheses were tested against measurement.  Six were killed (basin jump,
+swallowtail, wrong arc list, wrong arc ranges, wrong chord endpoints, and the
+chord-vs-wall-segment story as tested on the y-component).  The seventh is
+CONFIRMED, quantitatively and on directions it was never fitted to.
+
+### The law
+
+For every perturbation eta vanishing at t = 0 and t = pi/2,
+
+    dA_rec/deps |_{c_G}  =  a * L(eta),    L(eta) := eta_x'(0) + eta_x'(pi/2),
+    a = -(x_B - x_D)/4 = -0.40344081,
+
+while dA_true/deps = 0 identically (exact Rust oracle, GERVER mode, n=4801).
+Here x_D = -1.4206448 and x_B = +0.1931160 are the endpoints of the TOP wall
+segment, of length x_B - x_D = 1.6137632 = 4|a|.  Note x_D = -c_y'(0) exactly.
+
+Evidence: a was fitted from the pure sin-mode family alone, then tested on six
+RANDOM mixed directions in a 12-dimensional space (K=6, both components).
+Worst relative error 1.4e-8 at dps=30.  Structured checks: the law predicts
+dA_rec = 0 for every ODD k (since eta_x'(pi/2) = 2k(-1)^k cancels eta_x'(0)),
+confirmed for k = 1,3,5,7; and -1.6137632*k for every even k, confirmed for
+k = 2,4,6,8 to 8 digits.
+
+### The mechanism
+
+Arc A is IDENTICALLY the wall line y = 0 on [0, phi], and arc C on
+[pi/2 - phi, pi/2], phi = 0.039177.  Measured: A(s)_y = 0 to 1e-32 for
+s <= 0.01, and 0.0839 at s = 0.1.  So on those intervals the hallway touches
+the sofa along a SEGMENT, not a point, and the contact-point formula is a
+spurious selection there.
+
+Under an x-perturbation the two selected endpoints lift off the wall at
+exactly the rate of the perturbation's endpoint derivative:
+
+    d/deps A(0)_y = eta_x'(0),     d/deps C(pi/2)_y = eta_x'(pi/2)
+
+(measured 4.00000 for k=2, both).  The two bottom closing chords then stop
+lying along y = 0 and pick up a first-order sliver:
+
+    d/deps seg(C(pi/2),D(0)) = -(1/2) x_D eta_x'(pi/2) = +2.8412897,
+    d/deps seg(B(pi/2),A(0)) = +(1/2) x_B eta_x'(0)    = +0.3862368
+
+for k = 2, summing to +3.2275264 -- and the arc terms contribute exactly twice
+that with the opposite sign, for a net -3.2275264.  Both chord values are
+reproduced in closed form from x_D, x_B to all printed digits.
+
+The y-component shows NO defect on any mode, because a y-perturbation does not
+lift the endpoints off the wall (measured drift 0.00000 on all six endpoints).
+
+### What this does and does not mean
+
+DOES: Part II's reduction theorem is FALSE as stated on the full tangent space.
+Since a != 0 and L is linear, one SIGN of any eta with L(eta) != 0 sends
+A_rec below A_true at first order, breaking the superset property.
+
+DOES NOT: it does not hole the reduction on ker L.  The defect is a SINGLE
+linear functional -- rank one.  On the codimension-1 subspace {L(eta) = 0},
+which contains every y-mode and every odd x-mode, A_rec is stationary at c_G
+(measured 1.5e-8) and the reduction stands.  So the corrected statement is:
+
+    Part II's reduction is valid on ker L, a closed subspace of codimension 1.
+
+Closing Part II therefore needs ONE extra direction handled, not a rebuild.
+That is a far smaller gap than "Part II is holed", which is how this was
+recorded before the measurement.
+
+### Attempted repair that did NOT work, recorded so it is not retried
+
+Treating the two wall contacts as moving junctions (Newton-solve a0 near 0 with
+A(a0)_y = 0, and c1 near pi/2 with C(c1)_y = 0, then integrate A over [a0,pi/2]
+and C over [0,c1]) does NOT fix it: at c_G the arcs do not CROSS the wall
+transversally, they COINCIDE with it, so the Newton step is degenerate and
+a0, c1 never move.  Verified: dA_fix = dA_rec to all digits on every mode.
+See `gerver_fixed.py`, kept as a negative result.
+
+### Gauge note
+
+The true area is invariant under reparametrisation c(t) -> c(t + eps s(t)),
+s(0) = s(pi/2) = 0 -- the sofa depends only on the SET of hallways.  Gauge
+directions eta = s c' have L(eta) = s'(0) c_x'(0) + s'(pi/2) c_x'(pi/2) = 0,
+because c'(0) = (0, 1.4206448) and c'(pi/2) = (0, -1.4206448) have NO
+x-component.  Consistently, measured dA_rec on gauge directions is ~3e-3
+against a defect scale of 3.2.  So the defect is not gauge-breaking; the gauge
+directions sit inside ker L.  (Caution recorded: the first version of this test
+dropped the eps*s'' term in the chain rule for c'' and gave spurious values
+~1.6; the term is first order and must not be dropped.)
+
+### Scripts
+
+`gerver_decomp.py` (term-by-term first variation), `gerver_active.py` (measured
+active t-ranges -- all five assumed ranges are 100% correct), `gerver_fixed.py`
+(the failed six-junction repair), `gerver_gauge.py`, `gerver_rankone.py`.
+
+## SUPERSEDED: the remaining candidate as stated before measurement
+
 ## THE REMAINING CANDIDATE, now sharply identified
 
 The reconstruction closes the three gaps with **CHORDS between arc endpoints**:
