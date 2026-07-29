@@ -114,7 +114,7 @@ def build(K, prec=256, brad=1e-16):
                     Ju = jets(cu, ku, t); Jv = jets(cv, kv, t)
                     spu = acb(2*ku)*(acb(2*ku)*t).cos()
                     spv = acb(2*kv)*(acb(2*kv)*t).cos()
-                    return sig*(Ju[6]*spv + Jv[6]*spu)/2
+                    return sig*(Ju[6]*spv - Jv[6]*spu)/2
             tot += sgn * acb.integral(f, lo, hi).real
         # --- junction chords (exact ball jets, no integration) ---
         ends = [(lab, t1, slot) for lab, t0, t1, slot in TAB]

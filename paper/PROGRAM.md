@@ -433,6 +433,58 @@ informal proof is short and self-contained.
 
 ---
 
+## BUG FOUND AND FIXED (2026-07-29): corner-term polarization
+
+The corner-path contribution to the second variation is the wedge
+η_u ∧ η_v′, whose symmetric polarization is ¼·E_ij·(W_ij − W_ji) with
+W_ij = ∫s_i s_j′ and E antisymmetric. **All three implementations used the
+SUM (W_ij + W_ji) instead of the difference.** Effects:
+* the Python assembler's corner term came out ANTISYMMETRIC and silently
+  vanished under symmetrization;
+* the Rust port made it symmetric and wrongly kept it;
+* the arb certification inherited the same wrong integrand.
+Only the xy (cross-component) block is affected — E vanishes on the
+diagonal and within each component block, which is exactly why the
+5-digit FD-oracle validation (diagonal entries only) passed it.
+**Found by cross-checking the Rust port against Python** — the two
+disagreed by 1.8 in the xy block while agreeing to 2e-12 elsewhere.
+Fixed in `sigma_qstruct_assemble.py`, `sigma_struct.rs`,
+`certify_sigma_struct.py`; Rust and Python now agree to 3.8e-12.
+CORRECTED margins are STRONGER: L² 2.336 / 1.173 / 0.0357 at K = 6/16/24
+(was 1.211 / 0.622 / 0.0354). All definiteness verdicts stand; the
+certification was re-run with the corrected integrand.
+
+**Lesson recorded**: the validation that passed this bug tested only
+diagonal entries. Cross-component terms need their own check — an
+independent reimplementation caught what the oracle comparison could not.
+
+## Rust port (compute discipline, honoring the standing instruction)
+
+`sigma_struct.rs` (pure std, no crates): the closed-form assembler in
+Rust — **0.5 s for K = 32/48/64**, versus a Python geometry probe that
+needed ~90 minutes and was killed. The one O(n³) step (eigenvalues) goes
+to LAPACK via a thin front-end (`sigma_spec.py`), which is Fortran/C, not
+Python. What remains Python: the shapely TRUE-area oracle (the actual
+bottleneck all session, and the cause of the OOM) — porting it needs
+polygon booleans and is scoped, not yet done.
+
+## HIGH-K TAIL FINDING (`sigma_struct.rs` scan)
+
+| K  | Q_struct L² margin | H¹ margin |
+|----|--------------------|-----------|
+| 16 | 1.17               | 6.9e-3    |
+| 24 | 3.6e-2             | 2.0e-4    |
+| 32 | 8.1e-4             | 4.0e-6    |
+| 48 | < 1e-6 (f64 floor) | < 1e-6    |
+| 64 | < 1e-6 (f64 floor) | < 1e-6    |
+
+**Q_struct's margin collapses below f64 resolution by K ≈ 48.** Two
+consequences, both load-bearing: (i) the certified Sylvester route on
+Q_struct cannot be pushed much past K ≈ 32 without extended precision,
+and (ii) more importantly it can NEVER supply a uniform constant — so
+**item 12 must go through the dichotomy (Q_rel + fan bite), not through
+Q_struct.** That settles the architecture question for the tail.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
