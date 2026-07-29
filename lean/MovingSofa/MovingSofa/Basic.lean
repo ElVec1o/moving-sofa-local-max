@@ -38,6 +38,10 @@ Formalized here:
           body satisfies K(ε) = ε·K(1) exactly and the fan bite is exactly
           ε²·N — the reason the cap loss is quadratic with a
           non-quadratic-form coefficient.
+  • F4e — the fan-cut gain identity (N12b sharpness):
+          sin(β−s)sin(β+s) = sin²β − sin²s, so the single-cut gain factor
+          G(s) is minimized at the fan centre and G ≥ cot β uniformly —
+          the step that makes the bite bound uniform in s.
   • F3b — the ambidextrous frame-pair mechanism (N9 core): the identity
           (cu+sv)² + (cu−sv)² = 2c²u² + 2s²v² and the coercivity bound
           2m(u²+v²) ≤ 2c²u² + 2s²v² for any common lower bound m of c², s² —
@@ -341,6 +345,42 @@ theorem fan_homogeneity {V : Type _} (L : V → Int) (smul : Int → V → V)
     exact Int.le_of_mul_le_mul_left h he
   · intro h
     exact Int.mul_le_mul_of_nonneg_left h (Int.le_of_lt he)
+
+/-! ## F4e — the fan-cut gain identity (N12b sharpness)
+
+The single-interior-cut lower bound for the fan bite carries the gain
+factor G(s) = sin2β / (2 sin(β−s) sin(β+s)).  Its minimum over the fan is
+at s = 0, giving G ≥ cot β, because of the identity
+
+    sin(β−s)·sin(β+s) = sin²β − sin²s   ≤   sin²β,
+
+a polynomial identity in the four sine/cosine symbols under the two
+Pythagorean relations.  This is what makes the bite bound uniform in s
+(and sharp at the fan centre): -/
+
+/-- **Fan-cut gain.**  (sb·cs − cb·ss)(sb·cs + cb·ss) = sb² − ss². -/
+theorem fan_cut_gain (sb cb ss cs : Int)
+    (hb : sb*sb + cb*cb = 1) (hs : ss*ss + cs*cs = 1) :
+    (sb*cs - cb*ss)*(sb*cs + cb*ss) = sb*sb - ss*ss := by
+  have hdiff : (sb*cs - cb*ss)*(sb*cs + cb*ss)
+      = (sb*cs)*(sb*cs) - (cb*ss)*(cb*ss) := by
+    rw [Int.sub_mul, Int.mul_add, Int.mul_add]
+    have hcross : (sb*cs)*(cb*ss) = (cb*ss)*(sb*cs) := Int.mul_comm _ _
+    omega
+  have hA : (sb*cs)*(sb*cs) = (cs*cs)*(sb*sb) := by
+    rw [Int.mul_assoc, Int.mul_comm cs (sb*cs), Int.mul_assoc sb cs cs,
+        ← Int.mul_assoc sb sb (cs*cs), Int.mul_comm (sb*sb) (cs*cs)]
+  have hB : (cb*ss)*(cb*ss) = (ss*ss)*(cb*cb) := by
+    rw [Int.mul_assoc, Int.mul_comm ss (cb*ss), Int.mul_assoc cb ss ss,
+        ← Int.mul_assoc cb cb (ss*ss), Int.mul_comm (cb*cb) (ss*ss)]
+  have hcs : cs*cs = 1 - ss*ss := by omega
+  have hcb : cb*cb = 1 - sb*sb := by omega
+  rw [hdiff, hA, hB, hcs, hcb]
+  have e1 : (1 - ss*ss)*(sb*sb) = sb*sb - (ss*ss)*(sb*sb) := by
+    rw [Int.sub_mul, Int.one_mul]
+  have e2 : (ss*ss)*(1 - sb*sb) = ss*ss - (ss*ss)*(sb*sb) := by
+    rw [Int.mul_sub, Int.mul_one]
+  omega
 
 /-! ## F3b — the ambidextrous frame-pair mechanism (N9 core)
 
