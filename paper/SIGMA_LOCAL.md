@@ -433,7 +433,7 @@ modulo horizontal translation,*
 | 4 | **Structure map**: ∂Σ is 10 arcs, junctions exactly at {0,β,π/2−β,π/2} | **[K]** residuals 1e-10; Green area = A_R* to 2.6e-9 |
 | 5 | **Envelope null result**: junction response contributes nothing | **[P/K]** derived (H_ββ diagonal ≡ 0) + measured 3.8e-6 at K=16 |
 | 6 | **Q_struct closed form** = the true structure-following 2nd variation | **[K]** matches direct FD oracle to 5 digits |
-| 7 | **Q_struct NEGATIVE DEFINITE** on the K-span | **[C] CERTIFIED in arb** (Sylvester on the ball matrix, 256 bits) |
+| 7 | **Q_struct NEGATIVE DEFINITE** on the K-span | **[C] CERTIFIED in arb** at K=10 (20 modes, 210 entries, max radius 2.1e-12; Sylvester minors positive through order 20, 256 bits) |
 | 8 | **Fan release**: F ≤ F_rel, equality at c_R, F_rel is C² | **[P]** Lean `fan_combination`; verified 2e-10, fwd/bwd = 1.0000 |
 | 9 | **Fan-bite identity** F_rel − F = ε²N(φ), N ≥ 0 homogeneous deg 2 | **[P]** Lean `fan_homogeneity`; validated to 0.55% |
 | 10 | **Bite lower bound** N(φ)+N(−φ) ≥ cot β‖d‖²_∞, translation-invariant | **[P]** Lean `fan_cut_gain` |
