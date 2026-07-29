@@ -1046,9 +1046,26 @@ repaired reconstruction that is superset-valid on symmetry-breaking modes, or
 already identified in the L2 work, which tolerates self-intersection and
 counts loops correctly.
 
-**Route (b) is the promising one** and it unifies the session's findings: the
-signed-loop correction is exactly N12's fan bite at a degenerate unfolding,
-and exactly this linear term at a generic one.
+**Route (b) was proposed on the swallowtail hypothesis — FIRST TEST NEGATIVE.**
+Tracing the A-arc at ε=1e-3 for both a symmetric (sin2t) and a symmetry-
+breaking (sin4t) mode found **ZERO self-crossings** and zero loop area, against
+a predicted loop area of 3.2275·ε = 3.2e-3. So the linear term is NOT explained
+by an A-arc swallowtail. The test is incomplete — it does not cover crossings
+between DIFFERENT arcs — but the hypothesis is unconfirmed and must not be
+used as an explanation until a loop is actually exhibited. **The mechanism
+producing the first-order discrepancy remains UNKNOWN.**
+
+## M-LADDER COMPLETE: the symmetric bound is K-stable
+
+| K | 10 | 16 | 24 | 32 |
+|---|----|----|----|----|
+| m(M) | 8.5314 | 6.8415 | 6.5555 | **6.4806** |
+
+Decrements 1.69, 0.286, 0.075 — ratio ≈0.26 per step, extrapolating to
+**≈6.45**. The symmetric-second-difference coercivity of Σ is K-stable, now
+confirmed to K=32 with the exact released oracle. This result is independent
+of the Part II difficulties above and of the one-sidedness gap; it is what
+stands from the Σ line.
 
 ## Compute discipline (post-OOM, 2026-07-29)
 
