@@ -203,15 +203,41 @@ generally.
   * **Ladder** (d²F/dε² convention): negative definite at every K, but
     the margin decays on CAP-CONCENTRATED modes (L²: 1.21 / 0.62 / 0.035
     at K = 6/16/24; quadrature-converged to 6 digits, so real).
-- **[ ] S7‴-b (the identified next step).** The decay is the FROZEN-form
-  defect, not a Σ pathology: with junctions frozen, the junction chords
-  contribute O(k²) terms that eat the cap arcs' coercivity — exactly the
-  Gerver phenomenon where the wall-anchored frozen form went indefinite
-  at K=32 while the true form stayed at m ≈ 0.78. The fix is the proved
-  envelope identity N3: let the junction parameters respond (affine
-  junction family) and take the envelope. Concretely: port the true-form
-  junction response to Σ — cheap here, since Σ's junctions are the phase
-  transitions themselves.
+- **[P/K] S7‴-b. ENVELOPE IDENTITY APPLIED TO Σ — a NULL RESULT, and the
+  null result is a theorem** (`sigma_envelope.py`). The hypothesis was
+  that Σ's decaying cap margin is the frozen-junction defect (as at
+  Gerver K=32) and that letting the 10 junction parameters respond would
+  restore it. Measured and derived:
+  * **The zero-chord derivative identity holds**: max |∂G/∂β| = 2.9e-7
+    at c_R (the identity that makes any envelope argument possible).
+  * **H_ββ has identically zero diagonal** — measured |H_jj| ≤ 3e-4
+    (noise), and derived: with one junction parameter moving, the
+    reconstruction area is O(δ³), because
+    ∂G/∂δ = ½[P(b+δ)−P(b)]∧P′(b+δ) = ¼δ²·P′∧P″ + O(δ³).
+    So the affine-junction family's β-quadratic is DEGENERATE and the
+    naive "min over β" Schur complement does not even apply.
+  * **Exactly ONE junction carries a cross term**: H[rC·t₁, dC·t₀] =
+    −0.048, all others zero. Reason: the cross term is ½P′∧Q′, and at
+    every junction joining arcs of the SAME family both velocities are
+    ∥ μ (λ_C μ, λ_D μ) so the wedge vanishes — the breakpoint mechanism
+    N7. It survives only at the mirror-axis junction where a ν-slot arc
+    meets its own ρ-image, whose velocities are μ_t and μ_{−t}: an angle
+    2t apart. **The same 2θ frame-angle that drives N9.**
+  * **Net correction is negligible**: margins move by < 1e-5 (relative
+    4e-6) at K=6. Junction response does not touch Σ's second variation.
+  **Conclusion: Σ's closed-form frozen structure-following form already
+  IS the true second variation.** The certifiable object is the right
+  object — but the decaying cap margin is therefore GENUINE, not an
+  artifact, and cannot be repaired by junction response.
+- **[ ] S7‴-c (the real remaining question).** The cap decay must be
+  read through N11: on cap-supported directions the true functional's
+  cutting branch decreases like −c·ε^{3/2}, which DOMINATES ε² — so a
+  near-zero quadratic form there is not an obstruction but a statement
+  that the quadratic majorant is not tight. The Σ-local theorem needs
+  the cap sector handled at the ε^{3/2} scale (N11 made quantitative at
+  Σ, with its constant) and the quadratic form used only off the caps.
+  This is the honest remaining gap. K=16 envelope run in flight to
+  confirm the correction stays negligible where the decay bites.
 - **[✗→P] S7‴ (supersedes S7″ — the corrected object).** The fan release
   FAILED as sole certified object: released-ladder margins collapse
   (L²: 4.58/0.91/0.20; weighted E_w: 0.136/0.0062/0.0013 at K=10/16/24;
