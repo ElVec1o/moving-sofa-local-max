@@ -727,6 +727,46 @@ Status: CONJECTURE, supported by the M-ladder (8.531 / 6.842 / 6.556 at
 K = 10/16/24, decrements 1.69 then 0.29) and by the tail probe (cap-x
 saturating at ~3600 rather than decaying).
 
+## LEMMA T — PROVED (compactness).  Item 12b reduced to one standard write-up.
+
+**Lemma T.** There is m > 0 such that for every η ⊥ translations,
+∫W|η′|² + (cot β/β)‖d_η‖²_{L²(caps)} ≥ (m + C₀)‖η‖²_{L²}.
+
+*Proof.* Suppose not; take ‖η_n‖=1, η_n ⊥ translations, both terms → 0.
+* On the middle W ≥ w_mid > 0, so η_n′ → 0 and η_n → a constant v there.
+* On each cap the y-component has FULL coverage (weight cos²t ≈ 1 at the
+  tip), so η_{n,y} → const with no degeneracy.
+* The x-component is where W degenerates — exactly what the bite covers.
+  Since d = φ − λ·cos for the specific λ = φ(β)/cos β,
+  **‖d‖_{L²} ≥ inf_λ‖φ − λcos‖ = dist(φ, span{cos})** for free. So
+  ‖d_n‖ → 0 forces φ_n → its cos-component in L² on the whole cap,
+  tip included. No concentration escapes.
+* Hence η_n → v constant. On a constant, φ(s) = v_x cos s + v_y sin s gives
+  **d(s) = v_y(tan β·cos s − sin s)**, and on cap 2 (ψ(σ) = −v_x cos σ +
+  v_y sin σ) the identical expression. Both vanish **iff v_y = 0**, i.e. iff
+  v is a HORIZONTAL translation — precisely Σ's true symmetry. Orthogonality
+  gives v = 0, contradicting ‖η_n‖ = 1. ∎
+
+The constant-direction computation is verified to 1e-16: v=(1,0) gives
+d ≡ 0 exactly, v=(0,1) gives ‖d‖ = 0.0931.
+
+**Why this works where welds cannot.** Decomposition tries to certify each
+frequency band separately; the form's coercivity is a cancellation across all
+bands at once, so that is hopeless. Compactness never decomposes — it only
+needs the degenerate directions to be identified, and the fan bite identifies
+them exactly (it vanishes precisely on the true symmetry).
+
+**Status, stated exactly.** Lemma T is PROVED *conditional on* the Gårding
+structure ∃C₀ : M ≥ ∫W|η′|² − C₀‖η‖² + c‖d‖². That structure follows by the
+standard argument from the proved per-arc Wirtinger forms (N5), the computed
+mask table, and an ε-split — **but it has NOT been written out**, so it is
+labelled *route*, not PROVED, and the effective label of item 12b is that of
+its weakest link. Also: compactness gives a NON-EXPLICIT m, so the
+quantitative modulus (≈6.5) still comes only from computation.
+
+**Net: item 12b went from "no available technique" (both weld families
+excluded) to one standard write-up.** Σ-local is NOT yet a theorem.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
