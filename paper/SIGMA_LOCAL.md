@@ -413,33 +413,64 @@ The prediction for the ladder trend: m_rel(K) may relax from 4.58
 toward the cap-sector structural constant ≈ 1 + corner corrections as
 cap-self-similar directions enter — remaining strictly positive.
 
-## 9. The Σ-local theorem: statement and dependency list (S7″ final form)
+## 9. THE Σ-LOCAL THEOREM — assembled statement and honest ledger
 
-**Theorem 9 (Σ is a strict local maximum — target form).** Let F be the
-ambidextrous area functional and c_R Romik's trajectory. Then there are
-explicit m > 0 and r > 0 such that for all perturbations η with
-0 < ‖η‖ ≤ r (in the reduction theorem's norm),
+### Theorem 9 (Σ is a strict local maximum — current status)
 
-  F[c_R + η] ≤ F[c_R] − m‖η‖²_{L²}.
+*Let F be Romik's ambidextrous area functional and c_R his trajectory.
+For every perturbation η in the span of {e_comp sin(2kθ)}_{k≤K}, η ≠ 0
+modulo horizontal translation,*
 
-*Proof structure and current status of each input:*
+  F[c_R + εη] − F[c_R] ≤ −(m/2)·ε²‖η‖²_{L²} + o(ε²),  m ≈ 10 (K-uniform).
 
-1. **Fan release** (Theorem 6): F ≤ F_rel, equality at c_R, F_rel
-   C² — [P], core Lean-verified, computationally validated.
-2. **Released ladder**: Q_rel negative definite on the K-block in the
-   L² metric, margins K-stable — [K]: m_rel = 4.576 (K=10); K=16, 24
-   pending in this chain. Certification of the block entries: [ ] (the
-   S4 closed-form/arb port).
-3. **Released interior Gårding** (Proposition 7): explicit
-   (c_rel, C_rel) — [ ] write-up; all machinery exists (N5–N7 + corner
-   absorption).
-4. **L² weld** (Corollary 8 + Part-II weld algebra): joins 2 and 3 into
-   Q_rel ≤ −m‖η‖²_{L²} for ALL η — [ ] mechanical.
-5. **Reduction to the functional statement**: the superset/reduction
-   chain (N1/N2, manuscript Theorem `thm:reduction` adapted to Σ's two
-   families) converts form-negativity into the area inequality — [P]
-   pattern; Σ-instantiation to write.
+**Proof architecture, with the status of every input.**
 
-With 2 complete at K=24 and stable, the theorem holds at computed level;
-certification upgrades [K] → [C] entrywise. This is the first
-new-truth theorem of the program (no prior result implies it).
+| # | Input | Status |
+|---|-------|--------|
+| 1 | **Superset principle** F_recon ≥ F, equality at c_R | **[P]** Lean `superset_principle` |
+| 2 | **Exact-degree**: frozen reconstructions are exactly quadratic | **[P]** Lean `exact_degree` |
+| 3 | **Cap law** λ_A ≡ 0; fan frozen at (1,½) | **[P]** Lean `lamA_zero_iff`; geometric check to 1e-10 |
+| 4 | **Structure map**: ∂Σ is 10 arcs, junctions exactly at {0,β,π/2−β,π/2} | **[K]** residuals 1e-10; Green area = A_R* to 2.6e-9 |
+| 5 | **Envelope null result**: junction response contributes nothing | **[P/K]** derived (H_ββ diagonal ≡ 0) + measured 3.8e-6 at K=16 |
+| 6 | **Q_struct closed form** = the true structure-following 2nd variation | **[K]** matches direct FD oracle to 5 digits |
+| 7 | **Q_struct NEGATIVE DEFINITE** on the K-span | **[C] CERTIFIED in arb** (Sylvester on the ball matrix, 256 bits) |
+| 8 | **Fan release**: F ≤ F_rel, equality at c_R, F_rel is C² | **[P]** Lean `fan_combination`; verified 2e-10, fwd/bwd = 1.0000 |
+| 9 | **Fan-bite identity** F_rel − F = ε²N(φ), N ≥ 0 homogeneous deg 2 | **[P]** Lean `fan_homogeneity`; validated to 0.55% |
+| 10 | **Bite lower bound** N(φ)+N(−φ) ≥ cot β‖d‖²_∞, translation-invariant | **[P]** Lean `fan_cut_gain` |
+| 11 | **Dichotomy**: −Q_rel + bites ≥ ≈10, K-stable (10.00 at K=24) | **[K]** search certified safe by spectral gap |
+| 12 | **Tail/weld**: extension from the K-span to all of L² | **[ ] OPEN** |
+
+**What is therefore established.** Items 1–11 give, for each computed K, a
+K-uniform margin on the K-mode span, and item 7 upgrades the definiteness
+statement on that span to a fully certified one (interval arithmetic, no
+floating point in the chain, modulo the β-enclosure noted below). Two
+INDEPENDENT routes reach the conclusion on the span: the certified
+Q_struct < 0 (items 1–7), and the dichotomy with its K-stable constant
+(items 8–11). The first is rigorous but its margin decays with K; the
+second has a K-stable margin but its Q_rel input is float.
+
+**What is NOT established (item 12).** The passage from "every direction of
+the K-mode span" to "every direction of L²" is not done for Σ. The Gerver
+analogue of this step (Part II's weld: far-tail Schur bound N8 + block
+coupling τ) took substantial work, and its Σ version has not been carried
+out. Until it is, Theorem 9 is a statement about finite-dimensional
+subspaces, not a local-maximality theorem. **Σ-local remains open**, with
+the remaining gap now a single named, standard-shaped estimate rather than
+a structural unknown.
+
+**β-enclosure caveat.** The certification treats β as a ball of radius
+1e-16 around Romik's constant. Enclosing β rigorously from its defining
+equation is the standard Newton–Kantorovich step already performed for
+Gerver's constants (`gerver_arb.py`); it has not been redone for Romik's,
+and until it is, item 7 is certified *conditionally on that enclosure*.
+
+### Why the two routes are worth keeping separate
+
+Route A (certified Q_struct) is the one that will scale to a machine-checked
+proof: every entry is an elementary trigonometric integral over ranges
+{0, β, π/2−β, π/2}, with trajectory-independent integrands — so the whole
+matrix is interval-izable with no oracle, no junction solve, and no
+floating point. Route B (the dichotomy) is the one that explains WHY the
+constant does not degenerate: the fan bite exactly compensates the released
+form's collapse, with its share growing 21% → 27% → 32% across K = 10, 16,
+24. A complete proof wants both: A for rigour, B for the uniform constant.
