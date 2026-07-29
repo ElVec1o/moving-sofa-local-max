@@ -831,6 +831,46 @@ subspace) — all PROVED. What is missing: Lemma O (one-sidedness) and the
 endpoint-general case. The review did its job: a chain assembled in one
 session was bounding the wrong quantity, and no result was built on it.
 
+## ONE-SIDEDNESS: FALSIFICATION RUN (2) AND LEMMA O (1) — the result is negative for a UNIFORM statement
+
+**(2) Falsification.** Minimised G(η) := −Q_rel(η) + 2[N₁(φ)+N₂(ψ)] over the
+whole sphere (which covers both branches, since G₋(η) = G₊(−η)), by projected
+gradient with 200 restarts seeded on the near-null eigendirections.
+
+  min G = **0.2328** at K=24, of which −Q_rel = 0.2321 and the bite = 0.0007.
+
+No counterexample: G > 0. **But the margin is essentially −Q_rel's own margin,
+and the bite contributes nothing there.** The exact bite at that direction
+(computed with `bite_area`, not the bound) is 0.0072 — 2.8x the lower bound
+and still negligible. Confirmed against the TRUE oracle: at that direction
+G(+) = 0.32–0.56 and G(−) = 98.0. Both branches strictly decrease, so local
+maximality holds THERE, but one-sidedly the decrease is weak.
+
+**(1) Lemma O.** Minimised −Q_rel on the zero-bite cone {d₁ ≤ 0, d₂ ≤ 0} by
+penalty + projected gradient: **min = 0.2966** (constraint violation 0).
+Lemma O holds numerically at K=24 — but note this demolishes the earlier
+random-sampling estimate of 1470, which was worthless in 48 dimensions. The
+cone does contain near-null directions of −Q_rel.
+
+**CONSEQUENCE — the uniform one-sided statement is not supported.** −Q_rel's
+L² margin decays: 8.116 / 1.295 / 0.239 at K = 10/16/24. Since the one-sided
+minimum tracks it (the bite vanishing exactly where −Q_rel is small), the
+one-sided margin decays too. So:
+
+* the SYMMETRIC second difference is uniformly coercive (M ≥ ≈6.5, K-stable) —
+  this stands;
+* the ONE-SIDED branches are strictly negative at every direction tested, but
+  with NO uniform L² modulus.
+
+**S7 must therefore be restated.** "Σ is a strict local maximum with L²
+modulus m > 0" is NOT established and the evidence suggests it is FALSE AS
+STATED — the modulus degenerates along outward cap-oscillatory directions.
+What the computations support is the weaker claim that Σ is a local maximum
+whose second-order decrease is directionally strict but not uniformly so in
+L². Identifying the correct norm (or the correct weaker statement) is now the
+open problem, and it is a different problem from the one this section set out
+to solve.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
