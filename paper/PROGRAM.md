@@ -70,15 +70,19 @@ generally.
   w_μ = min(1, sin²θ/sin²β, cos²θ/sin²β), w_ν = 1, with the anomalous
   stationary-contact responses one-signed favourable (N1). Core identity
   machine-verified (Lean: `frame_pair_identity`, `frame_pair_coercive`).
-- **[P-mech/K] N11. The fan-bite 3/2-law.** At a stationary wall fan, the
-  cutting-side response of the TRUE area is super-quadratic:
-  F(−ε) − F₀ ≈ −c·ε^{3/2} (bite depth ε, width √ε from the envelope
-  geometry; measured c ≈ 20 at Gerver's phase-1 fan, constant across
-  ε = 5e-4..2e-3). Consequences: the true functional is only C^{1,1/2}
-  at stationary-fan candidates; the kink is one-signed FAVOURABLE; and
-  every smooth oracle (jet/structure-following, or fan-released) is a
-  superset upper form dominating both one-sided branches — the uniform
-  justification of the certified objects at both c_G and Σ.
+- **[P/K] N11. The stationary-fan kink (CORRECTED by N12).** At a
+  stationary wall fan the true area is not twice differentiable: the two
+  one-sided second variations differ (measured branch ratio 0.12 at Σ,
+  0.005 at Gerver's phase-1 fan). ORIGINAL READING — a "3/2-law"
+  F(−ε)−F₀ ≈ −c·ε^{3/2} — was inferred from a log-slope of ≈1.6 on a
+  short ε-range and is **superseded by N12**: the exact scaling is
+  QUADRATIC, F_rel − F = ε²N(φ), with the non-quadratic-form coefficient
+  N accounting for the apparent fractional exponent (a pre-asymptotic
+  mix, not a fractional law). What survives unchanged and is load-bearing:
+  the kink is one-signed FAVOURABLE, and every smooth oracle
+  (jet/structure-following or fan-released) is a superset upper form
+  dominating both one-sided branches — the uniform justification of the
+  certified objects at both c_G and Σ.
 - **[P/K] N12. THE FAN-BITE FUNCTIONAL — the object that closes the cap
   sector.** At a stationary wall fan (λ ≡ 0 on an interval of half-width
   β) every constraint line passes through ONE point P. In u = x − P the
