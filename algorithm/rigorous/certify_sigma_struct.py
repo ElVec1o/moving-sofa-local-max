@@ -25,10 +25,10 @@ Definiteness is METRIC-INDEPENDENT, so Sylvester's criterion on the ball
 matrix (all leading principal minors of -Q strictly positive) is a complete
 rigorous test; no eigenvalue enclosure is needed.
 
-Caveat recorded honestly: beta enters as a ball of stated radius around
-Romik's constant. Enclosing beta itself from its defining equation is the
-standard Newton-Kantorovich step already done for Gerver's constants in
-gerver_arb.py; it is NOT redone here.
+beta is enclosed from its CLOSED FORM
+    beta = arctan( ( (sqrt2+1)^(1/3) - (sqrt2-1)^(1/3) ) / 2 )
+directly in ball arithmetic (radius ~1e-90 at 300 bits): no root-finding and
+no outstanding caveat.
 
 Usage: python3 certify_sigma_struct.py [K] [prec_bits] [beta_radius]
 """
@@ -45,7 +45,14 @@ from sofa_romik2017_reference import BETA as BETA_F
 def build(K, prec=256, brad=1e-16):
     ctx.prec = prec
     PI2 = arb.pi()/2
-    B = arb(repr(BETA_F)) + arb(0, brad)     # beta as a ball
+    # beta in CLOSED FORM: beta = arctan( ((sqrt2+1)^(1/3) - (sqrt2-1)^(1/3))/2 )
+    # -> rigorous enclosure with no root-finding, no caveat.
+    _s2 = arb(2).sqrt()
+    try:
+        _a = (_s2 + 1).root(3); _b = (_s2 - 1).root(3)
+    except AttributeError:
+        _a = ((_s2 + 1).log()/3).exp(); _b = ((_s2 - 1).log()/3).exp()
+    B = ((_a - _b)/2).atan()
     BB = PI2 - B
 
     # traversal table: (label, t_from, t_to, slot); struct variant
@@ -156,8 +163,8 @@ def main():
     K = int(sys.argv[1]) if len(sys.argv) > 1 else 6
     prec = int(sys.argv[2]) if len(sys.argv) > 2 else 256
     brad = float(sys.argv[3]) if len(sys.argv) > 3 else 1e-16
-    print(f"certifying Q_struct(Sigma), K={K}, {2*K} modes, prec={prec} bits, "
-          f"beta ball radius {brad:g}", flush=True)
+    print(f"certifying Q_struct(Sigma), K={K}, {2*K} modes, prec={prec} bits; "
+          f"beta from its CLOSED FORM (no caveat)", flush=True)
     Q, n, maxrad = build(K, prec, brad)
     print(f"\nall {n*(n+1)//2} entries enclosed; max radius {maxrad:.3e}")
     ok, dets = certify_negdef(Q, n, prec)
