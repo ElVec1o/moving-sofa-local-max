@@ -485,6 +485,55 @@ and (ii) more importantly it can NEVER supply a uniform constant — so
 **item 12 must go through the dichotomy (Q_rel + fan bite), not through
 Q_struct.** That settles the architecture question for the tail.
 
+## Shapely-oracle Rust port — DELIVERED, with a measured limitation
+
+`sigma_area.rs`. The port is made tractable by an algebraic restructuring
+rather than by implementing polygon booleans: each hallway is
+H_t = C_t \ Q_t (two half-planes minus the reflex quadrant), so the whole
+intersection reorders as
+
+    S = ⋂_t H_t = (⋂_t C_t) \ (⋃_t Q_t) = C \ U,
+    Σ = C2 \ (U ∪ ρU),   C2 = C ∩ ρC convex.
+
+C2 is exact Sutherland–Hodgman half-plane clipping; and on any vertical
+line each quadrant cuts exactly ONE y-interval, so the notch is a 1-D
+interval union per slice (sort and merge). No polygon booleans anywhere.
+
+**Validated**: area at c_R agrees with shapely to 4.8e-6 at NXQ=4000 and
+1.2e-8 at NXQ=30000 (both sit 1.2e-4 from Romik's exact value — that is
+the shared t-discretization, not a port error). Speed: 3x faster than
+shapely at equal accuracy.
+
+**MEASURED LIMITATION (the honest part).** The slice quadrature is NOT
+adequate for finite-difference Hessians at high mode frequency:
+
+| test direction | Rust FD | shapely FD | error |
+|---|---|---|---|
+| smooth cap bump | −80.27 | −81.38 | 1.4% |
+| K=24 worst eigenvector (freq ~24) | −44.36 | −52.39 | 15% |
+
+with the high-frequency value converging only slowly in NXQ
+(+812 / +81 / −44 at NXQ = 4k / 12k / 30k). **Mechanism**: shapely
+computes the polygon exactly, so its O(1e-4) discretization error is
+common-mode and cancels in the ε² division; the slice quadrature's error
+sits at KINKS THAT MOVE WITH ε, so it does not cancel, and the 1/ε² = 1e8
+amplification exposes it. This is a real property of the method, not a
+tuning issue.
+
+**Verdict and scope.** Usable now for smooth/moderate-frequency probes
+(1–2% at NXQ=30000) and for absolute areas. NOT usable for high-frequency
+Hessian entries. The exact fix is to keep the body as a polygon and
+implement `subtract_wedge` (polygon minus convex wedge: walk ∂P, re-route
+the inside-Q run along ∂Q through the apex) — that restores shapely's
+exactness at Rust speed. Scoped, ~100 lines, not attempted here rather
+than botched.
+
+**What is now Rust/C end to end**: the closed-form assembler
+(`sigma_struct.rs`, 0.5 s for K=64), the interval certification
+(FLINT/arb), the eigensolves (LAPACK), Lean. The remaining Python is the
+shapely oracle, still needed for high-frequency FD until `subtract_wedge`
+lands.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
