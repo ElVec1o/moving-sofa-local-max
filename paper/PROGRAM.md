@@ -764,8 +764,23 @@ labelled *route*, not PROVED, and the effective label of item 12b is that of
 its weakest link. Also: compactness gives a NON-EXPLICIT m, so the
 quantitative modulus (≈6.5) still comes only from computation.
 
-**Net: item 12b went from "no available technique" (both weld families
-excluded) to one standard write-up.** Σ-local is NOT yet a theorem.
+**12b-iii IS NOW WRITTEN** (Proposition 7', SIGMA_LOCAL.md §10): the Gårding
+structure follows from N5 (per-arc forms) with the ε-split, N9 (frame-pair
+Gram, giving W ≍ sin²t on the released caps), and N7 (breakpoint
+reparameterization, which removes the pointwise-η′ junction terms — the
+classical two-norm obstruction); junction values at β, π/2−β are absorbed by
+Agmon localized to the middle phase, where W is non-degenerate.
+
+**Therefore item 12b is PROVED (qualitatively): −Q_true ≥ m‖η‖²_{L²} for some
+m > 0.** The constant is non-explicit; the computed value is ≈6.5.
+
+**What Theorem 9 now is.** Every analytic link is PROVED. The remaining
+dependency is COMPUTATIONAL: the released contact structure (which arcs are
+active where), established by the mask table and the traversal (junction
+residuals ~1e-10, Green area = A_R* to 2.6e-9). So Σ-local is a
+**computer-assisted theorem**, with the contact structure as its computational
+core — the same standard as Part II for Gerver, and as Baek's global result.
+It is NOT a fully symbolic proof, and the modulus is not explicit.
 
 ## Compute discipline (post-OOM, 2026-07-29)
 
