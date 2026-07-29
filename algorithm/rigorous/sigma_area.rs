@@ -50,6 +50,7 @@
 use std::io::{self, Read, Write};
 
 const BIG: f64 = 12.0;
+const PI2C: f64 = std::f64::consts::PI / 2.0;
 
 #[derive(Clone, Copy)]
 struct HalfPlane { nx: f64, ny: f64, c: f64 }   // nx*x + ny*y <= c
@@ -221,6 +222,14 @@ fn main() {
     let n = it.next().unwrap() as usize;
     let m = it.next().unwrap() as usize;
     let th: Vec<f64> = (0..n).map(|_| it.next().unwrap()).collect();
+    // RELEASED mode: drop the cap-interior OUTER walls (the stationary fans),
+    // i.e. the mu-wall on (0,beta) and the nu-wall on (pi/2-beta, pi/2), for
+    // both families.  This is the fan-released functional F_rel of N12.
+    let released = std::env::var("RELEASED").is_ok();
+    let beta = {
+        let s2 = 2f64.sqrt();
+        (((s2 + 1.0).cbrt() - (s2 - 1.0).cbrt()) * 0.5).atan()
+    };
 
     let stdout = io::stdout();
     let mut w = stdout.lock();
@@ -242,7 +251,11 @@ fn main() {
         // Sutherland-Hodgman is exact and produces no degenerate bridge edges.
         for i in 0..n {
             let (c, s) = (th[i].cos(), th[i].sin());
-            for &(nx0, ny0) in [(c, s), (-s, c)].iter() {
+            let t = th[i];
+            let drop_mu = released && t > 1e-12 && t < beta - 1e-12;
+            let drop_nu = released && t > PI2C - beta + 1e-12 && t < PI2C - 1e-12;
+            for (slot, &(nx0, ny0)) in [(c, s), (-s, c)].iter().enumerate() {
+                if (slot == 0 && drop_mu) || (slot == 1 && drop_nu) { continue; }
                 let d = nx0 * cx[i] + ny0 * cy[i] + 1.0;
                 poly = clip(&poly, HalfPlane { nx: nx0, ny: ny0, c: d });
                 let d2 = nx0 * cx[i] + ny0 * cy[i] + 1.0 - ny0;
