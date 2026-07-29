@@ -677,6 +677,56 @@ That is a genuine setback for item 12b and is logged as one.
 8.531 (K=10), 6.842 (K=16), 6.556 (K=24); decrements 1.69 then 0.29. K=32
 running (`sigma_rel_hess.py`, released Rust oracle, ETA ~33m) to extend it.
 
+## GRADED WELD — also FAILS.  Decomposition is the wrong tool.
+
+Dyadic bands with optimized weights (`sigma_graded.py`), K=24, K0=6:
+
+| band | k-range | lam_min | couplings |
+|------|---------|---------|-----------|
+| B0 | (0,6] | 9.81 | 287, 249 |
+| B1 | (6,12] | 246.60 | 287, 1055 |
+| B2 | (12,24] | 56.47 | 249, 1055 |
+
+Optimized graded bound: **-1044.8**, against the true full-form margin
+**+6.5555**.
+
+**This is the informative failure.** The couplings (~1000) dwarf the band
+minima (10-250), and lam is not even monotone in the band index. The form is
+NOT approximately block-diagonal in frequency: its coercivity comes from a
+cancellation spread across ALL modes at once. Therefore **no decomposition
+weld can work** -- not 2x2, not dyadic, not any refinement. The Part-II
+template is unavailable for Sigma at a structural level, not for want of
+tuning.
+
+## THE REMAINING MATHEMATICS, sharply posed
+
+With decomposition excluded, item 12b reduces to ONE analytic statement. All
+its ingredients are already proved or computed:
+
+M(eta) >= int_0^{pi/2} W(t)|eta'(t)|^2 dt - C_0 ||eta||^2_{L2}
+              + (cot b / b) ||d_eta||^2_{L2(caps)}
+
+where W is the coverage weight (W ~ 1 on the middle phase, W ~ sin^2 t on the
+caps -- N9), C_0 the interior-Garding constant (N5/N6 pattern), and d_eta the
+cap deviation (linear in eta, vanishing exactly on translations -- N12).
+
+**Lemma T (the target).** There is m > 0 such that for every eta orthogonal
+to the translation direction,
+
+    int W(t)|eta'|^2 dt  +  (cot b / b) ||d_eta||^2_{L2(caps)}
+        >=  (m + C_0) ||eta||^2_{L2}.
+
+This is a DEGENERATE-WEIGHT POINCARE INEQUALITY WITH BOUNDARY COMPENSATION:
+the weight W vanishes at the two cap points, so the Poincare step fails there
+on its own, and the d-functional must supply exactly the missing control.
+That is precisely the division of labour the fan-bite mechanism was found to
+implement, so the statement is the right one -- but it is a genuine piece of
+analysis, not a computation, and it is NOT yet proved.
+
+Status: CONJECTURE, supported by the M-ladder (8.531 / 6.842 / 6.556 at
+K = 10/16/24, decrements 1.69 then 0.29) and by the tail probe (cap-x
+saturating at ~3600 rather than decaying).
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
