@@ -554,6 +554,56 @@ stencil.
 shapely oracle, still needed for high-frequency FD until `subtract_wedge`
 lands.
 
+## TAIL (Theorem 9, item 12) — high-K evidence with the exact oracle
+
+With `sigma_area.rs` exact and fast, the tail was attacked directly against
+the TRUE functional rather than through proxies.
+
+**(a) Tail probe** (`sigma_tail.py`, driver over the Rust oracle). The
+covering argument predicts which mechanism carries each component; measured
+−Q_true on L²-normalized families at frequencies far past the K≤24 ladders:
+
+| family | k=4 | 16 | 32 | 64 | 128 | reading |
+|---|---|---|---|---|---|---|
+| cap, x-polarized | 411 | 2374 | 3289 | 3595 | 3645 | **saturates ≈3600** |
+| cap, y-polarized | 8617 | 22821 | 24322 | 24441 | — | k² then saturates |
+| plain modes | 190 | 2710 | 10413 | — | — | k² growth |
+| middle-supported | 861 | 12550 | 51024 | — | — | k² growth |
+
+The critical row is the first: the cap x-component is the one the ν-slot
+arcs cover only with weight sin²t (degenerate at the cap), so the FAN BITE
+must carry it — and the bite is amplitude², i.e. frequency-INDEPENDENT.
+Measured: it saturates at ≈3600 and does NOT decay, confirmed at n_theta =
+1201 and 2401. **That is the one claim whose failure would have broken the
+weld, and it holds.**
+
+**(b) K-uniform bound** (`sigma_tail_min.py`). Cleaner than the Q_rel+bite
+dichotomy: since Q_true ≤ Q_struct (superset), −Q_true ≥ −Q_struct, so the
+minimum of −Q_true can only sit where −Q_struct is least coercive. Searching
+those p=8 directions with the EXACT oracle (no polarization of the kinked
+functional, no matrices):
+
+| K | −λ₁(Q_struct) | inf over the p least-coercive dirs | gap λ_{p+1} |
+|---|---|---|---|
+| 16 | 1.742 | **9.19** | 302 |
+| 24 | 0.351 | **8.76** | 218 |
+| 32 | 0.044 | **8.85** | 139 |
+| 48 | 0.00002 | **8.77** | 54 |
+| 64 | ~0 | (search 59.4) | 8.8 |
+
+**−Q_true ≈ 8.8·‖η‖²_{L²}, K-STABLE across K = 16…64**, while Q_struct's own
+margin collapses by five orders of magnitude over the same range. The true
+functional does not degenerate; only the smooth majorant does.
+
+**What is still missing for a proof.** The bound above is min(search, gap),
+which is rigorous for η lying wholly in the p-span or wholly in its
+complement. MIXED directions need an interpolation step (a Lipschitz/
+continuity estimate for −Q_true, or a search over the full span). Until
+that is supplied, item 12 has strong high-K evidence with a clean structure
+but is **not closed**. At K=64 the reported figure is the gap, not the
+search, so p=8 is too small there — that is a computation to redo, not an
+obstruction.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
