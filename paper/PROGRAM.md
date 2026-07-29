@@ -646,6 +646,37 @@ Remaining for that weld: Q_rel at K > 24 (needs a released mode in
 `sigma_area.rs` — a flag skipping the cap outer walls), then the tail
 constant c_T and coupling τ. Mechanical, not conceptual.
 
+## THE WELD (item 12b) — FAILED as set up. Honest report.
+
+The 2x2 block weld on M was run at four cutoffs. It fails at all of them:
+
+| K | K0 | m_N | c_T | tau | tau^2 vs m_N c_T | verdict |
+|---|----|-----|-----|-----|------------------|---------|
+| 24 | 8 | 9.39 | 22.03 | 402 | 1.6e5 vs 207 | FAILS |
+| 24 | 12 | 7.56 | 56.47 | 1077 | 1.2e6 vs 427 | FAILS |
+| 24 | 16 | 6.84 | 509.7 | 1809 | 3.3e6 vs 3487 | FAILS |
+| 16 | 8 | 9.39 | 121.4 | 389 | 1.5e5 vs 1140 | FAILS |
+
+**Diagnosis (structural, not a cutoff choice).** In L² normalization the form
+is UNBOUNDED — the Wirtinger terms scale like k² — so the tail block's
+minimum (22, attained on cap-concentrated tail combinations) and the coupling
+maximum (402, attained on entirely different directions) are reached in
+different places. A 2x2 bound multiplies those two worst cases together and
+is hopelessly lossy. It is lossy, not wrong: the FULL K=24 form has margin
+6.56 > 0, so the failure is in the estimate, not in the mathematics.
+
+**Why the Gerver weld does not transfer.** Part II's weld runs in H¹, where
+k² is absorbed into the norm and the form is bounded. Σ has L² coercivity but
+NOT H¹ coercivity (Q_struct's H¹ margins decay: 0.128 / 0.0069 / 0.0002),
+because the bite is a frequency-INDEPENDENT mechanism. So the Σ tail needs an
+estimate adapted to an unbounded form — a graded/multi-block weld, or a
+direct proof that the K-limit of m(M) is positive — not the Part-II template.
+That is a genuine setback for item 12b and is logged as one.
+
+**Status of the M-ladder** (the quantity whose limit must be shown positive):
+8.531 (K=10), 6.842 (K=16), 6.556 (K=24); decrements 1.69 then 0.29. K=32
+running (`sigma_rel_hess.py`, released Rust oracle, ETA ~33m) to extend it.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
