@@ -226,6 +226,9 @@ fn main() {
     // i.e. the mu-wall on (0,beta) and the nu-wall on (pi/2-beta, pi/2), for
     // both families.  This is the fan-released functional F_rel of N12.
     let released = std::env::var("RELEASED").is_ok();
+    // GERVER mode: single hallway family (no rho image) -> the one-hallway
+    // body S, for auditing Part II's structure-following form.
+    let gerver = std::env::var("GERVER").is_ok();
     let beta = {
         let s2 = 2f64.sqrt();
         (((s2 + 1.0).cbrt() - (s2 - 1.0).cbrt()) * 0.5).atan()
@@ -258,8 +261,10 @@ fn main() {
                 if (slot == 0 && drop_mu) || (slot == 1 && drop_nu) { continue; }
                 let d = nx0 * cx[i] + ny0 * cy[i] + 1.0;
                 poly = clip(&poly, HalfPlane { nx: nx0, ny: ny0, c: d });
-                let d2 = nx0 * cx[i] + ny0 * cy[i] + 1.0 - ny0;
-                poly = clip(&poly, HalfPlane { nx: nx0, ny: -ny0, c: d2 });
+                if !gerver {
+                    let d2 = nx0 * cx[i] + ny0 * cy[i] + 1.0 - ny0;
+                    poly = clip(&poly, HalfPlane { nx: nx0, ny: -ny0, c: d2 });
+                }
             }
             if poly.len() < 3 { break; }
         }
@@ -270,10 +275,12 @@ fn main() {
                 let wd = Wedge { ax: cx[i], ay: cy[i], n1x: c, n1y: s, n2x: -s, n2y: c };
                 poly = subtract_wedge(&poly, &wd, &mut apex_bad);
                 if poly.len() < 3 { break; }
-                let wr = Wedge { ax: cx[i], ay: 1.0 - cy[i],
-                                 n1x: c, n1y: -s, n2x: -s, n2y: -c };
-                poly = subtract_wedge(&poly, &wr, &mut apex_bad);
-                if poly.len() < 3 { break; }
+                if !gerver {
+                    let wr = Wedge { ax: cx[i], ay: 1.0 - cy[i],
+                                     n1x: c, n1y: -s, n2x: -s, n2y: -c };
+                    poly = subtract_wedge(&poly, &wr, &mut apex_bad);
+                    if poly.len() < 3 { break; }
+                }
             }
         }
         writeln!(w, "{:.15}", shoelace(&poly)).unwrap();
