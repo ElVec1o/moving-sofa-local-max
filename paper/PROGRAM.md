@@ -1067,6 +1067,47 @@ confirmed to K=32 with the exact released oracle. This result is independent
 of the Part II difficulties above and of the one-sidedness gap; it is what
 stands from the Σ line.
 
+## MECHANISM LOCALIZED: a cancellation that holds only on symmetric modes
+
+**Both sides now measured.**
+
+*True functional* (exact one-hallway oracle): dA_true/dε = 0 for every mode.
+For sin4t and sin16t the residuals SHRINK with ε (−5.8e-5 → −8e-6 as ε goes
+4e-4 → 2e-4, scaling ~ε^2.8), i.e. they are higher-order, not a first
+variation. c_G is critical in all directions, as it must be.
+
+*Reconstruction* (both oracles, frozen and structure-following agreeing to 7
+digits): dA_rec/dε = −3.227527 (sin4t), −12.91011 (sin16t) — CONSTANT in ε.
+
+So **δA_true = 0 while δA_rec ≠ 0** on the symmetry-breaking modes. The
+reconstruction and the body agree in value at c_G but not in first derivative.
+
+**Term-by-term decomposition** of the Green sum (IA, IC, ID, Ix, IB, and the
+three closing segments) at ε = 2e-4:
+
+| mode | IA | IC | ID | Ix | IB | S2 | S3 | total |
+|------|----|----|----|----|----|----|----|-------|
+| sin2t (sym) | −0.345 | +1.573 | +0.526 | −0.490 | −0.036 | −1.421 | +0.193 | **−0.000000** |
+| sin4t (antisym) | −1.611 | −4.066 | +0.355 | −1.182 | +0.049 | +2.841 | +0.386 | **−3.227527** |
+
+**There is no single culprit piece.** Every term is individually large and
+nonzero in BOTH cases; for symmetric modes they cancel to machine zero, and
+for antisymmetric modes the cancellation simply fails. So the defect is not a
+mis-specified arc range or a wrong sign on one term — it is that the
+reconstruction's global first-order balance is tied to the t → π/2 − t
+symmetry of c_G, and antisymmetric perturbations break it.
+
+**Status.** Mechanism localized but not yet explained: we know WHAT fails (the
+global cancellation) and on WHICH modes (antisymmetric), not WHY the identity
+is symmetry-dependent. The earlier swallowtail hypothesis is not supported (no
+self-crossing found). Part II's reduction theorem remains holed on those modes.
+
+**This is the correct place to stop and think rather than compute.** The next
+step is analytic: derive δA_rec in closed form from the per-arc formulas and
+compare against the classical first-variation formula δA = ∮ v_n ds for the
+true body, term by term. The difference is then an explicit expression whose
+vanishing on symmetric modes should be visible.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
