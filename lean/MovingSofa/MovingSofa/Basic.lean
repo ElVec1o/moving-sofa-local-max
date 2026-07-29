@@ -33,6 +33,11 @@ Formalized here:
           of the ν-slot Wirtinger form cancels exactly; with Hardy's
           inequality this closes the cap tail sector of the Σ-local
           theorem at structural constant 1.
+  • F4d — exact homogeneity of a stationary fan (N12 core): the perturbed
+          constraints at a frozen fan have no constant term, so the local
+          body satisfies K(ε) = ε·K(1) exactly and the fan bite is exactly
+          ε²·N — the reason the cap loss is quadratic with a
+          non-quadratic-form coefficient.
   • F3b — the ambidextrous frame-pair mechanism (N9 core): the identity
           (cu+sv)² + (cu−sv)² = 2c²u² + 2s²v² and the coercivity bound
           2m(u²+v²) ≤ 2c²u² + 2s²v² for any common lower bound m of c², s² —
@@ -314,6 +319,28 @@ theorem nu_slot_collapse (η η' s c : Int) :
   have h7 : (c*c - s*s)*(η*η) = (c*c)*(η*η) - (s*s)*(η*η) :=
     Int.sub_mul _ _ _
   omega
+
+/-! ## F4d — exact homogeneity of a stationary fan (N12 core)
+
+At a stationary wall fan every constraint line passes through one point P.
+In u = x − P the perturbed constraints read ⟨u, n_i⟩ ≤ ε·φ_i, with NO
+constant term — so the whole local configuration is exactly ε times a
+fixed one, and the area lost to the interior lines is exactly ε² times a
+fixed functional (the fan-bite N).  The scaling covariance that makes this
+exact, for any linear functional and any ε > 0: -/
+
+/-- **Fan homogeneity.**  ⟨ε·v, n⟩ ≤ ε·c  ⟺  ⟨v, n⟩ ≤ c  for ε > 0.
+    Hence K(ε) = ε·K(1) exactly, and |W(ε) \ K(ε)| = ε²·|W(1) \ K(1)|. -/
+theorem fan_homogeneity {V : Type _} (L : V → Int) (smul : Int → V → V)
+    (hL : ∀ (e : Int) (v : V), L (smul e v) = e * L v)
+    (e c : Int) (v : V) (he : 0 < e) :
+    L (smul e v) ≤ e * c ↔ L v ≤ c := by
+  rw [hL]
+  constructor
+  · intro h
+    exact Int.le_of_mul_le_mul_left h he
+  · intro h
+    exact Int.mul_le_mul_of_nonneg_left h (Int.le_of_lt he)
 
 /-! ## F3b — the ambidextrous frame-pair mechanism (N9 core)
 
