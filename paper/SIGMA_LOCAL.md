@@ -296,13 +296,39 @@ First data: Q_rel(cap bump) = −16.62; **released ladder K=10:
 NEG DEF, m_rel_L² = 4.576** (bulk spectrum matching the full form's —
 min −1587 vs −1589 — confirming the release touches only cap behavior).
 
-**K=16: NEG DEF, m_rel_L² = 0.91074 — the Lemma 7a prediction
-CONFIRMED.** The margin relaxed from 4.58 toward the Hardy-derived
-cap-sector structural constant ≈ 1 (prediction committed before the
-datum), remaining strictly positive: the cap-self-similar directions
-entered the span and found the floor where the exact identity says it
-is. K=24 (running) sharpens the floor estimate; the corner corrections
-account for the ≈ 0.09 deficit from 1.
+**K=16: m_rel_L² = 0.911; K=24: 0.201 — and the honest post-mortem
+(§8e) shows the released-margin collapse is GENUINE.** The K=16 datum's
+agreement with the Hardy-floor prediction was coincidental: the §8d
+Hardy step was wrong (Hardy's ¼ needs a boundary condition the cap
+profiles don't satisfy), and direct probes verified the collapse
+(−0.77 → −0.039 on the worst spans; in the weighted metric
+0.136/0.0062/0.0013). See §8e for the mechanism and the corrected
+architecture.
+
+### 8e. Why the release fails, and the corrected object (S7‴)
+
+Releasing the cap fans deletes every μ-slot constraint on the cap
+interior. A t→0-concentrating x-polarized bump then couples to F_rel
+only through the ν-slot arcs (Lemma 7a coverage, scale-invariant) and
+the corner terms — and tuned shapes cancel these against each other:
+the flat-direction family is genuine, and inf Q_rel → 0 in every
+metric. The release overshot.
+
+**The corrected certified object is the STRUCTURE-FOLLOWING form
+Q_struct**: keep every fan wall as an envelope-following contact arc
+(exactly the Gerver jet-oracle pattern, there verified smooth and
+symmetric). Its per-arc Wirtinger sum then includes the stationary
+A-arc's p-form over the whole cap interval — full-strength μ-slot
+derivative coverage with NO sin² suppression — restoring the uniform
+H¹ Gårding inequality and the entire Part-II ladder/weld architecture
+in the plain H¹ metric. Q_struct is superset-valid (its arcs are
+constraint-boundary arcs; equality at c_R since the fan arc degenerates
+to the frozen point), smooth (envelope formulas are analytic in the
+jets), and assembles in CLOSED FORM (the qfrz Σ-port: per-arc
+integrals + junction chords, no junction solving) — directly
+arb-certifiable. The release detour's permanent yield: N11, the proof
+that the A-arc terms are load-bearing, Lemma 7a, and the
+criticality/domination checks.
 
 ## 8c. Tail control for the released functional (S6-released)
 
