@@ -439,7 +439,9 @@ modulo horizontal translation,*
 | 10 | **Bite lower bound** N(φ)+N(−φ) ≥ cot β‖d‖²_∞, translation-invariant | **[P]** Lean `fan_cut_gain` |
 | 11 | **Dichotomy**: −Q_rel + bites ≥ ≈10, K-stable (10.00 at K=24) | **[K]** search certified safe by spectral gap |
 | 12a | **Interpolation**: −Q_true ≥ M, M a genuine quadratic form (bite minorant is quadratic since d is linear in η) | **[P/K] DONE** — holds on all directions, verified against the exact oracle |
-| 12b | **Weld**: extension from the K-span to all of L², now applied to the quadratic M | **[ ] OPEN** (mechanical: needs Q_rel at K>24, then c_T and τ) |
+| 12b-i | **Decomposition welds** (2×2 and dyadic) | **[✗] EXCLUDED** — the form is not block-diagonal in frequency; couplings ≈1000 vs band minima 10–250. No refinement can work. |
+| 12b-ii | **Lemma T** (degenerate-weight Poincaré with boundary compensation) | **[P] PROVED** by compactness, conditional on 12b-iii. Constant m NON-EXPLICIT. |
+| 12b-iii | **Gårding structure**: ∃C₀ with M ≥ ∫W\|η′\|² − C₀\|η\|² + c\|d\|² | **[route]** standard from N5 + masks + ε-split; NOT written out. The single remaining gap. |
 
 **What is therefore established.** Items 1–11 give, for each computed K, a
 K-uniform margin on the K-mode span, and item 7 upgrades the definiteness
