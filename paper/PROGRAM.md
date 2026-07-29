@@ -177,19 +177,29 @@ generally.
   dominates the weighted coverage there): true, not delivering. Kept as
   a bulk instrument; the delivering frame for the caps is the cell-wise
   L² statement (S7′).
-- **[P/K→] S7″ (supersedes S7′ — the delivering route).** FAN RELEASE:
-  replace each cap's stationary wall fan by its two extreme walls. By N1,
-  F_rel ≥ F with EQUALITY at c_R (half-planes through a common point are
-  determined by their extreme normals — verified 2·10⁻¹⁰), and F_rel is
-  C² near c_R (fan kink gone: fwd/bwd = 1.0000 at three stencil sizes vs
-  0.12 for the full functional). Hence Q_rel ≥ Q one-sidedly, and
-  **Q_rel ≤ −m‖η‖²_{L²} ⟹ Σ strict local max, modulus m** — no branch
-  enumeration, no kink in the certified object. First datum:
-  Q_rel(cap bump) = −16.62 stencil-stable. Released ladder K=10/16/24
-  chained and running (`sigma_hessian_released.py`,
-  `sigma_rel_K{K}.npy`). The wedge-bite terms discarded on the
-  favourable side are the corner-fan support functional — N11 candidate
-  if needed quantitatively later.
+- **[✗→P] S7‴ (supersedes S7″ — the corrected object).** The fan release
+  FAILED as sole certified object: released-ladder margins collapse
+  (L²: 4.58/0.91/0.20; weighted E_w: 0.136/0.0062/0.0013 at K=10/16/24;
+  direct-probe-verified −0.77 → −0.039 on the worst spans). Mechanism:
+  releasing the cap fans deletes ALL μ-slot constraints there, leaving
+  t→0-concentrating x-bumps coupled only through cancelable terms —
+  the flat-direction family is genuine. THE CORRECTION: the certified
+  object is the **STRUCTURE-FOLLOWING form Q_struct** — keep every fan
+  wall as an envelope-following contact arc (the Gerver jet-oracle
+  pattern, verified smooth & symmetric there): its Wirtinger sum
+  includes the stationary A-arc's p-form over the cap interval =
+  full-strength μ-coverage, NO sin² suppression ⟹ uniform H¹ Gårding,
+  plain-H¹ ladder + Part-II weld verbatim. Q_struct is superset-valid
+  (arcs are constraint-boundary arcs; equality at c_R), smooth (envelope
+  formulas analytic in the jets), and assembles in CLOSED FORM (the
+  qfrz Σ-port — no junction solving, directly certifiable). The release
+  detour's yield stands: N11 (fan-bite 3/2-law), the flat-direction
+  discovery (proving the A-arc terms are load-bearing), Lemma 7a
+  (ν-slot bookkeeping), criticality/domination checks.
+- **[archived] S7″ (fan release).** Valid inequalities (F ≤ F_rel with
+  equality at c_R verified 2·10⁻¹⁰; C², fwd/bwd = 1.0000; Lean core
+  `fan_combination` stands; ladders in `sigma_rel_K{K}.npy`) but NOT
+  uniformly coercive — kept as a lemma family, not the theorem vehicle.
 - **[~] S7′ (superseded by S7″).** Cell-wise branch enumeration — kept
   as the fallback/refinement frame (branch data: −9/−43 per unit L²
   along the worst mode; FD-average m_L² ≈ 3.5).
