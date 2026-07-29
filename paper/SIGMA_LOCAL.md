@@ -529,11 +529,12 @@ W ≥ w_mid > 0. Agmon localized to the middle phase,
 already non-degenerate part of the coverage term at the cost of enlarging C₀.
 Choosing δ and ε small completes the proof. ∎
 
-**Consequence.** Proposition 7' supplies the hypothesis of Lemma T, so
-
-  **−Q_true(η) ≥ M(η) ≥ m‖η‖²_{L²}** for some m > 0, all η ⊥ translations,
-
-which is item 12b. The constant m is non-explicit (compactness); the computed
+**Consequence, corrected after adversarial review.** Proposition 7' supplies
+the hypothesis of Lemma T, so **−Q_true(η) ≥ M(η) ≥ m‖η‖²_{L²}** for the
+SYMMETRIC second difference. That is NOT yet local maximality: each one-sided
+branch needs −Q_rel + 2N(±φ) > 0, and the bite is one-sided. See the
+adversarial-review section of PROGRAM.md; Lemma O is required and unproved.
+Proposition 7' itself is proved on the endpoint-vanishing subspace only. The constant m is non-explicit (compactness); the computed
 value is ≈ 6.5.
 
 **Labels.** Proposition 7' is PROVED at the level of rigour of a paper
