@@ -223,8 +223,13 @@ generally.
     N7. It survives only at the mirror-axis junction where a ν-slot arc
     meets its own ρ-image, whose velocities are μ_t and μ_{−t}: an angle
     2t apart. **The same 2θ frame-angle that drives N9.**
-  * **Net correction is negligible**: margins move by < 1e-5 (relative
-    4e-6) at K=6. Junction response does not touch Σ's second variation.
+  * **Net correction is negligible, CONFIRMED AT BOTH K**: relative
+    ‖Q_true−Q_frz‖_F/‖Q_frz‖_F = 3.8e-6 at K=16 (4e-6 at K=6), with the
+    margins unchanged to four digits — H¹ 0.006868 → 0.006868,
+    L² 0.621862 → 0.621865. K=16 is precisely where the cap decay bites,
+    so the test is decisive: junction response does not touch Σ's second
+    variation. (The H_ββ structure is K-independent: diagonal ≤ 3e-4,
+    the single mirror-axis cross term −0.0482 at every K.)
   **Conclusion: Σ's closed-form frozen structure-following form already
   IS the true second variation.** The certifiable object is the right
   object — but the decaying cap margin is therefore GENUINE, not an
@@ -236,8 +241,8 @@ generally.
   that the quadratic majorant is not tight. The Σ-local theorem needs
   the cap sector handled at the ε^{3/2} scale (N11 made quantitative at
   Σ, with its constant) and the quadratic form used only off the caps.
-  This is the honest remaining gap. K=16 envelope run in flight to
-  confirm the correction stays negligible where the decay bites.
+  This is the honest remaining gap; the K=16 envelope run has now
+  confirmed that no junction-response repair exists.
 - **[✗→P] S7‴ (supersedes S7″ — the corrected object).** The fan release
   FAILED as sole certified object: released-ladder margins collapse
   (L²: 4.58/0.91/0.20; weighted E_w: 0.136/0.0062/0.0013 at K=10/16/24;
