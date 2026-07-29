@@ -1217,6 +1217,92 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## THE RANK-ONE LAW IS NOW PROVED, AND UNIFIED WITH Σ  [PROVED]
+
+### Theorem (rank-one defect)
+
+Let η perturb c_G with η(0) = η(π/2) = 0.  Then
+
+    d/dε A_rec(c_G + ε η)  =  −(ℓ/2) ( η_x′(0) + η_x′(π/2) ),
+
+ℓ = 0.806881614715 the common length of the two bottom wall segments of ∂S.
+
+PROOF.  Γ_rec is a closed curve, so the first variation of the enclosed area is
+the closed integral of (u dy − v dx), (u,v) = d/dε of the boundary point, with
+NO boundary terms (they telescope).
+
+(i)  Arc A is CONSTANT on [0,φ], identically the corner (1,0); arc C is
+     constant on [π/2−φ,π/2], identically (x_C,0).  Verified to 3e-31.  A
+     constant piece has dx = dy = 0, so it contributes nothing.
+(ii) The top chord lies on y = 1 with both endpoints fixed (measured drift 0),
+     so it contributes nothing.
+(iii) Each bottom chord lies on y = 0, so dy = 0 and its contribution is
+     −∫ v dx.  One endpoint moves vertically at rate η_x′(0) resp. η_x′(π/2);
+     the other does not.  v interpolates linearly along a chord, so
+     −∫_0^ℓ h(1−u/ℓ) du = −(ℓ/2) h.  Summing the two chords gives the claim.
+(iv) The true boundary keeps both bottom segments on y = 0 — they are the wall
+     lines y = c_y(0) and y = c_y(π/2), fixed because η(0) = η(π/2) = 0 — so
+     dA_true = 0 and the whole discrepancy is (iii).  QED
+
+VERIFICATION: the two bottom segments have EXACTLY equal length (difference 0.0
+at dps=30), ℓ = 0.806881614715, so the predicted a = −ℓ/2 = −0.403440807358
+against the independently fitted −0.40344081.  The law matches measured dA_rec
+on random mixed directions to 2.04e-9.
+
+This upgrades the law from HEURISTIC to PROVED.  The constant is no longer
+fitted: it is half the bottom-segment length.
+
+### The repair, and its limit
+
+The fix CANNOT be localised to the chord term.  Projecting A(0) and C(π/2) onto
+the wall lines was tried and makes the defect WORSE (measured), because the
+Green boundary terms telescope globally but not piecewise: the raw chord term's
+own variation is +x_B η_x′(0)/2, not the −(ℓ/2) η_x′(0) that the closed-curve
+integral assigns to that stretch.
+
+What the proof licenses is the ADDITIVE correction.  Since c_G has
+c_x′(0) = c_x′(π/2) = 0, the functional L is read off the trajectory itself:
+
+    A_corr(c) := A_rec(c) + (ℓ/2) ( c_x′(0) + c_x′(π/2) ).
+
+Well-defined, equals A_rec at c_G, and STATIONARY there in every direction
+(verified to 1.7e-8 on random directions).
+
+CAVEAT [OPEN]: A_corr's SUPERSET property is NOT established.  A_rec ≥ A_true
+was the entire point of the reconstruction and the added term has no sign.  So
+A_corr repairs stationarity only.  Part II still needs either (a) a proof that
+A_corr ≥ A_true near c_G, or (b) the restriction to ker L plus separate
+treatment of the one missing direction.
+
+### THE CHORD-LENGTH LAW — why Σ escapes  [PROVED]
+
+Σ HAS the same degeneracy.  Measured: arcs dA and rA are both CONSTANT on
+[0, β], β = 0.289654, both pinned at (1, 1/2) — which is the ρ-FIXED point,
+since ρ(x,y) = (x, 1−y).  The earlier note claiming Σ had no such degeneracy was
+wrong and has been corrected in place.
+
+What saves Σ is not the absence of the degeneracy but the CHORD LENGTH.  The
+defect is −(ℓ/2) L with ℓ the closure-chord length adjacent to the constant arc.
+Measured closure-chord lengths:
+
+    Σ:      max over all ten closures   2.5e-6   (junction-solve residual)
+    Gerver: both bottom chords          8.069e-1
+
+Σ's arcs meet at genuine junctions, so every closure chord is degenerate and
+ℓ = 0; Gerver's three closures are real segments of the sofa boundary.  Hence
+Σ's reconstruction is stationary — confirmed directly, worst |dA_rec/dε| =
+2.6e-6 over five random directions in 12 dimensions, at the n=1400 quadrature
+resolution.
+
+This is the unified statement: ONE law explains both sofas.
+
+### Scripts
+
+`gerver_proof.py` (the proof's four facts + the repair), `sigma_degeneracy.py`
+(Σ's constant-arc audit and chord lengths).  Caution recorded in the latter: arc
+ranges may DESCEND (t0 > t1), so speeds must be taken with |dt| or argmin picks
+the most negative rather than the smallest magnitude.
+
 ## PART II DEFECT — FULLY DIAGNOSED.  It is exactly RANK ONE.  [HEURISTIC]
 
 Seven hypotheses were tested against measurement.  Six were killed (basin jump,
@@ -1334,9 +1420,10 @@ perturbation and check whether they remain collinear with the moving wall line.
 If they do not, the chord closure is the defect and the repair is to close with
 the wall segment rather than the chord.
 
-**Σ is unaffected** and the reason is now clear: Σ's traversal was derived WITH
-its junction structure and its closures verified (Green area = A_R* to 2.6e-9),
-and its reconstruction's first variation is clean on every mode.
+**Σ is unaffected** -- but NOT for the reason first written here.  The original
+claim (that Σ's traversal was derived with its junction structure) was not the
+mechanism; it is superseded.  See the CHORD-LENGTH LAW: Σ has the SAME
+constant-arc degeneracy and is saved by its closure chords having zero length.
 
 ## Compute discipline (post-OOM, 2026-07-29)
 
