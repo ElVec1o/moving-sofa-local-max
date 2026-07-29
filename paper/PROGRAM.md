@@ -871,6 +871,49 @@ L². Identifying the correct norm (or the correct weaker statement) is now the
 open problem, and it is a different problem from the one this section set out
 to solve.
 
+## 🌊 RED FLAG ON PART II — the structure-following form may not dominate
+
+Audit of the Gerver chain for the same one-sidedness defect. Added a GERVER
+mode to `sigma_area.rs` (single hallway family) to get an exact one-hallway
+true area, and compared against the structure-following oracle
+(`true_hessian probe`) on ADMISSIBLE (endpoint-vanishing) sine modes:
+
+| mode | eps | true dF | struct dF | struct >= true? |
+|------|-----|---------|-----------|-----------------|
+| e_x sin2t | ±2e-3 | −9.2991e-6 | −9.6072e-6 | **NO** |
+| e_x sin6t | ±2e-3 | −6.6213e-5 | −6.9123e-5 | **NO** |
+| e_y sin4t | ±2e-3 | −4.1826e-5 | −4.1766e-5 | yes |
+
+**Not discretization**: refining n 1201→2401 moves true dF by 9e-9 against a
+gap of 3.2e-7. The structure-following form decreases MORE than the true area
+on the x-modes, i.e. F_struct <= F_true there — domination the WRONG WAY.
+
+**Why this is geometrically expected, and where the earlier L4 audit erred.**
+A structure-following arc that detaches INWARD cuts into the body, so the
+form is not a superset upper bound. The FROZEN reconstruction with chords is
+the upper bound (chords bridge gaps from outside); structure-following is
+neither in general. The L4 entry earlier in this session asserted that the
+Part-II jet oracle "is the smooth structure-following SUPERSET form ... so the
+manuscript's ladder-negativity chain is VALID and strengthened". **That
+assertion is now contradicted by direct measurement and is withdrawn.**
+
+**What is and is not at risk.** The manuscript's reduction theorem uses the
+FROZEN reconstruction, which is superset-valid (lem:superset, Lean-verified),
+and the K=16 frozen block is certified negative definite — that part stands.
+At risk is the step that leans on the true-Hessian ladder (m∞ ≈ 0.765) to
+carry the argument past K=32, where the frozen form goes indefinite: if the
+structure-following object does not dominate the true one-sided response,
+negative definiteness of that ladder does not by itself give one-sided local
+maximality. The envelope identity (N3) is what relates the two families and
+is the natural place to repair or refute this.
+
+**Status: FLAGGED, not concluded.** Three sine modes are not an audit. The
+required work is (i) a systematic sign test across many modes and amplitudes,
+(ii) checking whether the gap is an O(eps^3) artifact rather than a second-
+order one, and (iii) re-deriving what the envelope identity actually licenses.
+Part II's headline result is NOT withdrawn; it is marked at risk pending that
+audit.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
