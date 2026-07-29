@@ -604,6 +604,48 @@ but is **not closed**. At K=64 the reported figure is the gap, not the
 search, so p=8 is too small there — that is a computation to redo, not an
 obstruction.
 
+## THE INTERPOLATION ESTIMATE — item 12's obstruction REMOVED
+
+The blocker was that the fan bite N is homogeneous of degree 2 but **not a
+quadratic form**, so a bound proved on a low-dimensional search space could
+not be transported to mixed directions. Resolution: the PROVED bite bound is
+quadratic once unwound.
+
+    N(φ)+N(−φ) ≥ max_s d(s)²G(s)              [one interior cut, N12b]
+               ≥ cot β · ‖d‖²_∞                [G ≥ G(0), Lean `fan_cut_gain`]
+               ≥ (cot β/β) · ‖d‖²_{L²(0,β)}    [max ≥ mean]
+
+and **d is LINEAR in η** (d(s) = φ(β)cos s/cos β − φ(s)). So ‖d‖²_{L²} is a
+quadratic form D, and with Q_true = Q_rel − [N(φ)+N(−φ)],
+
+    **−Q_true(η) ≥ M(η) := −Q_rel(η) + (cot β/β)·(D₁+D₂)(η),  M QUADRATIC.**
+
+Coercivity of M is an ordinary eigenvalue problem, valid on **every direction
+simultaneously — mixed included**. No search, no interpolation gap.
+(cot β/β = 11.5838; d vanishes on translations, so the statement is modulo
+the exact symmetry, as it must be.)
+
+| K | −Q_rel alone | **m(M) = closed bound** | bite's share |
+|---|---|---|---|
+| 10 | 8.116 | **8.531** | 4.9% |
+| 16 | 1.295 | **6.842** | 81.1% |
+| 24 | 0.239 | **6.556** | 96.4% |
+
+The released form alone collapses by 34×; M stays ≈ 6.6 with the bite
+carrying 96% of it by K=24. Decrements 1.69 then 0.29 — settling near 6.5.
+
+**Verified end to end**: on random directions in the K=24 span, M(η) ≤
+−Q_true(η) held in every case, tight to 1–3% (e.g. 1974.7 ≤ 2021.5,
+3487.0 ≤ 3537.4), with −Q_true evaluated by the exact Rust oracle.
+
+**What this changes.** Item 12 is no longer blocked by a structural
+obstruction (a non-quadratic functional resisting decomposition); it is
+reduced to the STANDARD WELD applied to the quadratic form M — the same
+block/tail/coupling argument already carried out for Gerver in Part II.
+Remaining for that weld: Q_rel at K > 24 (needs a released mode in
+`sigma_area.rs` — a flag skipping the cap outer walls), then the tail
+constant c_T and coupling τ. Mechanical, not conceptual.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
