@@ -953,6 +953,53 @@ from two amplitudes and was wrong (first the "3/2-law" of N11, now this ε³
 reading). Two points determine a slope and nothing else. Order claims need at
 least three amplitudes plus an independent check.
 
+## ORACLE VALIDATED — and it exposes a NONZERO FIRST VARIATION 🌊🌊
+
+**Task 1 result.** `true_hessian` (Rust) agrees with `analytic_oracle`
+(independent mpmath implementation) to **4.4e-16** on every mode tested, with
+identical junction values. There is no solver bug. The earlier "implausible"
+rows are real behaviour of the object.
+
+**What the scaling test shows** (six amplitudes, 5e-5 … 2e-3):
+
+| mode | behaviour | reading |
+|------|-----------|---------|
+| e_x sin2t (k=1, odd) | 2dF/ε² → −4.812, stable to 4 digits | clean quadratic |
+| e_x sin4t (k=2, even) | dF = −3.23·ε, EXACTLY linear | nonzero 1st variation |
+| e_x sin16t (k=8, even) | dF = −12.9·ε, EXACTLY linear | nonzero 1st variation |
+
+Junction moves scale linearly with ε throughout — no basin jump, no
+continuation failure. **The structure-following functional is NOT STATIONARY
+at c_G in the even-k x-modes**, while the true functional is. Those are
+precisely the modes ANTISYMMETRIC under t → π/2 − t, i.e. the ones breaking
+Gerver's symmetry.
+
+**Transfer (Rule 1): singularity theory of envelope unfoldings.** The
+discrepancy F_struct − F_true is the SIGNED AREA OF SELF-INTERSECTION LOOPS of
+the traced curve: when an arc detaches, the structure-following curve develops
+a swallowtail, and Green's theorem counts the loop with a multiplicity that is
+wrong for the true region. A loop that appears LINEARLY in ε contributes a
+linear term — exactly what is measured. At a DEGENERATE fan the same mechanism
+is ε²-homogeneous, which is N12. So N12 and this defect are one phenomenon at
+two unfolding types.
+
+**Consequences, carefully bounded.**
+* The LADDER NUMBERS are unaffected: a second difference
+  (F(+ε) − 2F(0) + F(−ε))/ε² annihilates any linear term. So Part II's
+  m₁(K) = 0.805…0.775 remain what they always were.
+* What fails is the INTERPRETATION: with a nonzero first variation,
+  F_struct is not a stationarity-preserving surrogate, so "Q_struct < 0"
+  cannot be read directly as one-sided local maximality.
+* The frozen reconstruction is unaffected (its linear term vanishes by
+  criticality, and it is superset-valid) — the certified K=16 chain stands.
+
+**Open and now sharply posed.** Either (i) both oracles share an arc-range
+convention that is wrong on symmetry-breaking modes, or (ii) the
+structure-following object genuinely fails stationarity there. These are
+distinguishable: compare the first variation against the frozen form's, which
+is provably zero. That is the next test, and it decides whether Part II's
+ladder step needs repair or merely reinterpretation.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
