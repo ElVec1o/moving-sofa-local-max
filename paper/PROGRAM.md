@@ -1217,6 +1217,106 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## THE ROOT CAUSE: a gap in Lemma `lem:superset` (the paper's load-bearing lemma)
+
+Lemma `lem:superset` ("One-sided reconstruction") is stated for closed curves
+assembled from constraint subarcs **together with straight chords**, but its
+proof establishes only the constraint-subarc case: "each point excluded from
+R(Γ) by a constraint subarc is excluded from S(c) by that same constraint."
+
+**A chord is not a constraint boundary.**  Nothing stops a chord from cutting
+INTO S(c); when it does, S ⊄ R(Γ) and the conclusion g_true ≤ g_Γ fails.  The
+missing hypothesis: each chord must lie on a SUPPORTING LINE of the family.
+
+That hypothesis fails for Gerver at FIRST order.  At c_G the two bottom chords
+lie exactly on the wall line y = 0, so the lemma applies.  Under a perturbation
+with η(0) = η(π/2) = 0 the chord endpoints A(0) and C(π/2) lift off that line at
+rates η_x′(0) and η_x′(π/2), the chords leave the supporting lines, and the
+enclosed region loses the sliver beneath them — which is exactly the measured
+−(ℓ/2)L, and exactly the observed SIGN (|S| > |R|).
+
+This is the root cause of everything recorded above, and it supersedes the
+framing of the defect as a mysterious reconstruction bug.  It also explains why
+the additive repair fails item B4: adding a term to the FUNCTIONAL cannot restore
+CONTAINMENT of the region.
+
+### ITEM B4 — REFUTED [PROVED]
+
+A_corr := A_rec + (ℓ/2)(c_x′(0) + c_x′(π/2)) restores stationarity in every
+direction but does NOT dominate the true area.  Measured
+Δ(ε) := [A_corr − A_true](ε) − [A_corr − A_true](0), oracle offset subtracted:
+
+    x sin4t   ε=+0.02 → −1.8e-6    ε=−0.02 → −3.6e-4   (Δ/ε² = −0.005 / −0.900)
+    x sin8t   ε=+0.01 → −1.2e-6    ε=−0.01 → −1.3e-4   (Δ/ε² = −0.012 / −1.278)
+    y sin4t   both signs → +5e-8 (no defect in y, as expected)
+
+Δ < 0 on the ε<0 branch of every x-mode, strongly asymmetric between branches
+(a kink).  So B4 FAILS.  Part II must use the ker L restriction, or rebuild
+Γ_ε with chords pinned to the moving supporting lines.  The additive route is
+closed.
+
+### ITEM 5 — the certified ladder does NOT need recomputation [PROVED]
+
+The defect is LINEAR in ε and the ladder entries are symmetric second
+differences, which annihilate linear terms exactly.  Verified directly: the
+second difference of A_rec and of A_corr agree to 0.0 in the last digit
+(x sin4t −14.25946675, x sin8t −55.14424039, x sin12t −128.7951754,
+y sin4t −20.92292313).  So the certified K=16 block and the whole ladder stand
+as COMPUTATIONS; what the defect invalidates is the INFERENCE from them via
+`lem:superset`.
+
+### ITEM 3 — the selection rule is PROVED, and it is a Z₂ grading
+
+Not "odd Δ vanishes" — that was only the same-component part, and it was
+incomplete.  Measured exhaustively at K=32:
+
+    same component (xx, yy):  M[(c,k),(c,k′)] = 0  unless k+k′ EVEN   (ratio 1e-10)
+    cross component  (xy)  :  M[(0,k),(1,k′)] = 0  unless k+k′ ODD    (ratio 1e9)
+
+Both are one statement: M is block-diagonal for the Z₂ grading
+g(c,k) := (k+c) mod 2, i.e. M[u,v] = 0 unless g(u) = g(v).
+
+PROOF.  Let U(η)(t) := (η_x(π/2−t), −η_y(π/2−t)) — reverse t and flip y, which
+is Σ's ambidextrous symmetry (the ρ-conjugation of SIGMA_LOCAL.md §1 composed
+with time reversal).  Since sin(2k(π/2−t)) = (−1)^{k+1} sin(2kt),
+
+    U(x,k) = (−1)^{k+1}(x,k),      U(y,k) = (−1)^{k}(y,k),
+
+so U = +1 exactly on {x odd k} ∪ {y even k} (the g=1 block) and U = −1 on the
+g=0 block.  A U-invariant form cannot couple the two eigenspaces. ∎
+
+Confirmation that the grading is the true block structure: the two graded blocks'
+L² margins are 6.4806 and 3.8725, which are exactly the two smallest eigenvalues
+of the full M.
+
+### ITEM 12b — the correct model is BLOCK-Toeplitz with a 2×2 matrix symbol
+
+Three fits, with the acceptance test "symbol min must equal the measured H¹
+margin" applied to each:
+
+  1. scalar Toeplitz, xx block        min f = −0.613  vs H¹ = +0.068   REJECTED
+  2. scalar Toeplitz, graded g-blocks min f = +3.139  vs H¹ = +0.068   REJECTED
+  3. 2×2 matrix symbol                min f = −1.083  vs H¹ = +0.068   REJECTED
+
+Fit 1 failed because the xx block is not an invariant block.  Fit 2 failed
+because the graded block alternates component with k: its a₀ came out
+12.95 ± 2.78, and 12.95 = (10.3+15.8)/2 while 2.78 = (15.8−10.3)/2 — the
+"spread" was a period-2 structure, not noise.  Fit 3 uses the right model and
+the selection rule shows PERFECTLY in the fitted blocks (D=0 diagonal only,
+D=1 off-diagonal only, D=2 diagonal only, D=3 off-diagonal only), but the
+coefficients have not converged: the xx entries carry 5–13% spread against
+yy's 0.1%.
+
+So the structure is settled and the obstruction is quantified: the x-component
+has not reached its Toeplitz limit by k=32.  Item 12b stays OPEN pending the
+K=48 ladder (running, checkpointed to sigma_rel_K48.npy).
+
+No f_min from a rejected fit is quoted as a tail bound anywhere.
+
+### Scripts
+
+`sigma_graded_symbol.py`, `sigma_matrix_symbol.py`, `gerver_superset.py`.
+
 ## ITEM 12b — the Σ tail is TOEPLITZ.  Half of it is now closed.  [PROVED / OPEN]
 
 ### Why every previous weld failed

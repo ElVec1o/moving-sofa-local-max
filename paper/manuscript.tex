@@ -2371,6 +2371,78 @@ better than quadratic.  All ladder computations in this paper are to be
 read in this sense.
 \end{remark}
 
+\begin{remark}[A gap in Lemma~\ref{lem:superset}, and the rank-one defect it
+produces]
+\label{rem:chord-gap}
+Lemma~\ref{lem:superset} is stated for closed curves assembled from
+constraint subarcs \emph{together with straight chords}, but its proof
+establishes only the statement for constraint subarcs: ``each point
+excluded from $R(\Gamma)$ by a constraint subarc is excluded from
+$S(c)$ by that same constraint''.  A chord is not a constraint
+boundary, and nothing prevents a chord from cutting \emph{into}
+$S(c)$; when it does, $S\not\subseteq R(\Gamma)$ and the conclusion
+$g_{\mathrm{true}}\leq g_{\Gamma}$ fails.  The hypothesis needed is
+that each chord lie on a supporting line of the family
+$\{H_{t}(c)\}$, so that it too excludes only points already excluded.
+
+This is not a vacuous caveat: for Gerver's sofa the omitted hypothesis
+fails under perturbation, and it fails at \emph{first} order.  The
+boundary $\partial S(\cG)$ contains three straight pieces, and the
+reconstruction closes them with chords.  On $[0,\varphi]$ the phase-1
+contact arc is not merely a wall fan with $\lambda_{A}\equiv0$: it is
+\emph{constant}, pinned at the corner $(1,0)$, and likewise the
+phase-2 arc is constant on $[\pi/2-\varphi,\pi/2]$ (both verified to
+$3\cdot10^{-31}$).  A perturbation with
+$\eta(0)=\eta(\pi/2)=0$ lifts the two chord endpoints off the wall
+line $y=0$ at exactly the rates $\eta_{x}'(0)$ and
+$\eta_{x}'(\pi/2)$, so the chords leave the supporting lines and the
+enclosed region loses the sliver beneath them.  Writing
+$\ell=0.806881614715$ for the common length of the two bottom wall
+segments, one obtains the exact first variation
+\begin{equation}\label{eq:rank-one}
+   \frac{d}{d\varepsilon}\,g_{\Gamma}(\varepsilon)\Big|_{\varepsilon=0}
+   \;=\; -\frac{\ell}{2}\bigl(\eta_{x}'(0)+\eta_{x}'(\pi/2)\bigr),
+\end{equation}
+whereas $g_{\mathrm{true}}'(0)=0$.  Indeed $\Gamma$ is a closed curve,
+so the first variation of the enclosed area is
+$\oint(u\,dy-v\,dx)$ with no boundary terms; the constant arcs have
+$dx=dy=0$ and contribute nothing, the top chord has both endpoints
+fixed, and each bottom chord lies on $y=0$ and so contributes
+$-\int v\,dx=-(\ell/2)\,\eta_{x}'$ since $v$ interpolates linearly
+from $\eta_{x}'$ to $0$.  Numerically the two bottom segments have
+\emph{exactly} equal length, giving $-\ell/2=-0.403440807358$ against
+an independent fit $-0.40344081$, and \eqref{eq:rank-one} reproduces
+measured first variations on random mixed directions to
+$2\cdot10^{-9}$.
+
+Three consequences.  (i) The defect is \emph{rank one}: it is the
+single linear functional $L(\eta)=\eta_{x}'(0)+\eta_{x}'(\pi/2)$, so
+$g_{\Gamma}$ is stationary on the codimension-one subspace $\ker L$,
+which contains every $y$-mode and every odd $x$-mode.  (ii) The
+\emph{ladder numbers of this paper are unaffected}: they are symmetric
+second differences, which annihilate a linear term exactly (verified
+to $0$ in the last digit).  What \eqref{eq:rank-one} invalidates is the
+\emph{inference} from them via Lemma~\ref{lem:superset}, not their
+values.  (iii) The naive repair
+$g_{\Gamma}+(\ell/2)(c_{x}'(0)+c_{x}'(\pi/2))$ restores stationarity
+in every direction but \emph{not} domination: the corrected functional
+falls below $g_{\mathrm{true}}$ on the $\varepsilon<0$ branch of the
+$x$-modes at order $\varepsilon^{2}$.  Restoring
+Lemma~\ref{lem:superset} therefore requires rebuilding
+$\Gamma_{\varepsilon}$ so that its chords remain on supporting lines,
+rather than correcting the functional additively.
+
+For Romik's sofa $\Sigma$ (Section~\ref{sec:romik}) the same
+degeneracy is present --- its two phase-$A$ arcs are constant on
+$[0,\beta]$, both pinned at the $\rho$-fixed point $(1,\tfrac12)$ ---
+but every closure chord of $\partial\Sigma$ has length
+$\leq2.5\cdot10^{-6}$, the residual of the junction solve, because
+consecutive arcs meet at genuine junctions.  Since the defect is
+$-(\ell/2)L$ with $\ell$ the adjacent chord length, $\Sigma$ is
+untouched: its reconstruction is stationary to $2.6\cdot10^{-6}$ on
+random directions.  One law accounts for both sofas.
+\end{remark}
+
 
 The two-norm obstruction that dominated
 Sections~\ref{sec:passage-fails}--\ref{sec:quartic} is thereby
