@@ -782,6 +782,55 @@ residuals ~1e-10, Green area = A_R* to 2.6e-9). So Σ-local is a
 core — the same standard as Part II for Gerver, and as Baek's global result.
 It is NOT a fully symbolic proof, and the modulus is not explicit.
 
+## ADVERSARIAL REVIEW OF THE S7 CHAIN (Rule 6) — one real defect found
+
+Four attacks survived, one landed. S7's label is DOWNGRADED accordingly.
+
+**SURVIVED — quantifiers in Lemma T.** ‖d_n‖→0 gives φ_n − λ_n cos → 0 with
+λ_n = φ_n(β)/cos β a POINT VALUE, not controlled by ‖η_n‖_{L²}. It is
+controlled because β lies in the middle phase where H¹ control holds, so λ_n
+is bounded and a subsequence converges. Step was missing from the write-up;
+it holds. Added.
+
+**SURVIVED — shape of the limit.** The cap weight sin²t degenerates only AT
+t=0, so ∫sin²t(η_x′)² → 0 still forces η_x′ = 0 a.e. on (0,β). The limit is
+constant on the caps; the bite control and the weighted-derivative control
+agree (over-determined).
+
+**SURVIVED — C₀ independence.** C₀ depends only on β, the mask table and the
+arc count; the Agmon absorption uses the middle phase only.
+
+**SURVIVED — circularity.** Lemma T → Prop 7′ → N5/N7/N9/masks. Acyclic.
+
+**LANDED — ONE-SIDEDNESS. 🌊** Q_true from second differences is the AVERAGE
+of the two one-sided second variations. Local maximality needs each branch:
+
+    F(±ε) − F₀ = −(ε²/2)[ −Q_rel + 2N(±φ) ] + O(ε³),
+
+so the + branch requires −Q_rel + **2N(φ)** > 0, whereas M bounds
+−Q_rel + N(φ) + N(−φ). Because the bite is genuinely one-sided (measured
+N(φ)=0, N(−φ)=26.24 on cap 1), these differ. **Theorem 9 as assembled bounds
+the symmetric second difference, not the quantity local maximality needs.**
+
+*Missing piece — Lemma O.* On the cone where both caps are outward (zero bite
+on that branch), −Q_rel alone must be coercive. Evidence: of 200 000 random
+K=24 directions, 1990 lie in that cone and over them min −Q_rel = **1470**,
+against a global minimum of **0.201** — the dangerous near-null directions are
+oscillatory and bite on BOTH branches, as the mechanism predicts. Encouraging,
+but 1990 samples in 48 dimensions is thin sampling, and Lemma O is NOT proved.
+
+**ALSO NOTED — endpoint restriction.** Prop 7′ discards endpoint junction
+terms using η(0)=η(π/2)=0, i.e. it is proved on the endpoint-vanishing
+subspace only. Part II handled the general case with extra work (slope
+carriers, τ_s = 0.063). Not done for Σ. This caveat was NOT stated when
+Theorem 9 was assembled; it is stated now.
+
+**REVISED STATUS.** S7 drops from PROVED to CONJECTURE. What stands: 12a
+(interpolation), 12b-ii (Lemma T), 12b-iii (Prop 7′ on the endpoint-vanishing
+subspace) — all PROVED. What is missing: Lemma O (one-sidedness) and the
+endpoint-general case. The review did its job: a chain assembled in one
+session was bounding the wrong quantity, and no result was built on it.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
