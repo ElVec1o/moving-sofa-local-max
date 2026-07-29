@@ -207,7 +207,8 @@ generally.
 - **[C] S4/S7‴-e. Σ CERTIFICATION — the first rigorous interval statement
   about Σ.** (`certify_sigma_struct.py`.) Q_struct is **NEGATIVE DEFINITE
   on the K-mode span, certified in arb** (Sylvester's criterion applied to
-  the ball matrix at 256 bits; entry radii ~1e-13; definiteness is
+  the ball matrix at 256 bits; **K=10 (20 modes, all 210 entries, max
+  radius 2.1e-12) certified**, minors positive through order 20; definiteness is
   metric-independent so no eigenvalue enclosure is needed). Certifiable
   precisely because of the three earlier structural results: integrands
   trajectory-independent, arc ranges exactly {0, β, π/2−β, π/2}, junction
