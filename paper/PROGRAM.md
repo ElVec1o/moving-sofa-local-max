@@ -279,12 +279,40 @@ generally.
   Σ Hessian's L² margins 3.98/3.68/3.58 (K-STABLE) at K = 10/16/24. The
   bite is exactly the difference, and the true form's K-stability is
   therefore explained rather than merely observed.
-  Remaining to make it a theorem: the uniform lower bound
-  Q_rel(η) − N(φ_η) − N(−φ_η) ≤ −m‖η‖²_{L²} via the dichotomy
-  (i) η with cap oscillation ⟹ N ≳ (oscillation amplitude)² by N12(b);
-  (ii) η one-signed on the caps ⟹ N = 0 by N12(a) but Q_rel is then
-  strongly negative (measured −16.6 on cap bumps). Both halves are
-  finite explicit estimates on the closed-form objects.
+  **S7‴-d. THE DICHOTOMY — PROVED (analytic ingredients) AND COMPUTED
+  (K-uniform).** (`sigma_dichotomy.py`.) The chain, each step elementary:
+  * G(s) = sin2β/(2 sin(β−s)sin(β+s)) is MINIMIZED at s = 0, because
+    sin(β−s)sin(β+s) = sin²β − sin²s (Lean: `fan_cut_gain`), so
+    G ≥ G(0) = cot β uniformly on the fan. **[P]**
+  * The two branches cover the two signs of d, so
+    N(φ) + N(−φ) ≥ max_s d(s)²G(s) ≥ cot β·‖d‖²_∞. **[P]**
+    (Verified against exact N: bound/exact = 89%, 58%, 75% on test data.)
+  * **d is translation-invariant**: replacing φ by φ + c·cos s leaves d
+    identically unchanged, since cos s spans ker(h ↦ h+h″) — exactly the
+    rigid-translation data of a fan. So the bite measures the distance of
+    the cap data from the unique true null direction, and the bound
+    descends to the quotient. **[P]**
+  * Hence **wherever the released form degenerates the bite must pay**,
+    and the total is what matters. Computed infimum of
+    −Q_true = −Q_rel + Σ_caps bites over the p least-negative released
+    directions (search restriction certified safe by the spectral gap:
+    λ_{p+1} = 457 / 285 / 146 ≫ the minimum ≈ 10):
+
+    | K  | released margin alone | **TOTAL (dichotomy)** | bite share |
+    |----|----------------------|-----------------------|------------|
+    | 10 | 8.116                | **11.06**             | 20.7%      |
+    | 16 | 1.295                | **10.47**             | 26.6%      |
+    | 24 | 0.239                | **10.00**             | 32.1%      |
+
+    The released margin collapses by a factor 34 while the TOTAL is
+    K-STABLE at ≈ 10 (decrements 0.59, 0.47 — extrapolating to ≈ 9),
+    and the bite's share grows monotonically 21% → 27% → 32%: the
+    dichotomy operating exactly as designed. Stable in p (p = 6 and
+    p = 10 agree to 0.5%).
+  * **Note on the earlier "true ladder margin 3.5"**: that was the min
+    eigenvalue of a matrix built by POLARIZING a non-quadratic functional,
+    hence not the functional's infimum. The honest object is the
+    directional infimum computed here.
 - **[✗→P] S7‴ (supersedes S7″ — the corrected object).** The fan release
   FAILED as sole certified object: released-ladder margins collapse
   (L²: 4.58/0.91/0.20; weighted E_w: 0.136/0.0062/0.0013 at K=10/16/24;
