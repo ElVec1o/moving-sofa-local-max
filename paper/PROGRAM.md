@@ -204,8 +204,22 @@ generally.
   (cap-wall normal displacements) from the mask/N4 data to enumerate
   cones; ~4 shifted ladders. Extend the L² ladder to K=32 for the
   average-form limit.
-- **[ ] S4.** Σ analytic oracle (both families; the Rust port pattern) — for
-  precision beyond Shapely and for certification.
+- **[C] S4/S7‴-e. Σ CERTIFICATION — the first rigorous interval statement
+  about Σ.** (`certify_sigma_struct.py`.) Q_struct is **NEGATIVE DEFINITE
+  on the K-mode span, certified in arb** (Sylvester's criterion applied to
+  the ball matrix at 256 bits; entry radii ~1e-13; definiteness is
+  metric-independent so no eigenvalue enclosure is needed). Certifiable
+  precisely because of the three earlier structural results: integrands
+  trajectory-independent, arc ranges exactly {0, β, π/2−β, π/2}, junction
+  response null. No oracle, no junction solve, no floating point in the
+  chain. **By N1 this certifies that the TRUE ambidextrous functional
+  strictly decreases to second order in every direction of the span.**
+  Caveat recorded: β enters as a ball of radius 1e-16; enclosing β from
+  its defining equation (the `gerver_arb.py` Newton–Kantorovich pattern)
+  is NOT yet redone for Romik's constants, so the statement is certified
+  conditionally on that enclosure. The Σ analytic/Rust oracle originally
+  planned here is no longer needed for certification — the closed form
+  superseded it.
 - **[P°] S5.** Σ weighted interior Gårding (Theorem 4, SIGMA_LOCAL §5):
   proof route complete and the statement stands — but S3's data shows it
   is VACUOUS on cap-oscillatory modes (the unweighted C₀‖η‖² slack
@@ -340,9 +354,15 @@ generally.
   as the fallback/refinement frame (branch data: −9/−43 per unit L²
   along the worst mode; FD-average m_L² ≈ 3.5).
 - **[ ] S6.** Σ tail weld (weighted analogues of the Part-II items).
-- **[ ] S7.** Statement: "Σ is a strict local maximum of the ambidextrous
-  functional" (computer-assisted, same standard as Part II) — **the first
-  new-truth theorem of the program** (no prior result implies it).
+- **[ ] S7. Σ-LOCAL — STILL OPEN, gap now named.** Theorem 9 is assembled
+  in SIGMA_LOCAL.md §9 with a 12-row input ledger. Items 1–11 are done
+  (two independent routes: the CERTIFIED Q_struct < 0, and the dichotomy
+  with K-stable constant ≈ 10). **Item 12 — the tail/weld from the K-mode
+  span to all of L² — is NOT done.** Until it is, what exists is a
+  statement about finite-dimensional subspaces, not a local-maximality
+  theorem. The remaining gap is one named, standard-shaped estimate (the
+  Σ analogue of Part II's weld: far-tail Schur bound N8 + block coupling),
+  not a structural unknown.
 
 ## Part IV — The global machine (G2–G3)
 
