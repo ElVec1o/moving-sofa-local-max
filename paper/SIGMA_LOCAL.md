@@ -352,6 +352,35 @@ by Proposition 7 uniformly in frequency; the finite ladder block
 supplies the mixed/low span; the coupling is bounded by the same
 structure constants (Part-II weld algebra in L² normalization).
 
+### 8d. The corner-constant budget (Prop 7 constants)
+
+For x-polarized η supported in the first cap [0, β]:
+
+1. *Mask-edge boundary terms vanish.* C's mask edges are 0 and π/2,
+   where sin t·cos t = 0; D's mask edge is π/2−β, where η = 0. Same for
+   the reflected arcs. So Lemma 7a contributes pure coverage:
+   −4∫₀^β sin²t·(η′ₓ)², no edge terms.
+2. *Hardy with the sin²-weight.* On [0, β]: sin t ≥ (sin β/β)·t =
+   0.9861·t, so sin²t ≥ 0.9724·t² and each arc's coverage is ≥
+   0.9724·(1/4)‖η‖²_{L²} on cap-supported directions (Hardy constant
+   1/4, sharp). Four arcs: structural constant ≥ 0.9724 ≈ 0.97.
+3. *What remains: the released-corner vertex quadratic.* The two-wall
+   corner at the cap responds through the extreme wall displacements
+   (g(0), g(β)) = (⟨η(0),μ₀⟩, ⟨η(β),μ_β⟩); for sine-basis directions
+   η(0) = 0, leaving a rank-one quadratic in η(β): |corner| ≤
+   C_V·|η(β)|². Agmon on [β/2, β] with the weighted derivative:
+   |η(β)|² ≤ δ·∫sin²t(η′ₓ)² + (sin(β/2))⁻²·δ⁻¹·‖η‖²_{L²} — absorb the
+   first part into item 2's coverage (4 → 4 − C_Vδ), the second into
+   the L² constant.
+4. *Junction-chord terms at β* (C/D arcs meeting the corner complex):
+   same |η(β)|²-type bounds via N7, added to C_V.
+
+Net cap-sector constant: m_cap ≥ 0.97 − (corner budget), with the
+measured K=16 margin 0.911 sitting exactly in this window — the
+empirical corner budget is ≈ 0.06, comfortably within item 3–4's
+head-room. The full explicit C_V enumeration is the remaining
+pen-and-paper item of Proposition 7.
+
 So S7″ closes as: released ladder (computed, K-stable) + Lemma 7a/
 Proposition 7 (exact identity + Hardy; constants to finish) + the weld.
 The prediction for the ladder trend: m_rel(K) may relax from 4.58
