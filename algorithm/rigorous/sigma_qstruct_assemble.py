@@ -137,7 +137,9 @@ def assemble(K, variant='struct', nq=None):
                            else (1.0 if modes[i][0] == 0 else -1.0)
                           for j in range(n)] for i in range(n)])
             W = (S*ws) @ SP.T
-            Q += sgn * E * 0.5*(W + W.T)
+            # eta_u ^ eta_v' polarizes with the DIFFERENCE: E is antisymmetric,
+            # so E*(W - W^T) is the (symmetric) matrix of the quadratic form.
+            Q += sgn * E * 0.5*(W - W.T)
             continue
         M = (U*ws) @ V.T
         Q += sgn * 0.5*(M + M.T)
