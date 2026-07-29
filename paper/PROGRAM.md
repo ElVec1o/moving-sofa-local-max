@@ -1150,6 +1150,56 @@ symmetric perturbations and not on antisymmetric ones.
 **Task 1 (closed-form δA_rec vs ∮v_n ds) is NOT done.** The empirical lead
 above is a substitute for direction, not for the derivation.
 
+## THE DOUBLED-CORNER LEAD IS DEAD (matching artifact)
+
+Re-mapped ∂S at 5000 probes with match distances reported:
+
+| run | probes | median distance |
+|-----|--------|-----------------|
+| X | 1357 | 1.27e-4 (good) |
+| D | 344 | **9.75e-2** |
+| C | 1258 | 1.24e-4 (good) |
+| X (2nd) | 439 | **3.57e-1** |
+| A | 1258 | 1.24e-4 (good) |
+| B | 344 | **9.78e-2** |
+
+The suspicious runs are not matches at all — distances of 0.1 to 0.36. Gerver's
+boundary contains STRAIGHT WALL SEGMENTS which the matcher did not include, so
+those probes were assigned to whatever arc happened to be nearest. **The
+doubled corner run is an artifact; the arc table is not shown to be wrong.**
+
+## δA_rec DERIVATION — the criterion, and why B alone is not the answer
+
+For a p-slot arc, δP = pμ + p′ν and P′ = λν, so the Green integrand is
+δP∧P′ = **p·λ**, while the true first variation contributes
+⟨η,n⟩·(ds/dt) = **p·|λ|**. They agree iff λ > 0. For a ν-slot arc,
+δP = −q′μ + qν and P′ = λ_C μ give δP∧P′ = **−q·λ_C**, which agrees with
+q·|λ_C| iff λ_C < 0. So each arc's table sign must match its wedge
+orientation, and the criterion differs by slot.
+
+Measured envelope speeds on the assumed ranges:
+
+| arc | λ range | fraction λ<0 | slot | consistent? |
+|-----|---------|--------------|------|-------------|
+| A | [0, +1.399] | 1% | p | yes |
+| C | [−1.399, 0] | 98.2% | q | yes (ν-slot self-corrects) |
+| D | [+0.132, +0.500] | 0% | q | **no — λ>0 on a ν-slot** |
+| B | [−0.500, −0.132] | 100% | p | **no — λ<0 on a p-slot** |
+
+So B and D are the two arcs whose slot formula and speed sign disagree.
+
+**But this does not yet explain the magnitude.** From the term decomposition,
+IB = +0.0488 and ID = +0.3546 for sin4t; flipping both signs moves the total by
+−0.807, against a defect of −3.2275. So the sign criterion identifies a real
+inconsistency but is NOT the whole mechanism. Something else contributes the
+bulk.
+
+**Honest status.** The derivation produced a genuine structural criterion and
+two candidate arcs, and killed the previous lead. It did not close the
+question. The remaining work is to carry the δA_rec computation through in
+closed form — including the chord/segment terms, which the decomposition shows
+are large (S2 = +2.841 on sin4t) and which no hypothesis has yet addressed.
+
 ## Compute discipline (post-OOM, 2026-07-29)
 
 A machine OOM killed all running computations (three concurrent Python
