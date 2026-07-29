@@ -177,6 +177,41 @@ generally.
   dominates the weighted coverage there): true, not delivering. Kept as
   a bulk instrument; the delivering frame for the caps is the cell-wise
   L² statement (S7′).
+- **[K] S4/S7‴-a. Σ's structure map and CLOSED-FORM form — BUILT AND
+  VALIDATED.** (`sigma_struct_map.py`, `sigma_struct_junctions.py`,
+  `sigma_qstruct_assemble.py`.) Results:
+  * **Traversal**: ∂Σ is exactly 10 arcs,
+    dA[π/2→b] rA[b→π/2] dB[π/2→β] dX[β→B] dD[B→0] rC[0→B] dC[B→0]
+    rD[0→B] rX[B→β] rB[β→π/2] (B = π/2−β), ρ-symmetric, the doubled
+    Gerver structure.
+  * **Junctions**: EVERY junction sits exactly at β, π/2−β, 0 or π/2
+    (Newton residuals ~1e-10). Σ has no free junction parameters at c_R
+    — strictly simpler than Gerver's four.
+  * **Cap law, arc-level**: the A-contact is frozen at exactly (1, ½) —
+    on the mirror axis, arc speed 0 to machine precision on (0,β).
+    λ_A ≡ 0 verified directly on the geometry.
+  * **Validation**: Green area over the table = −1.6449552 (A_R* to
+    2.6e-9); `Q[const_x, ·] ≡ 0` to 1.4e-12 (horizontal translation is
+    an exact symmetry of Σ — end-to-end check of the whole assembly);
+    every diagonal entry matches a direct struct-following FD oracle to
+    5 digits.
+  * **Key structural fact**: the per-arc integrands and chord jets are
+    TRAJECTORY-INDEPENDENT; the trajectory enters only through the arc
+    ranges, which are exactly {0, β, π/2−β, π/2}. So Q_struct is a
+    finite sum of elementary trigonometric integrals — closed form, no
+    oracle, no junction solve, directly interval-certifiable.
+  * **Ladder** (d²F/dε² convention): negative definite at every K, but
+    the margin decays on CAP-CONCENTRATED modes (L²: 1.21 / 0.62 / 0.035
+    at K = 6/16/24; quadrature-converged to 6 digits, so real).
+- **[ ] S7‴-b (the identified next step).** The decay is the FROZEN-form
+  defect, not a Σ pathology: with junctions frozen, the junction chords
+  contribute O(k²) terms that eat the cap arcs' coercivity — exactly the
+  Gerver phenomenon where the wall-anchored frozen form went indefinite
+  at K=32 while the true form stayed at m ≈ 0.78. The fix is the proved
+  envelope identity N3: let the junction parameters respond (affine
+  junction family) and take the envelope. Concretely: port the true-form
+  junction response to Σ — cheap here, since Σ's junctions are the phase
+  transitions themselves.
 - **[✗→P] S7‴ (supersedes S7″ — the corrected object).** The fan release
   FAILED as sole certified object: released-ladder margins collapse
   (L²: 4.58/0.91/0.20; weighted E_w: 0.136/0.0062/0.0013 at K=10/16/24;
