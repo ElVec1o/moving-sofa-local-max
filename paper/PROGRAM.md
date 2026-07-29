@@ -520,23 +520,33 @@ sits at KINKS THAT MOVE WITH ε, so it does not cancel, and the 1/ε² = 1e8
 amplification exposes it. This is a real property of the method, not a
 tuning issue.
 
-**`subtract_wedge` ATTEMPTED — INCOMPLETE (honest status).** The exact
-polygon-minus-wedge routine is written (event walk along ∂P, re-routing
-the inside-Q run along ∂Q through the apex, with an apex-in-polygon test)
-and the pipeline was restructured into a convex pass followed by a wedge
-pass so Sutherland–Hodgman only ever sees convex subjects. **It does not
-fire**: all 2400 wedge subtractions leave the polygon unchanged, so the
-binary currently returns the convex body C2 (2.0133) rather than Σ
-(1.6451) — the missing 0.368 is exactly the notch. Verified that the
-wedges MUST bite (10/10 probe points just inside the corner path are
-simultaneously inside C2 and inside some quadrant), and the wedge normals
-and reflected-wedge apex/normals were each re-derived and confirmed. So
-the bug is in the event walk, not the geometry set-up. Diagnostic left in
-the source. Note one informative accident: the high-frequency FD is
-already accurate (−52.368 vs −52.390, 0.04%) because the convex part
-carries that direction's second variation, while the smooth cap-bump
-direction — where the notch matters — is 10% off. **The oracle is NOT
-usable for areas in this state**; shapely remains the reference.
+**`subtract_wedge` — DONE, and the oracle is now EXACT.** The routine
+walks ∂P, classifies against the quadrant, computes crossings, and
+re-routes each inside-run along ∂Q through the apex.
+
+*The bug that took the debugging*: with a single enter/exit pair the walk
+begins AT the exit, so the Enter that cyclically precedes it is still
+pending when the loop ends and never receives its ∂Q routing — the
+boundary then short-circuits along a chord and removes only a thin sliver
+instead of the whole wedge region. It was invisible from the outside
+because the apex-fallback counter never tripped (the code never reached an
+Exit with a pending Enter). Diagnosed by instrumenting one wedge: it
+showed `inside=1, crossedges=2` while shapely put 0.150 of area in that
+same quadrant — proving the walk ran but removed nothing. Fixed by giving
+the wrap-around pair its own closure.
+
+**Validation — exact agreement with shapely:**
+
+| quantity | Rust | shapely | difference |
+|---|---|---|---|
+| area at c_R | 1.645080257887 | 1.645080257887 | 8.4e-15 |
+| FD, smooth cap bump | −81.38334 | −81.38334 | 0.0000% |
+| FD, K=24 eigenvector | −52.38710 | −52.38710 | 0.0000% |
+
+1199 wedges fire. Both finite differences now match to all printed digits —
+the exactness property the slice quadrature lacked is restored, because the
+polygon arithmetic is exact and its error is common-mode across an FD
+stencil.
 
 **What is now Rust/C end to end**: the closed-form assembler
 (`sigma_struct.rs`, 0.5 s for K=64), the interval certification
