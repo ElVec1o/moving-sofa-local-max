@@ -478,3 +478,68 @@ floating point. Route B (the dichotomy) is the one that explains WHY the
 constant does not degenerate: the fan bite exactly compensates the released
 form's collapse, with its share growing 21% → 27% → 32% across K = 10, 16,
 24. A complete proof wants both: A for rigour, B for the uniform constant.
+
+## 10. Proposition 7' (item 12b-iii): the Gårding structure for M
+
+Since (cot β/β)(D₁+D₂)(η) is by definition (cot β/β)‖d_η‖²_{L²(caps)}, the
+required statement reduces to a Gårding inequality for the RELEASED form:
+
+**Proposition 7'.** There are a weight W ≥ 0 and a constant C₀ < ∞ with
+  −Q_rel(η) ≥ ∫₀^{π/2} W(t)|η′(t)|² dt − C₀‖η‖²_{L²}
+for all η in the (endpoint-vanishing) trajectory space, where W is bounded
+below by a positive constant on the middle phase [β, π/2−β] and satisfies
+W(t) ≍ sin²t near t = 0 and W(t) ≍ cos²t near t = π/2.
+
+*Proof.* By the per-arc Wirtinger forms (N5, proved), the second variation of
+any chord-closed reconstruction is a signed sum of per-arc terms plus finite
+junction terms:
+
+  −Q_rel(η) = Σ_a κ_a ∫_{I_a}(P_a′² − P_a²) dt + B(η),  κ_a > 0,
+
+with P_a = ⟨η, μ_t⟩ on μ-slot arcs and ⟨η, ν_t⟩ on ν-slot arcs (the signs are
+those verified in the assembly; ∫P(P+P″) = ∫P² − ∫P′² + [PP′] supplies the
+displayed form).
+
+*(i) Derivative terms → coverage.* In the rotating frame
+p′ = ⟨η′,μ⟩ + ⟨η,ν⟩ and q′ = ⟨η′,ν⟩ − ⟨η,μ⟩. For any δ ∈ (0,1),
+(A+B)² ≥ (1−δ)A² − (1/δ − 1)B², so
+
+  Σ_a κ_a ∫ P_a′² ≥ (1−δ)∫ ⟨M(t)η′, η′⟩ dt − C(δ)‖η‖²_{L²},
+
+where M(t) = Σ_a κ_a χ_{I_a}(t)·n_a n_aᵀ is the coverage matrix (§5). Set
+W(t) := (1−δ)·λ_min(M(t)). The −∫P_a² terms are absorbed into C₀.
+
+*(ii) W has the stated shape.* On the middle phase the released structure
+retains both slots of both families, so M(t) ⪰ c·I with c > 0. On the caps
+the μ-slot is RELEASED, leaving the two families' ν-slot arcs, whose frame
+pair ν_{±t} has Gram eigenvalues {2cos²t, 2sin²t} (N9, Lean-verified
+`frame_pair_identity`). Hence λ_min(M) ≍ sin²t near t = 0, and ≍ cos²t near
+π/2 by the mirror. This is exactly the W of Lemma T.
+
+*(iii) Junction terms.* B(η) is a finite sum of terms bilinear in the jet of
+η at the junction parameters {0, β, π/2−β, π/2}. A priori such terms involve
+η′ at a point, which no H¹ norm controls — this is the classical two-norm
+obstruction. It is removed by the breakpoint reparameterization theorem (N7,
+proved): the junction displacement is ⟨η(b),ν⟩ν + O(ε²), so after
+reparameterization B(η) depends on the point VALUES η(τ) only. The endpoint
+terms vanish on the endpoint-vanishing space (η(0) = η(π/2) = 0), and the
+remaining parameters β, π/2−β lie in the interior of the middle phase, where
+W ≥ w_mid > 0. Agmon localized to the middle phase,
+|η(τ)|² ≤ ε∫_mid|η′|² + C(ε)∫_mid|η|², therefore absorbs them into the
+already non-degenerate part of the coverage term at the cost of enlarging C₀.
+Choosing δ and ε small completes the proof. ∎
+
+**Consequence.** Proposition 7' supplies the hypothesis of Lemma T, so
+
+  **−Q_true(η) ≥ M(η) ≥ m‖η‖²_{L²}** for some m > 0, all η ⊥ translations,
+
+which is item 12b. The constant m is non-explicit (compactness); the computed
+value is ≈ 6.5.
+
+**Labels.** Proposition 7' is PROVED at the level of rigour of a paper
+proposition, with constants not tracked. Its inputs N5, N7, N9 are PROVED
+(N9's core Lean-verified). It relies on the released contact structure — which
+arcs are active on which intervals — and that is COMPUTED (mask table,
+traversal with junction residuals ~1e-10, Green area matching A_R* to 2.6e-9),
+not proved. So Theorem 9 is **computer-assisted**, with the contact structure
+as its computational core, exactly as in Part II for Gerver.
