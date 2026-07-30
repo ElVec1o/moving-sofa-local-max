@@ -1217,6 +1217,106 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## S6 SOLVED: the second mechanism is a SELF-INTERSECTION LENS  🔥🔥🔥
+
+The repair for Σ is not geometric at all -- it is in how the area is EVALUATED.
+
+Lemma `lem:superset` is a statement about the enclosed REGION: S(c) ⊆ R(Γ), hence
+|S| ≤ |R(Γ)|.  But every reconstruction in this project evaluates a SIGNED area,
+a Green/shoelace sum, and
+
+    signed area  =  |R(Γ)|   ONLY IF Γ is simple.
+
+When Γ self-intersects, the shoelace SUBTRACTS the lens instead of adding it, so
+the computed number falls below |R(Γ)| and can fall below |S| even though the
+region still contains the sofa.  The lemma was never wrong here; the evaluation
+was.  This is a SECOND failure mode, independent of the chord gap.
+
+### Evidence
+
+Lens area (resolved region area minus |shoelace|) on the MATCHED Σ curve, against
+the deficits measured in sigma_matched.py:
+
+    case            lens        deficit      agreement
+    c_R          +5.45e-13         --        (curve is simple at c_R)
+    dir1 -0.004  +8.312e-05    -8.270e-05     0.5%
+    dir2 -0.004  +3.125e-05    -3.016e-05     3.6%
+    dir2 -0.002  +7.612e-06    -7.066e-06     7.7%
+
+The lens is exactly QUADRATIC in ε: over the three amplitudes ε = -0.004, -0.002,
+-0.001 it is 3.125e-05, 7.612e-06, 1.878e-06, giving local exponents 2.04 and
+2.02.  (Three amplitudes, per the standing rule that order claims need ≥3.)
+
+### The repair, and how far it goes
+
+Evaluate the enclosed REGION's area, resolving self-intersections (shapely
+`buffer(0)` returns exactly the outer region).  Measured, offsets subtracted,
+K=6, exact Rust oracle n=4801:
+
+    signed shoelace : 7/9 probes with Δ < 0,  worst -8.290e-05
+    region area     : 2/9 probes with Δ < 0,  worst -6.456e-07
+
+A factor 375 on the worst case.  The dominant ε² deficit is GONE.
+
+The two survivors are NOT sampling error -- they converge under refinement
+(n/arc = 600, 1200, 2400 gives -6.456e-07, -5.976e-07, -5.856e-07 and
+-2.794e-07, -2.728e-07, -2.710e-07).  But their scaling is ε^1.11, not ε², so
+they are not the ε² mechanism; and at ~5e-7 they sit 50x below the Σ oracle
+offset (3.14e-05), whose own perturbation dependence is unquantified at that
+level.  Honest status: unresolved, plausibly an oracle artifact, definitely not
+the mechanism that was breaking Theorem 9.
+
+### Caveat carried forward
+
+`sigma_matched.solve_matched` failed to converge on 3 of 12 probes (Newton
+residuals 5.6e-2, 5.1e-2, 2.9e-3).  Those rows are excluded everywhere above.
+The Newton needs a better initial guess or a continuation in ε before the matched
+response can be used at scale.
+
+## G8: THE CORNER-PATH STEP, reduced and certified  🔥🔥
+
+The chord-free Γ has three kinds of piece.  Wall-line segments and envelope arcs
+are rigorous (each lies on the boundary of a half-plane containing S, resp. bounds
+the intersection of such half-planes).  The open piece was the CORNER PATH, which
+enters with a MINUS sign, so we need
+
+    (region bounded by the corner path)  ⊆  ⋃_t Q_t.
+
+REDUCTION (this is the new content).  Write points as complex numbers.  With
+μ_t = (cos t, sin t), ν_t = (−sin t, cos t),
+
+    ⟨q − c(t), μ_t⟩ + i ⟨q − c(t), ν_t⟩  =  e^{−it} ( q − c(t) ),
+
+and Q_t is exactly the open third quadrant in the (μ_t, ν_t) frame at c(t).  Hence
+
+    q ∈ Q_t   ⟺   arg( q − c(t) ) − t  ∈ (π, 3π/2)   (mod 2π).
+
+Membership in ⋃_t Q_t is therefore a ONE-DIMENSIONAL root-existence question for
+the scalar function θ(t) = arg(q − c(t)) − t.  That is a form a proof can attack;
+the raw two-dimensional covering statement was not.
+
+CERTIFICATE.  min over the corner region of max_t min(−f_μ, −f_ν), as the t-grid
+refines:
+
+    n_t = 3001    Δt = 5.24e-04    margin -1.063e-04
+    n_t = 12001   Δt = 1.31e-04    margin +1.687e-05
+    n_t = 48001   Δt = 3.27e-05    margin +3.247e-05
+    n_t = 192001  Δt = 8.18e-06    margin +3.852e-05
+
+Converging to ≈ +3.9e-05, POSITIVE.  The negatives at the coarse grid were pure
+t-discretisation, and discretising t can only UNDERestimate a max, so refinement
+could only help -- which it did.  Every point the reconstruction subtracts is
+already excluded from S by some wedge.
+
+Label: HEURISTIC (Rule 7 -- a converged certificate, not a proof), but the other
+two piece types are PROVED and the corner criterion is now explicit enough to
+attempt analytically.
+
+## Scripts
+
+`sigma_crossing.py` (self-intersection / lens detector), `sigma_resolved.py`
+(region vs signed area, domination test), `gerver_corner.py` (the corner
+criterion and its margin).
 ## Σ's SECOND MECHANISM: chords are NOT the only problem  💧💧
 
 `sigma_envelope.py`'s contract reads: "Every such reconstruction is superset-valid,
