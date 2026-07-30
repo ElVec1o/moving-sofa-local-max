@@ -992,4 +992,114 @@ theorem cardano_vanishes {x : Int} (hx : (x*x*x) + 6*(x*x) + 9*x - 4 = 0) :
   rw [cardano_substitution, hx]
   omega
 
+/-! ## F16 — the cone-membership step of T1
+
+T1's proof needs: for `q = (p_x - ε, y)` and `p = c(t₀)`,
+
+    q ∈ Q_{t₀}   ⟺   ⟨q-p, μ⟩ < 0  and  ⟨q-p, ν⟩ < 0,
+
+and with `μ = (C, S)`, `ν = (-S, C)` (so `C = cos t₀ > 0`, `S = sin t₀ > 0`),
+
+    ⟨q-p, μ⟩ = -εC + (y-p_y)S,        ⟨q-p, ν⟩ = εS + (y-p_y)C .
+
+The ν-condition rearranges to `y·C < p_y·C - ε·S`, i.e. `y < p_y - ε tan t₀`, and the
+μ-condition is then automatic because its right-hand side is non-negative.  F16
+records both steps over `Int`, with the products `E*S`, `Y*C`, `P*C`, `E*C` as atoms so
+that each statement is linear in them.  The covering criterion itself is F13's
+`strip_covers_iff`; F16 supplies the two membership steps feeding into it. -/
+
+/-- **F16a (the binding condition).**  The `ν`-half of cone membership is exactly
+    `y·C < p_y·C - ε·S`, which is `y < p_y - ε·tan t₀`. -/
+theorem cone_nu_iff {E Y P S C : Int} :
+    (E*S + (Y*C - P*C) < 0) ↔ (Y*C < P*C - E*S) := by omega
+
+/-- **F16b (the other half is automatic).**  Given the `ν`-condition and
+    `ε·S, ε·C ≥ 0`, the `μ`-condition holds without further hypotheses: its
+    right-hand side is non-negative while the left is already negative. -/
+theorem cone_mu_of_nu {E Y P S C : Int} (hES : 0 ≤ E*S) (hEC : 0 ≤ E*C)
+    (h : Y*C < P*C - E*S) : (Y*C - P*C) - E*C < 0 := by omega
+
+/-! ## F17 — the niche functional in convex-linear data (P3c)
+
+Section 8 of the note derives, for the cap `K` with support function `h`,
+
+    c(t)      = (F-1) μ_t + (G-1) ν_t          F = h(μ_t), G = h(ν_t)
+    α₁(t)     = -⟨c',μ_t⟩ = G - 1 - F'         (face-1 arm)
+    α₂(t)     =  ⟨c',ν_t⟩ = F - 1 + G'         (face-2 arm)
+    σ(t)      = c_y/cos t = (F-1) tan t + G-1  (face-1 reach to the corridor floor)
+
+all affine in `h`; and the niche area
+
+    |N| = ∫ [ ½(α₂⁺)² + ½(σ-α₁)² - ½(α₁⁻)² ] dt .
+
+Three steps are arithmetic and are recorded here.  F17a is the Jacobian integral that
+produces the bracket, in the form that avoids halves.  F17b is the normal-velocity sign
+criterion of Lemma "Normal velocities": face 1 advances exactly beyond its envelope
+point and face 2 exactly inside its own, which is why *no sign hypothesis on the arms
+is needed* — the repair of the reported injectivity failure.  F17c is midpoint
+convexity of `x ↦ (x⁺)²`, the property that makes the first two terms convex
+quadratics.  Atoms are `Int`; products appearing in more than one term are named. -/
+
+/-- The positive part, spelled out so that no `Mathlib` `max` API is needed. -/
+def pp (x : Int) : Int := if 0 ≤ x then x else 0
+
+theorem pp_nonneg (x : Int) : 0 ≤ pp x := by
+  unfold pp; split <;> omega
+
+theorem pp_add_le (a b : Int) : pp (a + b) ≤ pp a + pp b := by
+  unfold pp; split <;> split <;> split <;> omega
+
+/-- **F17a (the arm integral).**  `∫_{α⁺}^{σ} (s-α) ds = ½(σ-α)² - ½(α⁻)²`, doubled to
+    clear the halves and split on the sign of `α`.  For `α ≤ 0`, `α⁻ = -α` and the
+    right side is `σ² - 2ασ`. -/
+theorem arm_integral_neg {S A : Int} (hA : A ≤ 0) :
+    (S - A)*(S - A) - pp (-A) * pp (-A) = S*S - 2*(A*S) := by
+  have h : (S - A)*(S - A) = S*S - 2*(A*S) + A*A := by
+    simp [Int.mul_sub, Int.mul_comm]; omega
+  have hp : pp (-A) = -A := by unfold pp; split <;> omega
+  rw [hp]
+  have hn : (-A)*(-A) = A*A := by simp [Int.neg_mul, Int.mul_neg]
+  omega
+
+/-- **F17a' (the other branch).**  When `α ≥ 0` the clamp kills the subtracted term
+    and the arm integral is exactly `½(σ-α)²`, the convex-quadratic case. -/
+theorem arm_integral_pos {S A : Int} (hA : 0 ≤ A) :
+    (S - A)*(S - A) - pp (-A) * pp (-A) = (S - A)*(S - A) := by
+  have hp : pp (-A) = 0 := by unfold pp; split <;> omega
+  rw [hp]; omega
+
+/-- **F17b (normal-velocity signs, and why no joint hypothesis is needed).**  With
+    `V₁ s = s - α₁` and `V₂ s = α₂ - s`, each face advances on one side of its *own*
+    envelope point, and each statement mentions only its own arm.  The face-1 sweep
+    `[α₁⁺, σ]` is therefore nonempty under a condition on `σ` and `α₁` alone, in both
+    sign regimes of `α₁` — including `α₁ < 0`, where the one-corner injectivity
+    condition fails.  That is the repair: the reported failure came from demanding
+    `α₁ > 0` and `α₂ > 0` simultaneously, which the decomposition never uses. -/
+theorem face_advance_sign {S A1 A2 : Int} :
+    (A1 < S → 0 < S - A1) ∧ (S < A2 → 0 < A2 - S) := ⟨by omega, by omega⟩
+
+theorem face1_nonempty {S A1 : Int} (hS : pp A1 < S) : 0 < S - A1 := by
+  unfold pp at hS; split at hS <;> omega
+
+/-- **F17c (midpoint convexity of the Mamikon integrand).**  `φ x = (x⁺)²` satisfies
+    `2(φ a + φ b) ≥ φ (a+b)`, via `a⁺ + b⁺ ≥ (a+b)⁺ ≥ 0` and `2(p²+q²) ≥ (p+q)²`.
+    This is the inequality behind "the first two terms of the niche formula are convex
+    quadratics", hence behind concavity of the upper bound. -/
+theorem two_sq_add_sq (p q : Int) : (p + q)*(p + q) ≤ 2*(p*p + q*q) := by
+  have h : 2*(p*p + q*q) - (p + q)*(p + q) = (p - q)*(p - q) := by
+    simp [Int.sub_mul, Int.mul_sub, Int.add_mul, Int.mul_add, Int.mul_comm]; omega
+  have hsq : 0 ≤ (p - q)*(p - q) := sq_nonneg_int (p - q)
+  omega
+
+/-- **F17c.**  `φ x = (x⁺)²` is midpoint convex: `φ(a+b) ≤ 2(φ a + φ b)`.  With
+    `φ` affine-precomposed this is the inequality that makes the first two terms of the
+    niche formula convex quadratics, hence the upper bound concave. -/
+theorem posPart_sq_midpoint_convex (a b : Int) :
+    pp (a + b) * pp (a + b) ≤ 2*(pp a * pp a + pp b * pp b) := by
+  have hle := pp_add_le a b
+  have h0 := pp_nonneg (a + b)
+  have hstep : pp (a + b) * pp (a + b) ≤ (pp a + pp b) * (pp a + pp b) :=
+    Int.mul_le_mul hle hle h0 (Int.le_trans h0 hle)
+  exact Int.le_trans hstep (two_sq_add_sq _ _)
+
 end MovingSofa

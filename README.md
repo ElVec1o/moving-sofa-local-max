@@ -39,7 +39,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 8 | **ODE6**, the ambidextrous phase equation $x''=2Jx'+\tfrac34(x-\kappa_6)-\tfrac14R_t(1,1)^{\mathsf T}$; its characteristic roots $i/2,3i/2$ account for every half-integer angle in the $\Sigma$ formulas | PROVED |
 | 9 | $\Sigma=\bigcap_{t\in[-\pi/2,\pi/2]}H_t$ with $c(-t)=\rho c(t)$ — a single constraint family of angle range $\pi$ | PROVED |
 | 10 | Baek's injectivity condition holds for $\Sigma$ **only** on $(\beta,\pi/2-\beta)$, failing exactly at the phase junctions | PROVED |
-| 11 | **Optimality of $\Sigma$** | **not proved** |
+| 11 | **The corner is affine in the support function**: $c(t)=(h(\mu_t)-1)\mu_t+(h(\nu_t)-1)\nu_t$, so the two arms $\alpha_1,\alpha_2$ and the reach $\sigma$ are convex-linear | PROVED |
+| 12 | **Normal velocities.** Face $i$ advances on one side of its *own* envelope point, so the niche is inner-face-2 plus outer-face-1 — and result 10's failure is an artefact of requiring both arms at once | PROVED |
+| 13 | **The niche area in convex-linear data.** $\lvert N\rvert=\int_0^{\pi/2}\bigl[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2-\tfrac12(\alpha_1^-)^2\bigr]dt=0.184193197089\ldots$, against $0.184193171$ measured on the region from the under-measuring side | HEURISTIC ($10^{-8}$) |
+| 14 | The one term with the wrong curvature: $\tfrac12\int(\alpha_1^-)^2=\tfrac\beta8-a_1(1-\cos\beta)+a_1^2(\beta-\tfrac12\sin2\beta)=0.0119502700\ldots$, supported exactly on $[0,\beta)$ | PROVED |
+| 15 | **Optimality of $\Sigma$** | **not proved** |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -61,21 +65,34 @@ Four attempts to transfer the existence half failed, for one underlying reason
 maximisers attain $\omega=\pi/2$, whereas the ambidextrous constraint family spans
 $\pi$ and its corner path is discontinuous at $t=0$.
 
-The upper-bound half remains open here. Result 5 puts the problem in exactly its
-cap-minus-one-niche shape, and what blocks it is measured: a trial underestimate built
-from the apex path dominates but is **not tight** (slack $0.087$ against
-$\lvert\Sigma\rvert=1.645$). The missing area sits in the two *tails* — precisely the
-part of Baek's construction that consumes injectivity — and by result 10 injectivity
-fails exactly there. The phase-marginal measurement is stark: the two degenerate
-phases contribute $0.804+0.200$ of unique niche area against the middle phase's
-$0.075$.
+The upper-bound half is where results 11–14 make progress. Two obstructions have been
+removed and one remains.
+
+*Removed.* No trial underestimate of the niche was tight — the best, built from the
+apex path, left a slack of $0.087$ against $\lvert\Sigma\rvert=1.645$. Result 13 is
+tight, so that slack is gone. And result 10's injectivity failure turns out not to
+obstruct: by result 12 each face is used only on the range where its own arm has the
+right sign, and no joint hypothesis is used anywhere. The reported failure came from
+asking for $\alpha_1>0$ and $\alpha_2>0$ simultaneously.
+
+*Remaining.* Two of the three terms in result 13 are convex quadratics in the support
+function, which is what the generalised Mamikon theorem buys, so they give a concave
+upper bound. The third is **subtracted**, hence contributes a convex term with the
+wrong sign for concavity. Result 14 computes it exactly; it is supported precisely on
+$[0,\beta)$, the phase where $\Sigma$ degenerates, and its support is exactly the
+threshold $\sin t<1/(4a_1)$ of result 7. Whether $\lvert C_2\rvert-2\lvert N\rvert$ is
+nonetheless concave is a Hessian computation on support-function perturbations and is
+**not attempted**. Neither is the second half of the argument — that the three
+geometric hypotheses of result 13 (the two sweeps are disjoint, injective, and cover)
+hold for competitors and not only for $\Sigma$. Those hypotheses are *measured* for
+$\Sigma$, not proved.
 
 ## Layout
 
 ```
 paper/niche_separation/   the note (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including retractions
-lean/MovingSofa/          Lean 4 development, 54 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 62 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/                computations (ambi_*, sigma_*, gerver_*)
 ```

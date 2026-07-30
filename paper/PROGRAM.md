@@ -1,3 +1,107 @@
+## 🟢🟢 P3c SOLVED: THE NICHE FUNCTIONAL IS TIGHT AND BUILT FROM CONVEX-LINEAR DATA
+
+The blocker for eight sessions was that no underestimate of the niche was TIGHT: the
+best one, built from the apex path, dominated but left slack 0.087 against
+|Sigma| = 1.645, and the missing area sat exactly on the phases where Baek's
+injectivity condition fails.  Both halves of that are now resolved.
+
+### The reconstruction (ambi_mamikon.py)
+
+Pushing both outer walls in until they touch the cap puts the corner at
+
+    c(t) = (F(t)-1) mu_t + (G(t)-1) nu_t,    F = h_K(mu_t), G = h_K(nu_t),
+
+so c is AFFINE-LINEAR in the support function, hence convex-linear on Baek's domain.
+Three scalars inherit it:
+
+    alpha_1 = -<c',mu_t> = G - 1 - F'      face-1 arm
+    alpha_2 =  <c',nu_t> = F - 1 + G'      face-2 arm
+    sigma   = c_y/cos t  = (F-1) tan t + G - 1    face-1 reach to the corridor floor
+
+Baek's Def 6.1.2(3) is exactly alpha_1, alpha_2 > 0.
+
+### The decomposition (ambi_split.py) — MEASURED EXACT
+
+The normal velocity of the face-i line at distance s from the corner is s - alpha_1 on
+face 1 and alpha_2 - s on face 2.  So the niche is created by the INNER part of face 2
+and the OUTER part of face 1:
+
+    N = W_2  (+)  W_1out       overlap 0.000000000,  N \ (W_2 u W_1out) = 0.000000000
+
+W_2 = sweep of [c, c - alpha_2^+ mu_t];  W_1out = sweep of face 1 from c - alpha_1^+ nu_t
+outward.  Both numbers are zero to the oracle's printing precision, at n_hall = 481.
+
+### The outer arm is convex-linear too (ambi_outerarm.py)
+
+The face-1 direction -nu_t = (sin t, -cos t) points DOWN, and the ray always leaves the
+cap through the corridor floor y = 0:
+
+    S_1(t) = c_y(t)/cos t = sigma(t)   on 1200/1201 samples, to 1e-15
+                                       (the one failure is t = pi/2, cos t = 0)
+
+That was the last non-convex-linear ingredient.
+
+### The formula (ambi_functional.py) — TIGHT
+
+    |N| = int_0^{pi/2} [ (1/2)(alpha_2^+)^2 + (1/2)(sigma-alpha_1)^2
+                                            - (1/2)(alpha_1^-)^2 ] dt = V
+
+Evaluated with EXACT derivatives of SOL1/SOL5/SOL6 (complex forms below) and
+Gauss-Legendre per phase so no interval straddles a kink:
+
+    V = 0.184193197089    stable in the 12th digit from 20 to 320 nodes per phase
+
+against the polygonal measurement |W_1 u W_2| = 0.184193171.  An inscribed quad union
+UNDER-measures, so the two agree to 2.6e-8 from the expected side.  Cross-check on the
+cap: A_R* + 2V = 2.013341613, and the circumscribed polygonal |C2| values 2.013345504
+(n=241) and 2.013342045 (n=481, 721) decrease to it, as an intersection of finitely
+many half-planes must.  So V = |N| at the 1e-8 level.
+
+    SOL1  z(t) = a1 e^{2it}            - (1 + i/2) e^{it} + (1 - a1 + i/2)
+    SOL6  z(t) = (f1 - i f2) e^{3it/2} - (1 + i)   e^{it} + (1 - (4/3)a1 + i/2)
+    SOL5  z(t) = a1 e^{2it}            - (1/2 + i) e^{it} + (1 - (5/3)a1 + i/2)
+
+max err vs the reference piecewise path: 5.0e-16.
+
+### The injectivity failure was an artefact — B2 REPAIRED
+
+Baek's condition asks alpha_1 > 0 AND alpha_2 > 0.  For Sigma alpha_1 > 0 only on
+[beta, pi/2] and alpha_2 > 0 only on [0, pi/2-beta], so the JOINT condition holds only
+on the middle phase — which is what B2 measured and what result 10 reported.  But the
+decomposition uses each face only on the range where its OWN arm has the right sign:
+face 2 enters as alpha_2^+ (zero where alpha_2 <= 0, costing nothing) and face 1 needs
+only sigma >= alpha_1^+, which holds throughout with equality only at t = pi/2
+(min sigma - alpha_1 = -6.4e-8, at t = pi/2).  No joint hypothesis is used anywhere.
+So B2's failure does not obstruct this construction.
+
+### What is left: ONE term with the wrong curvature
+
+Two of the three terms are convex quadratics in h, since x -> (1/2)(x^+)^2 and
+x -> (1/2)x^2 are convex and alpha_2, sigma - alpha_1 are affine in h.  The third is
+SUBTRACTED, so it contributes a CONVEX term to Q = |C2| - 2V — the wrong sign for
+concavity.  It is supported exactly on the degenerate phase [0,beta), where
+alpha_1 = 2 a1 sin t - 1/2 < 0, and equals in closed form
+
+    (1/2) int (alpha_1^-)^2 dt = beta/8 - a1(1-cos beta) + a1^2(beta - sin(2beta)/2)
+                               = 0.011950270059     (6.488% of V)
+
+verified against quadrature to 2.9e-16.  Note alpha_1 < 0 <=> sin t < 1/(4a1) <=>
+t < beta is exactly T3, so the support of the obstruction IS the T3 threshold.
+
+### Honest status
+
+  * V = |N| for Sigma: at the 1e-8 level, HEURISTIC by Rule 7 (it is an area
+    measurement plus quadrature, not an enclosure).  The three geometric hypotheses
+    (disjoint, injective, covering) are MEASURED, not proved.
+  * Convex-linearity of alpha_1, alpha_2, sigma: PROVED (affine algebra on (C)).
+  * The normal-velocity lemma: PROVED.
+  * The closed form of the obstruction: PROVED.
+  * Concavity of |C2| - 2V: NOT ATTEMPTED.  Needs the Hessian as a quadratic form on
+    support-function perturbations.
+  * Validity for COMPETITORS: NOT ATTEMPTED.  This is Baek's Ch. 3-6 half.
+  * Therefore optimality of Sigma remains OPEN.  What changed is that the upper bound
+    is now tight and in convex-linear data, with one explicitly computed bad term.
+
 ## AUDIT FOR FIXED-SCALE / WEAK-PROXY ARTIFACTS — one real bug found
 
 Three artifacts in one session (coarse t-grid on the corner margin; fixed-eps sampling

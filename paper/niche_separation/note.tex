@@ -36,7 +36,8 @@ reflection exchanging the two niches. The relevant constant is
 $M=\max_t c_y(t)=\tfrac12-\bigl(\sqrt2-f_1\sqrt{4-2\sqrt2}\bigr)$, and the
 condition $M<\tfrac12$ is equivalent to $f_1^2<(2+\sqrt2)/2$, which holds with a
 margin of $0.2600\ldots$. Along the way we give a closed form for Romik's
-constant $f_1$, which appears in the literature only as a decimal.
+constant $f_1$, which appears in the literature only as a decimal, and record the
+relation $4a_1\sin\beta=1$ between two of his constants.
 \end{abstract}
 
 \section{Setting}
@@ -438,7 +439,8 @@ root; both $4/x-3$ and $w$ are real roots, so $4/x-3=w$. This is
 \end{proof}
 
 \begin{corollary}\label{cor:ucubic}
-$2\tan\beta$ is the real root of $u^{3}+3u=2$, and
+$2\tan\beta$ is the real root of $u^{3}+3u=2$ --- equivalently
+$4\tan^{3}\beta+3\tan\beta=1$, the cubic already recorded in the literature --- and
 \[
   \sqrt[3]{71+8\sqrt2}+\sqrt[3]{71-8\sqrt2}=u^{4}+6u^{2}+6 .
 \]
@@ -467,12 +469,22 @@ $\beta$ and $\pi/2-\beta$ and $\cos(\pi/2-\beta)=\sin\beta$, both conditions
 reduce to $\sin\beta=1/(4a_1)$.
 \end{proof}
 
-\begin{remark}
-Every step was also checked numerically at $60$ digits. Romik tabulates $a_1$ and
-$\beta$ separately; we have not found Theorem~\ref{thm:a1beta} or
-Corollary~\ref{cor:ucubic} stated in the literature. The two polynomial steps
-\eqref{eq:xcubic} and the Cardano substitution are machine-checked
-(\verb|u_sq_cubic|, \verb|cardano_substitution|).
+\begin{remark}[Attribution]
+Neither \eqref{eq:ucubic} nor \eqref{eq:xcubic} is new. The standard description of
+$\Sig$ gives its area as $x+\arctan y$ where $x^{2}(x+3)=8$ and $y(4y^{2}+3)=1$;
+the second of these is exactly \eqref{eq:ucubic} with $y=\tan\beta=u/2$, and the
+first is \eqref{eq:xcubic} shifted, since $x=u^{2}+1$ turns
+$x^{3}+3x^{2}-8$ into $u^{6}+6u^{4}+9u^{2}-4$. Equivalently
+\[
+  A_R^\ast=u^{2}+1+\arctan(u/2),\qquad u^{3}+3u=2,
+\]
+so a single algebraic number generates both parts of the area. What we have not
+found stated is the relation $4a_1\sin\beta=1$ of
+Theorem~\ref{thm:a1beta} between the shape constant $a_1$ and $\beta$, nor
+$w=u^{4}+6u^{2}+6$; but both are elementary consequences of the two standard
+cubics, and we make no priority claim. Every step was checked numerically at $60$
+digits, and the two polynomial steps are machine-checked (\verb|u_sq_cubic|,
+\verb|cardano_substitution|).
 \end{remark}
 
 Theorem~\ref{thm:a1beta} has a consequence for the transfer of Baek's method.
@@ -484,7 +496,7 @@ $t=0.05$ one finds $c'\cdot\mu_t=+0.4125$. So $\Sig$ satisfies the injectivity
 condition on its middle phase and violates it on both outer phases, and the
 failure boundary is exactly the phase junction.
 
-\begin{remark}[Where the difficulty of the ambidextrous problem sits]
+\begin{remark}[Where the difficulty of the ambidextrous problem sits]\label{rem:degen}
 The outer phases $[0,\beta)$ and $(\pi/2-\beta,\pi/2]$ are also where the contact
 arcs of $\partial\Sig$ are \emph{constant}, pinned at the $\rho$-fixed point
 $(1,\tfrac12)$ to $3\cdot10^{-31}$: there the supporting hallway touches
@@ -511,6 +523,178 @@ features lie outside the setting of the one-corner argument, which is developed
 for rotation angle $\omega\le\pi/2$ and whose maximisers attain $\omega=\pi/2$.
 Equation~\eqref{eq:pirange} is thus a reformulation, not a reduction: it exhibits
 the ambidextrous problem inside a larger class rather than inside the solved one.
+
+\section{The niche area in convex-linear data}\label{sec:mamikon}
+
+The obstruction recorded in Remark~\ref{rem:degen} is that the one-corner
+argument's injectivity condition fails for $\Sig$ on the two outer phases. We now
+show that the failure is an artefact of how the condition is stated, and derive an
+exact formula for the niche area whose every ingredient is convex-linear in the
+cap.
+
+Throughout, $K$ is the cap, $h=h_K$ its support function, and
+\[
+  F(t):=h(\mu_t),\qquad G(t):=h(\nu_t).
+\]
+
+\begin{lemma}[The corner is affine in the support function]\label{lem:corner}
+Place the hallway at angle $t$ and push both outer walls inward until they touch
+$K$. Then the inner corner sits at
+\begin{equation}\label{eq:corner}
+  c(t)=\bigl(F(t)-1\bigr)\mu_t+\bigl(G(t)-1\bigr)\nu_t ,
+\end{equation}
+and the removed wedge is
+$Q_t=\{\langle p,\mu_t\rangle<F(t)-1\}\cap\{\langle p,\nu_t\rangle<G(t)-1\}$.
+\end{lemma}
+
+\begin{proof}
+The two outer walls are the lines with outer normals $\mu_t,\nu_t$; touching $K$
+means their offsets are $F(t),G(t)$. The corner lies one unit inside each, so
+$\langle c,\mu_t\rangle=F-1$ and $\langle c,\nu_t\rangle=G-1$, which is
+\eqref{eq:corner} since $(\mu_t,\nu_t)$ is orthonormal. The wedge is the
+intersection of the two inner half-planes through $c$.
+\end{proof}
+
+Since $h\mapsto h$ is linear under Minkowski sum, \eqref{eq:corner} makes $c(t)$,
+and hence each of
+\begin{align}
+  \alpha_1(t)&:=-\langle c'(t),\mu_t\rangle=G(t)-1-F'(t),\label{eq:a1}\\
+  \alpha_2(t)&:=\ \ \langle c'(t),\nu_t\rangle=F(t)-1+G'(t),\label{eq:a2}\\
+  \sigma(t)&:=c_y(t)/\cos t=\bigl(F(t)-1\bigr)\tan t+G(t)-1,\label{eq:sig}
+\end{align}
+an affine-linear functional of $h$, hence convex-linear on a domain of convex
+bodies closed under Minkowski sum. The wedge $Q_t$ has two faces, the rays
+$c-s\nu_t$ (face~1) and $c-s\mu_t$ (face~2), and $\alpha_1,\alpha_2$ are the
+signed distances from $c$ to the envelope points on them: the one-corner
+injectivity condition is exactly $\alpha_1,\alpha_2>0$.
+
+\begin{lemma}[Normal velocities]\label{lem:normvel}
+The face-$1$ line advances in its own normal direction with speed $s-\alpha_1(t)$
+at the point at distance $s$ from the corner, and the face-$2$ line with speed
+$\alpha_2(t)-s$.
+\end{lemma}
+
+\begin{proof}
+Face~1 lies on $\ell_t=\{\langle p,\mu_t\rangle=F(t)-1\}$. For $p$ fixed the
+signed gap to $\ell_t$ is $F(t)-1-\langle p,\mu_t\rangle$, whose $t$-derivative is
+$F'(t)-\langle p,\nu_t\rangle$ because $\mu_t'=\nu_t$. At $p=c-s\nu_t$ we have
+$\langle p,\nu_t\rangle=G-1-s$, so the speed is $F'-G+1+s=s-\alpha_1$ by
+\eqref{eq:a1}. Face~2 lies on $\{\langle p,\nu_t\rangle=G(t)-1\}$ and
+$\nu_t'=-\mu_t$, so the same computation gives $G'+\langle p,\mu_t\rangle
+=G'+F-1-s=\alpha_2-s$ at $p=c-s\mu_t$.
+\end{proof}
+
+So the niche is created by the \emph{inner} part of face~2 and the \emph{outer}
+part of face~1, and \emph{no sign hypothesis on $\alpha_1$ is involved}: where
+$\alpha_1<0$ the whole visible face~1 advances, and where $\alpha_2\le0$ face~2
+contributes nothing. This is the promised repair of Remark~\ref{rem:degen}: each
+face is used only on the range where its own arm has the right sign, and the
+reported failure came from requiring both arms simultaneously.
+
+Write $W_2$ for the region swept by the segments $[c(t),c(t)-\alpha_2(t)^+\mu_t]$,
+and $W_1^{\mathrm{out}}$ for the region swept by the face-1 segments running from
+$c(t)-\alpha_1(t)^+\nu_t$ outward to the corridor floor $\{y=0\}$; note the face-1
+direction $-\nu_t=(\sin t,-\cos t)$ points downward, and the floor is reached at
+distance exactly $\sigma(t)$, which is why \eqref{eq:sig} is the relevant reach.
+
+\begin{proposition}[Niche area in convex-linear data]\label{prop:V}
+If the two sweeps are disjoint, injective and cover the niche, then
+\begin{equation}\label{eq:V}
+  |N|=\int_0^{\pi/2}\Bigl[\tfrac12\bigl(\alpha_2^+\bigr)^2
+      +\tfrac12\bigl(\sigma-\alpha_1\bigr)^2
+      -\tfrac12\bigl(\alpha_1^-\bigr)^2\Bigr]dt .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For the face-2 sweep $\Phi(s,t)=c(t)-s\mu_t$ one has
+$\partial_s\Phi=-\mu_t$ and $\partial_t\Phi=c'-s\nu_t$, so
+$\det[\partial_s\Phi,\partial_t\Phi]=-\langle c',\nu_t\rangle+s=s-\alpha_2$, and
+integrating $|s-\alpha_2|$ over $s\in[0,\alpha_2^+]$ gives
+$\tfrac12(\alpha_2^+)^2$. For the face-1 sweep $\Psi(s,t)=c(t)-s\nu_t$ one gets
+$\det=s-\alpha_1$, and
+\[
+  \int_{\alpha_1^+}^{\sigma}(s-\alpha_1)\,ds
+  =\tfrac12(\sigma-\alpha_1)^2-\tfrac12(\alpha_1^-)^2 ,
+\]
+which is $\tfrac12(\sigma-\alpha_1)^2$ when $\alpha_1\ge0$ and
+$\tfrac12\sigma^2-\alpha_1\sigma$ when $\alpha_1<0$, as required. Injectivity
+turns each $\int|\det|$ into the area of the image, disjointness makes the two
+areas add, and covering makes the sum $|N|$.
+\end{proof}
+
+\begin{remark}[What is measured, and what it gives]\label{rem:V}
+For $\Sig$ the three hypotheses of Proposition~\ref{prop:V} are verified
+numerically and sharply: the two sweeps have intersection area $0$ and leave
+$0$ of the niche uncovered, to the printing precision of the polygon oracle. The
+right-hand side of \eqref{eq:V}, evaluated with exact derivatives of
+SOL1/SOL5/SOL6 and Gauss--Legendre quadrature on each phase separately, is
+\[
+  V=0.184193197089\ldots ,
+\]
+stable in the twelfth digit from $20$ to $320$ nodes per phase, against a
+polygonal measurement $0.184193171$ of the same region --- and an inscribed
+quadrilateral union under-measures, so the two agree to $2.6\cdot10^{-8}$ from the
+expected side. The implied cap area $A_R^\ast+2V=2.0133416\ldots$ lies just below
+the circumscribed polygonal values $2.0133455$ and $2.0133420$ at $241$ and $481$
+constraints, which must decrease to it. We therefore record \eqref{eq:V} as an
+identity for $\Sig$ at the $10^{-8}$ level.
+
+Two of the three terms of \eqref{eq:V} are convex quadratics in $h$, since
+$x\mapsto\tfrac12(x^+)^2$ and $x\mapsto\tfrac12x^2$ are convex and
+$\alpha_2,\sigma-\alpha_1$ are affine in $h$. This is what the generalised
+Mamikon theorem buys, and it is the reason \eqref{eq:V} is the right shape: for
+$|\Sig|=|C_2|-2|N|$ a convex $|N|$ gives a concave upper bound, for which a
+first-order condition suffices.
+\end{remark}
+
+\begin{proposition}[The obstruction, in closed form]\label{prop:obstruction}
+The third term of \eqref{eq:V} is subtracted, so it contributes a \emph{convex}
+term to $|C_2|-2|N|$ and is the one ingredient with the wrong curvature. It is
+supported exactly on the degenerate phase $[0,\beta)$, where $\alpha_1<0$, and
+there $\alpha_1(t)=2a_1\sin t-\tfrac12$, so
+\begin{equation}\label{eq:obstruction}
+  \tfrac12\int_0^{\pi/2}\bigl(\alpha_1^-\bigr)^2dt
+  =\tfrac{\beta}{8}-a_1(1-\cos\beta)+a_1^2\Bigl(\beta-\tfrac12\sin2\beta\Bigr)
+  =0.011950270059\ldots,
+\end{equation}
+which is $6.488\ldots\%$ of $V$.
+\end{proposition}
+
+\begin{proof}
+On $[0,\beta)$ the path is SOL1 with $a_2=0$, so in complex form
+$z(t)=a_1e^{2it}-(1+\tfrac i2)e^{it}+(1-a_1+\tfrac i2)$ and
+$e^{-it}z'(t)=2ia_1e^{it}-i(1+\tfrac i2)$, whence
+$\alpha_1=-\operatorname{Re}(e^{-it}z')=2a_1\sin t-\tfrac12$. This is negative
+exactly for $\sin t<1/(4a_1)$, i.e.\ for $t<\beta$ by
+Theorem~\ref{thm:a1beta}. Expanding
+$\tfrac12\int_0^\beta(\tfrac12-2a_1\sin t)^2dt$ and using
+$\int_0^\beta\sin^2=\tfrac\beta2-\tfrac14\sin2\beta$ gives
+\eqref{eq:obstruction}.
+\end{proof}
+
+\begin{remark}[Where this leaves the problem]\label{rem:leaves}
+Two obstructions have been removed and one remains. The first was that no trial
+underestimate of the niche was tight: the best previous one, built from the apex
+path, left a slack of $0.087$ against $|\Sig|=1.645$. Formula~\eqref{eq:V} is
+tight, so that slack is gone. The second was that the injectivity condition fails
+for $\Sig$ on $[0,\beta)$ and $(\pi/2-\beta,\pi/2]$; Lemma~\ref{lem:normvel}
+shows the condition is not needed, only the two one-sided statements
+$\alpha_2^+$ and $\sigma\ge\alpha_1^+$, and the second holds throughout with
+equality only at $t=\pi/2$.
+
+What remains is \eqref{eq:obstruction}. It is a subtracted square of a
+convex-linear quantity, i.e.\ a $\mathcal J$-type term of the same kind the
+one-corner argument must itself control, and it is localised on the phase where
+$\Sig$ degenerates. Establishing or refuting concavity of
+$|C_2|-2V$ is a Hessian computation on the space of support-function
+perturbations, and is not attempted here. Neither is the second half of the
+argument, which would have to show that the three hypotheses of
+Proposition~\ref{prop:V} hold for competitors and not only for $\Sig$. So
+\emph{optimality of $\Sig$ remains open}; what is new is that the upper bound is
+now tight and expressed entirely in convex-linear data, with a single explicitly
+computed term of the wrong sign.
+\end{remark}
 
 \section{Formalisation}
 

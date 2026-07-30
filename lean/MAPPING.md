@@ -91,6 +91,25 @@ Recorded so the VERIFIED label is not read as covering more than it does.
   minors); for `|R_n|` it is available via N10, since on each combinatorial cell the
   polygon area is a polynomial.  Until that certificate exists these stay HEURISTIC.
 
+## F17 — the niche functional in convex-linear data (note §8, P3c)
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| Prop "Niche area in convex-linear data", the arm integral `∫_{α⁺}^{σ}(s-α)ds = ½(σ-α)² - ½(α⁻)²`, negative branch | `arm_integral_neg` | VERIFIED |
+| same, non-negative branch (clamp kills the subtracted term) | `arm_integral_pos` | VERIFIED |
+| Lemma "Normal velocities": each face advances on one side of its OWN envelope point | `face_advance_sign` | VERIFIED |
+| the face-1 sweep is nonempty under a condition on `σ, α₁` alone — the repair of the reported injectivity failure | `face1_nonempty` | VERIFIED |
+| `2(p²+q²) ≥ (p+q)²` | `two_sq_add_sq` | VERIFIED |
+| `(a+b)⁺ ≤ a⁺ + b⁺` | `pp_add_le` | VERIFIED |
+| midpoint convexity of `x ↦ (x⁺)²`, the property making the first two terms convex quadratics | `posPart_sq_midpoint_convex` | VERIFIED |
+
+`#print axioms` on all seven: `[propext, Quot.sound]` only.  What is NOT formalized,
+and is the substance of the proposition: that the two sweeps are disjoint, injective,
+and cover the niche.  Those are measured, not proved — see the note's Remark "What is
+measured, and what it gives".  Nor is the convex-linearity of `α₁, α₂, σ` in `h`
+formalized; it is an affine-algebra statement about \(h\mapsto c(t)\) that needs real
+analysis, not `Int`.
+
 ## Tooling note
 
 Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go
