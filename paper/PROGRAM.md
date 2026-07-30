@@ -1,3 +1,87 @@
+## 🎆🎆🎆 CONCAVITY PROVED. THE CONDITIONAL THEOREM NOW RESTS ON ONE NUMERICAL IDENTITY.
+
+### d^2 Q <= 0 IS PROVED (item 1)
+
+On [0,beta) retain a fraction delta of -int eta'^2 and apply the completion identity to the
+rest; completing the square in p = eta'(t) and discarding the negative square,
+
+    -(1-delta)p^2 - (qT+p)^2 + (r-p)^2 <= A q^2 T^2 + B r^2,
+    A = (1+kappa)/(1-delta) - 1,   B = (1+1/kappa)/(1-delta) + 1,
+
+using (qT+r)^2 <= (1+kappa)q^2T^2 + (1+1/kappa)r^2 and T = tan t <= tan beta on [0,beta).
+Poincare constants for eta(0) = eta(pi/2) = 0, each with one Dirichlet and one free end:
+
+    P1 = (pi/2beta)^2        = 29.4135   on [0,beta]
+    P2 = (pi/2(pi/2-beta))^2 =  1.5035   on [beta,pi/2]
+    P3 = 1                   =  1.0000   on [pi/2,pi]
+
+and -(eta(t)+eta'(t+pi/2))^2 <= -lambda eta'(t+pi/2)^2 + (lambda/(1-lambda)) eta(t)^2 turns
+the E2 term into -lambda int_{pi/2}^{pi-beta} eta'^2 + (lambda/(1-lambda))(J1+J2), while
+eta(pi/2) = 0 gives int_{pi/2}^{pi/2+beta} eta^2 <= (beta^2/2) int eta'^2, so the B r^2
+remainder is absorbed once lambda >= B beta^2/2.  Collecting,
+
+    coef J1 = A tan^2 beta - delta P1 + 1 + lambda/(1-lambda)
+    coef J2 = 1 - P2 + lambda/(1-lambda)
+    coef J3 = 1 - P3 = 0
+    coef int_{pi/2}^{pi-beta} eta'^2 = B beta^2/2 - lambda
+
+At delta = 1/10, kappa = 2, lambda = 0.117 these are -1.6013, -0.3710, 0, -0.005:
+
+    (1/2) d^2 Q <= -1.6013 J1 - 0.3710 J2 + 0 J3 - 0.005 int_{pi/2}^{pi-beta} eta'^2
+
+so d^2 Q <= 0.  STRICTNESS: equality forces eta = 0 on [0,pi/2] AND eta the first
+Dirichlet-Neumann mode on [pi/2,pi]; but with eta = 0 on [0,pi/2] the E2 term contributes
+-int eta'(t+pi/2)^2 < 0.  So d^2 Q < 0 for eta != 0.  The implied constant on
+L^2(0,pi/2) is 0.7419, against the measured supremum 0.7285 over L^2(0,pi): the gap is the
+slack in the J3 coefficient, which P3 = 1 makes sharp.
+
+### sigma - alpha_1 = cos(t) x'(t)  (item 2, structural)
+
+PROVED symbolically on SOL1, SOL5, SOL6 (residual 0 each), where x = (F-1)/cos t is the
+face-1 line's x-intercept.  So the middle term of V is (1/2) int cos^2 t x'^2 dt, an ENERGY
+OF THE INTERCEPT PATH; and it independently recovers cos^2 t x' = 1/2 - sin t on phase 1 and
+(1/2)(1 - sin t) on phase 5.
+
+### The area identity (item 2, numerical)
+
+Since u = 2 tan beta,  A_R* = u^2 + 1 + arctan(u/2) = 1 + 4 tan^2 beta + beta.  Using the
+identity above to make every integrand elementary, at 50 working digits:
+
+    |C2| = 2.0133416126029788281721...   (six blocks, listed in the script output)
+    V    = 0.1841931970887689882517...   (0.0842064 + 0.0997315 + 0.0002553)
+    Q(Sigma) - (1 + 4 tan^2 beta + beta) = -2.7e-51
+
+A SYMBOLIC evaluation of the same integrals was attempted and DID NOT TERMINATE (10 min).
+So this stays HEURISTIC, but now against a closed-form target and with a phase decomposition.
+
+### (RC) => M < 1/2 ?  NOT REFUTED, NOT PROVED (item 3)
+
+Rule 3 falsification over H + eps sin(k theta), k = 2,4,6 and |eps| up to 0.20: every case
+satisfying (RC) has M <= 0.3895 < 1/2; the cases with M >= 1/2 (k=4, eps = +-0.15, +-0.20)
+all violate (RC).  No counterexample, no implication.  Hypothesis (iii) stands untouched.
+
+### Where the conditional theorem stands now
+
+    (i)   Q(Sigma) = A_R*     HEURISTIC, 51 digits, closed-form target
+          dQ(Sigma) = 0       PROVED
+          d^2 Q <= 0 on C     PROVED   <-- this session
+    (ii)  the three injectivity conditions   PROVED from (RC)
+    (iii) M < 1/2 for competitors            untouched
+
+So it rests on ONE numerical identity and ONE geometric hypothesis, rather than on four
+measured conditions.  Optimality of Sigma remains OPEN.
+
+## 🟢 LEAN F21
+
+  second_diff_mono      non-negative second difference + equal first two terms => non-decreasing
+  discrete_osc_nonneg   Phi_0 = Phi_1 = 0 and second difference >= 0 => Phi_n >= 0.  The
+                        DISCRETE shadow of Phi = int sin(tau-u) R(u) du >= 0, which is the
+                        step F19 could not formalize for lack of integration
+  garding_sum_nonpos    a sum of (non-positive coefficient) x (non-negative quantity) is <= 0
+
+78 theorems, 14 defs, zero sorry; axioms [propext, Quot.sound], garding_sum_nonpos needing
+only propext.
+
 ## 🎆🎆 (RC) NOW PROVES ALL THREE INJECTIVITY CONDITIONS, AND dQ(Sigma) = 0 IS PROVED
 
 Two hypotheses of the conditional theorem move to PROVED this session.

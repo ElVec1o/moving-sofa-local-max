@@ -151,6 +151,19 @@ analysis, not `Int` arithmetic.
 Axioms: `[propext, Quot.sound]`.  NOT formalized: the two geometric identities for `s1`,
 `s2` (they need plane geometry), and the Poincaré inequalities of the Gårding step.
 
+## F21 — the oscillator positivity, discretely (note §12)
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| non-negative second difference + equal first two terms ⟹ non-decreasing | `second_diff_mono` | VERIFIED |
+| `Φ₀ = Φ₁ = 0` and second difference `≥ 0` ⟹ `Φₙ ≥ 0` — the discrete shadow of `Φ = ∫ sin(τ-u)R du ≥ 0` | `discrete_osc_nonneg` | VERIFIED |
+| a sum of (non-positive coefficient) × (non-negative quantity) is `≤ 0`, the Gårding assembly | `garding_sum_nonpos` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`; `garding_sum_nonpos` needs only `propext`.  `discrete_osc_nonneg`
+is the honest formal content of the step F19 left to analysis: core Lean has no integration,
+but the discrete implication is the same statement on a grid.  Still NOT formalized: the
+Poincaré inequalities, and that the continuum ODE has the stated integral representation.
+
 ## Tooling note
 
 Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go

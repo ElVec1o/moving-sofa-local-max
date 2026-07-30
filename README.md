@@ -63,7 +63,10 @@ proof; **HEURISTIC** = computational evidence only.
 | 32 | $\delta Q(\Sigma)=0$: all six Euler–Lagrange residuals vanish **identically in $a_1,f_1,f_2$**. Romik's ODE families are exactly the critical-point equations of $Q$ | PROVED |
 | 33 | $-p^2-(qT+p)^2+(r-p)^2=-(p+qT+r)^2+2r^2+2qTr$: the added term is absorbed exactly, leaving a derivative-free remainder | PROVED |
 | 34 | Gårding constant $c=0.7285\ldots$ measured; the ingredients (Poincaré constants $4$, $1$, $29.41$; coefficient $-1.83$; requirement $0.135\le\tfrac12$) are all in place, the chain not assembled | HEURISTIC |
-| 35 | **Optimality of $\Sigma$** | **not proved** |
+| 35 | $\delta^2Q\le0$ on $\Sigma$'s cell, with explicit constants $-1.6013,-0.3710,0,-0.005$; strict for $\eta\ne0$. So $Q$ is concave there | PROVED |
+| 36 | $\sigma-\alpha_1=\cos t\,x'(t)$: the middle term of the niche formula is $\tfrac12\int\cos^2t\,x'^2$, an energy of the intercept path | PROVED |
+| 37 | $A_R^\ast=1+4\tan^2\beta+\beta$, and $Q(\Sigma)$ matches it to $2.7\cdot10^{-51}$ | PROVED / HEURISTIC |
+| 38 | **Optimality of $\Sigma$** | **not proved** |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -137,7 +140,7 @@ $Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
 ```
 paper/niche_separation/   the note (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including retractions
-lean/MovingSofa/          Lean 4 development, 75 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 78 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/                computations (ambi_*, sigma_*, gerver_*)
 ```

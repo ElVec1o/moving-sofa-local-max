@@ -1316,4 +1316,61 @@ theorem completion_identity (p q r T : Int) :
   rw [e1, e2, e3, e4]
   omega
 
+/-! ## F21 — the positivity of the forced oscillator, discretely, and the Garding sum
+
+F19 reduced both injectivity conditions to `Phi'' + Phi = R >= 0` with `Phi(0) = Phi'(0) = 0`
+and concluded `Phi >= 0` from the integral representation.  Core Lean has no integration, but
+the DISCRETE form of exactly that implication is provable and is the honest formal content:
+if a sequence starts flat and its second difference is non-negative, it never goes negative.
+
+Applied to `Phi_n` on a grid, the second difference is `h^2 (R_n - Phi_n)`, so the hypothesis
+`0 <= P(n+2) - 2 P(n+1) + P n` is the discrete `Phi'' >= -Phi`, which is implied by `R >= 0`
+wherever `Phi <= R`.  F21a is that implication; F21b is the monotonicity it rests on.
+
+F21c is the assembly step of the Garding estimate: a sum of terms, each a non-positive
+coefficient times a non-negative quantity, is non-positive.  With the coefficients
+`-1.6013`, `-0.3710`, `0` and `-0.005` of the note, that is what yields `d^2 Q <= 0`. -/
+
+/-- **F21b (monotonicity).**  A sequence with non-negative second difference and equal first
+    two terms is non-decreasing. -/
+theorem second_diff_mono (P : Nat → Int) (h1 : P 1 = P 0)
+    (hc : ∀ n, 0 ≤ P (n+2) - 2*P (n+1) + P n) : ∀ n, P n ≤ P (n+1) := by
+  intro n
+  induction n with
+  | zero => show P 0 ≤ P 1; omega
+  | succ k ih =>
+      have h := hc k
+      show P (k+1) ≤ P (k+2)
+      omega
+
+/-- **F21a (the discrete oscillator positivity).**  `Phi_0 = Phi_1 = 0` and a non-negative
+    second difference give `Phi_n >= 0` for all `n`.  This is the discrete shadow of
+    `Phi(tau) = int_0^tau sin(tau-u) R(u) du >= 0`. -/
+theorem discrete_osc_nonneg (P : Nat → Int) (h0 : P 0 = 0) (h1 : P 1 = 0)
+    (hc : ∀ n, 0 ≤ P (n+2) - 2*P (n+1) + P n) : ∀ n, 0 ≤ P n := by
+  have hmono := second_diff_mono P (by omega) hc
+  intro n
+  induction n with
+  | zero => omega
+  | succ k ih =>
+      have h := hmono k
+      omega
+
+/-- **F21c (the Garding assembly).**  A sum of products of non-positive coefficients with
+    non-negative quantities is non-positive. -/
+theorem garding_sum_nonpos : ∀ (cs qs : List Int),
+    (∀ x ∈ cs, x ≤ 0) → (∀ x ∈ qs, 0 ≤ x) →
+    (List.zipWith (fun a b => a * b) cs qs).sum ≤ 0
+  | [], _, _, _ => by simp
+  | _ :: _, [], _, _ => by simp
+  | c :: cs, q :: qs, hc, hq => by
+      have h1 : c * q ≤ 0 :=
+        Int.mul_nonpos_of_nonpos_of_nonneg (hc c List.mem_cons_self)
+          (hq q List.mem_cons_self)
+      have h2 : (List.zipWith (fun a b => a * b) cs qs).sum ≤ 0 :=
+        garding_sum_nonpos cs qs
+          (fun x hx => hc x (List.mem_cons_of_mem _ hx))
+          (fun x hx => hq x (List.mem_cons_of_mem _ hx))
+      simpa using Int.add_nonpos h1 h2
+
 end MovingSofa
