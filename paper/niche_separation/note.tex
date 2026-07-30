@@ -1661,16 +1661,40 @@ maximum there, so $Q(H)\le Q(\Sig)$, and $Q(\Sig)=A_R^\ast$ by Theorem~\ref{thm:
 Combining, $|T|\le Q(H)\le A_R^\ast$.
 \end{proof}
 
-\begin{remark}[What Theorem~\ref{thm:final} is not]\label{rem:notopt}
-It is not a proof that $\Sig$ is optimal. $\mathcal D$ is an explicit convex class
-containing $\Sig$ with room around it --- perturbations $H_\Sig+\varepsilon\sin(k\theta)$
-stay in $\mathcal D$ for $k=2,4$ and $|\varepsilon|\le10^{-2}$ --- but it is \emph{not}
-shown to contain every competitor, and Remark~\ref{rem:gerver} gives concrete reason for
-doubt: the cap of Gerver's sofa violates (b). Condition (c) is stated as a hypothesis
-rather than derived; the attempt to derive it is Remark~\ref{rem:retract}, and it failed.
+\begin{remark}[The size of $\mathcal D$, and what Theorem~\ref{thm:final} is not]
+\label{rem:notopt}
+It is not a proof that $\Sig$ is optimal, and the reason is quantitative.
+
+Measuring the radius of $\mathcal D$ along $H_\Sig+\varepsilon\sin(2k\theta)$ gives
+$\varepsilon_k=0.0864,\ 0.0117,\ 0.0047,\ 0.0036,\ 0.0021$ at $k=2,4,6,8,10$, so
+$\varepsilon_kk^2$ stays between $0.17$ and $0.35$: the radius scales like $k^{-2}$.
+$\mathcal D$ therefore contains a ball in the $C^2$ norm and in no weaker one, which is
+exactly what a bound on $H''$ should give. It is a genuine ball rather than a sliver ---
+of $60$ random eight-mode perturbations with coefficients of size $0.02/k^2$, $51$ land
+inside --- but every member is a small $C^2$-perturbation of $\Sig$.
+\textbf{Theorem~\ref{thm:final} is thus a $C^2$-local statement}, with explicit convex
+hypotheses in place of a neighbourhood of unspecified size.
+
+In every one of those probes the binding constraint was (b); condition (c) never became
+active. That is consistent with (c) being implied by (b) near $\Sig$, which
+Remark~\ref{rem:Mnum} also suggests and Remark~\ref{rem:retract} failed to prove.
+
+$\mathcal D$ does not reach Gerver's cap, and by Remark~\ref{rem:sharp} no relaxation of
+the constant in (b) can make it: injectivity genuinely fails once the density exceeds $1$.
 So the honest reading is that the one-corner architecture transfers to the ambidextrous
-problem on an explicit convex domain, and that identifying the domain is where the
-remaining difficulty sits.
+problem on an explicit convex $C^2$-neighbourhood of $\Sig$, and that enlarging that
+neighbourhood is where the remaining difficulty sits.
+\end{remark}
+
+\begin{remark}[(RC) is sharp]\label{rem:sharp}
+The constant $1$ in the forcing $R=1-(G+G'')$ of Theorem~\ref{thm:rc} is the corridor
+width: it enters through $c(t)=(F-1)\mu_t+(G-1)\nu_t$, so
+$\langle c(t),\nu_{t'}\rangle=n+G-1$ and $n''=-n+1-(G+G'')$. The argument therefore cannot
+tolerate a density above $1$. Nor can the conclusion: perturbing $\Sig$ so that the maximum
+density passes through $1$, the face-2 sweep acquires self-intersections exactly there. At
+densities $0.838,0.921,0.976$ there are none; at $1.004,1.047,1.119$ there are
+$160,1510,3086$ among $\binom{301}{2}$-many tested pairs, and a second mode gives $0$ at
+$0.976$ against $200$ and $526$ at $1.045$ and $1.114$. So (b) is sharp as stated.
 \end{remark}
 
 \section{Formalisation}

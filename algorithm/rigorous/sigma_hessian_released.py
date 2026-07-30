@@ -109,7 +109,7 @@ def main():
 
     modes = [(c, k) for c in (0, 1) for k in range(1, K+1)]
     n = len(modes)
-    ck = os.path.join(THIS, f"sigma_rel_K{K}.npy")
+    ck = os.path.join(THIS, f"sigma_rel_K{K}_e{int(-math.log10(eps))}.npy")
     Q = np.load(ck) if os.path.exists(ck) else np.full((n, n), np.nan)
     basis = {m: np.sin(2*m[1]*th) for m in modes}
 

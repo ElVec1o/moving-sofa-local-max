@@ -119,6 +119,18 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F24 — the support-point coordinates (note §9)
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| at `θ=π`, `(C,S)=(-1,0)`, the boundary point is `(-H,-D)`, height `-H'(π)` | `support_point_at_pi` | VERIFIED |
+| at `θ=0` it is `(H,D)`, height `H'(0)` | `support_point_at_zero` | VERIFIED |
+| the whole chain: height at `π` is `-D`, `ρ`-fixedness gives `D=-1`, so `2H'(π)+1` vanishes | `boundary_chain` | VERIFIED |
+
+NOT formalizable in core Lean: the parametrisation `p(θ) = H(θ)μ_θ + H'(θ)ν_θ` of the
+boundary point, and the uniqueness of the extreme point.  Both are geometry rather than
+`Int` arithmetic, and both are used by the note without proof.
+
 ## F17 — the niche functional in convex-linear data (note §8, P3c)
 
 | Statement (note) | Lean declaration | Status |

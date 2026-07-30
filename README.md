@@ -72,7 +72,9 @@ proof; **HEURISTIC** = computational evidence only.
 | 41 | The mirror decomposition gives Gerver the same value, so the failure in 40 is not an orientation artefact; the reason is that $\Sigma$'s cap has vertices at both ends (from its constant contact arcs) while Gerver's does not | PROVED |
 | 42 | $M\le H'(0)$, attempted for the separation hypothesis | **FALSE** (the ceiling atom breaks $W\le1$) |
 | 43 | **Main theorem.** $\mathcal D=\{$gauge$\}\cap\{$(RC)$\}\cap\{c_y\le\tfrac12\}\cap\{$sign cell$\}$ is convex, contains $\Sigma$, and $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa with cap data in $\mathcal D$ | PROVED |
-| 44 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is not shown to contain every competitor, and Gerver's cap violates (RC)) |
+| 44 | $\mathcal D$ is a **$C^2$-ball**: its radius along $\sin(2k\theta)$ scales like $k^{-2}$, so result 43 is a **$C^2$-local** statement. (RC) is always the binding constraint; $c_y\le\tfrac12$ never binds | HEURISTIC |
+| 45 | **(RC) is sharp**: face-2 injectivity fails exactly as the curvature density crosses $1$ | HEURISTIC |
+| 46 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$ and cannot be widened, since (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -146,7 +148,7 @@ $Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 86 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 89 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these

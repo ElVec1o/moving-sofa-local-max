@@ -1,3 +1,66 @@
+## THE THEOREM IS C^2-LOCAL; AN INTEGRITY CHECK THAT FOUND THREE STALE FILES; LEAN F24
+
+### 🔴 D IS A C^2-BALL, SO THE MAIN THEOREM IS A C^2-LOCAL STATEMENT (item 3)
+
+Radius of D along H_Sigma + eps sin(2k theta):
+
+    k          2        4        6        8       10
+    eps_k   0.0864   0.0117   0.0047   0.0036   0.0021
+    eps_k k^2 0.346    0.187    0.170    0.231    0.210
+
+eps_k k^2 stays between 0.17 and 0.35, so the radius scales like 1/k^2.  D contains a ball
+in the C^2 norm and in NO WEAKER ONE -- exactly what a bound on H'' should give.  It is a
+genuine ball rather than a sliver: of 60 random eight-mode perturbations with coefficients
+of size 0.02/k^2, 51 land inside (5/60 at 0.05, 0/60 at 0.10).
+
+SO THEOREM thm:final IS A C^2-LOCAL STATEMENT, with explicit convex hypotheses in place of
+a neighbourhood of unspecified size.  That is weaker than the phrase "an explicit convex
+class containing Sigma with room around it" suggested in the previous commit, and the note
+now says so.
+
+In EVERY probe the binding constraint was (RC); condition (c), c_y <= 1/2, NEVER became
+active.  Consistent with (c) being implied by (RC) near Sigma -- which the retracted
+M <= H'(0) attempt tried and failed to prove.
+
+D does not reach Gerver, and since (RC) is sharp no relaxation of the constant can make it.
+
+### 🔴 AN INTEGRITY CHECK, AND IT FOUND THREE STALE FILES ON ITS FIRST RUN (item 2)
+
+private/tools/check_sync.sh compares every file the release repo tracks against its source
+counterpart and exits nonzero on divergence.  First run:
+
+  * algorithm/README.md -- the RELEASE copy still advertised the WITHDRAWN paper by title,
+    "It supports the numerical experiments in the companion paper *Strict local maximality
+    of Gerver's sofa*".  The source had been corrected; the release had not.
+  * algorithm/rigorous/romik_hessian.py -- release 8 lines BEHIND source: missing the
+    corrected defaults (n_modes 6 -> 16, epsilon -> 1e-5) and the whole NOTE explaining why
+    the step size must not be coarsened.  A shipped module that other shipped scripts
+    import.
+  * algorithm/rigorous/sigma_hessian_released.py -- release had the old checkpoint filename
+    without the epsilon exponent.
+
+In all three the SOURCE was authoritative, so the direction discipline held; what failed
+was that nobody checked.  Synced, re-run clean.  Eight release-only files (the withdrawn
+work kept deliberately, plus release metadata) are now whitelisted so that any NEW
+release-only file stands out.
+
+This is the fourth defect in this project traced to sync drift.  The check is now a
+one-command gate and should be run before every push.
+
+### 🟢 LEAN F24 (item 4)
+
+  support_point_at_pi    at theta = pi, (C,S) = (-1,0), the boundary point is (-H,-D)
+  support_point_at_zero  at theta = 0, it is (H,D)
+  boundary_chain         F24a + rho_fixed_height + boundary_term_vanishes composed: the
+                         height at pi is -D, rho-fixedness gives D = -1, and the
+                         coefficient 2H'(pi)+1 vanishes
+
+89 theorems, 14 defs, zero sorry, axioms [propext, Quot.sound].
+
+NOT formalizable in core Lean, and now stated as such in MAPPING.md: the parametrisation
+p(theta) = H mu_theta + H' nu_theta of the boundary point, and the uniqueness of the
+extreme point.  Both are geometry, not Int arithmetic.
+
 ## ITEMS 2-4: (RC) IS SHARP; LEAN F23; AND THE MAPPING AUDIT FOUND REAL GAPS
 
 ### 🟢 (RC) IS SHARP -- D CANNOT BE WIDENED THERE (item 4)

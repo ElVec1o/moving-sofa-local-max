@@ -326,9 +326,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--quick", action="store_true",
                         help="reduce n_theta and skip arb_mat.eig")
-    parser.add_argument("--n_modes", type=int, default=6)
+    parser.add_argument("--n_modes", type=int, default=16)
     parser.add_argument("--n_theta", type=int, default=361)
-    parser.add_argument("--epsilon", type=float, default=1e-3)
+    # NOTE on the step size.  A mode-k perturbation eps*sin(2k theta) has
+    # H^2-size ~ eps*k^2, so a fixed eps that is fine for low modes leaves
+    # the linear regime for high modes: at eps=1e-3 the N=16 step-sensitivity
+    # radius |Q(eps)-Q(eps/2)| blows up (max ~700) and the arb interval
+    # eigenvalue enclosure fails to certify.  At eps=1e-5 the radius collapses
+    # (max ~0.16) and arb_mat.eig() certifies lambda_max(Q_16) <= -2.896,
+    # i.e. truncated coercivity m_{N=16}^R >= 2.896.  Do not coarsen below 1e-5
+    # without re-checking that the certification still succeeds.
+    parser.add_argument("--epsilon", type=float, default=1e-5)
     parser.add_argument("--robustness", action="store_true",
                         help="also run N=8 and N=12 for Phase 3 robustness")
     args = parser.parse_args()

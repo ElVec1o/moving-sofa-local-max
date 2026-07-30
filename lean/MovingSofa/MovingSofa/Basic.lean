@@ -1464,4 +1464,39 @@ theorem right_extreme_height {DZ hgt : Int}
 theorem extremes_same_height {DZ DP : Int} (hz : DZ = 1) (hp : DP = -1) :
     DZ = -DP := by omega
 
+/-! ## F24 — the support-point coordinates feeding F23
+
+F23 took as given that the cap's boundary point with outer normal `mu_theta` has height
+`-H'(pi)` at `theta = pi`.  That comes from the parametrisation
+
+    p(theta) = H(theta) mu_theta + H'(theta) nu_theta ,   mu = (C,S),  nu = (-S,C),
+
+so `p = (HC - DS, HS + DC)` with `D = H'`.  The parametrisation itself is geometry and is
+not formalized here; what is arithmetic, and is formalized, is its evaluation at the two
+angles that matter and the chain from there to the vanishing of the boundary term. -/
+
+/-- **F24a.**  At `theta = pi`, where `(C,S) = (-1,0)`, the boundary point is `(-H, -D)`,
+    so its height is `-D = -H'(pi)`. -/
+theorem support_point_at_pi {H D C S : Int} (hC : C = -1) (hS : S = 0) :
+    H*C - D*S = -H ∧ H*S + D*C = -D := by
+  subst hC; subst hS; constructor <;> omega
+
+/-- **F24b.**  At `theta = 0`, where `(C,S) = (1,0)`, the boundary point is `(H, D)`, so
+    its height is `D = H'(0)`. -/
+theorem support_point_at_zero {H D C S : Int} (hC : C = 1) (hS : S = 0) :
+    H*C - D*S = H ∧ H*S + D*C = D := by
+  subst hC; subst hS; constructor <;> omega
+
+/-- **F24c (the whole chain).**  At `theta = pi` the boundary point's height is `-D`; if
+    that height is `rho`-fixed, in doubled units where the reflection is `y ↦ 2 - y`, then
+    `D = -1`, i.e. `H'(pi) = -1/2`, and the coefficient `2H'(pi) + 1` of `eta(pi)` in
+    `delta Q` vanishes.  This is F24a, `rho_fixed_height` and `boundary_term_vanishes`
+    composed into the single statement the note uses. -/
+theorem boundary_chain {H D C S hgt : Int} (hC : C = -1) (hS : S = 0)
+    (hh : hgt = H*S + D*C) (hfix : hgt = 2 - hgt) : D + 1 = 0 := by
+  have h1 := (support_point_at_pi (H := H) (D := D) hC hS).2
+  rw [h1] at hh
+  have := rho_fixed_height hfix
+  omega
+
 end MovingSofa

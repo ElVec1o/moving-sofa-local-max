@@ -2,8 +2,8 @@
 
 A self-contained Python module for testing whether a given planar
 polygon can be moved through the unit-width right-angled L-hallway.
-It supports the numerical experiments in the companion paper
-*Strict local maximality of Gerver's sofa*.
+Built as a concrete computational pivot away from the structural
+manuscript work.
 
 ## What's in here
 
