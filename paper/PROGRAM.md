@@ -1217,6 +1217,125 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## POST-BLACKOUT SESSION: Lean audit, K=48, the chord-free rebuild, and ker L
+
+Blackout killed the K=48 job but it had already FINISHED (4656/4656, symmetric,
+uncorrupted); the Rule-8 checkpoint did its job.  Disk recovered to 24 GB free.
+
+### The Lean formalisation is SOUND but does not cover the paper's usage [PROVED]
+
+`superset_principle` in lean/MovingSofa/MovingSofa/Basic.lean states
+
+    SetP.Subset (fullInter H) (famInter H P)
+
+-- dropping constraints enlarges the intersection.  True, correctly proved, zero
+sorry.  But it is a statement about INTERSECTIONS OF CONSTRAINT SETS and says
+nothing about chords.  The paper's `lem:superset` claims more: constraint subarcs
+TOGETHER WITH straight chords.  So:
+
+  * no false theorem has been machine-verified -- the Lean is fine;
+  * but F1 does NOT underwrite the step the paper uses it for, because the
+    reconstruction Γ contains chords.
+
+The gap is in the paper, not in the Lean.  Recorded so the VERIFIED label on F1
+is not read as covering more than it does.
+
+### ITEM 12b — the symbol route is a DEAD END at feasible K  🌊
+
+K=48 re-fit of the 2x2 matrix symbol, same acceptance test:
+
+    K=32:  symbol min -1.083  vs H1 margin +0.068467   gap 1.151
+    K=48:  symbol min -0.531  vs H1 margin +0.066555   gap 0.597
+
+The gap halves as K goes 32 -> 48, i.e. it closes like ~1/K.  Accepting at
+|gap| < 0.05 would need K ~ 570, which is 325k Hessian entries, far beyond
+reach.  The block-Toeplitz STRUCTURE is right (the selection rule shows exactly
+in the fitted blocks), but fitting the symbol numerically will not close item
+12b.  The only remaining route is CLOSED-FORM symbol coefficients.
+
+Per Rule 16 this is a 🌊: the symbol was this session's main new idea for item
+12b and it did not converge.  Item 12b has now survived several sessions.
+
+What K=48 DID give, cleanly:
+
+    K      L2 margin    H1 margin    H1 even-k    H1 odd-k
+    10        8.5314     0.679412     0.871104     5.607622
+    16        6.8415     0.225626     0.324905     1.335908
+    24        6.5555     0.083236     0.161535     0.432817
+    32        6.4806     0.068467     0.143725     0.341266
+    48        6.4563     0.066555     0.143618     0.338414
+
+L2 margin converging to ~6.44 (changes -1.69, -0.286, -0.0749, -0.0243); the H1
+PARITY BLOCKS are essentially converged (even-k 0.143725 -> 0.143618, a change
+of 1.1e-4).  Both are finite-K UPPER bounds on the infinite margin, so they are
+evidence, not proof.
+
+### ITEM 3 — THE CHORD-FREE REBUILD KILLS THE FIRST-ORDER DEFECT  🔥 [PROVED]
+
+The root cause says: rebuild Γ from constraint boundaries only.  Measured facts
+that make it possible (η(0) = η(π/2) = 0, so c(0), c(π/2) and every constraint
+line of H_0, H_{π/2} are FIXED):
+
+    A(φ)        lies on x = c_x(0) + 1       to 1.4e-11 under perturbation
+    C(π/2−φ)    lies on x = c_x(π/2) − 1     to 1.4e-11
+    B(π/2)      lies on y = c_y(0)
+    D(0)        lies on y = c_y(π/2)
+    A(π/2), C(0) lie on y = c_y(0)+1 and do not move
+
+So the closed curve
+
+    X[bx1→bx2] · D[bD→0] · {y=c_y(π/2)} · {x=c_x(π/2)−1} · C[π/2−φ→0]
+      · {y=c_y(0)+1} · A[π/2→φ] · {x=c_x(0)+1} · {y=c_y(0)} · B[π/2→bB]
+
+uses ONLY envelope arcs, the corner path, and wall lines -- no chords.  At c_G
+both closure corners degenerate and Γ = ∂S exactly.
+
+RESULT (shoelace on the assembled polygon, 3000-4000 pts/arc):
+
+    A_rep(c_G) = 2.2195321200   (sampling error +4.5e-07)
+
+    first variation:   x sin4t  +0.000005   (chorded law: −3.227526)
+                       x sin8t  +0.000003   (chorded law: −6.455053)
+                       x sin12t +0.000013   (chorded law: −9.682579)
+                       y sin4t  −0.000001
+
+The rank-one defect is GONE -- zero to the sampling noise floor on every mode.
+This is the repair the root cause dictated, and it works.
+
+DOMINATION: not numerically settled, and the reason is instrumental.  The Rust
+oracle OVERestimates the true area with offset exactly C/n (measured +1.227e-4,
++4.906e-5, +2.453e-5 at n = 4801, 12001, 24001 -- clean 1/n), and that offset is
+PERTURBATION-DEPENDENT since a higher-curvature trajectory is under-resolved by
+the same grid.  At n=24001, A_rep − A_true is −2.4e-5 at ε=0.002 (inside the
++2.45e-5 offset, i.e. ≈ 0) but −1.0e-4 to −2.0e-3 at ε=0.01, where the active
+structure plausibly changes and the fixed arc table stops applying.  So the
+measurement neither confirms nor refutes domination.  Domination for A_rep should
+come from PROOF -- every piece is a constraint boundary, so the Lean
+`superset_principle` argument applies -- not from this comparison.
+
+### ITEM 4 — the ker L fallback is DEAD  💧 [PROVED]
+
+I previously offered "restrict Part II to ker L" as the safe fallback.  It does
+not work.  On ker L the first-order AREA discrepancy cancels, but the chord
+still leaves the supporting line, so CONTAINMENT still fails and `lem:superset`
+still does not apply.  Measured on odd x-modes (which lie in ker L, since
+η_x′(0)+η_x′(π/2) = 2k + 2k(−1)^k = 0), oracle offset subtracted:
+
+    x sin2t   Δ/ε² = −0.0971, −0.0971, −0.0878, −0.0878   (ε = ±0.02, ±0.01)
+    x sin6t   Δ/ε² = −0.9661, −0.9661, −0.9108, −0.9108
+
+Δ < 0 on every probe, and identical for ±ε -- a genuine second-order deficit
+with no first-order part, confirming these directions really are in ker L.  So
+A_rec < A_true on ker L at second order.
+
+CONSEQUENCE: neither of the two fallbacks works.  The additive correction fails
+(item B4, refuted last session) and ker L fails (here).  Only the chord-free
+rebuild restores containment, which makes item 3 the ONLY route for Part II.
+
+### Scripts
+
+`gerver_repaired.py` (the chord-free reconstruction; `curve()` is reusable).
+
 ## THE ROOT CAUSE: a gap in Lemma `lem:superset` (the paper's load-bearing lemma)
 
 Lemma `lem:superset` ("One-sided reconstruction") is stated for closed curves

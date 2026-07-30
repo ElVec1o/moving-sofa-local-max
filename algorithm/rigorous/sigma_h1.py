@@ -59,7 +59,7 @@ def main():
     print(f"{'K':>4} {'L2 margin':>12} {'H1 margin':>12} {'H1 even-k':>12} "
           f"{'H1 odd-k':>12}")
     rows = []
-    for K in (10, 16, 24, 32):
+    for K in (10, 16, 24, 32, 48):
         f = os.path.join(THIS, f"sigma_rel_K{K}.npy")
         if not os.path.exists(f):
             continue
