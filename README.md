@@ -1,120 +1,118 @@
-# Computer-assisted Sobolev-coercivity evidence for local maximality of moving-sofa candidates
+# The ambidextrous moving sofa problem: separation, constants, and obstructions
+
+Vico Bonfioli — <vicobonfioli@gmail.com>
 
 [![DOI](https://zenodo.org/badge/1252674180.svg)](https://doi.org/10.5281/zenodo.20434287)
 
-Computer-assisted **numerical evidence** for a strict local maximum of
-the moving-sofa area functional, on the Sobolev space
-$H^2([0, \pi/2]; \mathbb{R}^2)$ of corner trajectories, modulo
-translation symmetry.
+Working repository. Not a claim of a solved problem; **Status** below states exactly
+what is and is not proved, and `paper/PROGRAM.md` is the full ledger, including
+retractions.
 
-**The headline new contribution** is the first quantitative
-local-maximality evidence for **Romik's ambidextrous candidate
-$\Sigma$** — the second half of Romik's 2018 Open Problem 1, implied by
-no prior work. The identical apparatus is also developed on Gerver's
-sofa $c_G$, whose global (and hence local) optimality is in any case
-established by Baek (2024); we assume Baek's resolution throughout, so
-the Gerver computation serves as a validation of the method and as the
-vehicle for explaining it.
+## The problem
 
-> **This is not a proof.** The results are conditional on three
-> explicitly identified non-rigorous ingredients (see *Honest scope*
-> below) and are presented as numerical evidence, not theorems in the
-> strict computer-assisted-proof sense.
+The *ambidextrous* moving sofa problem asks for the largest planar shape that can be
+manoeuvred around a right-angled corner of a unit-width hallway turning **both** ways.
+Romik's candidate $\Sigma$ has area
 
-## Result (summary)
+$$A_R^\ast = 1.6449552184254408\ldots$$
 
-> Conditional on the existence of a finite trilinear-form bound $K_3$
-> for $D^3F$ at $c_G$ and on the working cross-term estimate stated
-> in the proof, there exist $\delta \ge 0.044$ and $m \ge 4.27$ such
-> that for every $\eta \in H^2$ with $\|\eta\|_{H^2} \le \delta$ and
-> $\eta \perp V_0$,
->
-> $$F[c_G + \eta] \le F[c_G] - \frac{m}{2}\|\eta\|_{H^2}^2 + \frac{K_3}{6}\|\eta\|_{H^2}^3.$$
->
-> The same framework applied to Romik's ambidextrous candidate
-> $\Sigma$ yields a full-space coercivity constant $m^R \ge 2.2$ under
-> the same three conditions.
+Its optimality is **open**. The one-corner problem was settled by Baek
+([arXiv:2411.19826](https://arxiv.org/abs/2411.19826)), who proved Gerver's sofa
+optimal; his hallway has a single corner and his argument does not address the
+ambidextrous variant.
 
-The work targets Open Problem 1 of Romik (2018), which asks for a
-proof that Gerver's and the ambidextrous sofa are local maxima of the
-area functional.
+## Results
 
-## Honest scope
+`paper/niche_separation/note.tex` (8pp) is the mathematical content. Labels:
+**VERIFIED** = machine-checked in Lean 4, no `sorry`; **PROVED** = complete human
+proof; **HEURISTIC** = computational evidence only.
 
-This is numerical evidence under explicit conditions, not a full
-computer-assisted proof. Three items remain open and are flagged
-throughout the manuscript:
+| # | Statement | Label |
+|---|---|---|
+| 1 | **Niche ceiling.** For $t\in[0,\pi/2]$, $Q_t\subseteq\\{y\le c_y(t)\\}$ | VERIFIED |
+| 2 | **Separation.** $U\subseteq\\{y\le M\\}$ and $\rho U\subseteq\\{y\ge 1-M\\}$; if $M<\tfrac12$ the two niches are disjoint | VERIFIED |
+| 3 | $M=\max_t c_y(t)=\tfrac12-(\sqrt2-f_1\sqrt{4-2\sqrt2})=0.3878381292441943\ldots$ | PROVED |
+| 4 | **Closed form for Romik's $f_1$**, which the literature gives only as a decimal | PROVED |
+| 5 | $\lvert\Sigma\rvert=\lvert C_2\rvert-2\lvert U\cap C_2\rvert$ — a convex cap minus **one** niche | PROVED |
+| 6 | **Connectedness ceiling.** $p_y>\tfrac12$ forces the sofa to omit a vertical strip of width $(2p_y-1)/(2\tan t_0)$; sharp, since $p_y\le\tfrac12$ leaves a gap at every distance | PROVED (criterion VERIFIED) |
+| 7 | $4a_1\sin\beta=1$, and $w=u^4+6u^2+6$ | PROVED |
+| 8 | **ODE6**, the ambidextrous phase equation $x''=2Jx'+\tfrac34(x-\kappa_6)-\tfrac14R_t(1,1)^{\mathsf T}$; its characteristic roots $i/2,3i/2$ account for every half-integer angle in the $\Sigma$ formulas | PROVED |
+| 9 | $\Sigma=\bigcap_{t\in[-\pi/2,\pi/2]}H_t$ with $c(-t)=\rho c(t)$ — a single constraint family of angle range $\pi$ | PROVED |
+| 10 | Baek's injectivity condition holds for $\Sigma$ **only** on $(\beta,\pi/2-\beta)$, failing exactly at the phase junctions | PROVED |
+| 11 | **Optimality of $\Sigma$** | **not proved** |
 
-1. **Floating-point Hessian.** The finite-dimensional second-variation
-   matrix is evaluated with `shapely` (floating-point polygon
-   intersection), not interval arithmetic. The truncated coercivity
-   constant $m_N \ge 4.6035$ is enclosed at 128-bit precision by three
-   independent post-hoc methods, but the underlying Hessian entries
-   are not interval-certified.
+**Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
+$4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
+standard cubics for $\Sigma$'s area, $y(4y^2+3)=1$ and $x^2(x+3)=8$, the latter shifted
+by $x=u^2+1$. Equivalently $A_R^\ast=u^2+1+\arctan(u/2)$ with $u^3+3u=2$. We make no
+priority claim on result 7; it is elementary from those cubics. See the attribution
+remark in the note.
 
-2. **Cross-term placeholder.** The coupling
-   $\|Q_{NT}\|_{H^2 \to H^2}$ between low-frequency and high-frequency
-   Fourier modes is bounded by a conservative numerical placeholder
-   $\le 0.05$. An empirical probe gives a Frobenius estimate
-   $\approx 0.022$; an analytic bound is left for follow-up work.
+## Why optimality is not proved
 
-3. **Q_jump empirical.** The second variation decomposes as
-   $Q = Q_{\text{smooth}} + Q_{\text{jump}}$. Lemma 8 characterizes
-   $Q_{\text{smooth}}$ analytically (the per-arc structural identity:
-   no $\|\eta''\|^2$ principal symbol). $Q_{\text{jump}}$ at the four
-   contact-transition breakpoints is captured only empirically by the
-   polygon Hessian computation; the empirical sum-rule excess
-   $\approx 2.7\times$ at moderate $k$ is consistent with the
-   shape-derivative structure but is not derived in closed form here.
+Baek's argument has two halves. The **upper-bound** half (his Ch. 7–8) builds a
+quadratic functional on a convex domain of convex bodies, concave by Mamikon's
+theorem, so a first-order condition suffices. The **existence** half (Ch. 3–6)
+supplies a maximum monotone sofa of rotation angle $\pi/2$ satisfying an injectivity
+condition.
 
-## Repository layout
+Four attempts to transfer the existence half failed, for one underlying reason
+(result 9): his framework is developed for rotation angle $\omega\le\pi/2$ and his
+maximisers attain $\omega=\pi/2$, whereas the ambidextrous constraint family spans
+$\pi$ and its corner path is discontinuous at $t=0$.
+
+The upper-bound half remains open here. Result 5 puts the problem in exactly its
+cap-minus-one-niche shape, and what blocks it is measured: a trial underestimate built
+from the apex path dominates but is **not tight** (slack $0.087$ against
+$\lvert\Sigma\rvert=1.645$). The missing area sits in the two *tails* — precisely the
+part of Baek's construction that consumes injectivity — and by result 10 injectivity
+fails exactly there. The phase-marginal measurement is stark: the two degenerate
+phases contribute $0.804+0.200$ of unique niche area against the middle phase's
+$0.075$.
+
+## Layout
 
 ```
-.
-├── paper/
-│   ├── manuscript.tex          main paper
-│   ├── manuscript.pdf          compiled, 30 pages
-│   ├── UNIQUENESS.tex          uniqueness appendix
-│   ├── OFFDIAG_RIGOROUS.tex    off-diagonal Hilbert-inequality appendix
-│   └── figures/
-├── algorithm/
-│   ├── moving_sofa_tools.py    L-hallway feasibility library
-│   ├── sofa_*.py               candidate constructions, BVP solver, variants
-│   ├── test_moving_sofa.py     reference test suite
-│   └── rigorous/               certified-arithmetic experiments
-│        ├── gerver_constants.py     60-digit certified Gerver constants
-│        ├── gerver_arb.py           arb interval enclosures
-│        ├── second_variation.py     Hessian
-│        ├── phase4_full_theorem.py  truncated coercivity m_N
-│        ├── F_richardson_*.py       Richardson-extrapolated F[c]
-│        ├── hypV_sweep.py           eigenvalue-growth empirical sweep
-│        ├── k3_*.py                 K_3 Lipschitz bounds
-│        ├── sympy_lemma10_2.py      symbolic Lemma 8 cancellation
-│        ├── phase1a_cross_term.py   cross-term diagnostic
-│        ├── phase1b_K3_breakpoint.py  K_3 breakpoint blow-up probe
-│        └── phase2a_lemma8_check.py   smooth/jump sum-rule diagnostic
-└── lean/                       Lean 4 skeleton (structures only)
+paper/niche_separation/   the note (LaTeX + PDF)
+paper/PROGRAM.md          full research ledger, including retractions
+lean/MovingSofa/          Lean 4 development, 54 theorems, no sorry
+lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
+algorithm/                computations (ambi_*, sigma_*, gerver_*)
 ```
 
-## Building the paper
+## Lean
 
 ```bash
-cd paper
-pdflatex manuscript.tex
-pdflatex manuscript.tex
+cd lean/MovingSofa && lake build
 ```
 
-## Reproducing the numerical experiments
+Lean 4.30, **no Mathlib**. Trigonometric quantities are carried as formal symbols
+under sign or Pythagorean side conditions and arithmetic is over `Int`, so the
+identities stay decidable. Instantiating those symbols at actual sines and cosines is a
+separate Mathlib-track task and is **not** claimed. `#print axioms` reports nothing
+beyond `propext` and `Quot.sound`, except `strip_covers_iff` and `cone_nu_iff`, which
+also use `Classical.choice`.
 
-```bash
-pip install mpmath numpy matplotlib python-flint sympy shapely
-python algorithm/rigorous/gerver_constants.py
-python algorithm/rigorous/phase4_full_theorem.py
-python algorithm/rigorous/hypV_sweep.py
-python algorithm/rigorous/phase1a_cross_term.py
-python algorithm/rigorous/phase1b_K3_breakpoint.py
-python algorithm/rigorous/phase2a_lemma8_check.py
-```
+## Method note
+
+`paper/PROGRAM.md` records failed attempts and withdrawn claims alongside the results,
+deliberately. Several intermediate findings here were artifacts of testing at a fixed
+scale while the phenomenon lived at a shrinking one, or of checking a proxy (equal
+areas) rather than the property (equal sets). Two claims were retracted on those
+grounds and one sign error was found the same way. The ledger keeps them so the same
+mistakes are not repeated.
+
+## Superseded work
+
+An earlier line of work in this repository aimed at *local* maximality of Gerver's and
+Romik's sofas via second variation, and its results are **withdrawn**. Baek's theorem
+gives global optimality for Gerver, and local optimality there was already available in
+Gerver (1992), Romik (2018) and Den (2024). For $\Sigma$, the reconstruction that
+approach certifies does not dominate the true area at second order; details, including
+the two failure modes found (chords that are not constraint boundaries, and signed
+Green sums evaluated on self-intersecting curves), are in `paper/PROGRAM.md`. Those two
+failure modes are of independent interest to anyone computing area bounds from boundary
+integrals.
 
 ## Citation
 
@@ -126,5 +124,4 @@ MIT — see `LICENSE`.
 
 ## Comments
 
-Comments, corrections, and pointers to errors are welcome — please
-open an issue.
+Comments, corrections, and pointers to errors are welcome — please open an issue.
