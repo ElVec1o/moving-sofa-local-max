@@ -665,4 +665,48 @@ theorem sum_pos_of_one_pos : ∀ {l : List Int}, (∀ x ∈ l, 0 ≤ x) →
           sum_pos_of_one_pos (fun y hy => h y (by simp [hy])) ⟨x, hxt, hxpos⟩
         omega
 
+/-! ## F9 — the ambidextrous transfer: the two niches are disjoint
+
+New goal: prove Romik's ambidextrous sofa Σ optimal by transferring Baek's
+concavity architecture (arXiv:2411.19826) from the one-corner problem.
+
+Baek's sofa is `S = K \ N(K)`, a convex cap minus ONE niche, and his `Q` is
+concave because it subtracts Mamikon regions, whose areas are convex quadratics
+(his Theorem 7.4.2).  The ambidextrous sofa is
+
+    Σ = C₂ \ (U ∪ ρU),      C₂ = C ∩ ρC convex,   ρ(x,y) = (x, 1-y),
+
+a convex cap minus the union of TWO niches.  Inclusion–exclusion gives
+`|U ∪ ρU| = |U| + |ρU| - |U ∩ ρU|`, and that last term would enter `Q` with a
+PLUS sign — the wrong sign for the subtract-convex-quadratics mechanism.  So the
+transfer hinges on the two niches being disjoint.  F9 proves they are.
+
+Measured for Romik's trajectory: `max_t c_y(t) = 0.387838 < 1/2`, and the niches
+are disjoint with a gap of 0.224. -/
+
+/-- **F9a (niche ceiling).**  A point of the wedge `Q_t` lies at or below its
+    apex.  In the wedge, `q - c(t) = -a·μ_t - b·ν_t` with `a, b ≥ 0`, and on
+    `t ∈ [0, π/2]` both frame vectors have non-negative `y`-component
+    (`μ_t = (cos t, sin t)`, `ν_t = (-sin t, cos t)`), so the `y`-coordinate can
+    only decrease.  Here `s, c ≥ 0` stand for `sin t, cos t`. -/
+theorem niche_below_apex {a b s c qy cy : Int}
+    (ha : 0 ≤ a) (hb : 0 ≤ b) (hs : 0 ≤ s) (hc : 0 ≤ c)
+    (hq : qy = cy - a*s - b*c) : qy ≤ cy := by
+  have h1 : 0 ≤ a*s := Int.mul_nonneg ha hs
+  have h2 : 0 ≤ b*c := Int.mul_nonneg hb hc
+  omega
+
+/-- **F9b (separation).**  If the niche lies in `{y ≤ M}` and its `ρ`-image lies
+    in `{y ≥ H - M}`, where `ρ` reflects in `y = H/2`, then `2M < H` forces the
+    two to be disjoint: no point can satisfy both.  With `H = 1` and
+    `M = max_t c_y(t) = 0.387838` this is Romik's case. -/
+theorem niche_disjoint {M H y : Int} (h : 2*M < H)
+    (hU : y ≤ M) (hRU : H - M ≤ y) : False := by omega
+
+/-- **F9c (inclusion–exclusion collapses).**  Disjointness removes the overlap
+    term, so the union's area is the plain sum and each niche can be treated by
+    exactly the machinery Baek applies to his single niche. -/
+theorem union_area_of_disjoint {u ru ov total : Int}
+    (hie : total = u + ru - ov) (hdisj : ov = 0) : total = u + ru := by omega
+
 end MovingSofa

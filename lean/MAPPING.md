@@ -43,6 +43,9 @@ sines and cosines is a separate Mathlib-track item and is NOT claimed here.
 | `weighted_sq_nonneg` | 626 | F8 | `0 ≤ d*x²` for `d > 0` | propext |
 | `weighted_sq_pos` | 630 | F8 | `0 < d*x²` for `d > 0`, `x ≠ 0` | propext |
 | `sum_nonneg` | 640 | F8 | non-negative entries ⟹ non-negative sum | propext, Quot.sound |
+| `niche_below_apex` | 690 | F9a, A1 | a wedge point lies at or below its apex (ambidextrous transfer) | propext, Quot.sound |
+| `niche_disjoint` | 700 | F9b, A2 | `y ≤ M` and `H−M ≤ y` with `2M < H` is contradictory: the two niches are disjoint | propext, Quot.sound |
+| `union_area_of_disjoint` | 707 | F9c, A4 | disjointness collapses inclusion–exclusion | propext, Quot.sound |
 | `sum_pos_of_one_pos` | 656 | F8 | non-negative entries with one positive ⟹ positive sum: certificate ⟹ strict definiteness | propext, Quot.sound |
 
 ## What is NOT formalized, and why

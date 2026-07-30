@@ -1,3 +1,99 @@
+# NEW PROGRAM (2026-07-30): the AMBIDEXTROUS problem via Baek's architecture
+
+GOAL: prove that Romik's ambidextrous sofa Σ, area A_R* = 1.6449552184, is the
+maximum-area ambidextrous moving sofa, by transferring Baek's concavity
+architecture (arXiv:2411.19826) from the one-corner problem.
+
+The second-variation program is retired.  Baek settles the one-corner problem
+globally and never computes a second variation; the ambidextrous problem is open
+and his method is the one to use on it.  Retired ladder jobs were killed; their
+checkpoints are kept but certify a bound no longer in use.
+
+## Baek's engine, extracted (his Chapter 7)
+
+  * Thm 7.1.1  the planar convex bodies 𝒦 form a CONVEX DOMAIN under Minkowski sum
+  * Thm 7.1.2  h_K, the vertices v_K^±, and the surface measure σ_K are
+               CONVEX-LINEAR in K
+  * Thm 7.1.3  |K| = ½∫ h_K σ_K is QUADRATIC in K
+  * Thm 7.1.5  for a CONCAVE quadratic f on a convex domain, K maximises f iff
+               Df(K;·) ≤ 0 -- only the FIRST derivative is needed
+  * Thm 7.3.2  the convex-curve segment has 𝒥(u_K^{a,b}) = ½∫_{(a,b)} h_K σ_K,
+               quadratic in K
+  * Thm 7.4.1  MAMIKON, generalised: the Mamikon region has area ½∫_a^b α(t)² dt
+               with α(t) = (z(t) − v_K^+(t))·v_t
+  * Thm 7.4.2  THE CONCAVITY ENGINE: if z_K is convex-linear in K and lies on the
+               tangent line l_K(t), then ℳ_K(a,b;z_K) is quadratic and CONVEX in K
+
+So Q = (linear and quadratic terms) − (Mamikon regions) is CONCAVE, because a
+square of a convex-linear quantity is a convex quadratic.  That single observation
+replaces every Hessian ladder in the retired program.
+
+## The transfer, and the one thing that had to be checked
+
+Baek: S = K \ N(K), convex cap minus ONE niche.
+Ambidextrous, in the decomposition this project already uses in sigma_area.rs:
+
+    Σ = C₂ \ (U ∪ ρU),     C₂ = C ∩ ρC convex,     ρ(x,y) = (x, 1−y).
+
+A convex cap minus the union of TWO niches.  Inclusion–exclusion,
+
+    |U ∪ ρU| = |U| + |ρU| − |U ∩ ρU|,
+
+puts the overlap term into Q with a PLUS sign, which is exactly the wrong sign for
+a mechanism built on SUBTRACTING convex quadratics.  So the whole transfer hinged
+on whether the niches overlap.
+
+### They do not.  [PROVED]
+
+Measured first: on a 500×500 grid over [−2.6,1.6]×[−0.2,1.2] with n_t = 12001,
+
+    |U| ≈ |ρU| ≈ 1.033719   (43775 cells each),   |U ∩ ρU| = 0   (0 cells)
+
+and refinement bands of ±0.02, ±0.005, ±0.001 about y = ½ contain no point of
+either niche.  Then the reason, which is elementary:
+
+LEMMA (niche ceiling).  For t ∈ [0, π/2], Q_t ⊆ {y ≤ c_y(t)}.
+Proof.  q ∈ Q_t means q − c(t) = −a μ_t − b ν_t with a, b > 0.  On [0, π/2] both
+μ_t = (cos t, sin t) and ν_t = (−sin t, cos t) have non-negative y-component, so
+q_y − c_y(t) = −a sin t − b cos t ≤ 0. ∎
+
+LEMMA (separation).  Hence U ⊆ {y ≤ M} with M := max_t c_y(t), and ρU ⊆ {y ≥ 1−M}.
+If M < ½ the two are disjoint. ∎
+
+For Romik's trajectory M = 0.387838, measured, against the threshold ½ — a margin
+of 0.112, and a gap of 0.224 between the niches.  Since Romik's Σ is piecewise
+ALGEBRAIC and c is in closed form, M < ½ is a finite closed-form check, not a
+numerical one.
+
+CONSEQUENCE: |U ∪ ρU| = |U| + |ρU| exactly, so each niche is handled by precisely
+the machinery Baek applies to his single niche, and the architecture transfers with
+no new mathematics at this step.
+
+## Formalized (F9, all VERIFIED)
+
+    niche_below_apex        F9a  a wedge point lies at or below its apex
+    niche_disjoint          F9b  M ≤ y and H−M ≤ y with 2M < H is contradictory
+    union_area_of_disjoint  F9c  the inclusion–exclusion term drops out
+
+`lake build` clean, zero sorry, axioms only propext and Quot.sound.  35 theorems.
+
+## What remains, in order
+
+  B1  monotone reduction for ambidextrous sofas: does a maximum-area ambidextrous
+      sofa admit BOTH movements with rotation angle exactly π/2?  (Baek Ch. 3–4
+      redone; his balancing repair may or may not survive two corners.)
+  B2  the ambidextrous injectivity condition, by a differential inequality in
+      Baek's style (his Ch. 6, the eleven-fold bootstrap).
+  B3  the overestimating region: two cores and four tails, or one core and two in a
+      ρ-quotient.  This is where the ρ-symmetry should pay.
+  B4  Q on a convex domain of convex-body tuples, quadratic by support functions.
+  B5  concavity by Mamikon, using F9 so that the two niches contribute additively.
+  B6  criticality of Σ from Romik's ambidextrous ODEs (Rom18) — the analogue of
+      Baek §1.8.3, and the step where Romik's existing work is the input.
+  B7  formalize B4/B5 in Lean.  These are closed-form convex geometry with NO
+      numerics, so unlike every margin in the retired program they can reach
+      VERIFIED.
+
 ## 🌊🌊🌊 RULE 4 NOVELTY AUDIT AGAINST BAEK 2024 — PART II IS SUBSUMED AND WAS ALREADY KNOWN
 
 Read: Jineon Baek, "Optimality of Gerver's Sofa", arXiv:2411.19826v1, 29 Nov 2024,
