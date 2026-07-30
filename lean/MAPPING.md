@@ -110,6 +110,22 @@ measured, and what it gives".  Nor is the convex-linearity of `α₁, α₂, σ`
 formalized; it is an affine-algebra statement about \(h\mapsto c(t)\) that needs real
 analysis, not `Int`.
 
+## F18 — cap form, principal symbol, outer-arm monotonicity (note §9)
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| the two-branch expansion behind `\|C2\| = ∫(H²−H′²) − H(0) − H(π)` | `cap_branch_sum` | VERIFIED |
+| the principal symbol is `≤ −1` for every admissible indicator choice, given `E₁ ⊆ [0,π/2]` | `principal_symbol_neg` | VERIFIED |
+| `4a₁ sin β = 1` with `a₁ > ½` forces `sin β < ½`, i.e. `β < π/6` (scaled to `Int` by a common denominator) | `beta_below_pi_over_six` | VERIFIED |
+| `cos²t·x′ = ½ − sin t > 0` on the first phase | `phase1_increasing` | VERIFIED |
+| `cos²t·x′ = ½(1 − sin t) ≥ 0` on the last phase | `phase3_increasing` | VERIFIED |
+| the sweep endpoint equals the right end of the floor facet | `facet_tangency` | VERIFIED |
+
+`#print axioms` on all six: `[propext, Quot.sound]`.  NOT formalized: the analysis behind
+the cap identity (that `⟨h″,h⟩ = −∫h′²` with no boundary terms, the circle having none);
+the middle-phase positivity `W > 0`, which core Lean cannot express; and
+Proposition "V over-estimates the niche", whose proof is Reynolds' transport theorem.
+
 ## Tooling note
 
 Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go

@@ -799,12 +799,10 @@ Since $\alpha_1,\alpha_2$ are affine in $H$, each pointwise sign condition is a
 half-space and $\Sig$'s cell is convex. Concavity plus criticality on a convex set gives
 that $\Sig$ maximises $Q$ \emph{on that cell}. Nothing global follows.
 
-\emph{What is missing.} All of the above concerns $Q$ alone. The inequality
-$Q\ge|\text{sofa}|$, which is the only reason $Q$ is relevant, is exactly the statement
-that the two sweeps of Proposition~\ref{prop:V} are disjoint, injective and covering for
-\emph{competitors}; that is measured only at $\Sig$. It is the analogue of the one-corner
-argument's Chapters 3--6 and it is not done here. \emph{No optimality claim follows},
-and all of the numbers in this remark are floating point.
+\emph{What is missing --- and it is worse than missing.} All of the above concerns $Q$
+alone. The inequality $Q\ge|\text{sofa}|$, which is the only reason $Q$ is relevant,
+\textbf{fails}; see Proposition~\ref{prop:reynolds}. All numbers in this remark are
+floating point.
 \end{remark}
 
 \begin{remark}[The boundary of the cap, and where the sweep terminates]\label{rem:cap}
@@ -831,6 +829,134 @@ is an algebraic identity, the right-hand side being the left end of the facet pl
 length $H'(\pi/2^+)-H'(\pi/2^-)$. So the tangency at $t=\pi/2$ is exact, not
 coincidental, and what remains of $S_1=\sigma$ is the monotonicity of the explicit
 function $x$.
+\end{remark}
+
+\begin{proposition}[$V$ over-estimates the niche, so $Q$ is not an upper bound]
+\label{prop:reynolds}
+For every admissible $H$, $V(H)\ge|N(H)|$. Consequently
+$Q=|C_2|-2V\le|C_2|-2|N|$, and for the maximal sofa
+$T_{\max}=C_2\setminus(U\cup\rho U)$ with that cap, $|T_{\max}|=|C_2|-2|N|\ge Q$. So $Q$
+is an upper bound for $|T_{\max}|$ only where $V=|N|$.
+\end{proposition}
+
+\begin{proof}
+$V$ is precisely the flux of the advancing part of $\partial Q_t$, by
+Lemma~\ref{lem:normvel} and the Jacobian computation in Proposition~\ref{prop:V}. By
+Reynolds' transport theorem the area gained by the sweeping region
+$N_T=\bigcup_{t\le T}Q_t\cap C_2$ satisfies
+$\tfrac{d}{dT}|N_T|\le\int_{\text{advancing part of }\partial Q_T}v_n\,ds$, because
+advance into already-swept territory contributes to the flux but gains no area.
+Integrating over $T\in[0,\pi/2]$ gives $|N|\le V$.
+\end{proof}
+
+\begin{remark}[The size of the gap, measured]\label{rem:gap}
+Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
+is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
+$V(\Sig)=|N(\Sig)|$. Perturbing $H$ by a smooth bump $\eta$ supported where
+$H+H''\ge\tfrac12$ (so convexity survives) and measuring $|N|$ with a polygon oracle
+against $V$ from the same $H$, the excess $V-|N|$, corrected for the oracle's known
+$O(1/n)$ bias, is
+\[
+  \begin{array}{r|cccccc}
+    \varepsilon & -0.20 & -0.10 & -0.05 & 0.05 & 0.10 & 0.20\\\hline
+    V-|N| & 5.5\cdot10^{-3} & 1.4\cdot10^{-4} & 4.2\cdot10^{-6}
+          & 9.3\cdot10^{-5} & 8.4\cdot10^{-4} & 5.0\cdot10^{-3}
+  \end{array}
+\]
+--- strictly positive on \emph{both} sides and growing faster than $\varepsilon^2$. So
+$\Sig$ is an isolated zero of $V-|N|$: the functional $Q$ touches the true bound at $\Sig$
+and falls strictly below it in every direction. Therefore $Q$ cannot certify $\Sig$, and
+the fact that $Q$ is tight, critical and concave there (Remark~\ref{rem:conc}) does not
+yield an optimality statement.
+
+This locates the difficulty exactly. The repair is the one the one-corner argument
+performs: replace the exact flux $V$ by the flux over a sub-family on which the sweep is
+\emph{provably} injective, so that the integral is the area of a genuine subset of $N$ and
+the inequality runs the right way, while the restriction is vacuous at $\Sig$. Producing
+such a sub-family is the content of that argument's Chapters 3--6 and is not done here.
+
+One reformulation that may help. A point $p$ lies on the face-2 line at parameter $t$ iff
+$\phi(t):=\langle p,\nu_t\rangle-(G(t)-1)$ vanishes, and with
+$s(p,t):=F(t)-1-\langle p,\mu_t\rangle$ one computes
+$\phi'=s-\alpha_2$ and $s'=-\phi-\alpha_1$, i.e.\ in complex form
+\[
+  z:=s+i\phi,\qquad z'=iz-(\alpha_1+i\alpha_2).
+\]
+So the whole face-2 sweep is governed by one linear ODE whose homogeneous part is an
+exact rotation, $z(t)=\zeta(t)+e^{it}w_0$ with $w_0$ an affine coordinate for $p$; the
+sweep is injective iff no solution meets $\{\phi=0,\ 0\le s\le\alpha_2\}$ twice, and at
+every such meeting $\phi'=s-\alpha_2\le0$, so the crossing is always downward. A second
+meeting therefore forces an upward crossing in between, at $s\ge\alpha_2$. Since the
+total rotation over $[0,\pi/2]$ is only $\pi/2$, the homogeneous part alone cannot supply
+that extra crossing; whether the forcing $\zeta$ can is the open point.
+\end{remark}
+
+\begin{proposition}[Monotonicity of the outer arm]\label{prop:mono}
+The face-1 segment's far endpoint has $x$-coordinate
+\begin{equation}\label{eq:xint}
+  x(t)=c_x(t)+\sigma(t)\sin t=\frac{F(t)-1}{\cos t},
+\end{equation}
+the $x$-intercept of the face-1 line, and $\cos^2t\;x'(t)=F'(t)\cos t+(F(t)-1)\sin t$.
+For $\Sig$:
+\begin{itemize}
+\item on $[0,\beta)$, where $A(t)\equiv P$ so $F(t)=\cos t+\tfrac12\sin t$,
+\[
+  x=1+\tfrac12\tan t-\sec t,\qquad \cos^2t\;x'=\tfrac12-\sin t>0,
+\]
+the last because $\sin\beta=1/(4a_1)=0.2856\ldots<\tfrac12$ by
+Theorem~\ref{thm:a1beta}, i.e.\ $\beta<\pi/6$;
+\item on $(\pi/2-\beta,\pi/2]$, where $F(t)-1=A\cos t+\tfrac12\sin t-\tfrac12$ with
+$A=1-\tfrac23a_1$,
+\[
+  x=A-\tfrac12\tan\Bigl(\tfrac\pi4-\tfrac t2\Bigr),\qquad
+  \cos^2t\;x'=\tfrac12(1-\sin t)>0\ \ (t<\pi/2),
+\]
+and in particular $x(\pi/2)=A=1-\tfrac23a_1=0.4164750917\ldots$, which is exactly the
+right endpoint of the corridor floor facet of Remark~\ref{rem:cap};
+\item on $[\beta,\pi/2-\beta]$, substituting $u=t/2-\pi/8$ and using
+$-f_2/f_1=\sqrt2-1=\tan(\pi/8)$,
+\[
+  \cos^2t\;x'=W(u):=\tfrac{3K}{4}\sin u+\tfrac K4\cos3u+\tfrac12
+    -\sqrt2\cos\Bigl(2u+\tfrac\pi4\Bigr),\qquad K=f_1\sqrt{4-2\sqrt2},
+\]
+on $|u|\le\pi/8-\beta/2$.
+\end{itemize}
+Hence $x$ is strictly increasing, given $W>0$.
+\end{proposition}
+
+\begin{proof}
+The face-1 line is $\{\langle p,\mu_t\rangle=F(t)-1\}$, so its $x$-intercept is
+$(F-1)/\cos t$; that it agrees with $c_x+\sigma\sin t$ is
+$c_x+c_y\tan t=(F-1)/\cos t$, immediate from $c=(F-1)\mu_t+(G-1)\nu_t$. The three
+closed forms follow by substituting $F(t)-1=\operatorname{Re}(e^{-it}z(t))$ with the
+complex forms of SOL1, SOL6, SOL5. For the middle phase the $\kappa_6$ terms cancel and
+the triple-angle identities $\sin(3t/2)=s(3c^2-s^2)$, $\cos(3t/2)=c(c^2-3s^2)$ with
+$s=\sin\tfrac t2$, $c=\cos\tfrac t2$ reduce the result to the stated three-term form.
+\end{proof}
+
+\begin{remark}
+$K=1.3020516916\ldots$ and $W$ is strictly decreasing on $|u|\le\pi/8-\beta/2$ with
+minimum $W(\pi/8-\beta/2)=\tfrac12(1-\cos\beta)=0.0208285\ldots$ at the right junction,
+where it agrees with the last phase's $\tfrac12(1-\sin t)$ as it must. So $W>0$; the
+proof of that inequality is elementary but is not written out here, and the closed forms
+above have been checked against numerical differentiation to $10^{-10}$. Since $C_2$ is
+convex, this monotonicity together with the endpoint identity is what reduces the claim
+$S_1=\sigma$ to those two facts.
+\end{remark}
+
+\begin{remark}[The identity at 61 digits]\label{rem:61}
+With all constants from their closed forms ($u^3+3u=2$, $\beta=\arctan(u/2)$,
+$a_1=\sqrt{4+u^2}/(4u)$, $f_1$ from Proposition~\ref{prop:f1}) and $60$ working digits,
+\[
+  V=0.184193197088768988251655564606\ldots,\qquad
+  |C_2|=2.013341612602978828172120476813\ldots,
+\]
+\[
+  Q(\Sig)-A_R^\ast=-1.56\cdot10^{-61}.
+\]
+The two sides share no computation, so this rules out the possibility that the
+double-precision agreement of \eqref{eq:Qtight} was a rounding coincidence. It remains
+floating point, not an interval enclosure.
 \end{remark}
 
 \section{Formalisation}

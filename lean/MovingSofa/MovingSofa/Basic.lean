@@ -1102,4 +1102,82 @@ theorem posPart_sq_midpoint_convex (a b : Int) :
     Int.mul_le_mul hle hle h0 (Int.le_trans h0 hle)
   exact Int.le_trans hstep (two_sq_add_sq _ _)
 
+/-! ## F18 — the cap quadratic form, the principal symbol, and the outer-arm monotonicity
+
+Three further steps of the note are arithmetic.
+
+F18a.  The cap identity.  Since `rho` reflects in `y = 1/2`, the support function of
+`C2 = C ^ rho C` has two branches, `H(theta)` above and `H(-theta) + sin theta` below, and
+`|C2| = (1/2) int (h_2^2 - h_2'^2)` over the circle becomes an integral over `[0,pi]` of
+the SUM of the two branches' integrands.  The algebraic step is the expansion of that
+sum, recorded here (doubled, to clear the halves) with atoms `H, D = H', S = sin s,
+C = cos s`.  What is NOT formalized is the analysis: that `<h_2'', h_2> = -int h_2'^2`
+with no boundary terms because the circle has none.
+
+F18b.  The principal symbol.  The coefficient of `eta'(theta)^2` in the second variation
+is `-1` from the cap, `-s` from the sigma term (`s = 1` on `[0,pi/2]`), `+o` from the
+obstruction term (`o = 1` on `E_1`), and `-f` from the face-2 term.  Since `E_1` is a
+subset of `[0,pi/2]`, where the sigma term is always present, `o <= s`; hence the total
+is at most `-1` for every admissible choice.  That is why concavity is a finite question.
+
+F18c.  The outer-arm monotonicity, `x(t) = (F(t)-1)/cos t`.  On the two outer phases
+`cos^2 t * x'(t)` is `1/2 - sin t` and `(1/2)(1 - sin t)` respectively.  The first is
+positive exactly when `sin t < 1/2`, and `4 a_1 sin beta = 1` with `a_1 > 1/2` forces
+`sin beta < 1/2`; scaled to integers by a common denominator `N` this is F18c1.  The
+second is non-negative because `sin t <= 1`.  The middle phase is NOT here: it reduces to
+positivity of an explicit three-term trigonometric expression, which core Lean cannot
+express.
+
+F18d.  The tangency at `t = pi/2`: the sweep endpoint equals the right end of the floor
+facet.  A linear identity in the four quantities involved. -/
+
+/-- **F18a (the cap expansion).**  Doubled sum of the two branch integrands. -/
+theorem cap_branch_sum (H D S C : Int) :
+    (H*H - D*D) + ((H - S)*(H - S) - (D - C)*(D - C))
+      = 2*(H*H) - 2*(D*D) - 2*(H*S) + 2*(D*C) + S*S - C*C := by
+  simp [Int.mul_sub, Int.sub_mul, Int.mul_comm]; omega
+
+/-- **F18b (the principal symbol is negative).**  With `s, o, f` the indicators of the
+    sigma, obstruction and face-2 terms and `o ≤ s` (the obstruction lives inside the
+    sigma term's range), the coefficient of `eta'^2` is at most `-1`. -/
+theorem principal_symbol_neg {s o f : Int}
+    (hs : s = 0 ∨ s = 1) (ho : o = 0 ∨ o = 1) (hf : f = 0 ∨ f = 1)
+    (hos : o ≤ s) : -1 - s + o - f ≤ -1 := by
+  rcases hs with h | h <;> rcases ho with h' | h' <;> rcases hf with h'' | h'' <;>
+    subst h <;> subst h' <;> subst h'' <;> omega
+
+/-- **F18c1 (`beta < pi/6`).**  Writing `sin beta = S/N` and `a_1 = A/N`, the relation
+    `4 a_1 sin beta = 1` is `4*A*S = N*N`, and `a_1 > 1/2` is `N < 2*A`.  Then
+    `sin beta < 1/2`, i.e. `2*S < N` — which is what makes `1/2 - sin t > 0` on the
+    whole first phase. -/
+theorem beta_below_pi_over_six {A S N : Int} (hN : 0 < N) (hS : 0 < S)
+    (hT3 : 4*(A*S) = N*N) (hA : N < 2*A) : 2*S < N := by
+  have key : N*(2*S) < (2*A)*(2*S) :=
+    Int.mul_lt_mul_of_pos_right hA (by omega)
+  have hrw : (2*A)*(2*S) = 4*(A*S) := by ac_rfl
+  rw [hrw, hT3] at key
+  -- N*(2*S) < N*N  with  N > 0  gives  2*S < N
+  rcases Int.lt_trichotomy (2*S) N with h | h | h
+  · exact h
+  · rw [h] at key; omega
+  · exact absurd key (by
+      have : N*N ≤ N*(2*S) := Int.mul_le_mul_of_nonneg_left (by omega) (by omega)
+      omega)
+
+/-- **F18c2 (first phase).**  `cos^2 t * x'(t) = 1/2 - sin t`, doubled: positive exactly
+    when `2 sin t < 1`. -/
+theorem phase1_increasing {S : Int} (h : 2*S < 1) : 0 < 1 - 2*S := by omega
+
+/-- **F18c3 (last phase).**  `cos^2 t * x'(t) = (1/2)(1 - sin t) ≥ 0` since `sin t ≤ 1`,
+    with equality only at `t = pi/2`. -/
+theorem phase3_increasing {S : Int} (h : S ≤ 1) : 0 ≤ 1 - S := by omega
+
+/-- **F18d (the tangency identity).**  The right end of the floor facet is its left end
+    `c_x(0) - alpha_2(0)` plus its length `alpha_2(0) + alpha_1(pi/2) - (G(pi/2)-1)`, and
+    with `c_x(0) = 0` that equals `alpha_1(pi/2) - (G(pi/2)-1)`, which is the sweep
+    endpoint `c_x(pi/2) + alpha_1(pi/2)` because `G(pi/2)-1 = -c_x(pi/2)`. -/
+theorem facet_tangency {A1 A2 G CX0 CXP : Int} (h0 : CX0 = 0) (hG : G = -CXP) :
+    (CX0 - A2) + (A2 + A1 - G) = CXP + A1 := by
+  subst h0; subst hG; omega
+
 end MovingSofa

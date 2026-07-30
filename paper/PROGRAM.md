@@ -1,3 +1,115 @@
+## 🔴🔴 THE ARCHITECTURE DOES NOT CLOSE: V OVER-ESTIMATES THE NICHE, SO Q IS NOT AN UPPER BOUND
+
+The decisive test, and it is negative.  For any ambidextrous sofa T with cap data H,
+
+    |T| <= |C2| - 2|N|,   with EQUALITY for T_max = C2 \ (U u rho U),
+
+so Q := |C2| - 2V bounds |T| if and only if V <= |N|.  But:
+
+    PROPOSITION.  V >= |N| for every admissible H.
+
+PROOF.  V is exactly the flux of the ADVANCING part of dQ_t (the normal-velocity lemma
+plus the Jacobian computation).  Reynolds' transport theorem gives
+d|N_T|/dT <= int_{advancing} v_n ds, because advance into already-swept territory is
+counted by the flux but gains no area.  Integrate over [0,pi/2].  QED
+
+Hence Q <= |C2| - 2|N| = |T_max|, so Q is BELOW the area of the very sofa it should
+bound, except where V = |N| exactly.
+
+### Measured (ambi_domination.py): Sigma is an ISOLATED zero of V - |N|
+
+Perturb H by a smooth bump at theta = 1.0, half-width 0.45, supported where H+H'' >= 1/2
+so convexity survives.  Excess V - |N|, corrected for the oracle's known O(1/n) bias:
+
+    eps     -0.20    -0.10    -0.05     0.05     0.10     0.20
+    V-|N|  5.5e-03  1.4e-04  4.2e-06  9.3e-05  8.4e-04  5.0e-03
+
+Strictly positive on BOTH sides, growing faster than eps^2.  So Q touches the true bound
+at Sigma and falls strictly below it in every direction.
+
+### Consequence for the previous section's results
+
+Q(Sigma) = A_R*, dQ(Sigma) = 0 and d^2 Q < 0 on Sigma's cell are all still TRUE, and
+they are still the three hypotheses of Thm 7.1.5.  They just do not compose into an
+optimality statement, because the fourth ingredient -- domination -- is FALSE for this V.
+The previous section said domination was "not done"; it is worse than that, it is false.
+Corrected in the note (Prop "V over-estimates the niche") and the README.
+
+### The repair, and one reformulation that may help
+
+The repair is what Baek's Ch. 3-6 does: replace the exact flux V by the flux over a
+sub-family on which the sweep is PROVABLY injective, so the integral is the area of a
+genuine SUBSET of N and the inequality runs the right way, with the restriction vacuous
+at Sigma.  Note that injectivity is needed not to make the integral a lower bound but to
+make it EQUAL the area of a subset; int|det| >= |image| always.
+
+REFORMULATION.  p is on the face-2 line at parameter t iff
+phi(t) := <p,nu_t> - (G(t)-1) = 0, and with s(p,t) := F(t)-1-<p,mu_t> one computes
+
+    phi' = s - alpha_2 ,     s' = -phi - alpha_1 ,
+
+i.e. with z = s + i phi,
+
+    z' = i z - (alpha_1 + i alpha_2),     z(t) = zeta(t) + e^{it} w_0 ,
+
+w_0 an affine coordinate for p.  So the ENTIRE face-2 sweep is one linear ODE whose
+homogeneous part is an exact rotation.  The sweep is injective iff no solution meets
+{phi = 0, 0 <= s <= alpha_2} twice; at every meeting phi' = s - alpha_2 <= 0, so every
+crossing is DOWNWARD, and a second meeting forces an upward crossing in between at
+s >= alpha_2.  The total rotation over [0,pi/2] is only pi/2, so the homogeneous part
+alone cannot supply the extra crossing.  Whether the forcing zeta can is the open point,
+and it is a concrete question about one linear ODE rather than about plane geometry.
+
+## 🟢 ITEM 2 CLOSED (to one elementary inequality): THE OUTER ARM IS MONOTONE
+
+x(t) = c_x(t) + sigma(t) sin t = (F(t)-1)/cos t -- the X-INTERCEPT of the face-1 line
+(identity verified to 2.2e-16).  So cos^2 t x' = F' cos t + (F-1) sin t, and per phase:
+
+  [0,beta)          F = cos t + (1/2) sin t          (A(t) = P constant)
+                    x = 1 + (1/2)tan t - sec t,   cos^2 t x' = 1/2 - sin t > 0
+                    because sin beta = 1/(4a1) = 0.285620 < 1/2, i.e. beta < pi/6. PROVED
+
+  (pi/2-beta,pi/2]  F-1 = A cos t + (1/2) sin t - 1/2,  A = 1 - (2/3) a1
+                    x = A - (1/2) tan(pi/4 - t/2),  cos^2 t x' = (1/2)(1 - sin t) > 0.
+                    PROVED.  And x(pi/2) = A = 1 - (2/3)a1 = 0.416475091724845 EXACTLY
+                    the right end of the corridor floor facet -- a CLOSED FORM for it.
+
+  [beta,pi/2-beta]  with u = t/2 - pi/8 and -f2/f1 = sqrt2 - 1 = tan(pi/8) (exact, 5.6e-17)
+                    cos^2 t x' = W(u) = (3K/4) sin u + (K/4) cos 3u + 1/2
+                                        - sqrt2 cos(2u + pi/4),   K = f1 sqrt(4-2sqrt2)
+                    on |u| <= pi/8 - beta/2 = 0.247867.  K = 1.302051691617.
+                    W is decreasing with min W = (1/2)(1-cos beta) = 0.020828596 at the
+                    RIGHT junction, matching the last phase's (1/2)(1-sin t) there.
+                    Positivity of W is elementary but not written out.
+
+All three closed forms checked against numerical differentiation to 1e-10.  Combined with
+convexity of C2 and the tangency identity, this is what reduces M3 (S_1 = sigma) to
+W > 0.
+
+## 🟢 ITEM 4: THE IDENTITY AT 61 DIGITS (ambi_precision.py)
+
+mpmath at 60 working digits, all constants from closed forms:
+
+    V     = 0.184193197088768988251655564606289616337273660
+    |C2|  = 2.013341612602978828172120476813212917868800180
+    Q(Sigma) - A_R* = -1.5557538e-61          (relative 9.46e-62)
+    4 a1 sin beta - 1 = -7.8e-62              (T3, as a byproduct)
+
+The two sides share no computation, so the earlier 5e-13 agreement was not a
+double-precision coincidence.  Still floating point, not an enclosure (Rule 7).
+
+## 🟢 ITEM 3: LEAN F18
+
+  cap_branch_sum          the two-branch expansion behind |C2| = int(H^2-H'^2) - H(0) - H(pi)
+  principal_symbol_neg    -1 - s + o - f <= -1 for indicators with o <= s (E_1 inside
+                          [0,pi/2]); this is why concavity is a finite question
+  beta_below_pi_over_six  4*(A*S) = N*N and N < 2*A imply 2*S < N: T3 forces beta < pi/6
+  phase1_increasing       0 < 1 - 2*S
+  phase3_increasing       0 <= 1 - S
+  facet_tangency          (CX0 - A2) + (A2 + A1 - G) = CXP + A1 given CX0 = 0, G = -CXP
+
+68 theorems, 14 defs, zero sorry; #print axioms on all six: [propext, Quot.sound].
+
 ## 🟢🟢 Q = |C2| - 2V IS TIGHT, CRITICAL AND CONCAVE AT SIGMA (one cell), and one RETRACTION
 
 Baek Thm 7.1.5 needs three things of an upper bound: (i) Q >= |sofa| with equality at the
