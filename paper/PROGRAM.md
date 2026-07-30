@@ -1,3 +1,66 @@
+## RULE 6 ADVERSARIAL REVIEW OF THE ASSEMBLED NOTE, plus release preparation
+
+### The DAG is acyclic
+
+60 environments, 28 with proofs.  Two forward references, BOTH from remarks and neither
+inside a proof: rem:conc -> prop:reynolds and rem:rcclassical -> thm:rc/thm:cross.  Those
+are pointers, not dependencies.  No proof cites a later result.
+
+### 🔴 FINDING 1: the BOUNDARY TERM of dQ was never checked
+
+d|C2| = 2 int_0^pi (H eta - H' eta') dtheta - eta(0) - eta(pi).  Integrating the eta' by
+parts and using eta(0) = 0 leaves, BESIDES the pointwise Euler-Lagrange equations,
+
+    -(2 H'(pi) + 1) eta(pi).
+
+Theorem thm:el proved only the pointwise equations, so dQ(Sigma) = 0 was NOT established.
+
+It does hold.  dV contributes no boundary term at theta = pi: its only one there carries
+the factor alpha_2^+(pi/2), and alpha_2(pi/2) = -0.5 < 0, so the clamp kills it; every
+other boundary sits at theta = 0 or pi/2 where eta vanishes.  And H'(pi) = -1/2 exactly
+(measured -0.499999998666, error 1.3e-9 at the finite-difference floor).
+
+WHY, structurally: the boundary point of C2 with outer normal mu_pi = (-1,0) is
+H(pi) mu_pi + H'(pi) nu_pi = (-H(pi), -H'(pi)), so its height is -H'(pi); C2 is
+rho-symmetric about y = 1/2, so its leftmost point is rho-fixed when unique, forcing
+H'(pi) = -1/2.  The same mechanism at theta = 0 gives H'(0) = 1/2.  BOTH EXTREME POINTS OF
+THE CAP SIT AT HEIGHT 1/2 -- they are the two rho-fixed points, (1, 1/2) and
+(-1.334100, 1/2).  So the gap was in the WRITE-UP, not the result.  Fixed.
+
+### 🔴 FINDING 2: main theorem used M <= 1/2 against a corollary needing M < 1/2
+
+Hypothesis (c) is c_y <= 1/2, but cor:sep is stated for M < 1/2 (strict) and concludes
+U ^ rho U = EMPTY.  With M = 1/2 the two niches can share the line y = 1/2.  That is a null
+set, so |U ^ rho U| = 0 and the area bound is unaffected -- but the proof cited the strict
+corollary.  Fixed by arguing the null-set form directly from lem:ceiling and noting that
+Sigma satisfies the strict form anyway.
+
+### 🔴 FINDING 3: the covering hypothesis was cited to the wrong result
+
+thm:final cited prop:V for V = |N|, but prop:V ASSUMES covering, disjointness and
+injectivity.  The covering and containment arguments live in the proof of prop:convex.
+Fixed: thm:final now cites prop:convex.
+
+### 🔴 PROCESS ERROR, caught by verification
+
+While syncing I ran a RELEASE -> SOURCE copy of note.tex, which overwrote the freshly
+patched source with the stale release copy and silently destroyed all three fixes.  Caught
+by grepping for the patch markers instead of assuming the edit had stuck; redone
+source -> release only.  STANDING RULE: never copy release -> source.
+
+### Release preparation
+
+  * CITATION.cff version 0.5.0 -> 0.6.0, date 2026-07-30.
+  * paper/manuscript.tex, OFFDIAG_RIGOROUS.tex and UNIQUENESS.tex each get a WITHDRAWN
+    header, and manuscript.tex a boxed notice after \maketitle, so a reader who opens them
+    cannot be misled.  They are KEPT because the archived release 0.4.0 contained them and
+    PROGRAM.md references them.
+  * README layout section now states plainly which files are superseded.
+  * The 52 gerver_*/sigma_* scripts and PROGRAM.md are KEPT: they are the computational
+    record behind the retractions, and PROGRAM.md is advertised by the README as exactly
+    that.  Rule 11's ban on narration is aimed at strategy leakage, not at a deliberate
+    public ledger.
+
 ## 🔴 RULE 4: (RC) IS NOT NEW. It is the classical sliding-ball condition, relaxed.
 
 The audit gap is closed, and it forces a reframing.

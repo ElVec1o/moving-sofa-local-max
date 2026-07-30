@@ -144,11 +144,17 @@ $Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
 ## Layout
 
 ```
-paper/niche_separation/   the note (LaTeX + PDF)
-paper/PROGRAM.md          full research ledger, including retractions
+paper/niche_separation/   THE PAPER (LaTeX + PDF)
+paper/PROGRAM.md          full research ledger, including every retraction
 lean/MovingSofa/          Lean 4 development, 82 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
-algorithm/                computations (ambi_*, sigma_*, gerver_*)
+algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
+                          by one of these
+
+superseded, retained only because the archived release contained them, and each
+marked WITHDRAWN in its own header:
+paper/manuscript.tex, paper/OFFDIAG_RIGOROUS.tex, paper/UNIQUENESS.tex,
+paper/figures/, algorithm/rigorous/{gerver_*,sigma_*}.py
 ```
 
 ## Lean

@@ -1275,9 +1275,10 @@ against a direct linear solve, agreeing to $10^{-16}$.
 So hypothesis (ii) of Theorem~\ref{thm:cond} may be replaced throughout by (RC).
 
 \begin{theorem}\label{thm:el}
-$\delta Q(\Sig)=0$. More precisely the Euler--Lagrange equations of
+$\delta Q(\Sig)=0$. Two things are needed and both hold: the Euler--Lagrange equations of
 Remark~\ref{rem:el} hold identically on each of the six regions, as trigonometric
-identities in $a_1,f_1,f_2$ --- no relation among the constants is used.
+identities in $a_1,f_1,f_2$ with no relation among the constants used; and the boundary
+term of $\delta Q$ vanishes, because $H'(\pi)=-\tfrac12$.
 \end{theorem}
 
 \begin{proof}
@@ -1298,6 +1299,18 @@ $\alpha_1=G-1-F'$, $\alpha_2=F-1+G'$, $\sigma=(F-1)\tan t+G-1$ and into the two
 Euler--Lagrange equations, with the sign pattern of each region fixed
 ($\alpha_2>0$ except on the last phase, $\alpha_1<0$ only on the first), every residual
 reduces identically to $0$.
+
+For the boundary term, integrating the $\eta'$ of
+$\delta|C_2|=2\int_0^\pi(H\eta-H'\eta')d\theta-\eta(0)-\eta(\pi)$ by parts and using
+$\eta(0)=0$ leaves $-(2H'(\pi)+1)\eta(\pi)$ beyond the pointwise equations. The variation
+$\delta V$ contributes nothing there: its only boundary term at $\theta=\pi$ carries the
+factor $\alpha_2^+(\pi/2)$, and $\alpha_2(\pi/2)<0$, so the clamp kills it; every other
+boundary sits at $\theta=0$ or $\pi/2$, where $\eta$ vanishes. Finally the boundary point of
+$C_2$ with outer normal $\mu_\pi=(-1,0)$ is
+$H(\pi)\mu_\pi+H'(\pi)\nu_\pi=(-H(\pi),-H'(\pi))$, so its height is $-H'(\pi)$; since $C_2$
+is $\rho$-symmetric about $y=\tfrac12$ its leftmost point is $\rho$-fixed when unique,
+forcing $H'(\pi)=-\tfrac12$ and the boundary term to vanish. The same mechanism at
+$\theta=0$ gives $H'(0)=\tfrac12$: both extreme points of the cap sit at height $\tfrac12$.
 \end{proof}
 
 \begin{remark}
@@ -1616,7 +1629,8 @@ that
 \item[(a)] $H(0)=H(\pi/2)=1$ \emph{(the gauge: horizontal translation, unit corridor)};
 \item[(b)] \emph{(RC)} $\sigma_K$ is absolutely continuous on $[0,\pi/2)$ and $(\pi/2,\pi]$
 with density at most $1$, the only atom being at $\theta=\pi/2$;
-\item[(c)] $c_y(t)=(H(t)-1)\sin t+(H(t+\pi/2)-1)\cos t\le\tfrac12$ for $t\in[0,\pi/2]$;
+\item[(c)] $c_y(t)=(H(t)-1)\sin t+(H(t+\pi/2)-1)\cos t\le\tfrac12$ for $t\in[0,\pi/2]$
+\emph{(note $\le$, not $<$: this gives $|U\cap\rho U|=0$, which is all an area bound needs)};
 \item[(d)] $\alpha_1<0$ exactly on $[0,\beta)$ and $\alpha_2>0$ exactly on
 $[0,\pi/2-\beta)$.
 \end{enumerate}
@@ -1634,9 +1648,13 @@ $\Sig$ satisfies (b) by Proposition~\ref{prop:rcsigma}, (c) with margin
 $\tfrac12-M=0.1121\ldots$ by Theorem~\ref{thm:main}, and (d) by definition of $\beta$.
 
 By (b) and Theorems~\ref{thm:rc} and \ref{thm:cross} the combined sweep is injective, so
-$V=|N|$ by Proposition~\ref{prop:V}. By (c) and Corollary~\ref{cor:sep} the two niches are
-disjoint, and $C_2$ is $\rho$-invariant, so
-$|T|\le|C_2|-|N|-|\rho N|=|C_2|-2|N|=Q$. By (d) and
+$V=|N|$ by Proposition~\ref{prop:convex}, whose proof also supplies the covering and
+containment that Proposition~\ref{prop:V} assumes. By (c) and Lemma~\ref{lem:ceiling},
+$U\subseteq\{y\le\tfrac12\}$ and $\rho U\subseteq\{y\ge\tfrac12\}$, so
+$|U\cap\rho U|=0$; with $C_2$ $\rho$-invariant this gives
+$|T|\le|C_2|-|N|-|\rho N|=|C_2|-2|N|=Q$. (Corollary~\ref{cor:sep} states the strict form
+$M<\tfrac12$, which is what $\Sig$ satisfies; the null-set form used here is what the
+hypothesis $\le$ delivers.) By (d) and
 Theorem~\ref{thm:concave}, $\delta^2Q\le0$ on $\mathcal D$; by Theorem~\ref{thm:el},
 $\delta Q(\Sig)=0$. A concave function with a critical point on a convex set attains its
 maximum there, so $Q(H)\le Q(\Sig)$, and $Q(\Sig)=A_R^\ast$ by Theorem~\ref{thm:QA}.

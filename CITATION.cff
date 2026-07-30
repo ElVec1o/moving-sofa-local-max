@@ -5,7 +5,7 @@ authors:
   - family-names: Bonfioli
     given-names: Vico
     email: vicobonfioli@gmail.com
-version: "0.5.0"
+version: "0.6.0"
 date-released: 2026-07-30
 license: MIT
 doi: "10.5281/zenodo.20434287"
