@@ -1,3 +1,99 @@
+## B1b: THE RHO-QUOTIENT REDUCTION — the ambidextrous problem becomes a ONE-niche problem
+
+This is the new content of this turn, and it is a consequence of the separation
+theorem rather than an independent construction.
+
+### The reduction  [PROVED]
+
+A1--A3 give U subset {y <= M} with M = 0.3878381292... < 1/2.  So the ENTIRE lower
+niche lies below the symmetry axis, and intersecting with the lower half-strip
+removes rho U completely:
+
+    Sigma^- := Sigma ^ {y <= 1/2} = K^- \ U,        K^- := C2 ^ {y <= 1/2},
+
+with K^- convex, and by rho-symmetry
+
+    |Sigma| = 2 |Sigma^-| = 2 ( |K^-| - |U ^ K^-| ).                       (Q)
+
+That is Baek's shape exactly: a convex cap minus ONE niche.  The two-niche
+obstruction that killed B1 is gone in the quotient.
+
+VERIFIED (project builder, n_theta = 1441):
+    |Sigma|             = 1.645059395    (A_R* = 1.644955218; the 1.04e-4 is the
+                                          n_theta discretisation)
+    |Sigma ^ {y<=1/2}|  = 0.822529698
+    2 x that            = 1.645059395    rho-symmetry error 3.775e-15
+    rho U meets {y<=1/2}?  NO, clearance 1 - M - 1/2 = 0.112161871
+    U entirely below the cut?  yes, clearance 1/2 - M = 0.112161871
+
+### What still does not close, and by exactly how much
+
+The balancing argument in the quotient acquires a DEFECT.  The boundary dK^- now
+includes the horizontal cut at y = 1/2, of outward normal angle pi/2, where the
+niche polyline has tau = 0.  Since v_{pi/2} . u_0 = -1, Baek's identity becomes
+
+    sum_{t != cut} (sigma(t) - tau(t)) (v_t . u_0)  =  + sigma_cut  >  0,
+
+which is compatible with sigma(t) <= tau(t) for every pushable t.  So we again get
+an INEQUALITY where Baek gets the equality sigma = tau, and it is the equality that
+Theorem 3.4.10 (maximum cap contains its niche) consumes.
+
+Moreover the cut cannot be pushed: rho-symmetry pins it at y = 1/2, so it is not
+in the admissible perturbation family.
+
+PROGRESS, stated precisely.  The obstruction has shrunk from an entire second niche
+polyline (B1) to a SINGLE SCALAR localised at ONE angle: the cut length sigma_cut,
+which is the width of Sigma at y = 1/2.  The balance condition becomes
+
+    sigma(t) <= tau(t) for all pushable t,   with   sum_t (tau - sigma)|v_t . u_0| = sigma_cut.
+
+That is a structured conclusion, not a dead end, and it suggests the right class to
+work in: caps with a PRESCRIBED horizontal edge at y = 1/2, where sigma_cut is a
+known constant of the class rather than a free quantity.
+
+### An equivalent reformulation worth recording
+
+Since Sigma = S ^ rho S, the ambidextrous problem is exactly
+
+    maximise |S ^ rho S|  over one-corner moving sofas S.
+
+Baek's theorem gives the trivial consequence A_R* <= |S| <= 2.2195..., which is far
+from tight (A_R* = 1.6450), but the reformulation is clean and may be the more
+natural setting for an existence argument, since the constraint set is now the
+one-corner sofas, about which Baek's Ch. 2--4 says everything.
+
+## B6 written up
+
+ROMIK_FORMULAS.md now carries SOL6 and ODE6 explicitly, with the derivation of f1
+from the junction, and the observation that the characteristic roots i/2 and 3i/2 of
+ODE6 are the source of every half-integer angle in the Sigma formulas.
+
+## F11 formalized (no axioms at all)
+
+The identity underlying the ODE6 derivation is a statement about half-angle
+trigonometric arcs, and the file's existing `Trig` coefficient machinery expresses
+it directly: with `D` the formal derivative in the half-angle,
+
+    D(D v) = -(v + 1)   for every arc with constant term -1,
+
+which is `4 v'' = -(v + (1,1))` for SOL6's bracket.  `Trig.sol6_bracket` and
+`Trig.sol6_ode` are proved by `rfl` and depend on NO axioms -- the first
+declarations in the development with that property besides the N1 family.  41
+theorems, zero sorry.
+
+## Honest assessment of publishability
+
+The reduction (Q) is new, but it is a corollary of the separation theorem rather
+than a deep result, and it does not by itself prove anything about optimality.  What
+exists now that is publishable is a short note: the separation theorem, the closed
+form for f1, ODE6, and the quotient reduction.  That is a genuine but small
+contribution to an open problem.
+
+The ambidextrous OPTIMALITY theorem remains blocked at the existence step, and the
+blocking object is now identified as sigma_cut.  Nothing in this session has
+produced a result of standing comparable to Baek's, and saying otherwise would be
+false.
+
 ## B1 ANSWERED: Baek's balancing argument does NOT transfer as-is  💧💧
 
 Read Baek Ch. 3-4 in full.  His balancing engine is a COINCIDENCE between two

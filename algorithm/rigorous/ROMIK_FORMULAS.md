@@ -41,7 +41,21 @@ $$
 $$
 \text{(ODE5) }\Gamma=\{A,B,C\}:\quad x''(t)=R_t\!\begin{pmatrix}-1/2\\-1\end{pmatrix}+\begin{pmatrix}2\sin t & -2\cos t\\ 2\cos t & 2\sin t\end{pmatrix}x'(t)
 $$
-(ODE6 is not used for Gerver's sofa.)
+**(ODE6)** is not used for Gerver's sofa. It IS the equation of the middle phase of
+Romik's AMBIDEXTROUS sofa $\Sigma$, and it is not of the same shape as ODE1--ODE5
+(those are $x''=R_t b+M(t)x'$ with no $x$ term). Derived from SOL6 below and
+confirmed numerically to $5.6\cdot10^{-15}$:
+
+$$
+\text{(ODE6)}\quad x''(t)=2Jx'(t)+\tfrac34\bigl(x(t)-\kappa_6\bigr)-\tfrac14 R_t\begin{pmatrix}1\\1\end{pmatrix},
+\qquad J=\begin{pmatrix}0&-1\\1&0\end{pmatrix}.
+$$
+
+In complex form ($J\leftrightarrow i$) the homogeneous part is
+$z''-2iz'-\tfrac34 z=0$, with characteristic roots $\lambda=i/2$ and $3i/2$. This
+is why SOL6 contains $\cos(t/2)$ and why $c_y(t)-\tfrac12$ contains $\sin(3t/2)$:
+**the two half-integer angles throughout the $\Sigma$ formulas are the two
+characteristic exponents of ODE6.**
 
 ## 2. Closed-form solutions (Romik Theorem 3, SOL1–SOL5)
 
@@ -61,6 +75,22 @@ $$
 x_5(t)=R_t\!\begin{pmatrix}e_1\cos t+e_2\sin t-\tfrac12\\ -e_2\cos t+e_1\sin t-1\end{pmatrix}+\kappa_5
 $$
 with $\kappa_j=(\kappa_{j,1},\kappa_{j,2})^\top$ and scalar constants $a_i,b_i,c_i,d_i,e_i$.
+
+**SOL6** (missing from Romik's Theorem 3 list above, which covers SOL1--SOL5; it is
+the ambidextrous solution and the middle phase of $\Sigma$):
+$$
+x_6(t)=R_t\!\begin{pmatrix}f_1\cos\frac t2+f_2\sin\frac t2-1\\ -f_2\cos\frac t2+f_1\sin\frac t2-1\end{pmatrix}+\kappa_6,
+\qquad \kappa_6=\Bigl(1-\tfrac43 a_1,\ \tfrac12\Bigr),\quad f_2=(1-\sqrt2)f_1,
+$$
+with (derived from the junction $x_1(\beta)=x_6(\beta)$; Romik tabulates only the
+decimal $1.202938908156911389$)
+$$
+f_1=\frac{\tfrac43\,a_1\cos\beta}{\cos\frac\beta2+(1-\sqrt2)\sin\frac\beta2}
+   =1.202938908156911389070223\ldots
+$$
+
+$\Sigma$'s phase structure is SOL1 on $[0,\beta)$, SOL6 on $[\beta,\pi/2-\beta]$,
+SOL5 on $(\pi/2-\beta,\pi/2]$.
 
 ## 3. The defining system (Romik §4, eqs. (23)–(44))
 

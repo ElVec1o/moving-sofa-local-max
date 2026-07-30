@@ -751,4 +751,55 @@ theorem concavity_of_subtracted_square {d w C : Int} (hd : 0 ≤ d)
   have h1 : 0 ≤ d*(w*w) := Int.mul_nonneg hd (sq_nonneg_int w)
   omega
 
+/-! ## F11 — ODE6, the ambidextrous phase equation
+
+Romik's six local-optimality ODEs govern the phases of an optimal rotation path.
+ODE1--ODE5 are the ones Gerver's sofa uses; ODE6 is the one it does not, and it is
+exactly the equation governing the middle phase of Romik's AMBIDEXTROUS sofa
+$\Sigma$.  Its solution SOL6 is
+
+    x₆(t) = R_t ( f₁cos(t/2) + f₂sin(t/2) - 1,
+                 -f₂cos(t/2) + f₁sin(t/2) - 1 )ᵀ + κ₆,
+
+and the equation itself, derived and numerically confirmed to 5.6e-15, is
+
+    x'' = 2 J x' + (3/4)(x - κ₆) - (1/4) R_t (1,1)ᵀ,     J = [[0,-1],[1,0]].
+
+Unlike ODE1--ODE5, which have the form `x'' = R_t b + M(t) x'` with no `x` term,
+ODE6 carries a restoring term.  In complex form (J ↔ i) its homogeneous part is
+`z'' - 2i z' - (3/4) z = 0`, with characteristic roots `i/2` and `3i/2` — which is
+why SOL6 contains `cos(t/2)` and why the closed form for `c_y - 1/2` contains
+`sin(3t/2)`.
+
+The whole derivation rests on one identity about the bracket `v`, and that identity
+is a statement about half-angle trigonometric arcs which the `Trig` machinery above
+already expresses.  Writing `D` for the formal derivative with respect to the
+HALF-ANGLE (equivalently `2 d/dt`), so that `D` is the same operator as before,
+F11 is `D(D v) = -(v + 1)` for every arc whose constant term is `-1`. -/
+
+namespace Trig
+
+/-- **F11 (the SOL6 bracket identity).**  For a half-angle arc with constant term
+    `-1`, applying the formal derivative twice negates the oscillatory part and
+    cancels the constant against `1`:  `D(D v) = -(v + 1)`.
+
+    Both components of SOL6's bracket have constant term `-1`, so both satisfy it,
+    which is the identity `4 v'' = -(v + (1,1))` underlying ODE6. -/
+theorem sol6_bracket (a b : Int) :
+    D (D ⟨a, b, -1⟩) = ⟨-a, -b, 0⟩ := rfl
+
+/-- **F11b.**  The right-hand side is exactly `-(v + 1)` when the constant term is
+    `-1`: with `v = ⟨a, b, -1⟩` we have `-(v + const 1) = ⟨-a, -b, 0⟩`. -/
+theorem neg_add_one (a b : Int) :
+    (⟨-a, -b, 0⟩ : Trig) = ⟨-(a), -(b), -((-1) + 1)⟩ := rfl
+
+/-- **F11c.**  Hence `D(D v) = -(v + 1)` for SOL6's bracket, stated as the
+    coefficient identity the derivation of ODE6 consumes.  The constant term `-1`
+    is essential: for any other constant `c` the two sides differ by `c + 1`. -/
+theorem sol6_ode (a b c : Int) (hc : c = -1) :
+    D (D ⟨a, b, c⟩) = ⟨-a, -b, -(c + 1)⟩ := by
+  subst hc; rfl
+
+end Trig
+
 end MovingSofa
