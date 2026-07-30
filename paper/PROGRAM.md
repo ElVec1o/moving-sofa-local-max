@@ -1,3 +1,64 @@
+## HYPOTHESIS (c) IS INDEPENDENT OF (RC) -- FALSIFIED, NOT PROVED (item 2)
+
+Rule 3 first, and it paid.  Add to H the function delta*sin(theta - pi/2) on [pi/2,pi],
+zero on [0,pi/2].  Then H + H'' of the addition is IDENTICALLY ZERO, so (RC) is preserved
+exactly; H(0) and H(pi/2) are unchanged, so the gauge is preserved; H' gains delta at
+pi/2, so the ceiling facet grows; and G(t) = H(t+pi/2) gains delta*sin t, so c_y gains
+delta*sin t*cos t, maximal delta/2 at t = pi/4.  Measured:
+
+    delta     0.0000   0.1000   0.2243   0.3000   0.5000
+    density   0.83863  0.83863  0.83863  0.83863  0.83863   (RC) holds throughout
+    facet     1.1670   1.2670   1.3913   1.4670   1.6670
+    M         0.38784  0.43784  0.49999  0.53784  0.63784   crosses 1/2 at delta ~ 0.2243
+
+So (c) CANNOT be derived from (RC) and the gauge, and must remain a hypothesis.
+
+This also RETRACTS the suggestion in the previous commit that "(c) never binds" was
+evidence of an implication.  It never binds among SMALL perturbations of Sigma, which is a
+statement about the probe, not about the geometry.
+
+## ITEM 3: WIDENING D NEEDS A CONCAVE BOUND ON THE EXCESS, NOT A WEAKER CONSTANT
+
+How badly does the bound degrade past (RC)?  Comparing the flux V_2 = (1/2) int (a2^+)^2
+with the area |W_2| actually swept:
+
+    max density   0.838    0.976    1.004    1.047    1.119    1.267
+    excess       4.4e-08  4.3e-08  4.3e-08  5.4e-07  9.5e-06  7.4e-05
+    relative      0.0000%  0.0000%  0.0000%  0.0003%  0.0056%  0.0424%
+
+Below 1 the excess sits at the quad-discretisation floor.  Past 1 it is the area
+double-counted by the flux -- and it is TINY: 0.04% even at density 1.27.  Gerver's own
+excess is V - |N| ~ 0.0016, about 0.25%.
+
+NUANCE, and it corrects the previous commit.  (RC) is sharp for INJECTIVITY -- violations
+appear at density 1.004 -- but the architecture degrades GRACEFULLY: those first violating
+pairs cover essentially no area.  So "Gerver is outside for real reasons" is true of the
+condition and misleading about the magnitude; the quantitative failure there is 0.25%.
+
+WHY A WEAKER CONSTANT STILL DOES NOT WORK.  To widen D one needs V minus an upper bound on
+the excess to remain a LOWER bound for |N|, and for Q to stay concave that upper bound must
+be CONCAVE in H.  The size of the excess is not the obstruction; its shape is.  Two routes
+were checked and rejected:
+
+  (a) TRUNCATE the sweep at lambda(t) = inf_{t'} s22(t,t'), which is exactly the largest
+      injective length.  s22 is affine in H, so the infimum is CONCAVE in H, and
+      (1/2)lambda^2 of a concave function is neither convex nor concave: the Mamikon
+      convexity that the whole architecture rests on is lost.
+  (b) Use the FIRST-CAPTURE decomposition, which is exact and injective by construction.
+      But once the sweep self-intersects its parameter domain is no longer of the form
+      0 <= s <= alpha_2, so its area is not a Mamikon integral and is not quadratic in H.
+
+Logged as dead ends with reasons (Rule 2).  A third route -- bounding the excess directly
+by something concave -- is not attempted and is the open direction.
+
+## ITEM 4: algorithm/README.md reframed
+
+It described the directory as "a concrete computational pivot away from the structural
+manuscript work", framing from the withdrawn line.  Now states plainly that the current
+paper is the ambidextrous note, that the ambi_*.py scripts regenerate everything it cites,
+and that the gerver_*/sigma_* scripts belong to the refuted line and support no current
+claim.
+
 ## THE THEOREM IS C^2-LOCAL; AN INTEGRITY CHECK THAT FOUND THREE STALE FILES; LEAN F24
 
 ### 🔴 D IS A C^2-BALL, SO THE MAIN THEOREM IS A C^2-LOCAL STATEMENT (item 3)
