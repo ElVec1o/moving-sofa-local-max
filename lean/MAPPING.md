@@ -164,6 +164,17 @@ is the honest formal content of the step F19 left to analysis: core Lean has no 
 but the discrete implication is the same statement on a grid.  Still NOT formalized: the
 Poincaré inequalities, and that the continuum ODE has the stated integral representation.
 
+## F22 — (RC) on the half-angle blocks (note §13)
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| `(x±y)²` expansions with `x, y` as atoms | `sq_add_int`, `sq_sub_int` | VERIFIED |
+| Lagrange: `(a²+b²)(c²+s²) − (ac+bs)² = (as−bc)²` | `lagrange_identity` | VERIFIED |
+| `c²+s² = 1` and `9(a²+b²) ≤ 16` ⟹ `9(ac+bs)² ≤ 16` — (RC) on the half-angle block, from the coefficients alone | `rc_block` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`.  This is why (RC) for `Σ` reduces to `f₁²(4−2√2) ≤ 16/9`
+with no information about `t`.
+
 ## Tooling note
 
 Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go

@@ -1373,4 +1373,52 @@ theorem garding_sum_nonpos : ∀ (cs qs : List Int),
           (fun x hx => hq x (List.mem_cons_of_mem _ hx))
       simpa using Int.add_nonpos h1 h2
 
+/-! ## F22 — (RC) for Sigma: the block bound
+
+Section 13 computes the surface-measure density block by block and finds that the only
+non-constant blocks are `(3/4)(f1 cos(t/2) + f2 sin(t/2))` and its companion.  (RC) for
+those blocks is `3(f1 C + f2 S) <= 4` with `C = cos(t/2)`, `S = sin(t/2)`, and by
+Lagrange's identity that follows from the coefficient bound `9(f1^2 + f2^2) <= 16` alone,
+with no information about `t`.  With `f2 = (1-sqrt2) f1` this is `f1^2 <= 16/(9(4-2sqrt2))`.
+
+F22a is Lagrange's identity, F22b the resulting bound.  Atoms are `Int`, and the
+Pythagorean relation `C^2 + S^2 = 1` is carried as a hypothesis in the usual way. -/
+
+theorem sq_add_int (x y : Int) : (x + y)*(x + y) = x*x + 2*(x*y) + y*y := by
+  simp [Int.add_mul, Int.mul_add, Int.mul_comm]; omega
+
+theorem sq_sub_int (x y : Int) : (x - y)*(x - y) = x*x - 2*(x*y) + y*y := by
+  simp [Int.sub_mul, Int.mul_sub, Int.mul_comm]; omega
+
+/-- **F22a (Lagrange).**  `(a²+b²)(c²+s²) - (ac+bs)² = (as-bc)²`. -/
+theorem lagrange_identity (a b c s : Int) :
+    (a*a + b*b)*(c*c + s*s) - (a*c + b*s)*(a*c + b*s) = (a*s - b*c)*(a*s - b*c) := by
+  have e1 : (a*a + b*b)*(c*c + s*s)
+      = a*a*(c*c) + a*a*(s*s) + b*b*(c*c) + b*b*(s*s) := by
+    simp [Int.add_mul, Int.mul_add]; omega
+  have e2 := sq_add_int (a*c) (b*s)
+  have e3 := sq_sub_int (a*s) (b*c)
+  have q1 : (a*c)*(a*c) = a*a*(c*c) := by ac_rfl
+  have q2 : (b*s)*(b*s) = b*b*(s*s) := by ac_rfl
+  have q3 : (a*s)*(a*s) = a*a*(s*s) := by ac_rfl
+  have q4 : (b*c)*(b*c) = b*b*(c*c) := by ac_rfl
+  rw [q1, q2] at e2
+  rw [q3, q4] at e3
+  have e4 : (a*c)*(b*s) = (a*s)*(b*c) := by ac_rfl
+  rw [e1, e2, e3, e4]; omega
+
+/-- **F22b ((RC) on the half-angle block).**  If `C² + S² = 1` and `9(a²+b²) ≤ 16` then
+    `9(aC+bS)² ≤ 16`: the block `(3/4)(a C + b S)` is bounded by `1` uniformly in `t`.
+    For `Sigma`, `a = f1`, `b = f2 = (1-sqrt2) f1`, so the hypothesis is
+    `f1² (4-2√2) ≤ 16/9`. -/
+theorem rc_block {a b c s : Int} (hp : c*c + s*s = 1) (hab : 9*(a*a + b*b) ≤ 16) :
+    9*((a*c + b*s)*(a*c + b*s)) ≤ 16 := by
+  have hL := lagrange_identity a b c s
+  rw [hp, Int.mul_one] at hL
+  have hsq : 0 ≤ (a*s - b*c)*(a*s - b*c) := sq_nonneg_int _
+  have hle : (a*c + b*s)*(a*c + b*s) ≤ a*a + b*b := by omega
+  have h9 : 9*((a*c + b*s)*(a*c + b*s)) ≤ 9*(a*a + b*b) :=
+    Int.mul_le_mul_of_nonneg_left hle (by omega)
+  omega
+
 end MovingSofa

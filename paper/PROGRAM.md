@@ -1,3 +1,53 @@
+## ITEMS 1-3: ONE STRUCTURAL EXPLANATION, ONE RETRACTION, ONE LEAN BLOCK
+
+### 🔴 RETRACTION: the bound M <= H'(0) is FALSE
+
+Attempted for hypothesis (iii).  Solving H'' + H = W with H(0) = 1 gives
+H(theta) = cos th + H'(0) sin th + int_0^th sin(th-s) W ds, and substituting into
+c_y(t) = (H(t)-1) sin t + (H(t+pi/2)-1) cos t gives
+
+    c_y(t) = H'(0) - sin t - cos t + sin t int_0^t sin(t-s) W ds
+                                   + cos t int_0^{t+pi/2} cos(t-s) W ds .
+
+Both kernels are >= 0 on their ranges (|t-s| <= pi/2), so "W <= 1" would give
+c_y <= H'(0); and for a rho-symmetric cap h2'(0+) = H'(0), h2'(0-) = 1 - H'(0), so the
+atom at theta = 0 has mass 2H'(0) - 1 = the length of the vertical right edge, forcing
+H'(0) >= 1/2, and apparently M <= 1/2 whenever that edge is absent.
+
+THE ERROR: W is NOT <= 1 as a measure.  It carries the CEILING ATOM of mass 1.1670498 at
+s = pi/2, and here that atom meets the kernel cos(t - pi/2) = sin t, which does not
+vanish.  Corrected, M <= H'(0) + (1/2)(1.1670) = 1.083 -- useless against the required
+1/2.  RETRACTED.
+
+THIS DOES NOT AFFECT THE INJECTIVITY THEOREM, and I checked: there R(u) = 1 - (G+G'')(t-u)
+has its atom at u = t, which is OUTSIDE [0,tau] when tau < t and is the endpoint where the
+kernel sin(tau-u) VANISHES when tau = t; the face-1 atom needs u = t - pi/2 <= 0.  The
+placement of the atom relative to the kernel is exactly what separates the two arguments.
+
+### The I11 tension, explained but not removed (item 1)
+
+The MIRROR decomposition (inner face 1 + outer face 2, reach sigma_2 = c_y/sin t) gives
+Gerver 0.642614486 -- IDENTICAL to the forward one, because Gerver's path is symmetric
+under t -> pi/2-t.  Both exceed |N| ~ 0.641.  So the failure is not an artefact of
+orientation.
+
+THE STRUCTURAL REASON.  Sigma's cap has H+H'' = 0 on [0,beta) and (pi-beta,pi] -- genuine
+VERTICES -- because Sigma's outer phases have CONSTANT contact arcs pinned at (1,1/2).
+Gerver's cap has no such vertices, and there H+H'' reaches 1.3960 near theta = pi.  So THE
+VERY DEGENERACY THAT MADE SIGMA HARD FOR LOCAL ANALYSIS IS WHAT MAKES (RC) HOLD FOR IT.
+The framework exploits Sigma's degeneracy rather than being general; that explains the I11
+failure without removing it.
+
+### 🟢 LEAN F22 (item 3)
+
+  sq_add_int, sq_sub_int    (x+-y)^2 expansions with x, y as atoms
+  lagrange_identity         (a^2+b^2)(c^2+s^2) - (ac+bs)^2 = (as-bc)^2
+  rc_block                  c^2+s^2 = 1 and 9(a^2+b^2) <= 16  =>  9(ac+bs)^2 <= 16
+
+rc_block is (RC) on the half-angle blocks: the bound follows from the COEFFICIENTS alone,
+with no information about t, which is why (RC) for Sigma reduces to
+f1^2 (4-2sqrt2) <= 16/9.  82 theorems, 14 defs, zero sorry, axioms [propext, Quot.sound].
+
 ## 🎆 Q(Sigma) = A_R* IS PROVED (structurally), AND (RC) HOLDS FOR SIGMA IN CLOSED FORM
 ## 🌊 BUT THE CONSTRUCTION DOES NOT RECOVER GERVER
 

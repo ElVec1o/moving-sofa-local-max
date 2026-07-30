@@ -1511,6 +1511,50 @@ $M<\tfrac12$; the $(RC)$-satisfying fraction fell from $250/250$ to $34/250$ as 
 No counterexample and no implication.
 \end{remark}
 
+\section{Two negative findings}\label{sec:neg}
+
+\begin{remark}[The mirror decomposition does not rescue Gerver]\label{rem:mirror}
+The decomposition of Proposition~\ref{prop:V} has a mirror image under
+$t\mapsto\pi/2-t$, $\mu\leftrightarrow\nu$: sweep the inner part of face~1 and the outer
+part of face~2, the latter reaching the floor at distance $\sigma_2=c_y/\sin t$. For
+Gerver both give the same value, $0.6426144\ldots$, because Gerver's rotation path is
+itself symmetric under $t\mapsto\pi/2-t$; both exceed $|N|\approx0.641$. So the failure of
+Remark~\ref{rem:gerver} is not an artefact of orientation.
+
+The structural reason is visible in Proposition~\ref{prop:rcsigma}. $\Sig$'s cap has
+$H+H''=0$ on $[0,\beta)$ and $(\pi-\beta,\pi]$, i.e.\ \emph{vertices}, because $\Sig$'s
+outer phases have constant contact arcs pinned at $(1,\tfrac12)$. Gerver's cap has no such
+vertices: there $H+H''$ reaches $1.3960$ near $\theta=\pi$. The degeneracy that makes
+$\Sig$ hard for local analysis is exactly what makes (RC) hold for it.
+\end{remark}
+
+\begin{remark}[A false bound, retracted]\label{rem:retract}
+The following was attempted for hypothesis (iii) and is \textbf{false}. Solving
+$H''+H=W$ with $H(0)=1$ gives
+$H(\theta)=\cos\theta+H'(0)\sin\theta+\int_0^\theta\sin(\theta-s)W(s)\,ds$, and
+substituting into $c_y(t)=(H(t)-1)\sin t+(H(t+\pi/2)-1)\cos t$ yields
+\[
+  c_y(t)=H'(0)-\sin t-\cos t+\sin t\!\int_0^t\!\sin(t-s)W\,ds
+        +\cos t\!\int_0^{t+\pi/2}\!\cos(t-s)W\,ds .
+\]
+Both kernels are non-negative on their ranges, so ``$W\le1$'' would give $c_y\le H'(0)$,
+and for a $\rho$-symmetric cap $H'(0)=\tfrac12+\tfrac12(\text{vertical right edge})$,
+apparently yielding $M\le\tfrac12$.
+
+The error is that $W$ is \emph{not} $\le1$ as a measure: it carries the ceiling atom of
+mass $1.1670\ldots$ at $s=\pi/2$, and here that atom meets the kernel
+$\cos(t-\pi/2)=\sin t$, which does not vanish. The corrected bound is
+$M\le H'(0)+\tfrac12\cdot1.1670=1.083\ldots$, useless against the required $\tfrac12$.
+
+This does \emph{not} affect Theorem~\ref{thm:rc}: there the same atom lands at $u=t$,
+which is outside the integration range when $\tau<t$ and is the endpoint where the kernel
+$\sin(\tau-u)$ vanishes when $\tau=t$; and the face-1 atom needs $u=t-\pi/2\le0$. The
+placement of the atom relative to the kernel is what distinguishes the two arguments, and
+it was checked in both.
+\end{remark}
+
+Hypothesis (iii) therefore remains open.
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of
