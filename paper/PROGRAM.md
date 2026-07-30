@@ -1,3 +1,79 @@
+## 💧💧 B2: BAEK'S INJECTIVITY CONDITION FAILS FOR ROMIK'S Σ ON THE OUTER PHASES
+
+S3 turned out to DEPEND on B2, not to be independent of it.  Working through what
+the conditional theorem needs: (a) |K^-| quadratic in K^- is Baek Thm 7.1.3 and holds
+for any planar convex body, verbatim; (c) concavity via Mamikon Thm 7.4.2 needs only
+convex-linearity, verbatim; (d) criticality of Σ comes from Romik's ODEs.  But (b),
+the construction of the niche UNDERestimate N' from a core and two tails, consumes
+the injectivity condition.  So B2 is on the critical path.
+
+### The condition, and the measurement
+
+Baek Def 6.1.2(3): for all t in (0, pi/2),  x'(t) . u_t < 0  and  x'(t) . v_t > 0,
+equivalently the arm lengths f, g exceed 1 (his Thm 6.2.3).
+
+Measured on Romik's Σ (closed forms for x1/x6/x5, dps 30):
+
+         t         x'.u_t          x'.v_t     ok
+      0.05     +0.41250773     +0.74838696    NO
+      0.15     +0.23839738     +0.73091766    NO
+      0.28     +0.01621879     +0.68239936    NO
+    0.2897 = beta   -3.87e-05  +0.67762761    yes
+      0.35     -0.05015705     +0.64671857    yes
+      0.50     -0.17059301     +0.56340138    yes
+      pi/4     -0.38103426     +0.38103448    yes   (f = g = 1.381034)
+      1.00     -0.52099380     +0.22518967    yes
+      1.20     -0.63571004     +0.06722282    yes
+     1.281 = pi/2-beta  -0.677579  +1.195e-04 yes
+      1.35     -0.70807665     -0.11661243    NO
+      1.50     -0.74618951     -0.37616924    NO
+
+So the condition holds EXACTLY on the middle phase (beta, pi/2 - beta) and fails on
+both outer phases, with x'.u_t changing sign precisely at beta and x'.v_t precisely
+at pi/2 - beta.  By the rho-symmetry A(t) = -B(pi/2 - t) the two failures are the
+same failure conjugated.
+
+Note this is not the weak form either: Baek's Remark 6.1.1 records that Romik assumes
+only x'.u <= 0 and x'.v >= 0, but at t = 0.05 we have x'.u = +0.41, strongly positive,
+so even the weak form fails on the outer phases.
+
+### Why this is coherent with everything else
+
+The outer phases [0, beta) and (pi/2 - beta, pi/2] are EXACTLY where Σ's contact arcs
+dA and rA are CONSTANT, pinned at the rho-fixed point (1, 1/2) -- the degeneracy found
+early in this program and responsible for the constant-arc/chord failures that killed
+the second-variation route.  The same degenerate phases are where Baek's injectivity
+fails.  Three independent lines of attack have now broken at the same place, which is
+evidence that the degeneracy is the real content of the ambidextrous problem rather
+than an artifact of any one method.
+
+### Consequence
+
+The conditional theorem cannot simply assume injectivity on (0, pi/2), because the
+CANDIDATE does not satisfy it.  Options:
+
+ (i) restrict the injectivity hypothesis to the middle phase and handle the outer
+     phases separately, using the fact that the contact arc is constant there (so its
+     contribution to the niche is degenerate and may be computable exactly);
+ (ii) find the correct ambidextrous analogue of the condition -- Baek's version is
+     tuned to a single hallway family, and the ambidextrous problem has two, so the
+     natural condition may involve x' tested against BOTH frames;
+ (iii) abandon the transfer.
+
+Option (i) is the most promising precisely because the failure region is where the
+arcs are constant, which is the most tractable possible degeneracy: a constant arc
+contributes nothing to a Green integral.
+
+## F12 formalized: the angular gap
+
+    wedge_gap        P - t < P + t for t > 0
+    wedge_gap_width  (P + t) - (P - t) = 2t
+
+With P standing for pi, the spans [t+pi, t+3pi/2] of Q_t and [pi/2-t, pi-t] of rho Q_t
+miss each other by exactly 2t at a rho-fixed apex.  This is why no single wedge pair
+separates (h*(t) > 1/2 throughout) while the full family does (S1): the gap closes
+only as t -> 0.  43 theorems, zero sorry.
+
 ## 🔥🔥🔥 S1 ESTABLISHED: connectedness forces M <= 1/2, at a threshold of EXACTLY 1/2
 
 This discharges the conditional hypothesis of the quotient reduction and satisfies

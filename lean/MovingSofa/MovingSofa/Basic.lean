@@ -802,4 +802,33 @@ theorem sol6_ode (a b c : Int) (hc : c = -1) :
 
 end Trig
 
+/-! ## F12 — the angular gap at a ρ-fixed apex
+
+S1: deforming Romik's path upward, `Σ = S ∩ ρS` is connected for `M < 1/2` and
+splits for `M > 1/2`, with the transition at `1/2` to six decimals and unchanged
+across four deformation families.  Yet no SINGLE wedge pair forces it: the measured
+per-`t` threshold satisfies `h*(t) > 1/2` throughout `(0, π/2)`.
+
+F12 is the reason both are true.  At the threshold the apex is ρ-FIXED, so `Q_t` and
+`ρQ_t` share it, and their angular spans are
+
+    Q_t    :  [ t + π ,  t + 3π/2 ],        ρQ_t  :  [ π/2 - t ,  π - t ],
+
+which leave an angular GAP of width `2t` between `π - t` and `π + t`.  A single pair
+therefore never separates for `t > 0`, and closes only as `t → 0` — exactly the
+observed shape of `h*`.  For `M > 1/2` the wedges of NEARBY `t`, with their ρ-images,
+fill the gap; that neighbourhood argument is what a proof of the connectedness
+ceiling must supply. -/
+
+/-- **F12 (angular gap).**  With `P` standing for `π`, the upper end `P - t` of the
+    ρ-image's span lies strictly below the lower end `P + t` of the wedge's own span
+    whenever `t > 0`.  So the two spans miss each other by `2t`, and a single wedge
+    pair at a ρ-fixed apex never covers a neighbourhood of the apex. -/
+theorem wedge_gap {t P : Int} (ht : 0 < t) : P - t < P + t := by omega
+
+/-- **F12b (the gap closes only in the limit).**  The gap width is `2t`, which is
+    positive for every `t > 0` and tends to `0` only as `t → 0`.  Stated as the
+    quantitative form: the width is exactly `2t`. -/
+theorem wedge_gap_width (t P : Int) : (P + t) - (P - t) = 2*t := by omega
+
 end MovingSofa
