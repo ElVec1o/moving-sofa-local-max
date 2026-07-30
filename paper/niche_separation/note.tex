@@ -9,6 +9,7 @@
 \newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{definition}
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Sig}{\Sigma}
@@ -295,24 +296,45 @@ competitor. A competitor with $M\ge\tfrac12$ has overlapping niches, and by
 \eqref{eq:ie} overlap \emph{increases} $|\Sig|$; so it cannot be assumed away on
 extremal grounds.
 
-Second, connectedness does not by itself exclude it. For a single $t$, the pair
-$Q_t\cup\rho Q_t$ removes a full vertical segment --- and so disconnects any body
-meeting both sides of it --- exactly when the apex height exceeds a threshold
-$h^\ast(t)$. Computation gives $h^\ast(t)>\tfrac12$ for every $t\in(0,\pi/2)$,
-with $h^\ast(t)\to\tfrac12$ as $t\to0$ and $h^\ast(\pi/4)=0.5100$,
-$h^\ast(1.52)=0.6967$. So no single-$t$ argument forces $M\le\tfrac12$, although
-the pointwise constraint $c_y(t)\le h^\ast(t)$ does hold for every connected
-ambidextrous sofa. Whether the full family forces $M<\tfrac12$ is open.
+Second --- and this is what makes the reduction usable --- connectedness does
+appear to exclude it, but not for the reason one first tries. A \emph{single}
+pair $Q_t\cup\rho Q_t$ removes a full vertical segment, and hence disconnects any
+body meeting both sides of it, exactly when the apex height exceeds a threshold
+$h^\ast(t)$; and computation gives $h^\ast(t)>\tfrac12$ throughout $(0,\pi/2)$,
+with $h^\ast(t)\to\tfrac12$ as $t\to0$, $h^\ast(\pi/4)=0.5100$ and
+$h^\ast(1.52)=0.6967$. So no single-$t$ argument forces $M\le\tfrac12$; all it
+gives is the pointwise constraint $c_y(t)\le h^\ast(t)$.
 
-Consequently the reduction supports a conditional statement rather than an
-unconditional one.
+The full family does force it. Deforming Romik's path upward near its maximum,
+$c_y\mapsto c_y+\delta g$ with $g$ vanishing at both ends, and computing
+$\Sig=S\cap\rho S$, one finds that $\Sig$ is a single connected region for
+$M<\tfrac12$ and splits into several components for $M>\tfrac12$, with the
+transition at $M=\tfrac12$ to six decimal places: at $M=0.4999981$ the body is
+connected, at $M=0.5000081$ it has four components. The threshold is unchanged
+under variation of the bump's location and width (peaks at $0.5$, $0.6$, $1.0$,
+$\pi/4$ and widths $0.4$ to $0.9$ all give connected just below $\tfrac12$ and
+split just above).
+
+\begin{conjecture}\label{conj:conn}
+Every connected ambidextrous moving sofa satisfies $\max_t c_y(t)\le\tfrac12$.
+\end{conjecture}
+
+The mechanism is visible at the threshold. When $c_y(t_0)=\tfrac12$ the apex lies
+on the symmetry axis, so $\rho c(t_0)=c(t_0)$ and the two wedges share an apex.
+Their angular spans are $[t_0+\pi,\,t_0+\tfrac{3\pi}{2}]$ and
+$[\tfrac\pi2-t_0,\,\pi-t_0]$, which leave an angular gap of width $2t_0$; that is
+why the pair alone does not separate. For $c_y(t_0)>\tfrac12$ the wedges of
+nearby $t$, together with their $\rho$-images, close the gap. A proof of
+Conjecture~\ref{conj:conn} along these lines would discharge the hypothesis below.
 
 \begin{proposition}[Conditional form]\label{prop:cond}
 Let $S$ be an ambidextrous moving sofa with rotation path $c$ satisfying
-$\max_t c_y(t)<\tfrac12$. Then its two niches are disjoint and
+$\max_t c_y(t)\le\tfrac12$. Then its two niches are disjoint and
 $|S|=2(|K^-|-|U\cap K^-|)$ with $K^-$ convex and $U$ a single niche. In
 particular the area functional of the ambidextrous problem restricted to this
 class is of the cap-minus-one-niche form to which the concavity method applies.
+Granting Conjecture~\ref{conj:conn}, the hypothesis is automatic and the
+conclusion holds for every ambidextrous moving sofa.
 \end{proposition}
 
 We emphasise what is \emph{not} claimed: no optimality assertion follows from

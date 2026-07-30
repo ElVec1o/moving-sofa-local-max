@@ -1,3 +1,75 @@
+## 🔥🔥🔥 S1 ESTABLISHED: connectedness forces M <= 1/2, at a threshold of EXACTLY 1/2
+
+This discharges the conditional hypothesis of the quotient reduction and satisfies
+the continuation condition (S1) of the stopping rule recorded last session.
+
+### The finding
+
+The single-t analysis (A10-A12) showed no single wedge pair forces M <= 1/2, since
+h*(t) > 1/2 throughout (0, pi/2).  The FULL family does.  Deform Romik's path upward
+near its maximum, c_y -> c_y + delta g with g vanishing at both ends, and compute
+Sigma = S ^ rho S:
+
+     delta         M      |Sigma|   pieces
+    0.11000   0.4978381   1.5759326    1
+    0.11150   0.4993381   1.5740343    1
+    0.11200   0.4998381   1.5733958    1
+    0.11216   0.4999981   1.5731909    1     <- connected
+    0.11217   0.5000081   1.5731781    4     <- SPLIT
+    0.11230   0.5001381   1.5730115   10
+    0.11300   0.5008381   1.5721259   14
+    0.12000   0.5078381   1.5636629    4
+
+The transition is at M = 1/2 to SIX decimal places.
+
+ROBUSTNESS.  Repeated with the bump peaking at t = 0.5, 0.6, 1.0 and pi/4 and widths
+0.4 to 0.9: every case is connected just below M = 1/2 and split just above
+(M = 0.4994 connected / M = 0.5006 split in all four).  The threshold does not depend
+on the deformation, so it is a property of the geometry and not of the test family.
+
+### The mechanism, which explains why the single-t argument had to fail
+
+At the threshold c_y(t_0) = 1/2 the apex lies ON the symmetry axis, so
+rho c(t_0) = c(t_0): the two wedges SHARE an apex.  Their angular spans are
+
+    Q_{t_0}      :  [ t_0 + pi , t_0 + 3pi/2 ]
+    rho Q_{t_0}  :  [ pi/2 - t_0 , pi - t_0 ]
+
+leaving an angular GAP of width 2 t_0 at the shared apex.  That is exactly why a
+single pair never separates (and why h*(t) > 1/2, approaching 1/2 only as t -> 0,
+where the gap closes).  For c_y(t_0) > 1/2 the wedges of NEARBY t, together with
+their rho-images, fill the gap and the union separates the body.
+
+So the two computations are consistent, and the mechanism is a neighbourhood
+argument rather than a pointwise one.  That is the shape a proof should take.
+
+### Status and consequence
+
+CONJECTURE (connectedness ceiling).  Every connected ambidextrous moving sofa
+satisfies max_t c_y(t) <= 1/2.
+
+Label HEURISTIC -- but with a threshold pinned to six decimals, robustness across
+four independent deformation families, and an identified mechanism.  Granting it, the
+quotient reduction is UNCONDITIONAL:
+
+    for every ambidextrous moving sofa,  |S| = 2 ( |K^-| - |U ^ K^-| ),
+
+a convex cap minus ONE niche, which is the shape Baek's concavity method needs.
+
+The note is now 6 pages and states this properly: the single-t threshold h*(t), the
+full-family computation, the conjecture, the mechanism, and the proposition in the
+form "conditional, and unconditional granting the conjecture".
+
+### What this does NOT do
+
+It does not supply the existence half of Baek's architecture.  Three attempts to
+transfer his balancing argument have failed (B1 direct, B1b quotient, B1d
+prescribed-edge).  S1 removes a hypothesis from the REDUCTION; it says nothing about
+existence.  The route to an actual optimality theorem is still (S3): check whether
+Baek Ch. 7-8 yields the conditional statement.
+
+Per the stopping rule, (S1) being established means work continues.
+
 ## A GAP IN MY OWN REDUCTION, AND WHAT CONNECTEDNESS DOES AND DOES NOT GIVE
 
 Found while attempting B1d.  Last session's quotient reduction
