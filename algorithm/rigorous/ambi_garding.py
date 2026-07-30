@@ -3,18 +3,12 @@ import os
 THIS = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, THIS); sys.path.insert(0, os.path.dirname(THIS))
 from ambi_concavity import hess_sets
-from ambi_hessian import Hats, PI2, PI
+from ambi_hessian import Hats, PI2, PI, mass_stiff
 b = 0.2896538208173209
 
 def mass(B):
-    """exact L^2 mass matrix for the retained hats"""
-    M = np.zeros((B.dim, B.dim)); h = B.h
-    for i, ni in enumerate(B.keep):
-        M[i,i] = 2.0*h/3.0
-        for j, nj in enumerate(B.keep):
-            if nj == ni + 1:
-                M[i,j] = M[j,i] = h/6.0
-    return M
+    """L^2 mass matrix, correctly assembled (see mass_stiff)"""
+    return mass_stiff(B)[0]
 
 print("GARDING CONSTANT: sup over eta of  d^2Q[eta] / ||eta||_{L^2}^2")
 print("  (symmetric generalized eigenproblem via Cholesky, not Mass^-1 M)\n")

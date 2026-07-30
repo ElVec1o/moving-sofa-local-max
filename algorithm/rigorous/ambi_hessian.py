@@ -243,6 +243,21 @@ def hessian(m, nq=8, worst=False):
     return B, 0.5*(M + M.T)
 
 
+
+def mass_stiff(B, nq=12):
+    """Correctly assembled L^2 mass and H^1 stiffness matrices for the retained hats.
+
+    Assembled by quadrature rather than by hand.  The hand-built version this replaces
+    gave the ENDPOINT hat at theta = pi the interior weights 2h/3 and 2/h, when its
+    support is only [pi-h, pi] and the correct values are h/3 and 1/h.  That single
+    entry was enough to make an H^1 estimate look false when it is true, and to shift
+    the measured L^2 constant from 0.7323 to 0.7285.  Use this, never a hand-built one.
+    """
+    T, W = gl_split(np.array(sorted(set(B.nodes.tolist()))), nq)
+    P, D = B.val_grad(T)
+    return ((P*W[:, None]).T @ P), ((D*W[:, None]).T @ D)
+
+
 def main():
     m = int(sys.argv[1]) if len(sys.argv) > 1 else 40
     print("Q = |C2| - 2V :  IS IT CONCAVE?\n")

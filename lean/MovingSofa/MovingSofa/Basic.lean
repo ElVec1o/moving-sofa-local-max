@@ -1546,4 +1546,33 @@ theorem concave_from_critical (P : Nat → Int) (hcrit : P 1 = P 0)
     ∀ n, P n ≤ P 0 :=
   concave_along_segment P (by omega) hc
 
+/-! ## F26 — the sigma term has no singularity
+
+The second variation contains `- int_0^{pi/2} (eta tan t + eta')^2 dt`, whose integrand is
+unbounded at `t = pi/2`.  It need not be: expanding,
+
+    -(eta tan t + eta')^2 = -eta^2 tan^2 t - 2 eta eta' tan t - eta'^2 ,
+
+and for `eta` vanishing at `0` and `pi/2` the cross term integrates by parts,
+`-2 int eta eta' tan t = -int (eta^2)' tan t = int eta^2 sec^2 t`.  Since
+`sec^2 - tan^2 = 1` the two unbounded pieces cancel exactly and
+
+    - int_0^{pi/2} (eta tan t + eta')^2 dt  =  int_0^{pi/2} (eta^2 - eta'^2) dt ,
+
+so the whole second variation can be written with bounded coefficients.  F26 records the
+two arithmetic steps; the integration by parts is analysis and is not formalized.  Atoms:
+`SQ` for `sec^2 t`, `TQ` for `tan^2 t`, `E` for `eta^2`, `D` for `eta'^2`. -/
+
+/-- **F26a (`sec^2 - tan^2 = 1`).**  Cleared of denominators against `C^2 + S^2 = 1`, this
+    is `1 - S^2 = C^2`. -/
+theorem sec_sq_sub_tan_sq {C S : Int} (h : C*C + S*S = 1) : 1 - S*S = C*C := by omega
+
+/-- **F26b (the cancellation).**  With `SQ - TQ = 1`, the expanded integrand collapses:
+    `-E*TQ + E*SQ - D = E - D`, i.e. the two unbounded terms leave `eta^2 - eta'^2`. -/
+theorem sigma_term_bounded {E D SQ TQ : Int} (h : SQ - TQ = 1) :
+    -(E*TQ) + E*SQ - D = E - D := by
+  have : E*SQ - E*TQ = E*(SQ - TQ) := by simp [Int.mul_sub]
+  rw [h] at this
+  omega
+
 end MovingSofa

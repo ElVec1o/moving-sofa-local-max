@@ -119,6 +119,15 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F26 — the sigma term has no singularity (note, Prop "$H^1$ stability")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| `sec² − tan² = 1`, cleared of denominators against `C²+S²=1` | `sec_sq_sub_tan_sq` | VERIFIED |
+| the two unbounded pieces of the σ integrand cancel, leaving `η²−η′²` | `sigma_term_bounded` | VERIFIED |
+
+The integration by parts `−2∫ηη′tan t = ∫η²sec²t` is analysis and is not formalized.
+
 ## F25 — the segment argument (note, Proposition "Beyond Sigma's own cell")
 
 | Statement (note) | Lean declaration | Status |

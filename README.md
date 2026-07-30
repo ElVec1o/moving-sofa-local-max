@@ -74,7 +74,7 @@ proof; **HEURISTIC** = computational evidence only.
 | 43 | **Main theorem.** $\mathcal D=\{$gauge$\}\cap\{$(RC)$\}\cap\{c_y\le\tfrac12\}\cap\{$sign cell$\}$ is convex, contains $\Sigma$, and $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa with cap data in $\mathcal D$ | PROVED |
 | 44 | $\mathcal D$ is a **$C^2$-ball**: its radius along $\sin(2k\theta)$ scales like $k^{-2}$, so result 43 is a **$C^2$-local** statement. (RC) is always the binding constraint; $c_y\le\tfrac12$ never binds | HEURISTIC |
 | 45 | **(RC) is sharp**: face-2 injectivity fails exactly as the curvature density crosses $1$ | HEURISTIC |
-| 46 | **Stability.** $\lvert T\rvert\le A_R^\ast-\tfrac{371}{1000}\lVert H-H_\Sigma\rVert^2_{L^2(0,\pi/2)}$ for every ambidextrous sofa with cap data in $\mathcal D$ | PROVED |
+| 46 | **Stability.** $\lvert T\rvert\le A_R^\ast-\tfrac{371}{1000}\lVert\eta\rVert^2_{L^2(0,\pi/2)}$ and $\lvert T\rvert\le A_R^\ast-\tfrac{153}{1000}\lVert\eta\rVert^2_{L^2(0,\pi)}$; neither implies the other | PROVED |
 | 47 | **Uniqueness.** $\Sigma$ is the unique ambidextrous sofa of area $A_R^\ast$ with cap data in $\mathcal D$ | PROVED |
 | 48 | The separation hypothesis is **independent** of (RC): adding $\delta\sin(\theta-\pi/2)$ on $[\pi/2,\pi]$ preserves (RC) and the gauge exactly while pushing $M$ past $\tfrac12$ | PROVED |
 | 49 | The bound and uniqueness **extend beyond $\mathcal D$**: concavity along the segment $[H_\Sigma,H]$ suffices, and holds whenever that segment meets only anchored cells with $\tau_1\le\tau_2$ | PROVED |
@@ -154,7 +154,7 @@ $Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 92 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 94 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these

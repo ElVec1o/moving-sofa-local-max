@@ -1,3 +1,73 @@
+## THE ENDPOINT BUG AUDITED ACROSS THE PROJECT; THE J3 OBSTRUCTION REMOVED; LEAN F26
+
+### Item 4 first: audit the endpoint-hat bug everywhere it could have propagated
+
+ambi_garding.py had the SAME hand-built mass matrix, giving the endpoint hat at theta = pi
+the interior weight 2h/3.  Fixed by adding a correctly ASSEMBLED helper mass_stiff(B) to
+ambi_hessian.py and routing everything through it, with a docstring recording why.
+
+Re-verification of every measured constant that used a hand-built matrix:
+
+  Garding constant   0.7285 -> 0.7323   (now converging from above: .7358 .7339 .7331 .7323)
+  anchored-cell table  all twelve entries shift by about 1.5%, ZERO sign changes:
+     (0,pi/2) -0.863 -> -0.875   (beta,pi/2-beta) -0.723 -> -0.733
+     (0.1,0.2) -0.139 -> -0.141  (0.3,0.5) -0.355 -> -0.361
+     (0.5,0.9) -0.533 -> -0.541  (0.8,1.2) -0.445 -> -0.451
+     (1.0,1.3) -0.340 -> -0.344  (1.2,1.4) -0.228 -> -0.231
+     (1.4,1.5) -0.109 -> -0.110  (1.5,pi/2) -0.047 -> -0.047
+     (0.2,1.5) -0.777 -> -0.788  (0.05,0.06) -0.040 -> -0.041
+  non-concave counterexamples   [0.4,1.2] +0.409, three pieces +0.411 -- still positive
+
+So EVERY concavity conclusion in the project is unaffected; only the magnitudes moved, and
+only the single constant 0.7285 was ever quoted.  The coefficient-space "lambda_max/h"
+proxies used in earlier turns never touched a mass matrix and are unaffected.
+
+### 🔥 Item 1: the J3 obstruction is REMOVED
+
+Stop splitting E2 off from the cap.  Writing the E2 bound as
+-lambda int_{pi/2}^{pi-beta} eta'^2 + (lambda/(1-lambda)) int_0^{pi/2-beta} eta^2 and
+splitting lambda = lambda_r + lambda_J, with lambda_r = B beta^2/2 absorbing the r^2
+remainder as before, the [pi/2,pi] block becomes
+
+    int eta^2 - int_{pi/2}^{pi-b} (1+lambda_J) eta'^2 - int_{pi-b}^{pi} eta'^2 ,
+
+whose sign is governed by a WEIGHTED STURM-LIOUVILLE EIGENVALUE
+
+    Lambda(lambda_J) = min [ int w eta'^2 ] / [ int eta^2 ],  eta(pi/2) = 0, eta(pi) free,
+    w = 1 + lambda_J on [pi/2,pi-beta],  w = 1 on [pi-beta,pi].
+
+The J3 coefficient is 1 - Lambda, and
+
+    lambda_J   0      0.05     0.10    0.165    0.25     0.35
+    Lambda     1     1.0495   1.0989  1.1629  1.2468   1.3452
+
+Lambda(0) = 1 EXACTLY, reproducing the marginal P3 = 1 that blocked the previous chain, and
+Lambda > 1 for every lambda_J > 0.  So J3 CAN be given a negative coefficient.
+
+Best admissible parameters delta = 0.07, kappa = 3, lambda = 0.257 give coefficients
+-0.4194, -0.1572, -0.1532 on J1, J2, J3, hence a FULL-INTERVAL estimate
+
+    (1/2) d^2 Q <= -0.1532 ||eta||^2_{L^2(0,pi)} .
+
+Neither this nor the earlier -0.3710 ||eta||^2_{L^2(0,pi/2)} implies the other: the first
+has the better constant, the second controls the whole interval.  Both are now in the
+stability theorem.  The gap to the sharp 0.7323 is still a factor of about 4.8, so the
+obstruction is removed but the constant is not sharp.
+
+### Item 2: the H^1 constants are in the note as a proposition
+
+c1 = 0, 0.1, 0.3, 0.5 give c0 = 0.7323, 0.6114, 0.3571, 0.0760, each converging in m, with
+the frontier close to c0 = 0.732 - 1.31 c1.
+
+### 🟢 Item 3: LEAN F26
+
+  sec_sq_sub_tan_sq   C^2 + S^2 = 1  =>  1 - S^2 = C^2, i.e. sec^2 - tan^2 = 1 cleared
+  sigma_term_bounded  SQ - TQ = 1  =>  -E*TQ + E*SQ - D = E - D: the two unbounded pieces
+                      of the sigma integrand cancel, leaving eta^2 - eta'^2
+
+94 theorems, 14 defs, zero sorry, axioms [propext, Quot.sound].  The integration by parts
+itself is analysis and is not formalized.
+
 ## 🎆 THE H^1 ESTIMATE HOLDS.  ONE WRONG MATRIX ENTRY CAUSED TWO FALSE NEGATIVES.
 
 ### 🔴 The bug
