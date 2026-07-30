@@ -1,3 +1,128 @@
+## 🟢🟢 Q = |C2| - 2V IS TIGHT, CRITICAL AND CONCAVE AT SIGMA (one cell), and one RETRACTION
+
+Baek Thm 7.1.5 needs three things of an upper bound: (i) Q >= |sofa| with equality at the
+candidate, (ii) nonpositive first derivative, (iii) concavity.  For the functional built
+in the previous section, (i)-as-an-identity, (ii) and (iii)-on-Sigma's-cell now all hold.
+
+### The cap is an exact quadratic form (ambi_hessian.py)
+
+rho(x,y) = (x, 1-y) is a reflection in y = 1/2, NOT in the origin, so
+h_{rho A}(u) = h_A(Ru) + u_y with R = diag(1,-1).  That is why the support function of
+C2 = C ^ rho C is NOT H(|theta|):
+
+    h_2(theta) = H(theta)                theta in [0, pi]
+    h_2(theta) = H(-theta) + sin theta   theta in [-pi, 0]
+
+(checked against the polygon at theta = -pi/2, -0.5, -2.4).  Using H(|theta|) gives
+4.347 for the area against the true 2.013 -- a real bug, caught by comparing to the
+polygon support function.  With the correct branches,
+
+    |C2| = int_0^pi ( H^2 - H'^2 ) dtheta - H(0) - H(pi)                          (A)
+
+The derivation needs only h_2 in H^1 of the CIRCLE, where <h_2'',h_2> = -int h_2'^2 with
+no boundary or atom terms.  Verified: (A) = 2.013341613 against A_R* + 2V = 2.013341613,
+agreeing to 9.6e-13.  (A) and V share no computation, so this is an INDEPENDENT analytic
+confirmation of |Sigma| = |C2| - 2|N| with |N| = V -- the identity is now good to 1e-12,
+not the 1e-8 recorded from the polygon comparison.  Equivalently
+
+    Q(Sigma) = 1.644955218425 = A_R*   to 5e-13.
+
+The correction -H(0)-H(pi) is LINEAR, so the Hessian is unaffected.
+
+### The second variation (ambi_concavity.py)
+
+Since nu_t = mu_{t+pi/2} everything is a functional of ONE function H on [0,pi].  With
+d(alpha_1) = eta(t+pi/2) - eta'(t), d(alpha_2) = eta(t) + eta'(t+pi/2) and
+d(sigma) = eta(t) tan t + eta(t+pi/2), the eta(t+pi/2) CANCELS in the middle term:
+
+    d(sigma - alpha_1) = eta(t) tan t + eta'(t),
+
+and (gauge H(0)=1 from x-translation, H(pi/2)=1 from the unit corridor -- which is also
+exactly what makes sigma tan-integrable at pi/2, so eta(0)=eta(pi/2)=0)
+
+  (1/2) d^2 Q = int_0^pi (eta^2-eta'^2) - int_{E2}(eta(t)+eta'(t+pi/2))^2
+                - int_0^{pi/2}(eta tan t + eta')^2 + int_{E1}(eta(t+pi/2)-eta'(t))^2
+
+PRINCIPAL PART IS NEGATIVE: coefficient of eta'(theta)^2 is -1 on [0,beta) and
+[pi-beta,pi], -2 in between.  So the form is bounded above with finitely many
+non-negative eigenvalues -- concavity is a FINITE question.
+
+### CRITICALITY: dQ = 0 in every direction
+
+Central differences on Q itself: ||dQ||_inf/h = 1.8e-8, ||dQ||_2/h = 4.5e-8, dim 63.
+So ROMIK'S ODEs ARE THE EULER-LAGRANGE EQUATIONS OF Q.
+
+A BUG WORTH RECORDING.  An analytic assembly of the gradient first reported nonzero
+values on [0,beta) and [pi/2,pi/2+beta) and nothing elsewhere (1e-14).  That was a sign
+error on d(-(1/2)(alpha_1^-)^2) = +alpha_1^- d(alpha_1), and its support is exactly where
+d(alpha_1) is supported, which is why the pattern looked meaningful.  The
+finite-difference cross-check on Q is what caught it.  Lesson: an analytic gradient that
+vanishes on most of the domain is not thereby validated on the rest.
+
+### CONCAVITY: yes on Sigma's cell, NO in general
+
+    sign pattern                              m=32     m=64    m=128
+    Sigma's own (E1=[0,beta), E2=[0,pi/2-b)) -0.6905  -0.7111  -0.7216   concave
+    Baek injectivity (E1 empty, E2 all)      -0.8239  -0.8486  -0.8616   concave
+    E1 all, E2 all                           -0.0015  -0.0004  -0.0001   marginal
+    crude worst case (E2 empty, E1 all)      +1.1734  +1.2114  +1.2306   NOT
+    E1 = E2 = [0.4, 1.2]                     +0.3838  +0.3964  +0.4071   NOT
+    E1 = E2, three pieces                    +0.3578  +0.3853  +0.4156   NOT
+
+(lam_max/h, L^2-normalised.)  Sigma's cell IS convex: alpha_1, alpha_2 are affine in H so
+each pointwise sign condition is a half-space.  Concave + critical on a convex set gives
+that Sigma maximises Q ON THAT CELL.
+
+### 🔴 RETRACTION
+
+An intermediate scan over sign patterns E1 = [0,tau1], E2 = [0,tau2] found the critical
+curve tau2_crit(tau1) = 0, 0.0048, 0.0153, 0.0963, 0.3107, 0.4856, 0.6957, 0.9499,
+1.1365, 1.4728 at tau1 = 0, 0.2, beta, 0.5, 0.8, 1.0, 1.2, 1.4, 1.5, pi/2, hence
+tau2_crit(tau1) < tau1 always, and I concluded "tau1 <= tau2 implies concave".  That is
+FALSE.  The scan only tested intervals ANCHORED AT 0.  Set-theoretically E1 = E2 =
+[0.4,1.2] has tau1 = tau2 and gives +0.407.  The claim is RETRACTED.  Same failure mode
+as the earlier A10/A11 retraction: a family of test cases too special to see the
+phenomenon.
+
+### The boundary of C2, incidentally determined
+
+H + H'' (the surface-measure density) is: 0 on (-beta,beta), the VERTEX P = (1,1/2);
+0.836 -> 0.5 on [beta, pi/2-beta); exactly 1/2 on (pi/2-beta, pi/2+beta), a CIRCULAR ARC
+OF RADIUS 1/2 centred at (1-2a_1, 1/2) = (-0.750574725, 0.5); an ATOM of mass 1.167050 at
+theta = pi/2, the corridor ceiling y=1, a FACET; then symmetric; 0 on (pi-beta,pi], the
+second vertex.  Plus the rho-mirror below.  The rho-image of the ceiling facet is the
+floor segment [-0.750575, 0.416475] x {0}, whose left end sits directly below the arc's
+centre.
+
+### M3 (S_1 = sigma) REDUCED
+
+C2 is CONVEX, so the face-1 segment lies in C2 as soon as its FAR ENDPOINT does.  So
+S_1 = sigma reduces to a one-parameter containment: x(t) = c_x(t) + sigma(t) sin t must
+lie in the floor facet.  Measured: x runs MONOTONICALLY from x(0) = 0 to
+x(pi/2) = 0.416475 = the right end of the facet, min increment +1.8e-6 over 200001
+samples, and
+
+    x(pi/2) = c_x(pi/2) + alpha_1(pi/2) = [c_x(0) - alpha_2(0)] + [facet length]
+
+is an ALGEBRAIC IDENTITY (facet length = H'(pi/2+) - H'(pi/2-) = alpha_2(0) +
+alpha_1(pi/2) - (G(pi/2)-1)).  So the tangency at t = pi/2 is exact, and what remains of
+M3 is monotonicity of one explicit function.
+
+### Honest status
+
+  * Q(Sigma) = A_R*: HEURISTIC at 5e-13, but now from TWO independent analytic routes.
+  * dQ(Sigma) = 0: HEURISTIC at 1.8e-8.
+  * d^2 Q < 0 on Sigma's cell: HEURISTIC (eigenvalues of a discretised form).
+  * Sigma's cell is convex: PROVED.
+  * Principal part of d^2 Q negative: PROVED.
+  * (A): PROVED.
+  * Q >= |sofa| FOR COMPETITORS: NOT DONE.  This is the whole point of Q and it is
+    exactly Baek's Ch. 3-6.  Without it none of the above bounds anything.
+  * Concavity on OTHER cells: FALSE (counterexamples above).
+  * Therefore optimality of Sigma remains OPEN.  What is new: the functional now
+    satisfies all three of Thm 7.1.5's hypotheses at Sigma on its own cell, and the
+    single remaining gap is the domination inequality for competitors.
+
 ## 🟢🟢 P3c SOLVED: THE NICHE FUNCTIONAL IS TIGHT AND BUILT FROM CONVEX-LINEAR DATA
 
 The blocker for eight sessions was that no underestimate of the niche was TIGHT: the

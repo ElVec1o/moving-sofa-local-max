@@ -696,6 +696,143 @@ now tight and expressed entirely in convex-linear data, with a single explicitly
 computed term of the wrong sign.
 \end{remark}
 
+\section{The upper bound at \texorpdfstring{$\Sig$}{Sigma}: tight, critical, concave}
+\label{sec:concavity}
+
+Since $\nu_t=\mu_{t+\pi/2}$, everything above is a functional of the single function
+\[
+  H(\theta):=h_K(\mu_\theta),\qquad \theta\in[0,\pi],\qquad
+  F(t)=H(t),\quad G(t)=H(t+\pi/2).
+\]
+
+\begin{proposition}[The cap is an exact quadratic form]\label{prop:cap}
+Let $C=\bigcap_{t\in[0,\pi/2]}C_t$ and $C_2=C\cap\rho C$. Then
+\begin{equation}\label{eq:capquad}
+  |C_2|=\int_0^\pi\bigl(H(\theta)^2-H'(\theta)^2\bigr)d\theta-H(0)-H(\pi).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+$\rho$ is a reflection in the line $y=\tfrac12$, not in the origin: $\rho p=Rp+(0,1)$
+with $R=\operatorname{diag}(1,-1)$, so $h_{\rho A}(u)=h_A(Ru)+u_y$. Since $C$ is
+unbounded downward, $h_C=+\infty$ on the lower half-circle and $h_{\rho C}=+\infty$ on
+the upper one, so the support function of $C_2$ is
+\[
+  h_2(\theta)=H(\theta)\ \ (\theta\in[0,\pi]),\qquad
+  h_2(\theta)=H(-\theta)+\sin\theta\ \ (\theta\in[-\pi,0]).
+\]
+For any support function in $H^1$ of the circle, $|C_2|=\tfrac12\int h_2\,d\sigma_2$
+with $\sigma_2=(h_2+h_2'')d\theta$ as a measure, and the distributional identity
+$\langle h_2'',h_2\rangle=-\int h_2'^2$ holds with no boundary or atom terms because the
+circle has no boundary. Splitting at $\theta=0,\pi$ and substituting the two branches,
+\[
+  |C_2|=\int_0^\pi\Bigl[H^2-H'^2-H\sin s+H'\cos s-\tfrac12\cos2s\Bigr]ds,
+\]
+and $\int_0^\pi\cos2s\,ds=0$ while
+$\int_0^\pi H'\cos s\,ds=-H(0)-H(\pi)+\int_0^\pi H\sin s\,ds$, which gives
+\eqref{eq:capquad}.
+\end{proof}
+
+Note $-H(0)-H(\pi)$ is \emph{linear}, so it does not enter the Hessian; and
+\eqref{eq:capquad} is invariant under $H\mapsto H+v\cos\theta$, as it must be, that
+being a horizontal translation. Numerically \eqref{eq:capquad} gives
+$2.013341613$ against $A_R^\ast+2V=2.013341613$, agreeing to
+$9.6\cdot10^{-13}$ --- an independent analytic confirmation of the whole chain
+$|\Sig|=|C_2|-2|N|$ with $|N|=V$, since \eqref{eq:capquad} and \eqref{eq:V} share no
+computation. Equivalently, writing $Q:=|C_2|-2V$,
+\begin{equation}\label{eq:Qtight}
+  Q(\Sig)=1.644955218425\ldots=A_R^\ast\quad\text{to }5\cdot10^{-13}.
+\end{equation}
+
+\begin{proposition}[The second variation]\label{prop:hess}
+Fix the gauge $H(0)=1$ (horizontal translation) and $H(\pi/2)=1$ (unit corridor; this
+is also exactly what makes $\sigma$ integrable against $\tan t$ at $t=\pi/2$), so that
+admissible $\eta$ satisfy $\eta(0)=\eta(\pi/2)=0$. Then, with
+$E_1=\{\alpha_1<0\}$ and $E_2=\{\alpha_2>0\}$,
+\begin{equation}\label{eq:Q2}
+\begin{aligned}
+  \tfrac12\,\delta^2Q[\eta]
+  =\int_0^\pi(\eta^2-\eta'^2)\,d\theta
+  &-\int_{E_2}\bigl(\eta(t)+\eta'(t+\tfrac\pi2)\bigr)^2dt\\
+  &-\int_0^{\pi/2}\bigl(\eta(t)\tan t+\eta'(t)\bigr)^2dt
+   +\int_{E_1}\bigl(\eta(t+\tfrac\pi2)-\eta'(t)\bigr)^2dt.
+\end{aligned}
+\end{equation}
+Its principal part is negative definite: the coefficient of $\eta'(\theta)^2$ is $-1$ on
+$[0,\beta)$ and on $[\pi-\beta,\pi]$, and $-2$ in between. Hence \eqref{eq:Q2} is
+bounded above and has at most finitely many non-negative eigenvalues.
+\end{proposition}
+
+\begin{proof}
+$\delta\alpha_1=\eta(t+\tfrac\pi2)-\eta'(t)$, $\delta\alpha_2=\eta(t)+\eta'(t+\tfrac\pi2)$
+and $\delta\sigma=\eta(t)\tan t+\eta(t+\tfrac\pi2)$ by \eqref{eq:a1}--\eqref{eq:sig};
+in the middle term the $\eta(t+\pi/2)$ cancels, leaving
+$\delta(\sigma-\alpha_1)=\eta(t)\tan t+\eta'(t)$. The integrand of \eqref{eq:V} is $C^1$
+across $\alpha_1=0$ and $\alpha_2=0$, so the moving boundaries of $E_1,E_2$ contribute
+nothing at second order, and $\delta^2$ of each square is twice the square of the
+first variation. The cap contributes $2\int(\eta^2-\eta'^2)$ by
+Proposition~\ref{prop:cap}. For the principal part, collect: $-1$ from the cap,
+$-1$ from the $\sigma$ term on $[0,\pi/2]$, $+1$ from the $E_1$ term on $[0,\beta)$,
+and $-1$ from the $E_2$ term at $\theta=t+\pi/2\in[\pi/2,\pi-\beta)$.
+\end{proof}
+
+\begin{remark}[Measurements, and exactly what they do and do not give]\label{rem:conc}
+In a hat basis with $\eta(0)=\eta(\pi/2)=0$:
+
+\emph{Criticality.} $\delta Q[\eta]=0$ in every direction, $\|\delta Q\|_\infty/h
+=1.8\cdot10^{-8}$ by central differences on $Q$ itself. So Romik's ODEs are the
+Euler--Lagrange equations of $Q$. (An analytic assembly of the gradient first reported a
+nonzero value on $[0,\beta)$ and $[\pi/2,\pi/2+\beta)$; that was a sign error on
+$\delta\bigl(-\tfrac12(\alpha_1^-)^2\bigr)=+\alpha_1^-\delta\alpha_1$, caught by the
+finite-difference check.)
+
+\emph{Concavity, on $\Sig$'s cell only.} With $\Sig$'s own sign pattern
+$E_1=[0,\beta)$, $E_2=[0,\pi/2-\beta)$, the form \eqref{eq:Q2} is negative definite:
+$\lambda_{\max}/h=-0.6905,-0.7111,-0.7216$ at $m=32,64,128$. Under Baek's injectivity
+condition, which is exactly $E_1=\emptyset$, $E_2=[0,\pi/2]$, it is $-0.8616$. But
+\eqref{eq:Q2} is \emph{not} negative for every sign pattern: with $E_1=E_2=[0.4,1.2]$ it
+is $+0.4071$, and with $E_1=E_2$ a union of three intervals $+0.4156$. An earlier scan
+over intervals \emph{anchored at $0$} suggested that $\tau_1\le\tau_2$ suffices; the
+unanchored cases refute that and the suggestion is \textbf{retracted}.
+
+Since $\alpha_1,\alpha_2$ are affine in $H$, each pointwise sign condition is a
+half-space and $\Sig$'s cell is convex. Concavity plus criticality on a convex set gives
+that $\Sig$ maximises $Q$ \emph{on that cell}. Nothing global follows.
+
+\emph{What is missing.} All of the above concerns $Q$ alone. The inequality
+$Q\ge|\text{sofa}|$, which is the only reason $Q$ is relevant, is exactly the statement
+that the two sweeps of Proposition~\ref{prop:V} are disjoint, injective and covering for
+\emph{competitors}; that is measured only at $\Sig$. It is the analogue of the one-corner
+argument's Chapters 3--6 and it is not done here. \emph{No optimality claim follows},
+and all of the numbers in this remark are floating point.
+\end{remark}
+
+\begin{remark}[The boundary of the cap, and where the sweep terminates]\label{rem:cap}
+The density $H+H''$ of the surface measure determines $\partial C_2$ completely:
+it vanishes on $(-\beta,\beta)$, where $\partial C_2$ is the single vertex
+$P=(1,\tfrac12)$; equals $\tfrac12$ on $(\pi/2-\beta,\pi/2+\beta)$, where $\partial C_2$
+is a circular arc of radius exactly $\tfrac12$ centred at $(1-2a_1,\tfrac12)$; has an
+atom of mass $1.167050$ at $\theta=\pi/2$, the corridor ceiling $y=1$, a facet; vanishes
+again on $(\pi-\beta,\pi]$, the second vertex; and is a smooth arc in between. The
+$\rho$-image of the ceiling facet is the corridor floor, the segment
+$[-0.750575,\,0.416475]\times\{0\}$, whose left endpoint lies directly below the centre
+of the radius-$\tfrac12$ arc.
+
+This settles the geometry of the outer arm of Proposition~\ref{prop:V}. Because $C_2$ is
+\emph{convex}, the face-1 segment lies in $C_2$ as soon as its far endpoint does, so the
+claim $S_1=\sigma$ reduces to a one-parameter containment: the endpoint
+$x(t)=c_x(t)+\sigma(t)\sin t$ must lie in the floor facet. It runs monotonically from
+$x(0)=0$ to $x(\pi/2)=0.416475$, the right end of the facet, and
+\[
+  x(\pi/2)=c_x(\pi/2)+\alpha_1(\pi/2)
+  =\bigl(c_x(0)-\alpha_2(0)\bigr)+\bigl(\alpha_2(0)+\alpha_1(\pi/2)-(G(\pi/2)-1)\bigr)
+\]
+is an algebraic identity, the right-hand side being the left end of the facet plus its
+length $H'(\pi/2^+)-H'(\pi/2^-)$. So the tangency at $t=\pi/2$ is exact, not
+coincidental, and what remains of $S_1=\sigma$ is the monotonicity of the explicit
+function $x$.
+\end{remark}
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of

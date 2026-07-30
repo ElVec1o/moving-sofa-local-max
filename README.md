@@ -43,7 +43,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 12 | **Normal velocities.** Face $i$ advances on one side of its *own* envelope point, so the niche is inner-face-2 plus outer-face-1 — and result 10's failure is an artefact of requiring both arms at once | PROVED |
 | 13 | **The niche area in convex-linear data.** $\lvert N\rvert=\int_0^{\pi/2}\bigl[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2-\tfrac12(\alpha_1^-)^2\bigr]dt=0.184193197089\ldots$, against $0.184193171$ measured on the region from the under-measuring side | HEURISTIC ($10^{-8}$) |
 | 14 | $\tfrac12\int(\alpha_1^-)^2=\tfrac\beta8-a_1(1-\cos\beta)+a_1^2(\beta-\tfrac12\sin2\beta)=0.0119502700\ldots$, supported exactly on $[0,\beta)$. Granted 13, this is the one term of the wrong curvature | PROVED (the value) |
-| 15 | **Optimality of $\Sigma$** | **not proved** |
+| 15 | **The cap is an exact quadratic form**: $\lvert C_2\rvert=\int_0^\pi(H^2-H'^2)d\theta-H(0)-H(\pi)$ where $H(\theta)=h_K(\mu_\theta)$, using $h_{\rho A}(u)=h_A(Ru)+u_y$ | PROVED |
+| 16 | $Q:=\lvert C_2\rvert-2V$ satisfies $Q(\Sigma)=A_R^\ast$ ($5\cdot10^{-13}$), $\delta Q(\Sigma)=0$ in every direction ($1.8\cdot10^{-8}$), and $\delta^2Q\prec0$ on $\Sigma$'s cell ($\lambda_{\max}/h\to-0.72$) — all three of Baek's Thm 7.1.5 hypotheses, at $\Sigma$ | HEURISTIC |
+| 17 | The principal part of $\delta^2Q$ is negative everywhere, so concavity is a **finite** question; and $\Sigma$'s cell is convex | PROVED |
+| 18 | $\delta^2Q$ is **not** negative on every cell: $E_1=E_2=[0.4,1.2]$ gives $+0.407$ | HEURISTIC |
+| 19 | **Optimality of $\Sigma$** | **not proved** |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -75,17 +79,19 @@ obstruct: by result 12 each face is used only on the range where its own arm has
 right sign, and no joint hypothesis is used anywhere. The reported failure came from
 asking for $\alpha_1>0$ and $\alpha_2>0$ simultaneously.
 
-*Remaining.* Two of the three terms in result 13 are convex quadratics in the support
-function, which is what the generalised Mamikon theorem buys, so they give a concave
-upper bound. The third is **subtracted**, hence contributes a convex term with the
-wrong sign for concavity. Result 14 computes it exactly; it is supported precisely on
-$[0,\beta)$, the phase where $\Sigma$ degenerates, and its support is exactly the
-threshold $\sin t<1/(4a_1)$ of result 7. Whether $\lvert C_2\rvert-2\lvert N\rvert$ is
-nonetheless concave is a Hessian computation on support-function perturbations and is
-**not attempted**. Neither is the second half of the argument — that the three
-geometric hypotheses of result 13 (the two sweeps are disjoint, injective, and cover)
-hold for competitors and not only for $\Sigma$. Those hypotheses are *measured* for
-$\Sigma$, not proved.
+*Also removed.* The third term of result 13 is **subtracted**, hence contributes a
+convex term with the wrong sign for concavity, and result 14 computes it exactly. That
+looked like the remaining obstruction. It is not: results 15–17 show
+$Q=\lvert C_2\rvert-2V$ is in fact negative definite at $\Sigma$'s sign pattern, with
+$Q(\Sigma)=A_R^\ast$ and $\delta Q(\Sigma)=0$. Since $\Sigma$'s cell is convex,
+$\Sigma$ maximises $Q$ there.
+
+*Remaining, and it is the whole point.* $Q$ is only relevant because
+$Q\ge\lvert\text{sofa}\rvert$, and that inequality **is** the statement that the two
+sweeps of result 13 are disjoint, injective and covering — which is *measured* at
+$\Sigma$ and unproved for competitors. That is the analogue of Baek's Chapters 3–6 and
+it is not done here. By result 18 concavity also fails on other cells, so nothing global
+follows even granting domination. Every number in results 16 and 18 is floating point.
 
 ## Layout
 
