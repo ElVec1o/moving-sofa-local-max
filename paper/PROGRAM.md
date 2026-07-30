@@ -1,3 +1,87 @@
+## AUDIT FOR FIXED-SCALE / WEAK-PROXY ARTIFACTS — one real bug found
+
+Three artifacts in one session (coarse t-grid on the corner margin; fixed-eps sampling
+in A10/A11; oscillatory-quadrature ETA) made an audit necessary.  The failure mode is
+always the same shape: a claim is tested with a proxy or at a fixed scale, while the
+phenomenon lives at a scale that shrinks or in a property the proxy cannot see.
+
+### B2 (injectivity) — AUDITED CLEAN, and sharpened
+
+Fine scan of the injectivity signs over (0, pi/2), 400 samples plus bisection:
+
+  * exactly THREE sign-pattern transitions, no thin subintervals;
+  * x'.u_t changes sign at t = 0.289653820817321, and beta = 0.289653820817321;
+  * x'.v_t changes sign at t = 1.28114250597758, and pi/2 - beta = 1.28114250597758.
+
+Agreement to 15 digits, so this is not a near-coincidence.
+
+    T2 [PROVED].  x'(beta) . mu_beta = 0  and  x'(pi/2 - beta) . nu_{pi/2-beta} = 0.
+
+The injectivity failure boundary IS the phase junction, exactly.  That is a sharper and
+cleaner statement than "fails on the outer phases", and it gives a geometric
+characterisation of beta: it is where the inner corner's velocity becomes perpendicular
+to mu.
+
+### A REAL BUG, caught by the audit
+
+Building the pi-range cap C2 = cap_{[-pi/2,pi/2]} C_t, the first implementation used the
+normals (mu_t, nu_t) on BOTH branches.  That is wrong for t < 0: the reflected
+half-planes have normals R mu_s = mu_t and R nu_s = -nu_t, so the second normal flips
+sign.  With the bug, |C2| = 1.901567157; corrected, |C2| = 2.013345504.
+
+The bug survived the first symmetry check because that check compared AREAS:
+|C2| and |rho C2| agreed to 2.22e-16 while the SYMMETRIC DIFFERENCE was 0.175.  Equal
+areas do not imply equal sets.  Recorded as a standing lesson: symmetry must be tested
+by symmetric difference, never by area.
+
+### A second proxy failure, benign
+
+With the normals fixed, shapely reported C2 as NOT convex.  Measuring the convexity
+defect |conv(C2)| - |C2| at n = 61, 121, 241 gives -4.4e-16, +4.4e-16, -1.8e-15 --
+machine epsilon, not growing with n.  So C2 IS convex, as it must be (an intersection
+of half-plane pairs), and `shapely.equals(convex_hull)` was defeated by vertex noise
+across 790 near-collinear vertices.  Recorded so the test is not trusted again.
+
+### Audit verdict on the remaining live claims
+
+  * A1, A2, A3, A3', A5, A6 -- all PROVED analytically, no sampling exposure.
+  * T1, T1a -- now PROVED with a closed-form threshold; the earlier grid evidence is
+    superseded and its artifacts explained.
+  * P1 (the pi-range identity) -- symmetric difference EXACTLY 0, which is the strong
+    test, not an area comparison.  Clean.
+  * D1, T2 -- analytic / 15-digit bisection.  Clean.
+  * The only remaining numerical inputs are shapely areas with known O(1/n)
+    convergence, which is a different and understood error mode.
+
+## P3 FOUNDATION ESTABLISHED
+
+For the pi-range family, with c(-t) = rho c(t):
+
+    |C2|            = 2.013345504      (n = 241)
+    |Sigma|         = 1.645583698
+    |niche ^ C2|    = 0.367761807
+    |U ^ C2|        = 0.183880903
+    |Sigma| = |C2| - 2 |U ^ C2|                                    (by A4/A6 + T1)
+
+and the three structural facts P3 needs are verified:
+
+    C2 is CONVEX                 convexity defect ~1e-15, stable in n
+    C2 is rho-SYMMETRIC          symmetric difference EXACTLY 0
+    Sigma subset C2              contains-test passes
+
+So the objects Baek's Ch. 7-8 machinery consumes -- a convex cap, a niche, and the
+identity expressing the body as cap minus niche -- all exist for the pi-range family,
+with the niche halved by rho-symmetry.
+
+REMAINING for P3, and this is the actual mathematics: construct an UNDERestimate
+U' subset U whose area is a sum of Mamikon regions with convex-linear data, so that
+|C2| - 2|U'| is a quadratic functional that is CONCAVE (Baek Thm 7.4.2) and dominates
+|Sigma|.  Baek builds his N' from a core and two tails using injectivity; by T2 that
+input fails precisely at Sigma's junctions, so the tails need separate treatment on
+[0, beta) and (pi/2 - beta, pi/2].  Those are exactly the phases where the contact arcs
+are CONSTANT (D1), which is the most tractable degeneracy available: a constant arc
+contributes nothing to a Green integral.
+
 ## 🔥🔥 ONE FACT EXPLAINS ALL FOUR FAILURES: the ambidextrous problem is an omega = pi problem
 
 After four failed transfers (direct balancing, rho-quotient, prescribed-edge,
