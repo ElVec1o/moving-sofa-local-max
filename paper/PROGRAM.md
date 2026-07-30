@@ -1,3 +1,93 @@
+## 🔥🔥 ONE FACT EXPLAINS ALL FOUR FAILURES: the ambidextrous problem is an omega = pi problem
+
+After four failed transfers (direct balancing, rho-quotient, prescribed-edge,
+injectivity), the right move was to reframe rather than patch again.
+
+### The reformulation  [PROVED, verified exactly]
+
+rho maps the hallway at angle s to the hallway at angle -s with corner rho c(s), so
+intersection_{t in [-pi/2,0]} H_t = rho S, and therefore
+
+    Sigma  =  intersection_{t in [-pi/2, pi/2]} H_t ,        c(-t) = rho c(t).     (*)
+
+VERIFIED: the two constructions agree to 7.3e-15 with symmetric difference area
+EXACTLY 0.000e+00 (n = 481).  |S| = 1.989684033, |S ^ rho S| = 1.645268432 =
+|cap_{[-pi/2,pi/2]} H_t|.
+
+So the ambidextrous constraint family is a SINGLE family spanning an angle range of
+length pi, not two families of length pi/2.
+
+### The caveat that matters
+
+The corner path of (*) is DISCONTINUOUS at t = 0.  For Romik's path c_y(0) = 0, while
+rho c(0) has height 1, so the corner jumps by 1 in y across t = 0.  Hence (*) is an
+exact identity of CONSTRAINT FAMILIES, not the statement that Sigma is a monotone
+sofa of rotation angle pi in Baek's sense -- his monotone sofas move continuously.
+
+### Why this explains the four failures as ONE fact
+
+Baek's framework is built for omega in (0, pi/2].  His Lemma 3.4.2 uses omega <= pi/2;
+the parallelogram P_omega is defined for that range; and Chapter 4's main conclusion is
+that a balanced maximum sofa has omega = pi/2 EXACTLY -- pi/2 is the top of his range
+and the value his maximisers attain.
+
+The ambidextrous problem sits at an angle range of pi, with a discontinuous corner
+path.  Both features are outside his setting.  So:
+
+  * B1 (balancing) failed because his identity pairs the cap boundary against ONE
+    niche polyline, which is the omega <= pi/2 picture;
+  * B1b (quotient) failed because cutting at y = 1/2 introduces a free edge, which is
+    an artifact of forcing a pi-range problem into a pi/2-range frame;
+  * B1d (prescribed edge) failed because that edge is not perturbation-stable;
+  * B2 (injectivity) failed ON THE CANDIDATE, on exactly the phases [0,beta) and
+    (pi/2-beta, pi/2] adjacent to the discontinuity at the ends of the half-range.
+
+Four symptoms, one cause.  This is the most useful thing the session has produced
+about the ambidextrous problem, and it is a reason to stop adapting Baek's
+architecture rather than to attempt a fifth variant: the architecture is not
+mis-applied, it is out of range.
+
+### What the reformulation suggests instead
+
+The upper-bound half of Baek's work (Ch. 7-8) does NOT use the motion; it needs only
+the cap/niche structure and convexity.  So the promising direction is to build the
+concave quadratic bound directly for the pi-range family, bypassing Ch. 3-6 entirely:
+
+  * the cap is C2 = cap_{[-pi/2,pi/2]} C_t, convex, rho-symmetric;
+  * the niche is U u rho U, and A1-A6 give that these are DISJOINT and congruent, so
+    the niche area is 2|U| -- one niche's worth of work;
+  * concavity would come from Mamikon exactly as in Thm 7.4.2, which is indifferent
+    to the angle range;
+  * criticality of Sigma comes from Romik's ODE1/ODE6/ODE5.
+
+What is then MISSING is only the existence/regularity input that Ch. 3-6 supplies in
+the omega <= pi/2 case -- and that would be assumed as a hypothesis, giving a
+CONDITIONAL theorem.  The conditional theorem is the honest target.
+
+## The degeneracy, stated as a positive result
+
+Three independent methods have broken at the same place, and it is worth stating as a
+structural fact about the ambidextrous problem rather than as three separate defeats.
+
+On the outer phases [0, beta) and (pi/2 - beta, pi/2]:
+
+  1. Sigma's contact arcs dA and rA are CONSTANT, pinned at the rho-FIXED point
+     (1, 1/2) (verified to 3e-31).  A constant contact arc contributes nothing to a
+     Green integral, and it is not a well-defined contact POINT: there the hallway
+     touches along a segment.
+  2. The second-variation route failed there: the constant arcs are what made the
+     closure chords move, producing the rank-one defect -(l/2)L, and later the
+     self-intersection lens.
+  3. Baek's injectivity condition fails there, and only there: x'.u_t > 0 on
+     [0, beta) and x'.v_t < 0 on (pi/2 - beta, pi/2], with sign changes exactly at the
+     junctions.
+
+So the degenerate phases are simultaneously: where the contact structure collapses,
+where local analysis breaks, and where the injectivity hypothesis of the successful
+one-corner proof is violated.  That is a coherent statement about where the difficulty
+of the ambidextrous problem lives, and it is publishable content independent of
+whether an optimality theorem follows.
+
 ## 💧💧 B2: BAEK'S INJECTIVITY CONDITION FAILS FOR ROMIK'S Σ ON THE OUTER PHASES
 
 S3 turned out to DEPEND on B2, not to be independent of it.  Working through what
