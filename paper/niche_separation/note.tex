@@ -1221,6 +1221,110 @@ has an explicit pointwise form; proving it amounts to substituting the closed fo
 SOL1, SOL5, SOL6 phase by phase, and is not carried out here.
 \end{remark}
 
+\section{The cross condition, the first variation, and a Gårding bound}\label{sec:rest}
+
+\begin{theorem}\label{thm:cross}
+(RC) implies the cross condition: for all $t,t'$ the point
+$\ell_2(t)\cap\ell_1(t')$ is not interior to both sweep segments. Consequently, under
+(RC) the combined sweep is injective and $V=|N|$, so
+$Q=|C_2|-2|N|\ge|T|$.
+\end{theorem}
+
+\begin{proof}
+Work in the frame at $t$ and write $p=c(t)+a\mu_t+b\nu_t$. The equation
+$\langle p,\nu_t\rangle=G(t)-1$ forces $b=0$, so $p$ moves along $\ell_2(t)$ with
+$s_2=-a$; the equation $\langle p,\mu_{t'}\rangle=F(t')-1$ then gives, for $t'=t-\tau$,
+\[
+  s_2=\frac{m(t-\tau)}{\cos\tau},\qquad
+  s_1=-\Phi(\tau)-\bigl(\alpha_2(t)-s_2\bigr)\sin\tau ,
+\]
+using $\langle\mu_t,\nu_{t-\tau}\rangle=\sin\tau$ and
+$n(t-\tau)=\Phi(\tau)+\alpha_2(t)\sin\tau$. If $\tau>0$ and $p$ is interior to the face-2
+segment, then $0<s_2<\alpha_2(t)$, and $\Phi\ge0$ by Theorem~\ref{thm:rc} with
+$\sin\tau\ge0$ because $\tau\le\pi/2$; hence $s_1<0\le\alpha_1(t')^+$ and $p$ lies below
+the face-1 segment.
+
+For $t'>t$ work in the frame at $t'$: the same computation with the roles of the two
+families exchanged gives, for $t=t'-\tau'$ with $\tau'>0$,
+\[
+  s_2=-\Psi(\tau')-\bigl(s_1-\alpha_1(t')\bigr)\sin\tau' ,
+\]
+so if $p$ is interior to the face-1 segment then $s_1>\alpha_1(t')^+\ge\alpha_1(t')$ and
+$s_2<0$, outside $[0,\alpha_2(t)]$. At $t'=t$ the two lines are perpendicular and meet at
+$c(t)$, where $s_1=s_2=0$, interior to neither. Both displayed identities were checked
+against a direct linear solve, agreeing to $10^{-16}$.
+\end{proof}
+
+So hypothesis (ii) of Theorem~\ref{thm:cond} may be replaced throughout by (RC).
+
+\begin{theorem}\label{thm:el}
+$\delta Q(\Sig)=0$. More precisely the Euler--Lagrange equations of
+Remark~\ref{rem:el} hold identically on each of the six regions, as trigonometric
+identities in $a_1,f_1,f_2$ --- no relation among the constants is used.
+\end{theorem}
+
+\begin{proof}
+On each phase, $F(t)-1=\operatorname{Re}(e^{-it}z(t))$ and
+$G(t)-1=\operatorname{Im}(e^{-it}z(t))$ evaluate to
+\[
+  \begin{array}{lll}
+    \text{SOL1} & F-1=\cos t+\tfrac12\sin t-1,
+      & G-1=(2a_1-1)\sin t+\tfrac12\cos t-\tfrac12,\\[2pt]
+    \text{SOL6} & F-1=f_1\cos\tfrac t2+f_2\sin\tfrac t2-1+\kappa\cos t+\tfrac12\sin t,
+      & G-1=-f_2\cos\tfrac t2+f_1\sin\tfrac t2-1+\tfrac12\cos t-\kappa\sin t,\\[2pt]
+    \text{SOL5} & F-1=(1-\tfrac23a_1)\cos t+\tfrac12\sin t-\tfrac12,
+      & G-1=(\tfrac83a_1-1)\sin t+\tfrac12\cos t-1,
+  \end{array}
+\]
+with $\kappa=1-\tfrac43a_1$. Substituting these into
+$\alpha_1=G-1-F'$, $\alpha_2=F-1+G'$, $\sigma=(F-1)\tan t+G-1$ and into the two
+Euler--Lagrange equations, with the sign pattern of each region fixed
+($\alpha_2>0$ except on the last phase, $\alpha_1<0$ only on the first), every residual
+reduces identically to $0$.
+\end{proof}
+
+\begin{remark}
+The computation is a computer algebra verification, six residuals, each returning $0$
+with $a_1,f_1,f_2$ free. It was controlled against five deliberately perturbed variants
+of the middle-phase equation (sign flip on the $\tan$ term, each of the two terms dropped,
+$\alpha_1$ and $\alpha_2$ exchanged, $H+H''$ replaced by $H-H''$), all of which return
+nonzero; and the three pairs of phase formulas were checked against the reference path to
+$2.2\cdot10^{-16}$. The content of Theorem~\ref{thm:el} is that Romik's ODE families are
+exactly the critical-point equations of $Q$.
+\end{remark}
+
+\begin{remark}[Towards $\delta^2Q\preceq0$]\label{rem:garding}
+The remaining part of hypothesis (i) is the sign of the second variation. The step that
+makes it accessible is an exact algebraic cancellation. On $[0,\beta)$ write
+$p=\eta'(t)$, $q=\eta(t)$, $r=\eta(t+\pi/2)$, $T=\tan t$; the three terms of
+\eqref{eq:Q2} that carry $\eta'(t)$ combine as
+\begin{equation}\label{eq:complete}
+  -p^2-(qT+p)^2+(r-p)^2=-(p+qT+r)^2+2r^2+2qTr ,
+\end{equation}
+so the added term is absorbed exactly and the remainder carries no derivative of $\eta$.
+What is left is a lower-order estimate. With $\eta(0)=\eta(\pi/2)=0$ the relevant
+Poincaré constants are $4$ on $[0,\pi/2]$, $1$ on $[\pi/2,\pi]$ (Dirichlet--Neumann,
+$\eta(\pi)$ free) and $(\pi/2\beta)^2=29.41$ on $[0,\beta]$. Retaining a fraction
+$\delta$ of $-\int_0^\beta\eta'^2$ before applying \eqref{eq:complete} and splitting
+$(qT+r)^2$ with a parameter $\kappa$, the coefficient of $\int_0^\beta\eta^2$ is
+\[
+  \Bigl(\tfrac{1+\kappa}{1-\delta}-1\Bigr)\tan^2\beta+1-\delta\Bigl(\tfrac{\pi}{2\beta}\Bigr)^2
+  =-1.83\ldots<0 \qquad(\delta=\tfrac1{10},\ \kappa=1),
+\]
+and the $r^2$ remainder, of coefficient $3.22\ldots$, is absorbed by the $E_2$ term of
+\eqref{eq:Q2}, which supplies $-\tfrac12\int_{\pi/2}^{\pi-\beta}\eta'^2$: since
+$\eta(\pi/2)=0$ gives
+$\int_{\pi/2}^{\pi/2+\beta}\eta^2\le(\beta^2/2)\int\eta'^2$, the requirement is
+$3.22\cdot0.0420=0.135\le\tfrac12$. So every ingredient of a Gårding inequality
+$\delta^2Q\le-c\|\eta\|_{L^2}^2$ is in place; assembling the chain with explicit constants
+is not carried out here.
+
+Measured, the constant is $c=0.7285\ldots$: the supremum of
+$\delta^2Q[\eta]/\|\eta\|_{L^2}^2$ over the hat space, as a symmetric generalised
+eigenvalue problem against the exact mass matrix, is
+$-0.7059,-0.7188,-0.7255,-0.7285$ at $m=32,64,128,256$.
+\end{remark}
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of

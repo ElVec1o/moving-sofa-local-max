@@ -59,7 +59,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 28 | **(RC) implies both self-intersection conditions of 23, for every pair.** The reduction is $\Phi''+\Phi=1-(H+H'')(t-\tau+\pi/2)$ with zero initial data, so $\Phi=\int_0^\tau\sin(\tau-u)R\,du\ge0$; the facet atoms sit where the kernel vanishes | PROVED |
 | 29 | $\Sigma$ satisfies (RC) with margin $0.1614$; across twelve perturbations (RC) holds exactly when the conditions of 23 hold | HEURISTIC |
 | 30 | The Euler–Lagrange equations of $Q$, pointwise; residual $9.4\cdot10^{-6}$ at $\Sigma$ | HEURISTIC |
-| 31 | **Optimality of $\Sigma$** | **not proved** |
+| 31 | **(RC) implies the cross condition too**, so it implies all three injectivity conditions: $V=\lvert N\rvert$ and $Q\ge\lvert\text{sofa}\rvert$ on $\{(\mathrm{RC})\}$ | PROVED |
+| 32 | $\delta Q(\Sigma)=0$: all six Euler–Lagrange residuals vanish **identically in $a_1,f_1,f_2$**. Romik's ODE families are exactly the critical-point equations of $Q$ | PROVED |
+| 33 | $-p^2-(qT+p)^2+(r-p)^2=-(p+qT+r)^2+2r^2+2qTr$: the added term is absorbed exactly, leaving a derivative-free remainder | PROVED |
+| 34 | Gårding constant $c=0.7285\ldots$ measured; the ingredients (Poincaré constants $4$, $1$, $29.41$; coefficient $-1.83$; requirement $0.135\le\tfrac12$) are all in place, the chain not assembled | HEURISTIC |
+| 35 | **Optimality of $\Sigma$** | **not proved** |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -133,7 +137,7 @@ $Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
 ```
 paper/niche_separation/   the note (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including retractions
-lean/MovingSofa/          Lean 4 development, 72 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 75 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/                computations (ambi_*, sigma_*, gerver_*)
 ```

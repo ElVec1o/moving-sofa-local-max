@@ -1,3 +1,104 @@
+## 🎆🎆 (RC) NOW PROVES ALL THREE INJECTIVITY CONDITIONS, AND dQ(Sigma) = 0 IS PROVED
+
+Two hypotheses of the conditional theorem move to PROVED this session.
+
+### The CROSS condition follows from (RC) too (item 1)
+
+Work in the frame at t: p = c(t) + a mu_t + b nu_t, and <p,nu_t> = G(t)-1 forces b = 0, so
+p moves along l2(t) with s2 = -a.  Then <p,mu_t'> = F(t')-1 with t' = t - tau gives
+
+    s2 = m(t-tau)/cos tau ,      s1 = -Phi(tau) - (alpha_2(t) - s2) sin tau ,
+
+using <mu_t, nu_{t-tau}> = sin tau and n(t-tau) = Phi(tau) + alpha_2(t) sin tau.  In the
+frame at t', for t = t' - tau', the mirror computation gives
+
+    s2 = -Psi(tau') - (s1 - alpha_1(t')) sin tau' .
+
+Both checked against a direct 2x2 linear solve: 1.1e-16 and 3.5e-17.
+
+  tau > 0: if p is interior to the face-2 segment then 0 < s2 < alpha_2, and Phi >= 0 by
+           the (RC) theorem with sin tau >= 0 since tau <= pi/2, so s1 < 0 <= alpha_1^+:
+           p is BELOW the face-1 segment.
+  tau'> 0: if p is interior to the face-1 segment then s1 > alpha_1^+ >= alpha_1, so
+           s2 < 0: p is OUTSIDE [0, alpha_2].
+  t' = t : the lines are perpendicular and meet at c(t), where s1 = s2 = 0, interior to
+           neither.
+
+So p is never interior to both.  (RC) therefore implies ALL THREE conditions, hence the
+combined sweep is injective, V = |N|, and Q >= |T| on {(RC)}.  Hypothesis (ii) of the
+conditional theorem is now entirely PROVED and reduces to one linear inequality.
+
+### dQ(Sigma) = 0 is PROVED, identically in the constants (item 2)
+
+On each phase F-1 = Re(e^{-it} z), G-1 = Im(e^{-it} z) evaluate to
+
+  SOL1  F-1 = cos t + (1/2) sin t - 1
+        G-1 = (2a1-1) sin t + (1/2) cos t - 1/2
+  SOL6  F-1 = f1 cos(t/2) + f2 sin(t/2) - 1 + k cos t + (1/2) sin t,   k = 1-(4/3)a1
+        G-1 = -f2 cos(t/2) + f1 sin(t/2) - 1 + (1/2) cos t - k sin t
+  SOL5  F-1 = (1-(2/3)a1) cos t + (1/2) sin t - 1/2
+        G-1 = ((8/3)a1-1) sin t + (1/2) cos t - 1
+
+(each checked against the reference path to 2.2e-16).  Substituting into
+alpha_1 = G-1-F', alpha_2 = F-1+G', sigma = (F-1)tan t + G-1 and into the two EL equations,
+with each region's sign pattern fixed, ALL SIX RESIDUALS ARE IDENTICALLY ZERO with
+a1, f1, f2 kept as FREE SYMBOLS.  No relation among the constants is needed.
+
+CONTROL (I12): five deliberately perturbed variants of the middle-phase equation -- sign
+flip on the tan term, each of the two terms dropped, alpha_1 and alpha_2 exchanged,
+H+H'' replaced by H-H'' -- all return NONZERO.  So the CAS is discriminating.
+
+STRUCTURAL CONSEQUENCE: Romik's ODE families SOL1/SOL5/SOL6 are exactly the
+critical-point equations of Q.  That is why the earlier hat-basis gradient came out at
+1.8e-8.
+
+### The Garding step (item 3): the exact cancellation, and the constant
+
+The step that makes d^2 Q <= 0 accessible is an algebraic identity.  On [0,beta), with
+p = eta'(t), q = eta(t), r = eta(t+pi/2), T = tan t, the three terms of (Q2) carrying
+eta'(t) combine as
+
+    -p^2 - (qT+p)^2 + (r-p)^2  =  -(p+qT+r)^2 + 2 r^2 + 2 q T r          (complete)
+
+so the ADDED term is absorbed exactly and the remainder carries NO derivative of eta.
+Poincare constants with eta(0) = eta(pi/2) = 0: 4 on [0,pi/2]; 1 on [pi/2,pi]
+(Dirichlet-Neumann, eta(pi) free); (pi/2beta)^2 = 29.4091 on [0,beta].  Retaining a
+fraction delta of -int_0^beta eta'^2 before applying (complete) and splitting (qT+r)^2
+with kappa, the coefficient of int_0^beta eta^2 is
+
+    ((1+kappa)/(1-delta) - 1) tan^2 beta + 1 - delta (pi/2beta)^2 = -1.8323 < 0
+    at delta = 0.1, kappa = 1,
+
+and the r^2 remainder (coefficient 3.2222) is absorbed by the E2 term, which supplies
+-1/2 int_{pi/2}^{pi-beta} eta'^2: since eta(pi/2) = 0 gives
+int_{pi/2}^{pi/2+beta} eta^2 <= (beta^2/2) int eta'^2 = 0.0420 int eta'^2, the requirement
+is 3.222 * 0.0420 = 0.135 <= 1/2.  OK.  So every ingredient is in place; assembling the
+chain with explicit constants is NOT done.
+
+MEASURED CONSTANT.  sup of d^2Q[eta]/||eta||_{L2}^2 over the hat space, as a SYMMETRIC
+generalized eigenproblem against the exact mass matrix (Cholesky, not Mass^{-1} M -- the
+latter is not symmetric and gave garbage, +12/+34/+112, on the first attempt):
+
+    m = 32, 64, 128, 256  ->  -0.705931, -0.718783, -0.725461, -0.728459
+
+so c = 0.7285... and it is bounded away from 0.  HEURISTIC (discretised).
+
+### Where the conditional theorem now stands
+
+    (i)  Q(Sigma) = A_R*        HEURISTIC (61 digits, two independent analytic routes)
+         dQ(Sigma) = 0          PROVED  <-- this session
+         d^2 Q <= 0 on C        HEURISTIC (Garding ingredients assembled, constant 0.7285)
+    (ii) the three injectivity conditions   PROVED from (RC)  <-- this session
+    (iii) M < 1/2 for competitors           conditional (the connectedness ceiling)
+
+## 🟢 LEAN F20
+
+  cross_excl_face2      Phi >= 0, Sin >= 0, s2 < A2, s1 = -Phi - (A2-s2) Sin  =>  s1 <= 0
+  cross_excl_face1      the mirror implication
+  completion_identity   -p^2 - (qT+p)^2 + (r-p)^2 = -(p+qT+r)^2 + 2r^2 + 2qTr
+
+75 theorems, 14 defs, zero sorry; axioms [propext, Quot.sound].
+
 ## 🎆 ONE LINEAR CURVATURE CONDITION PROVES BOTH INJECTIVITY CONDITIONS
 
 The previous section identified K' = {V = |N|} as convex but verified it only on a grid.

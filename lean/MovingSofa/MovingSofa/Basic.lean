@@ -1254,4 +1254,66 @@ theorem rc_convex {a b X Y D : Int} (ha : 0 ≤ a) (hb : 0 ≤ b)
   have h3 : (a + b)*D = a*D + b*D := by simp [Int.add_mul]
   omega
 
+/-! ## F20 — the cross condition, and the completion identity behind the Garding bound
+
+F20a.  The cross condition.  Solving `l2(t) ^ l1(t')` in the frame at `t` gives, for
+`t' = t - tau` with `tau > 0`,
+
+    s2 = m(t-tau)/cos tau,      s1 = -Phi(tau) - (alpha_2(t) - s2) sin tau,
+
+and in the frame at `t'` for `t = t' - tau'` with `tau' > 0`,
+
+    s2 = -Psi(tau') - (s1 - alpha_1(t')) sin tau' .
+
+Under (RC), `Phi, Psi >= 0` (F19), and `sin tau >= 0` because `tau <= pi/2`.  So if the
+meeting point is interior to the face-2 segment (`0 < s2 < alpha_2`) then `s1 < 0`, and the
+face-1 segment starts at `alpha_1^+ >= 0`, so the point is outside it; symmetrically, if it
+is interior to the face-1 segment (`s1 > alpha_1^+ >= alpha_1`) then `s2 < 0`, outside
+`[0, alpha_2]`.  Either way it is not interior to both.  F20a records the two sign
+implications; the identities themselves are geometry.
+
+F20b.  The completion identity.  On `[0,beta)`, writing `p = eta'(t)`, `q = eta(t)`,
+`r = eta(t+pi/2)` and `T = tan t`, the three second-variation terms that involve `eta'(t)`
+combine as
+
+    -p^2 - (qT+p)^2 + (r-p)^2  =  -(p+qT+r)^2 + 2 r^2 + 2 q T r ,
+
+so the added (bad) term is absorbed exactly and the remainder contains NO derivative of
+`eta` at all.  That is what makes the Garding estimate possible: after this step only
+lower-order terms remain, to be handled by Poincare inequalities. -/
+
+/-- **F20a (cross exclusion, face-2 side).**  If the meeting point is interior to the
+    face-2 segment and `Phi >= 0`, `Sin >= 0`, then `s1 < 0`, hence below the face-1
+    segment, whose left endpoint is non-negative. -/
+theorem cross_excl_face2 {Phi A2 S2v Sin s1 : Int}
+    (hPhi : 0 ≤ Phi) (hSin : 0 ≤ Sin) (hhi : S2v < A2)
+    (hs1 : s1 = -Phi - (A2 - S2v)*Sin) : s1 ≤ 0 := by
+  have h1 : 0 ≤ (A2 - S2v)*Sin := Int.mul_nonneg (by omega) hSin
+  omega
+
+/-- **F20a' (cross exclusion, face-1 side).**  Symmetrically, if the point is interior to
+    the face-1 segment then `s2 < 0`, hence outside `[0, alpha_2]`. -/
+theorem cross_excl_face1 {Psi A1 s1 Sin s2 : Int}
+    (hPsi : 0 ≤ Psi) (hSin : 0 ≤ Sin) (hgt : A1 < s1)
+    (hs2 : s2 = -Psi - (s1 - A1)*Sin) : s2 ≤ 0 := by
+  have h1 : 0 ≤ (s1 - A1)*Sin := Int.mul_nonneg (by omega) hSin
+  omega
+
+/-- **F20b (the completion identity).**  The three `eta'`-bearing terms of the second
+    variation on `[0,beta)` combine into a negative square plus derivative-free
+    remainders. -/
+theorem completion_identity (p q r T : Int) :
+    -(p*p) - (q*T + p)*(q*T + p) + (r - p)*(r - p)
+      = -((p + q*T + r)*(p + q*T + r)) + 2*(r*r) + 2*(q*T*r) := by
+  have e1 : (q*T + p)*(q*T + p) = (q*T)*(q*T) + 2*((q*T)*p) + p*p := by
+    simp [Int.add_mul, Int.mul_add, Int.mul_comm]; omega
+  have e2 : (r - p)*(r - p) = r*r - 2*(r*p) + p*p := by
+    simp [Int.sub_mul, Int.mul_sub, Int.mul_comm]; omega
+  have e3 : (p + q*T + r)*(p + q*T + r)
+      = p*p + (q*T)*(q*T) + r*r + 2*((q*T)*p) + 2*(r*p) + 2*((q*T)*r) := by
+    simp [Int.add_mul, Int.mul_add, Int.mul_comm]; omega
+  have e4 : (q*T)*r = q*T*r := by ac_rfl
+  rw [e1, e2, e3, e4]
+  omega
+
 end MovingSofa

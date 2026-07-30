@@ -140,6 +140,17 @@ that the integral representation solves the oscillator, and that the facet atom 
 `θ = π/2` contributes nothing because it sits where the kernel vanishes.  Both are
 analysis, not `Int` arithmetic.
 
+## F20 — the cross condition and the completion identity (note §11)
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| interior to the face-2 segment forces `s1 ≤ 0`, below the face-1 segment | `cross_excl_face2` | VERIFIED |
+| interior to the face-1 segment forces `s2 ≤ 0`, outside `[0,α₂]` | `cross_excl_face1` | VERIFIED |
+| `-p²-(qT+p)²+(r-p)² = -(p+qT+r)²+2r²+2qTr` | `completion_identity` | VERIFIED |
+
+Axioms: `[propext, Quot.sound]`.  NOT formalized: the two geometric identities for `s1`,
+`s2` (they need plane geometry), and the Poincaré inequalities of the Gårding step.
+
 ## Tooling note
 
 Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go
