@@ -266,12 +266,80 @@ ambidextrous upper bound requires only \emph{one} niche to be modelled: one core
 and two tails, the same shape as in the one-corner problem.
 \end{corollary}
 
+\section{The quotient reduction and a conditional statement}
+
+Theorem~\ref{thm:main} has a consequence that changes the shape of the
+ambidextrous problem. Since $U\subseteq\{y\le M\}$ with $M<\tfrac12$, the whole
+lower niche lies below the symmetry axis, so intersecting with the lower
+half-strip deletes $\rho U$ outright.
+
+\begin{corollary}[Quotient reduction]\label{cor:quot}
+Put $K^-:=C_2\cap\{y\le\tfrac12\}$, a convex body. Then
+\[
+  \Sig\cap\{y\le\tfrac12\}=K^-\setminus U,
+  \qquad
+  |\Sig|=2\bigl(|K^-|-|U\cap K^-|\bigr).
+\]
+\end{corollary}
+
+That is a convex cap minus \emph{one} niche: the shape Baek's argument is built
+on. Numerically, at $n=1441$ hallways, $|\Sig|=1.645059395$ and
+$|\Sig\cap\{y\le\frac12\}|=0.822529698$, whose double reproduces $|\Sig|$ to
+$3.8\cdot10^{-15}$.
+
+Two cautions must be recorded, because they bound what
+Corollary~\ref{cor:quot} delivers.
+
+First, $M<\tfrac12$ is a property of Romik's trajectory, not of an arbitrary
+competitor. A competitor with $M\ge\tfrac12$ has overlapping niches, and by
+\eqref{eq:ie} overlap \emph{increases} $|\Sig|$; so it cannot be assumed away on
+extremal grounds.
+
+Second, connectedness does not by itself exclude it. For a single $t$, the pair
+$Q_t\cup\rho Q_t$ removes a full vertical segment --- and so disconnects any body
+meeting both sides of it --- exactly when the apex height exceeds a threshold
+$h^\ast(t)$. Computation gives $h^\ast(t)>\tfrac12$ for every $t\in(0,\pi/2)$,
+with $h^\ast(t)\to\tfrac12$ as $t\to0$ and $h^\ast(\pi/4)=0.5100$,
+$h^\ast(1.52)=0.6967$. So no single-$t$ argument forces $M\le\tfrac12$, although
+the pointwise constraint $c_y(t)\le h^\ast(t)$ does hold for every connected
+ambidextrous sofa. Whether the full family forces $M<\tfrac12$ is open.
+
+Consequently the reduction supports a conditional statement rather than an
+unconditional one.
+
+\begin{proposition}[Conditional form]\label{prop:cond}
+Let $S$ be an ambidextrous moving sofa with rotation path $c$ satisfying
+$\max_t c_y(t)<\tfrac12$. Then its two niches are disjoint and
+$|S|=2(|K^-|-|U\cap K^-|)$ with $K^-$ convex and $U$ a single niche. In
+particular the area functional of the ambidextrous problem restricted to this
+class is of the cap-minus-one-niche form to which the concavity method applies.
+\end{proposition}
+
+We emphasise what is \emph{not} claimed: no optimality assertion follows from
+Proposition~\ref{prop:cond} alone. Baek's route additionally requires an
+existence and regularity step (a maximum monotone sofa of rotation angle $\pi/2$
+satisfying an injectivity condition), and his balancing argument for that step
+does not transfer, for a reason worth recording. His argument turns on a
+coincidence: the derivative of the area functional under pushing an edge is
+$\sigma(t)-\tau(t)$, and the same combination is forced to sum to zero because
+the cap boundary and the niche polyline join the \emph{same} pair of endpoints.
+In the quotient, $\partial K^-$ acquires the horizontal cut at $y=\tfrac12$,
+where the polyline contributes nothing, and the identity becomes
+$\sum_{t\ne\mathrm{cut}}(\sigma-\tau)(v_t\cdot u_0)=\sigma_{\mathrm{cut}}>0$,
+which is consistent with $\sigma\le\tau$ throughout. One obtains an inequality
+where Baek obtains an equality, and it is the equality that his argument
+consumes.
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of
 \eqref{eq:ie} are machine-checked in Lean~4 without Mathlib as
 \verb|niche_below_apex|, \verb|niche_disjoint| and
-\verb|union_area_of_disjoint|; \verb|lake build| is clean with no \verb|sorry|,
+\verb|union_area_of_disjoint|. The identity underlying $\Sigma$'s middle-phase
+equation is also formalised: writing $D$ for the formal derivative in the
+half-angle, $D(Dv)=-(v+1)$ for every arc of constant term $-1$, which is
+$4v''=-(v+(1,1))$ for the bracket of \eqref{eq:x6}
+(\verb|Trig.sol6_bracket|, proved by \verb|rfl| and depending on no axioms). \verb|lake build| is clean with no \verb|sorry|,
 and \verb|#print axioms| reports nothing beyond \verb|propext| and
 \verb|Quot.sound|. Trigonometric quantities are carried as formal symbols with
 the sign hypotheses $\sin t\ge0$, $\cos t\ge0$, which is all

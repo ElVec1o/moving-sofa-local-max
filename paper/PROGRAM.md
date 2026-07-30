@@ -1,3 +1,87 @@
+## A GAP IN MY OWN REDUCTION, AND WHAT CONNECTEDNESS DOES AND DOES NOT GIVE
+
+Found while attempting B1d.  Last session's quotient reduction
+|Sigma| = 2(|K^-| - |U ^ K^-|) uses M := max_t c_y(t) < 1/2, which is a property of
+ROMIK'S trajectory, NOT of an arbitrary competitor.  And a competitor with
+M >= 1/2 has OVERLAPPING niches, which by inclusion-exclusion makes
+|U u rho U| smaller and hence |Sigma| = |C2| - |U u rho U| LARGER.  So overlap is
+advantageous for area and cannot be assumed away on extremal grounds.
+
+Attempted rescue: connectedness.  A moving sofa is connected by definition, and if
+the apex sits above the axis the down-opening wedge Q_t lies above the up-opening
+rho Q_t, so their union might remove a full vertical segment and cut the body.
+
+MEASURED THRESHOLD.  For a single t, Q_t u rho Q_t removes a full vertical segment
+exactly when the apex height exceeds h*(t):
+
+        t        h*(t)      c_y(t) for Romik
+      0.05     0.500500        0.038029
+      0.10     0.501003        0.076557
+      0.20     0.502027        0.152150
+      0.30     0.503093        0.221049
+      0.50     0.505463        0.327543
+      pi/4     0.510000        0.387838
+      1.00     0.515574        0.353399
+      1.20     0.525722        0.263874
+      1.35     0.544552        0.167212
+      1.45     0.582381        0.092553
+      1.52     0.696695        0.038640
+
+Two readings, one positive and one negative.
+
+POSITIVE: h*(t) > 1/2 for EVERY t in (0, pi/2).  So the wedge pair never cuts when
+the apex is at or below 1/2 -- the separation threshold M < 1/2 is exactly the right
+one, and Romik's trajectory clears it everywhere with room (0.3878 against h* >= 1/2).
+
+NEGATIVE: h*(t) exceeds 1/2 strictly in the interior, and h*(t) -> 1/2 only as
+t -> 0.  So a single-t connectedness argument CANNOT force M <= 1/2: a competitor
+could carry c_y(t) slightly above 1/2 at interior t without being cut by that pair
+alone.  My conjectured lemma "connected implies M <= 1/2" is FALSE as stated.
+
+What survives is the pointwise constraint c_y(t) <= h*(t) for every connected
+ambidextrous sofa.  Whether the FULL family of wedge pairs (rather than one t at a
+time) forces M < 1/2 is open and is the natural next question; a competitor evading
+the constraint must thread between all of them simultaneously.
+
+CONSEQUENCE FOR THE CLAIM.  The quotient reduction is CONDITIONAL on M < 1/2, and
+the note now says so explicitly (Proposition, conditional form).  Last session's
+statement of it was too strong and has been corrected.
+
+## B1d: the prescribed-edge class does not work either
+
+The idea was to fix sigma_cut as a class constant.  It fails for a simple reason:
+pushing an edge e(t) of the cap generally CHANGES the length of the top edge at
+y = 1/2, so the class of caps with a prescribed horizontal edge is not closed under
+the perturbations the balancing argument needs.  Fixing sigma_cut and perturbing are
+incompatible.
+
+That is the THIRD failed attempt to transfer the existence half of Baek's
+architecture (B1 direct, B1b quotient, B1d prescribed-edge).  Per Rule 16 that is
+the signal to stop iterating on this strategy rather than attempt a fourth variant.
+
+## STOPPING RULE (agreed threshold, recorded in advance)
+
+The deliverable is now the note: separation theorem, closed form for f1, ODE6 with
+its characteristic-exponent explanation, and the conditional quotient reduction.
+That is a small, correct, new contribution to an open problem.
+
+The ambidextrous OPTIMALITY theorem requires an existence argument, and three
+attempts to import Baek's have failed for three different reasons.  Continuing is
+justified only by a genuinely different idea for existence, not another adaptation.
+Concretely, work continues only if one of these is established:
+
+  (S1) the full wedge family forces M < 1/2 for connected ambidextrous sofas
+       (removing the conditional hypothesis), or
+  (S2) an existence argument for a maximum ambidextrous sofa of the required
+       regularity that does not go through balancing at all, or
+  (S3) a proof that Baek's Ch. 7-8 concavity machinery yields the CONDITIONAL
+       theorem as stated, which would be a real result even with the hypothesis.
+
+If none of (S1)-(S3) is in hand after one further session, the honest outcome is to
+finish the note and stop.  (S3) is the most likely to succeed and is the cheapest,
+because it consumes the quotient reduction directly and needs no new existence
+theory.
+
 ## B1b: THE RHO-QUOTIENT REDUCTION — the ambidextrous problem becomes a ONE-niche problem
 
 This is the new content of this turn, and it is a consequence of the separation
