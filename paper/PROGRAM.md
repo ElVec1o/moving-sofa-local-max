@@ -1,3 +1,52 @@
+## 🔥🔥🔥 TWO NEW POSITIVE THEOREMS, FREE FROM WHAT WAS ALREADY PROVED
+
+Strict concavity had been proved and never cashed.  Q is EXACTLY quadratic on the cell, so
+
+    Q(H_Sigma + eta) = Q(Sigma) + dQ(Sigma)[eta] + (1/2) d^2Q[eta]
+
+exactly, with no remainder.  dQ(Sigma) = 0 and Q(Sigma) = A_R* are proved, and the Garding
+chain gives (1/2) d^2Q[eta] <= -1.6013 J1 - 0.3710 J2.  Hence:
+
+  THEOREM (STABILITY).  For every ambidextrous moving sofa T whose cap data
+  H = H_Sigma + eta lies in D,
+
+      |T|  <=  A_R*  -  0.3710 ||eta||^2_{L^2(0,pi/2)} .
+
+  COROLLARY (UNIQUENESS).  Sigma is the UNIQUE ambidextrous moving sofa of area A_R* with
+  cap data in D; every other one loses area by the quadratic amount above.
+
+Uniqueness: equality forces eta = 0 on [0,pi/2]; and with eta = 0 there the E2 term of the
+second variation contributes -int_0^{pi/2-beta} eta'(t+pi/2)^2 dt, negative unless eta is
+constant on [pi/2,pi], and eta(pi/2) = 0 makes that constant zero.
+
+The constant 0.3710 is the one the concavity proof delivers.  Measured, the sharp constant
+against the L^2(0,pi) norm is larger: sup (1/2)d^2Q/||eta||^2 = -0.7059, -0.7188, -0.7255,
+-0.7285 at m = 32, 64, 128, 256.
+
+Neither result needed a new argument -- only assembly.  Both are PROVED.
+
+## ITEM 2 (task #21): TIME-BOXED AND STOPPED, with the structure identified
+
+Literature search for the doubly-covered area of a tangent-segment sweep turned up
+envelope/caustic theory but no usable formula.  Deriving instead: the flux
+(1/2) int alpha_2^2 IS the signed area of the closed curve formed by the corner path, the
+envelope and the two end segments; the swept area is the area of its image.  For a closed
+curve with a self-intersection,
+
+    signed area  -  image area  =  the area of the doubly-wound LOBE.
+
+So the excess is a lobe area -- which is exactly the Mode-2 / signed-Green phenomenon this
+project identified years ago in the second-variation line, reappearing.  Lobe areas are not
+concave functionals of H in any obvious way, so the route needs an idea rather than a
+search.  Stopped there per Rule 2 rather than grinding.
+
+## ITEM 3: the abstract now states the independence of (c)
+
+One clause, not a paragraph: "The separation inequality is independent of (RC) and cannot
+be removed."  The abstract otherwise leads with the positive results -- the niche formula,
+(RC) implies injectivity, Q(Sigma) = A_R*, dQ = 0, d^2 Q < 0, and now the stability bound
+and uniqueness -- with the two limits in a final short paragraph.
+
 ## HYPOTHESIS (c) IS INDEPENDENT OF (RC) -- FALSIFIED, NOT PROVED (item 2)
 
 Rule 3 first, and it paid.  Add to H the function delta*sin(theta - pi/2) on [pi/2,pi],

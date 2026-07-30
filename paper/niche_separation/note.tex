@@ -26,32 +26,38 @@ and the obstruction to a concavity bound}
 \begin{abstract}
 Baek proved that Gerver's sofa is the maximum-area moving sofa for a corridor with one
 corner, by writing a sofa as a convex cap minus a niche and obtaining optimality from the
-concavity of a quadratic upper bound. We ask what that architecture gives for the
-ambidextrous moving sofa problem, which is open, and for Romik's candidate $\Sig$ of area
+concavity of a quadratic upper bound. We carry that architecture to the ambidextrous
+moving sofa problem, which is open, and to Romik's candidate $\Sig$ of area
 $A_R^\ast=1.6449552184\ldots$
 
 The niche of an ambidextrous sofa is expressed exactly in convex-linear data: writing
 $H(\theta)=h_K(\mu_\theta)$ for the cap's support function, the two arms
 $\alpha_1,\alpha_2$ and the reach $\sigma$ are affine in $H$, and
 $|N|=\int_0^{\pi/2}[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2
--\tfrac12(\alpha_1^-)^2]\,dt$ whenever the associated sweep is injective. Injectivity is
-implied by a single linear condition (RC), that the cap's radius of curvature be at most
-the corridor width, through a forced-oscillator argument whose kernel is non-negative
-because the rotation angle is $\pi/2$. (RC) is classical --- by the dual of Blaschke's
-rolling theorem it says the cap slides freely inside a unit ball, up to the corridor
-facets --- so what is new is its use, not the condition. Separately, $\Sig$'s two niches are disjoint, the
-relevant constant being $M=\tfrac12-(\sqrt2-f_1\sqrt{4-2\sqrt2})$.
+-\tfrac12(\alpha_1^-)^2]\,dt$ whenever the associated sweep is injective. Injectivity
+follows from a single linear condition (RC), that the cap's radius of curvature be at most
+the corridor width; the proof reduces each of the three required statements to a forced
+harmonic oscillator whose kernel is non-negative because the rotation angle is $\pi/2$.
+(RC) is classical --- by the dual of Blaschke's rolling theorem it says the cap slides
+freely inside a unit ball, up to the corridor facets --- so what is new is its use.
 
-For the functional $Q=|C_2|-2V$ we prove $Q(\Sig)=A_R^\ast$, $\delta Q(\Sig)=0$ --- Romik's
-ODE families are exactly the critical-point equations of $Q$, identically in his constants
---- and $\delta^2Q\le0$ on the cell of $\Sig$'s sign pattern. Together these give an upper
-bound $|T|\le A_R^\ast$ on an explicit convex domain of caps containing $\Sig$.
+For the functional $Q=|C_2|-2V$ we prove $Q(\Sig)=A_R^\ast$; that $\delta Q(\Sig)=0$, so
+Romik's ODE families are exactly the critical-point equations of $Q$, identically in his
+constants; and that $\delta^2Q<0$, with explicit constants. On the convex domain
+$\mathcal D$ cut out by (RC), a separation inequality and $\Sig$'s own sign pattern, this
+gives
+\[
+  |T|\ \le\ A_R^\ast-\tfrac{371}{1000}\|H-H_\Sig\|^2_{L^2(0,\pi/2)}
+\]
+for every ambidextrous sofa $T$ with cap data in $\mathcal D$, and $\Sig$ as the unique
+member attaining $A_R^\ast$. The domain is a $C^2$-neighbourhood of $\Sig$: its radius
+along $\sin(2k\theta)$ scales like $k^{-2}$.
 
-Two limitations are recorded rather than smoothed over. The functional is the exact flux of
-the advancing wedge boundary, so $V\ge|N|$ by Reynolds' transport theorem, and $Q$ bounds
-nothing off the domain where the sweep is injective. And the construction does not recover
-Gerver's sofa: its cap violates (RC), its sweep is not injective, and $V>|N|$ there
-accordingly. Optimality of $\Sig$ remains open.
+Two limits are recorded rather than smoothed over. The separation inequality is
+independent of (RC) and cannot be removed. And $V$ is the exact flux of the advancing
+wedge boundary, so $V\ge|N|$ by Reynolds' transport theorem and $Q$ bounds nothing where
+the sweep fails to be injective; in particular the construction does not recover Gerver's
+sofa, whose cap violates (RC). Optimality of $\Sig$ remains open.
 \end{abstract}
 
 \section{Setting}
@@ -1660,6 +1666,43 @@ $\delta Q(\Sig)=0$. A concave function with a critical point on a convex set att
 maximum there, so $Q(H)\le Q(\Sig)$, and $Q(\Sig)=A_R^\ast$ by Theorem~\ref{thm:QA}.
 Combining, $|T|\le Q(H)\le A_R^\ast$.
 \end{proof}
+
+Because $Q$ is exactly quadratic on the cell and $\delta Q(\Sig)=0$, the same ingredients
+give more than a bound.
+
+\begin{theorem}[Stability]\label{thm:stab}
+For every ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in $\mathcal D$,
+\begin{equation}\label{eq:stab}
+  |T|\ \le\ A_R^\ast-\tfrac{371}{1000}\,\|\eta\|_{L^2(0,\pi/2)}^2 .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+On the cell $\mathcal C$ the functional $Q$ is a quadratic polynomial in $H$, so
+$Q(H_\Sig+\eta)=Q(\Sig)+\delta Q(\Sig)[\eta]+\tfrac12\delta^2Q[\eta]$ exactly. The first
+variation vanishes by Theorem~\ref{thm:el} and $Q(\Sig)=A_R^\ast$ by
+Theorem~\ref{thm:QA}, while \eqref{eq:garding} gives
+$\tfrac12\delta^2Q[\eta]\le-1.6013\,J_1-0.3710\,J_2\le-0.3710\,\|\eta\|^2_{L^2(0,\pi/2)}$.
+Combining with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
+\end{proof}
+
+\begin{corollary}[Uniqueness]\label{cor:uniq}
+$\Sig$ is the unique ambidextrous moving sofa of area $A_R^\ast$ whose cap data lies in
+$\mathcal D$; every other one has strictly smaller area, by the amount \eqref{eq:stab}.
+\end{corollary}
+
+\begin{proof}
+Equality in \eqref{eq:stab} forces $\|\eta\|_{L^2(0,\pi/2)}=0$, and then $\eta\equiv0$ on
+$[0,\pi/2]$; Theorem~\ref{thm:concave} shows $\delta^2Q<0$ strictly unless $\eta\equiv0$
+throughout, since with $\eta\equiv0$ on $[0,\pi/2]$ the $E_2$ term of \eqref{eq:Q2}
+contributes $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2dt<0$ unless $\eta$ is constant on
+$[\pi/2,\pi]$, and $\eta(\pi/2)=0$ makes that constant zero.
+\end{proof}
+
+The constant in \eqref{eq:stab} is the one the proof of Theorem~\ref{thm:concave} delivers.
+Measured, the sharp constant for the $L^2(0,\pi)$ norm is larger:
+$\sup\tfrac12\delta^2Q[\eta]/\|\eta\|^2_{L^2(0,\pi)}$ equals
+$-0.7059,-0.7188,-0.7255,-0.7285$ at $m=32,64,128,256$.
 
 \begin{remark}[The size of $\mathcal D$, and what Theorem~\ref{thm:final} is not]
 \label{rem:notopt}
