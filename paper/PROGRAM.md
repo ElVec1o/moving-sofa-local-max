@@ -1217,6 +1217,61 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## 🔥🔥🔥 S8 RESULT: THE INTERSECTION RECONSTRUCTION IS NEGATIVE DEFINITE
+
+The Hessian of |R_n| at K=16, n_theta=1201 (Rule-8 checkpointed, 528 entries,
+12.4 min):
+
+    spectrum min -3191.1305    max -2.892347
+    8 largest: -97.4496 -96.9738 -51.1693 -48.8627 -28.0820 -23.3920
+               -6.0293 -2.8923
+    translation projected out:  max -6.029329
+    NEGATIVE DEFINITE,  margin 6.029329
+
+This is a Σ ladder against a reconstruction with NO exposure to either failure
+mode: no chords (Mode 1 impossible) and a region area rather than a signed Green
+sum (Mode 2 impossible), and superset validity is immediate from
+`superset_principle`, which is machine-verified.  For comparison the old margin
+under the signed evaluation was 6.4563; the intersection bound is slightly looser,
+as a coarser bound should be.
+
+WHAT THIS IS, PRECISELY.  One (K, n) pair.  The construction trades "equality at
+the base point" for "uniformity in n", so certifying Theorem 9 this way now needs
+TWO ladders, not one:
+
+  * the n-ladder, that the margin does not degrade as n grows (the superset slack
+    C/n -> 0 while the margin must stay bounded below);
+  * the K-ladder, as before, plus the tail bound above K.
+
+Neither is done.  What IS established is that the route exists and its first rung
+is clean, after two sessions in which every route was breaking.
+
+Command: `python3 sigma_inter_hess.py 16 1201 1e-4 40` -> sigma_inter_K16_n1201.npy.
+
+## G10: GERVER'S CHORD-FREE HESSIAN IS NEGATIVE DEFINITE AT K=16 AND K=24  🔥🔥
+
+The chord-free reconstruction's second variation, computed against A_rep (not the
+chorded A_rec), Rule-8 checkpointed:
+
+    K=16  spectrum min -1473.727246   max -4.273730
+          translation projected out:  max -5.021155   NEGATIVE DEFINITE
+    K=24  spectrum min -3389.505756   max -4.186595
+          8 largest: -70.8345 -61.2017 -40.5484 -34.6700 -17.4225 -14.8465
+                     -4.9487 -4.1866
+          translation projected out:  max -4.948650   NEGATIVE DEFINITE
+
+Margin 5.021155 -> 4.948650 from K=16 to K=24, a drop of 0.0725.  So the K=16
+result is NOT a truncation artifact, and the margin is settling near 4.95.
+
+Combined with A_rep(c_G) = A* to 7.2e-11, stationarity to +-1.7e-10 on every mode,
+the containment certificate, and the corner criterion, Part II's local chain now
+holds at K=24 with only two items open: G8b (the corner margin analytically rather
+than as a certificate) and G9 (a tail bound against A_rep rather than A_rec).
+
+Commands: `gerver_rep_hess.py 16 22 1e-5`, `gerver_rep_hess.py 24 20 1e-5`.
+Sizing note carried: high-k entries are much slower than a linear ETA suggests
+(oscillatory mp.quad); K=24 took 48 minutes against a 26-minute initial estimate.
+
 ## S12: the N12 bite does NOT absorb the lens — they live on OPPOSITE branches  💧💧
 
 Time-boxed cheap test before committing to the expensive route.  The Mode-2 repair
