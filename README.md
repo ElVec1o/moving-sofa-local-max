@@ -66,7 +66,10 @@ proof; **HEURISTIC** = computational evidence only.
 | 35 | $\delta^2Q\le0$ on $\Sigma$'s cell, with explicit constants $-1.6013,-0.3710,0,-0.005$; strict for $\eta\ne0$. So $Q$ is concave there | PROVED |
 | 36 | $\sigma-\alpha_1=\cos t\,x'(t)$: the middle term of the niche formula is $\tfrac12\int\cos^2t\,x'^2$, an energy of the intercept path | PROVED |
 | 37 | $A_R^\ast=1+4\tan^2\beta+\beta$, and $Q(\Sigma)$ matches it to $2.7\cdot10^{-51}$ | PROVED / HEURISTIC |
-| 38 | **Optimality of $\Sigma$** | **not proved** |
+| 38 | **(RC) holds for $\Sigma$**, in closed form: $\max(H+H'')_{\mathrm{ac}}=\tfrac34f_1\sqrt{4-2\sqrt2}\cos(\tfrac\beta2+\tfrac\pi8)=0.8388\ldots<1$, and it suffices that $f_1^2\le16/(9(4-2\sqrt2))$ | PROVED |
+| 39 | $Q(\Sigma)=A_R^\ast$, proved structurally: (RC) gives $V=\lvert N\rvert$, separation gives $\lvert\Sigma\rvert=\lvert C_2\rvert-2\lvert N\rvert$. No integral is evaluated | PROVED |
+| 40 | **The construction does not recover Gerver.** (RC) fails there ($1.3960$), its face-2 sweep is not injective ($33\,002$ of $158\,802$ pairs), and $V>\lvert N\rvert$ accordingly — though Gerver *does* satisfy the one-corner injectivity condition. The two conditions are independent | PROVED |
+| 41 | **Optimality of $\Sigma$** | **not proved** |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the

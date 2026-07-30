@@ -1416,6 +1416,101 @@ on one $51$-digit numerical identity and one geometric hypothesis, rather than o
 measured conditions. Optimality of $\Sig$ remains open.
 \end{remark}
 
+\section{\texorpdfstring{$\Sig$}{Sigma} satisfies (RC), and \texorpdfstring{$Q(\Sig)=A_R^\ast$}{Q = A_R}}
+\label{sec:rcsigma}
+
+\begin{proposition}\label{prop:rcsigma}
+$\Sig$ satisfies (RC). The surface-measure density is, block by block,
+\[
+  H+H''=
+  \begin{cases}
+    0 & \theta\in[0,\beta)\ \text{and}\ \theta\in(\pi-\beta,\pi],\\
+    \tfrac12 & \theta\in(\pi/2-\beta,\pi/2)\ \text{and}\ \theta\in(\pi/2,\pi/2+\beta),\\
+    \tfrac{3K}{4}\cos\bigl(\tfrac\theta2+\tfrac\pi8\bigr) & \theta\in[\beta,\pi/2-\beta],\\
+    \tfrac{3K}{4}\sin\bigl(\tfrac{\theta-\pi/2}{2}+\tfrac\pi8\bigr)
+      & \theta\in[\pi/2+\beta,\pi-\beta],
+  \end{cases}
+  \qquad K=f_1\sqrt{4-2\sqrt2},
+\]
+plus the ceiling atom at $\theta=\pi/2$. Hence
+\[
+  \max(H+H'')_{\mathrm{ac}}
+  =\tfrac{3K}{4}\cos\bigl(\tfrac\beta2+\tfrac\pi8\bigr)=0.8388253494\ldots<1 ,
+\]
+and already the amplitude satisfies $\tfrac34K=0.9765387687\ldots<1$, so (RC) holds as
+soon as
+\begin{equation}\label{eq:rccrit}
+  f_1^2\ \le\ \frac{16}{9\,(4-2\sqrt2)}=1.5174\ldots,
+  \qquad\text{against } f_1^2=1.4470\ldots
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Each block of $H$ is read off the three closed forms of Theorem~\ref{thm:el}. On the
+first phase $H=\cos\theta+\tfrac12\sin\theta$, so $H+H''=0$; the shifted last phase is
+the same. On the last phase $H=(1-\tfrac23a_1)\cos\theta+\tfrac12\sin\theta+\tfrac12$ and
+on the shifted first phase $H=(2a_1-1)\sin\theta+\tfrac12\cos\theta+\tfrac12$, each giving
+$H+H''=\tfrac12$. On the middle phase only the half-angle terms survive
+differentiation twice, contributing a factor $1-\tfrac14$, so
+$H+H''=\tfrac34(f_1\cos\tfrac\theta2+f_2\sin\tfrac\theta2)$ and, on the shifted middle
+phase, $\tfrac34(f_1\sin\tfrac\theta2-f_2\cos\tfrac\theta2)$. Both have amplitude
+$\tfrac34\sqrt{f_1^2+f_2^2}=\tfrac34f_1\sqrt{4-2\sqrt2}$ by
+$f_2=(1-\sqrt2)f_1$, and phase $\pi/8$ because $-f_2/f_1=\sqrt2-1=\tan(\pi/8)$. On
+$[\beta,\pi/2-\beta]$ the argument $\tfrac\theta2+\tfrac\pi8$ runs over
+$[0.5375,1.0333]\subset[0,\pi/2]$, where cosine decreases, so the maximum is at
+$\theta=\beta$.
+\end{proof}
+
+Criterion~\eqref{eq:rccrit} is strictly stronger than the separation criterion
+$f_1^2<(2+\sqrt2)/2=1.7071\ldots$ of Theorem~\ref{thm:main}: within the family in which
+$f_1$ is the free parameter, (RC) implies $M<\tfrac12$.
+
+\begin{theorem}\label{thm:QA}
+$Q(\Sig)=A_R^\ast$.
+\end{theorem}
+
+\begin{proof}
+$\Sig$ satisfies (RC) by Proposition~\ref{prop:rcsigma}, so $V(\Sig)=|N(\Sig)|$ by
+Theorems~\ref{thm:rc} and~\ref{thm:cross}. The niches are disjoint by
+Theorem~\ref{thm:main}, and $C_2$ is $\rho$-invariant, so
+$|\Sig|=|C_2|-|N|-|\rho N|=|C_2|-2|N|$. Hence
+$Q(\Sig)=|C_2|-2V(\Sig)=|C_2|-2|N|=|\Sig|=A_R^\ast$.
+\end{proof}
+
+No integral is evaluated. Independently, with $A_R^\ast=1+4\tan^2\beta+\beta$ and the
+integrands made elementary by Proposition~\ref{prop:sigx}, the two sides agree to
+$2.7\cdot10^{-51}$ at $50$ working digits, which is a consistency check on the whole
+chain rather than a proof of it.
+
+\begin{remark}[Regression against the one-corner problem]\label{rem:gerver}
+The construction does \emph{not} recover Gerver's sofa, and this should be stated
+plainly. Applying the same machinery to Gerver's rotation path:
+\begin{itemize}
+\item Gerver satisfies the one-corner injectivity condition everywhere:
+$\alpha_1>0$ and $\alpha_2>0$ on all of $[0,\pi/2]$, as expected.
+\item (RC) \emph{fails} for Gerver's cap: $\max(H+H'')_{\mathrm{ac}}=1.3960$ near
+$\theta=\pi$.
+\item Gerver's face-2 sweep is genuinely not injective in this decomposition:
+$33\,002$ of $158\,802$ tested pairs meet interior to both segments, with
+$\min(s_{22}-\alpha_2)=-0.0944$. The face-1 sweep is injective.
+\item Consistently, $V=0.6426146$ against $|N|=|C|-|S|=0.6406$ to $0.6412$ at $481$ and
+$721$ constraints, i.e.\ $V>|N|$ as Proposition~\ref{prop:reynolds} requires.
+\end{itemize}
+So (RC) and the one-corner injectivity condition are independent: $\Sig$ satisfies the
+first and not the second, Gerver the second and not the first. The decomposition
+$N=W_2\sqcup W_1^{\mathrm{out}}$ is therefore not the one the one-corner argument uses,
+and the fact that it fails on the solved case is a standing caution about the framework,
+recorded rather than explained.
+\end{remark}
+
+\begin{remark}[The separation hypothesis for competitors]\label{rem:Mnum}
+Hypothesis (iii) remains open. Over $250$ random perturbations
+$H_\Sig+\sum_{k=1}^3c_k\sin(2k\theta)$ with $|c_k|\le a/k^2$ for
+$a=0.02,0.05,0.10$, every $H$ satisfying (RC) had $M\le0.3976$, against the required
+$M<\tfrac12$; the $(RC)$-satisfying fraction fell from $250/250$ to $34/250$ as $a$ grew.
+No counterexample and no implication.
+\end{remark}
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of

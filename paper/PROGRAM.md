@@ -1,3 +1,85 @@
+## 🎆 Q(Sigma) = A_R* IS PROVED (structurally), AND (RC) HOLDS FOR SIGMA IN CLOSED FORM
+## 🌊 BUT THE CONSTRUCTION DOES NOT RECOVER GERVER
+
+### (RC) for Sigma, in closed form (item 1)
+
+The surface-measure density block by block:
+
+    H + H'' = 0                                    theta in [0,beta) and (pi-beta,pi]
+            = 1/2                                  theta in (pi/2-beta,pi/2) and (pi/2,pi/2+beta)
+            = (3K/4) cos(theta/2 + pi/8)           theta in [beta, pi/2-beta]
+            = (3K/4) sin((theta-pi/2)/2 + pi/8)    theta in [pi/2+beta, pi-beta]
+
+with K = f1 sqrt(4-2sqrt2) = 1.3020516916 -- the SAME K as in the W formula.  Both
+non-constant blocks have amplitude (3/4)K because f2 = (1-sqrt2)f1 gives
+sqrt(f1^2+f2^2) = f1 sqrt(4-2sqrt2), and phase pi/8 because -f2/f1 = sqrt2-1 = tan(pi/8).
+On [beta,pi/2-beta] the argument runs over [0.5375,1.0333] inside [0,pi/2] where cosine
+decreases, so
+
+    max a.c. (H+H'') = (3K/4) cos(beta/2 + pi/8) = 0.83882534940 < 1,   margin 0.16117
+
+matching the measured 0.838568.  Already the AMPLITUDE is below 1, so (RC) holds as soon as
+
+    f1^2 <= 16/(9(4-2sqrt2)) = 1.5174...,   against f1^2 = 1.4470...
+
+That criterion is STRICTLY STRONGER than the separation criterion f1^2 < (2+sqrt2)/2 =
+1.7071 of the main theorem: within the family in which f1 is the free parameter,
+(RC) implies M < 1/2.
+
+### Q(Sigma) = A_R*, PROVED WITHOUT EVALUATING AN INTEGRAL
+
+Sigma satisfies (RC), so V(Sigma) = |N(Sigma)| by the injectivity theorems.  The niches
+are disjoint (M < 1/2) and C2 is rho-invariant, so |Sigma| = |C2| - |N| - |rho N| =
+|C2| - 2|N|.  Hence
+
+    Q(Sigma) = |C2| - 2V(Sigma) = |C2| - 2|N| = |Sigma| = A_R*.
+
+The symbolic integration that timed out was never needed.  The 51-digit agreement stands
+as a consistency check on the chain rather than as its proof.
+
+HYPOTHESIS (i) IS NOW ENTIRELY PROVED: Q(Sigma) = A_R*, dQ(Sigma) = 0, d^2 Q <= 0.
+
+### 🌊🌊 RULE I11 REGRESSION: THE CONSTRUCTION FAILS ON THE SOLVED CASE
+
+Applying the same machinery to Gerver's rotation path:
+
+  * Gerver satisfies the ONE-CORNER injectivity condition everywhere: alpha_1 > 0 and
+    alpha_2 > 0 on 100% of [0,pi/2].
+  * (RC) FAILS for Gerver: max a.c. H+H'' = 1.3960 near theta = pi, margin -0.396.
+  * Gerver's FACE-2 SWEEP IS NOT INJECTIVE in this decomposition: 33002 of 158802 tested
+    pairs meet interior to both segments; min(s22 - alpha_2) = -0.0944.  The face-1 sweep
+    is injective.
+  * Consistently V(Gerver) = 0.642614626 > |N| = 0.6406 (n=481) to 0.6412 (n=721), i.e.
+    V > |N| exactly as the Reynolds proposition requires.
+
+So (RC) and the one-corner injectivity condition are INDEPENDENT: Sigma satisfies the
+first and not the second; Gerver the second and not the first.  The decomposition
+N = W2 (+) W1out is therefore NOT the one Baek's argument uses.
+
+I11 says the framework must recover the known special cases before it is trusted
+elsewhere.  It does not.  This is recorded as a TENSION, not explained.  Nothing proved
+above is contradicted -- the Gerver numbers satisfy every inequality the framework
+asserts -- but the construction's scope is narrower than the problem, and (RC) is a
+substantive restriction rather than a technicality.
+
+### Hypothesis (iii): still open (item 2)
+
+Over 250 random perturbations H + sum_{k<=3} c_k sin(2k theta) with |c_k| <= a/k^2 for
+a = 0.02, 0.05, 0.10, every H satisfying (RC) had M <= 0.3976 against the required
+M < 1/2, and the (RC)-satisfying fraction fell from 250/250 to 34/250 as a grew.  No
+counterexample, no implication.
+
+### Status
+
+    (i)   Q(Sigma) = A_R*                    PROVED   <-- this session
+          dQ(Sigma) = 0                      PROVED
+          d^2 Q <= 0 on C                    PROVED
+    (ii)  the three injectivity conditions   PROVED from (RC); (RC) PROVED for Sigma
+    (iii) M < 1/2 for competitors            OPEN
+    I11   recovery of the one-corner case    FAILS
+
+Optimality of Sigma remains OPEN, and the I11 failure is the more serious of the two gaps.
+
 ## 🎆🎆🎆 CONCAVITY PROVED. THE CONDITIONAL THEOREM NOW RESTS ON ONE NUMERICAL IDENTITY.
 
 ### d^2 Q <= 0 IS PROVED (item 1)
