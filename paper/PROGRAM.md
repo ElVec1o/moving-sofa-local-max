@@ -1,3 +1,94 @@
+## A3' PROVED: max_t c_y(t) in closed form, and F1 derived rather than tabulated
+
+The separation lemma needs M := max_t c_y(t) < 1/2.  This is now closed form.
+
+### The reduction
+
+On Romik's middle piece [beta, pi/2-beta], x_6(t) = R(t) v(t) + kappa with
+v(t) = (F1 cos(t/2) + F2 sin(t/2) - 1, -F2 cos(t/2) + F1 sin(t/2) - 1), and
+
+    kappa_{6,2} = 1/2  EXACTLY,        F2 = (1 - sqrt2) F1.
+
+So c_y(t) - 1/2 = sin(t) v_x + cos(t) v_y, and using
+S(3C^2 - S^2) = sin(3t/2), C(3S^2 - C^2) = -cos(3t/2) with S = sin(t/2),
+C = cos(t/2), this collapses to
+
+    c_y(t) - 1/2 = F1 sin(3t/2) - F2 cos(3t/2) - (sin t + cos t)
+                 = F1 sqrt(4 - 2 sqrt2) sin(3t/2 + pi/8) - sqrt2 sin(t + pi/4),
+
+using tan(pi/8) = sqrt2 - 1.  Both sinusoids peak at t = pi/4, and the expression
+is symmetric about pi/4 (verified: c_y(beta) = c_y(pi/2-beta) = 0.214380179711375),
+so the maximum is attained at t = pi/4 and
+
+    M = 1/2 - ( sqrt2 - F1 sqrt(4 - 2 sqrt2) ),
+    M < 1/2   <=>   F1^2 < (2 + sqrt2)/2.
+
+### F1, derived from the junction rather than taken from Table 2
+
+The reference implementation carried F1 as the decimal 1.202938908156911389 from
+Romik's Table 2, with a comment admitting the closed form was not resolved.  Two
+attempts to recover it from the decimal FAILED and are logged as dead ends:
+`findpoly` returns spurious degree-3 polynomials with 5-digit coefficients (19
+digits of input cannot support that), and `pslq` finds no relation in Q(sqrt2).
+
+It is not needed.  F1 is DETERMINED by the junction condition x_1(beta) = x_6(beta).
+Both x_1 and x_6 have the form R(t) v + kappa with kappa_y = 1/2, and the two
+kappa_x differ by exactly a_1/3, so R(beta)(v_1 - v_6) = (-a_1/3, 0), whence
+v_{1,x} - v_{6,x} = -(a_1/3) cos beta.  With A2 = 0 this gives
+
+    F1 = (4/3) a_1 cos(beta) / ( cos(beta/2) + (1 - sqrt2) sin(beta/2) ),
+
+and a_1, beta are already closed form:
+
+    a_1  = (1/4) sqrt( 4 + cbrt(71 + 8 sqrt2) + cbrt(71 - 8 sqrt2) )
+    beta = arctan( (1/2)( cbrt(sqrt2+1) - cbrt(sqrt2-1) ) ).
+
+VERIFICATION at 50 digits: the derived value is
+1.202938908156911389070223, agreeing with Table 2's 19-digit decimal to 7.0e-20 --
+i.e. the table value is exactly its rounding.  And the SECOND junction component,
+which the derivation did not use, is satisfied to 1.67e-51.  That independent
+check is what makes this a derivation and not a curve fit.
+
+### The numbers
+
+    F1^2        = 1.44706201675774209406641508553
+    (2+sqrt2)/2 = 1.70710678118654752440084436210
+    gap         = 0.26004476442880543033          -> M < 1/2 HOLDS
+
+    M               = 0.3878381292441942963983578
+    1/2 - M         = 0.1121618707558057036        (separation margin)
+    1 - 2M          = 0.2243237415116114072        (gap between the niches)
+
+All explicit algebraic numbers.  A3 moves HEURISTIC -> PROVED: the inequality is a
+finite comparison of closed-form algebraic numbers with a 15% margin, not a
+numerical measurement.
+
+## B3, at the design level: the rho-symmetry HALVES the construction
+
+rho is an isometry, so |rho U| = |U| exactly (measured: identical cell counts,
+43775 each).  Combined with disjointness (A4),
+
+    |Sigma| = |C2| - |U u rho U| = |C2| - 2|U|.
+
+So the ambidextrous Q needs only ONE niche handled, with one core and two tails --
+exactly Baek's shape, not two cores and four tails.  The rho-symmetry halves the
+construction instead of doubling it.  This is the answer to the scoping question
+that opened the new program.
+
+## F10 formalized: Baek's concavity criterion (all VERIFIED)
+
+    concave_critical_global          B <= 0 and C <= 0  =>  A + B + C <= A
+    segment_far_endpoint             the coefficient bookkeeping identifying
+                                     A + B + C with h(K',K')
+    concavity_of_subtracted_square   a subtracted square has C <= 0 -- the
+                                     mechanism of Baek's Thm 7.4.2
+
+38 theorems, zero sorry, axioms only propext and Quot.sound.  Recorded honestly:
+these formalize the ARITHMETIC CORE of Thm 7.1.5, not the convex-domain theory
+itself (which needs Minkowski sums and support functions over the reals, i.e.
+Mathlib).  The point of formalizing the core is that it is the step which makes the
+second variation unnecessary, and it is now machine-checked.
+
 # NEW PROGRAM (2026-07-30): the AMBIDEXTROUS problem via Baek's architecture
 
 GOAL: prove that Romik's ambidextrous sofa Σ, area A_R* = 1.6449552184, is the

@@ -709,4 +709,46 @@ theorem niche_disjoint {M H y : Int} (h : 2*M < H)
 theorem union_area_of_disjoint {u ru ov total : Int}
     (hie : total = u + ru - ov) (hdisj : ov = 0) : total = u + ru := by omega
 
+/-! ## F10 — Baek's concavity criterion, the step that removes the second variation
+
+Baek's Theorem 7.1.5: on a convex domain, a CONCAVE QUADRATIC functional attains
+its global maximum at `K` as soon as the directional derivative `Df(K;·)` is
+nonpositive.  No second variation, no eigenvalue ladder, no tail bound.
+
+The arithmetic core is this.  Along the segment `λ ↦ c_λ(K,K')` a quadratic
+functional is a quadratic polynomial
+
+    f(c_λ(K,K')) = A + Bλ + Cλ²,
+    A = h(K,K) = f(K),
+    B = h(K,K') + h(K',K) - 2h(K,K) = Df(K;K'),      (Baek Lemma 7.1.4)
+    C = h(K,K) - (h(K,K') + h(K',K)) + h(K',K'),
+
+so that `f(K') = f(c_1(K,K')) = A + B + C`.  Concavity of `f` says `C ≤ 0`, and
+criticality says `B ≤ 0`; together they give `f(K') ≤ f(K)` for EVERY `K'`, which
+is global maximality.  F10a is that step; F10b records the coefficient bookkeeping
+that identifies `A + B + C` with `f(K')`. -/
+
+/-- **F10a (concave + critical ⟹ global max).**  If the directional derivative
+    coefficient `B` and the concavity coefficient `C` are both nonpositive, the
+    value at the far endpoint does not exceed the value at `K`. -/
+theorem concave_critical_global {A B C : Int} (hB : B ≤ 0) (hC : C ≤ 0) :
+    A + B + C ≤ A := by omega
+
+/-- **F10b (segment coefficients).**  With `A`, `B`, `C` read off as above from a
+    bilinear `h`, the far endpoint value `A + B + C` is exactly `h(K',K')`.  This
+    is the bookkeeping that lets F10a be applied. -/
+theorem segment_far_endpoint (hKK hKK' hK'K hK'K' : Int) :
+    hKK + (hKK' + hK'K - 2*hKK)
+        + (hKK - (hKK' + hK'K) + hK'K') = hK'K' := by omega
+
+/-- **F10c (concavity from a subtracted square).**  Baek's Theorem 7.4.2 makes `Q`
+    concave by SUBTRACTING Mamikon regions, whose areas are `½∫α²` with `α`
+    convex-linear — hence convex quadratics.  The mechanism is just that the
+    concavity coefficient of a subtracted square is nonpositive: if the quadratic
+    part of `f` is `-d·w²` with `d ≥ 0`, then `C ≤ 0`. -/
+theorem concavity_of_subtracted_square {d w C : Int} (hd : 0 ≤ d)
+    (hC : C = -(d*(w*w))) : C ≤ 0 := by
+  have h1 : 0 ≤ d*(w*w) := Int.mul_nonneg hd (sq_nonneg_int w)
+  omega
+
 end MovingSofa
