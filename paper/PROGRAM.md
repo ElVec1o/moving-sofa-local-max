@@ -1,3 +1,104 @@
+## 🌊🌊🌊 RULE 4 NOVELTY AUDIT AGAINST BAEK 2024 — PART II IS SUBSUMED AND WAS ALREADY KNOWN
+
+Read: Jineon Baek, "Optimality of Gerver's Sofa", arXiv:2411.19826v1, 29 Nov 2024,
+119 pages.  This audit should have been run at the start of the program; running it
+now invalidates a large part of it.
+
+### What Baek proves
+
+Definition 1.1.1: the hallway is L = H_L ∪ V_L with H_L = (−∞,1]×[0,1] and
+V_L = [0,1]×(−∞,1] — ONE right-angled corner, the CLASSICAL problem.  Theorem 1.1.1:
+Gerver's sofa attains the maximum area 2.2195…  So global optimality for the
+classical problem is settled (peer review still pending as of this audit).
+
+### Baek's method, and why it is structurally better than ours
+
+  1. Reduce to MONOTONE sofas with rotation angle exactly π/2 (Ch. 3–4), repairing
+     a genuine logical gap in Gerver's own balancing argument (§1.3.2: balancing can
+     BREAK connectedness of the polygon intersection — Figure 1.6).
+  2. Prove an INJECTIVITY CONDITION on the rotation path via a differential
+     inequality, solved by bootstrapping f₀ → f₁ → … → f₁₁ ≥ 1 (Figure 1.10).
+     Three iterations suffice numerically; he does eleven "to minimize computer
+     assistance".
+  3. Build an OVERESTIMATING REGION R ⊇ S shaped like Gerver's niche (one core, two
+     tails), cutting the cap at a specific angle φ ∈ [0.039, 0.040].
+  4. Define Q(K,B,D) := |K| − 𝒥(γ) on a CONVEX DOMAIN ℒ of triples of convex bodies
+     with linear constraints, where 𝒥 is the curve area functional.
+  5. Prove Q is QUADRATIC on ℒ (support functions / Brunn–Minkowski) and GLOBALLY
+     CONCAVE (via MAMIKON'S THEOREM: the Mamikon regions have area linear in K, so
+     Q is a linear functional minus convex quadratics).
+  6. Show Gerver's G is a critical point of Q using ROMIK'S local-optimality ODEs.
+  7. Concave + local ⟹ global: Q(K,B,D) ≥ Q(K*,B*,D*) ≥ |S*|, so |G| ≥ |S*|.
+
+THE DECISIVE STRUCTURAL POINT.  Our entire program is SECOND-VARIATION: assemble
+Hessians, prove negative definiteness, weld a tail.  Baek never computes a second
+variation.  He constructs an upper bound that is quadratic and globally concave, so
+only the FIRST derivative is needed, and concavity does globally what our Hessian
+ladders were trying to do locally.  Our method is strictly weaker than the available
+one.
+
+### Part II (Gerver local maximality) is dead twice over
+
+  (a) SUBSUMED: Baek proves GLOBAL optimality, strictly stronger than local.
+  (b) ALREADY KNOWN: Baek states plainly that the derivation S_max = G "is
+      essentially done in the existing works establishing the local optimality of G
+      [Ger92; Rom18; Den24]".  So local optimality of Gerver's sofa was in the
+      literature BEFORE Baek, in three separate places.
+
+The one distinction worth recording, and it does not rescue the result: Gerver's and
+Romik's "local optimality" is a FIRST-ORDER derivation assuming the contact
+structure, whereas Part II attempted a genuine SECOND-ORDER statement over all
+perturbations without assuming the structure.  Stronger in kind, but of a claim that
+is now a corollary of Baek.  Part II should be retired, not repaired.
+
+### The φ coincidence is not a coincidence
+
+Baek cuts the cap at φ ∈ [0.039, 0.040].  Our measured φ = 0.039177 is the same
+angle, and it is exactly where we independently found that Gerver's contact arc A is
+CONSTANT on [0,φ] (verified to 3e-31).  Baek builds his core/tails decomposition
+precisely around that degeneracy.  So our hardest-won structural discovery is a
+known feature of the problem that the successful proof is organised around.
+
+### What survives the audit
+
+  * ROMIK'S AMBIDEXTROUS SOFA Σ IS STILL OPEN.  Baek's hallway has one corner; the
+    ambidextrous problem requires turning both ways and is not addressed anywhere in
+    his 119 pages.  A_R* = 1.6449552184 is still only a conjectured optimum, derived
+    by Romik from local optimality exactly as Gerver derived his.  This is a real
+    open problem and it is where the remaining value is.
+  * FORMALIZATION.  Baek's proof is 119 pages and peer review is pending.  Nothing
+    of it is machine-checked.  Our Lean development (32 theorems, zero sorry, axioms
+    only propext/Quot.sound) is a genuine asset and the natural target is Baek's
+    argument, or the ambidextrous analogue of it.
+  * The Mode-2 lemma (signed area ≠ region area, `bowtie_signed_zero` /
+    `square_signed`) is a real cautionary result for anyone computing area bounds
+    from Green sums, and is machine-checked.
+
+### What does NOT survive
+
+N1 (superset principle) is Baek's overestimating region R — the same idea, and ours
+is a rediscovery.  The Toeplitz/symbol machinery (M1–M4), the chord-free
+reconstruction, the lens analysis, and every ladder margin are all internal to the
+second-variation route, which the concavity route makes unnecessary.  They are
+salvage, not results.
+
+### Consequence for the plan
+
+The correct move is NOT to turn the remaining yellow/white atoms green.  Most of
+them certify a second-variation program for a theorem that is either already proved
+(Gerver) or better attacked another way (Σ).  Finishing them would be the last-mile
+failure mode of Rule 16 applied to a target that has moved.
+
+The re-aimed program:
+  A. Transfer Baek's architecture to the ambidextrous problem: monotone reduction,
+     injectivity by differential inequality, an overestimating region respecting the
+     ρ-symmetry (two cores / four tails, or a ρ-quotient with one core and two),
+     Q quadratic on a convex domain of convex-body tuples, concavity by Mamikon,
+     criticality from Romik's ambidextrous ODEs.
+  B. Formalize in Lean: the concavity engine (Mamikon, quadraticity of Q via support
+     functions) is far more formalizable than any Hessian ladder, because it is
+     closed-form convex geometry with no numerics.
+
 # THE PROGRAM — formal ledger toward the complete solution
 
 Status legend: **[P]** proved (symbolic/pen-level, machine-verified where noted) ·
