@@ -1,3 +1,99 @@
+## B1 ANSWERED: Baek's balancing argument does NOT transfer as-is  💧💧
+
+Read Baek Ch. 3-4 in full.  His balancing engine is a COINCIDENCE between two
+things, and the coincidence is what breaks for two corners.
+
+### What makes his argument work
+
+Working with polygon caps and the functional A_Theta(K) = |C_Theta(K)| - |N_Theta(K)|:
+
+  * Lemma 3.4.6 (the identity).  Following the polyline p_K from right to left,
+    C_K^+(omega) - A_K^-(0) = sum_{t} tau_K(t) v_t.  Following the upper boundary
+    dK from right to left gives the SAME endpoints, so also
+    C_K^+(omega) - A_K^-(0) = sum_t sigma_K(t) v_t.  Subtracting,
+        sum_t (tau_K(t) - sigma_K(t)) (v_t . u_0) = 0,   with v_t . u_0 < 0.
+  * Lemma 3.4.7 (the derivative).  Pushing the edge e_K(t) outward by epsilon
+    changes the functional by (sigma_K(t) - tau_K(t)) epsilon + O(eps^2).
+
+The SAME quantity sigma - tau appears in both.  Hence if K is not balanced there is
+a t with sigma > tau, pushing there strictly increases the area, and a maximum must
+satisfy sigma = tau exactly (Theorem 3.4.9).  That EQUALITY is then consumed by
+Theorem 3.4.10 (a maximum polygon cap contains its niche), which is precisely the
+step that repairs the connectedness gap in Gerver's original argument.
+
+### Why it breaks for two corners
+
+The ambidextrous functional is A_ambi = |C2| - |U| - |rho U|.  On rho-symmetric
+caps the admissible perturbation must push e(t) and e(rho t) together, and
+
+    delta A_ambi = 2 [ sigma(t) - tau_U(t) - tau_U(rho t) ] epsilon,
+
+so the balance condition would have to be sigma(t) = tau_U(t) + tau_U(rho t).  But
+the geometric identity does NOT change correspondingly: dC2 and the polyline of U
+connect one pair of endpoints, while the polyline of rho U connects a DIFFERENT
+pair, because the two niches sit on opposite sides of the separating band.  There
+is no single identity forcing sum (sigma - tau_U - tau_{rho U}) v_t = 0, so the
+contradiction step does not close.
+
+Concretely: Baek's derivative and his identity are both expressions in sigma - tau.
+Ours is an expression in sigma - tau_U - tau_{rho U}, and the available identity is
+still in sigma - tau.  The mismatch is exactly one factor of the second niche.
+
+### The irony worth recording
+
+What creates the obstruction is our own Theorem (A1-A6): the niches are DISJOINT,
+separated by a band of width 0.2243 about y = 1/2.  That disjointness is what makes
+|U u rho U| = |U| + |rho U| (good, it killed the inclusion-exclusion term) and ALSO
+what puts the two niche polylines on opposite sides of the cap so that no common
+identity is available (bad, it kills the balancing step).  The same geometric fact
+helps Ch. 7-8 and hurts Ch. 3-4.
+
+### Status
+
+B1 = NO as stated.  Not proved impossible -- what is established is that Baek's
+specific mechanism does not carry over, and where.  Options, in order of appeal:
+
+  (i)  find a modified identity for the rho-symmetric setting: perhaps follow a
+       path that traverses both niche polylines and the cap boundary once each, so
+       that a single closed circuit yields the needed relation;
+  (ii) balance in the rho-QUOTIENT: work on the half-strip 0 <= y <= 1/2 with one
+       niche, where Baek's argument may apply verbatim, and lift;
+  (iii) replace the balancing existence argument entirely, since its only purpose
+       is to produce a maximum monotone sofa of rotation angle pi/2 satisfying the
+       injectivity condition; any other existence proof would do.
+
+Option (ii) is the most promising and is directly enabled by the separation
+theorem: below the band there is exactly one niche, which is Baek's situation.
+
+## B6 COMPLETE: SOL6 transcribed and ODE6 DERIVED
+
+ROMIK_FORMULAS.md carried ODE1-ODE6 by name and SOL1-SOL5 explicitly, but SOL6 was
+missing -- and Sigma's middle phase IS SOL6.  Both are now recorded.
+
+    SOL6:  x_6(t) = R_t ( f1 cos(t/2) + f2 sin(t/2) - 1,
+                         -f2 cos(t/2) + f1 sin(t/2) - 1 )^T + kappa_6,
+           kappa_6 = ( 1 - (4/3) a_1 , 1/2 ),   f2 = (1 - sqrt2) f1,
+           f1 = (4/3) a_1 cos(beta) / ( cos(beta/2) + (1-sqrt2) sin(beta/2) ).
+
+    ODE6:  x'' = 2 J x' + (3/4)(x - kappa_6) - (1/4) R_t (1,1)^T,
+           J = [[0,-1],[1,0]].
+
+DERIVATION.  Writing v for the bracket, v'' = -(1/4)(v + (1,1)) directly.  With
+x = R_t v + kappa and R' = JR = RJ one gets x' = R(Jv + v') and
+x'' = R(-v + 2Jv' + v''); substituting v'' and eliminating v' = R^{-1}x' - Jv gives
+the stated form.
+
+VERIFIED: residuals 5.6e-15 at five values of t, against a finite-difference floor
+of ~1e-9; and v'' = -(1/4)(v + (1,1)) holds to 1e-16.
+
+STRUCTURAL POINT.  ODE6 is NOT of the form of ODE1-ODE5.  Those are
+x'' = R_t b + M(t) x' with no x term; a least-squares fit of SOL6 to that pattern
+fails with residual 0.154.  ODE6 carries a restoring term in x.  In complex form
+(J <-> i) its homogeneous part is z'' - 2i z' - (3/4) z = 0, with characteristic
+roots lambda = i/2 and 3i/2 -- which is exactly why SOL6 contains cos(t/2) and why
+the closed form for c_y - 1/2 contains sin(3t/2).  The two half-integer angles in
+this project's Sigma formulas are the two characteristic exponents of ODE6.
+
 ## A3' PROVED: max_t c_y(t) in closed form, and F1 derived rather than tabulated
 
 The separation lemma needs M := max_t c_y(t) < 1/2.  This is now closed form.
