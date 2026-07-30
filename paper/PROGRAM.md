@@ -1217,6 +1217,108 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## 🌊🌊 THE MODE-2 CORRECTION DESTROYS Σ's MARGIN — Theorem 9's strategy fails
+
+The Mode-2 repair (evaluate the REGION, not the signed sum) removes the domination
+failure, but it is not free.  Since
+
+    A_region = A_signed + lens,     lens >= 0,     lens = (1/2) L(v) eps^2,
+
+the second variation picks up  Q_region = Q_signed + L  with L >= 0, so the ladder
+margin DROPS by L(v)/(pi/4).  Measured (K=6, matched beta, offsets handled):
+
+    dir eps       lens         L(v)     margin loss   6.4563 - loss
+    1  +0.004   8.805e-06     1.1006      1.4013         5.0550
+    1  -0.004   8.325e-05    10.4068     13.2503        -6.7940
+    1  +0.002   2.223e-06     1.1116      1.4154         5.0409
+    1  -0.002   1.972e-05     9.8576     12.5511        -6.0948
+    2  +0.004   1.077e-05     1.3458      1.7135         4.7428
+    2  -0.004   3.125e-05     3.9058      4.9730         1.4833
+    2  +0.002   2.350e-06     1.1748      1.4958         4.9605
+    2  -0.002   7.656e-06     3.8279      4.8739         1.5824
+    3  +0.004   6.085e-06     0.7606      0.9685         5.4878
+    3  +0.002   1.618e-06     0.8092      1.0303         5.4260
+    (dir3 eps=-0.004 and -0.002 skipped: matched Newton residual 2.5e-1)
+
+Direction 1's negative branch costs 13.25 against a margin of 6.4563, i.e. the
+corrected form has margin -6.79.  **The Mode-2-corrected reconstruction is NOT
+negative definite.**  And these are sampled directions, so 6.4563 - loss is an
+UPPER bound on the corrected margin: the truth can only be worse.
+
+### What this does and does not say
+
+It does NOT say Σ fails to be a local maximum.  It says the RECONSTRUCTION used to
+certify it is too lossy: the region-area bound pays the whole lens, and the lens is
+larger than the margin.  Theorem 9's proof strategy fails; the theorem itself is
+undecided.
+
+### The lens is one-sided, not a quadratic form
+
+L(+eps) = 1.1006 vs L(-eps) = 10.4068 on direction 1, and 1.3458 vs 3.9058 on
+direction 2, stable across eps (1.1006/1.1116 and 9.8576/10.4068).  So the lens is
+exactly eps^2-homogeneous but NOT a quadratic form -- it is one-sided, structurally
+the same object as the N12 fan bite (recorded there as "exactly eps^2-homogeneous,
+one-signed, not a quadratic form").  Any repair must treat it the way N12 is
+treated, not as a matrix correction.
+
+### The route this leaves
+
+Do not CORRECT for the lens -- eliminate it.  If the reconstruction curve is
+SIMPLE, signed area equals region area and there is no penalty at all.  The
+self-intersections come from arcs running past their junctions, so the
+construction to build is: TRIM each arc at its actual crossing with its neighbour
+(a Sutherland-Hodgman-style clip, which `sigma_area.rs` already implements for
+half-planes) instead of at a matched-beta parameter.  That gives a simple curve, a
+chord-free closure, and no lens -- all three failure modes closed at once.
+
+## S7b RESOLVED — the residual is INSTRUMENTAL
+
+The two ~5e-7 residuals left by the Mode-2 repair are within the oracle's own
+convergence error.  A_true(0.004) - A_true(0) measured at n = 2401, 4801, 9601:
+
+    -1.2214e-03,  -1.2220e-03,  -1.2223e-03
+
+i.e. the difference is n-stable only to ~5e-7, exactly the size of the residuals.
+They cannot be distinguished from zero at n = 4801, and resolving them would need
+n ~ 6e5 (the difference converges like C/n).  Not a mechanism.
+
+## S7c PARTIAL — and the matched system has a floor
+
+Amplitude continuation (walk the amplitude 0 -> 1 in stages, restarting Newton
+from the previous solution, aborting a rung the moment a stage fails) gives, at a
+realistic tolerance, 10 of 12 probes converged versus the plain Newton's 9 of 12.
+Direction 3's negative branch still fails at 2.5e-1.
+
+More important, and found by this test: the BASE residual at c_R is 3.4e-05.  The
+matched system cannot be solved better than that, because the arc table's own
+junction endpoints already disagree by 2.5e-06 at c_R.  So "matched" means matched
+to ~1e-5, not to machine precision, and any argument resting on exact matching
+inherits that floor.  Recorded as a standing caveat.
+
+## LEAN — the F6 block, all VERIFIED
+
+Added to `lean/MovingSofa/MovingSofa/Basic.lean`, `lake build` clean, zero sorry:
+
+    chord_sliver        F6a  the sliver between wall line and departing chord has
+                             twice-area l*h -- the -(l/2)h term of the rank-one law
+    bowtie_signed_zero  F6b  a self-intersecting closed quadrilateral has signed
+                             shoelace 0
+    square_signed       F6c  the same four vertices traversed simply give
+                             twice-area 2  =>  signed area != region area
+    selection_rule      F6d  a T-invariant form vanishes between opposite-sign
+                             eigenvectors of an involution
+    ueig_opposite       F6e  modes in different grading classes have opposite
+                             U-eigenvalue
+    grading_selection   F6f  hence the Z2 block-diagonalisation of the Σ form
+
+`#print axioms` on all of these, plus `safe_closure` and `superset_principle`,
+reports nothing beyond `propext` and `Quot.sound` -- no `Classical.choice`.
+
+`lean/MAPPING.md` now carries the Rule 5 paper-to-Lean table for all 25 theorems,
+WITH an explicit section on what is NOT formalized and why (the rank-one law needs
+Green's theorem for piecewise-C1 curves; Mode 2 in general needs Jordan; the corner
+criterion needs ring normalisation of a degree-4 identity, unavailable in core
+Lean).  Those labels stay PROVED, not VERIFIED.
 ## S6 SOLVED: the second mechanism is a SELF-INTERSECTION LENS  🔥🔥🔥
 
 The repair for Σ is not geometric at all -- it is in how the area is EVALUATED.

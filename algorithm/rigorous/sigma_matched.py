@@ -67,23 +67,56 @@ def gaps(amps, delta, modes):
     return np.array(out)
 
 
-def solve_matched(amps, modes, delta0=None, it=40, h=1e-6):
-    d = np.zeros(len(SE.FREE)) if delta0 is None else delta0.copy()
-    for _ in range(it):
+def _newton(amps, modes, d, it=15, h=1e-6, cap=0.05, tol=1e-11, jevery=5):
+    """Newton on the ten gap equations.  The Jacobian costs 20 `gaps` calls, so
+    it is refreshed only every `jevery` iterations (the system is mildly
+    nonlinear and the stale Jacobian still contracts)."""
+    J = None
+    for k in range(it):
         r = gaps(amps, d, modes)
-        if np.max(np.abs(r)) < 1e-11:
+        if np.max(np.abs(r)) < tol:
             break
-        J = np.zeros((len(r), len(d)))
-        for j in range(len(d)):
-            dp = d.copy(); dp[j] += h
-            dm = d.copy(); dm[j] -= h
-            J[:, j] = (gaps(amps, dp, modes) - gaps(amps, dm, modes))/(2*h)
+        if J is None or k % jevery == 0:
+            J = np.empty((len(r), len(d)))
+            for j in range(len(d)):
+                dp = d.copy(); dp[j] += h
+                dm = d.copy(); dm[j] -= h
+                J[:, j] = (gaps(amps, dp, modes) - gaps(amps, dm, modes))/(2*h)
         step, *_ = np.linalg.lstsq(J, -r, rcond=None)
         nrm = np.linalg.norm(step)
-        if nrm > 0.05:
-            step *= 0.05/nrm
+        if nrm > cap:
+            step *= cap/nrm
         d = d + step
     return d, float(np.max(np.abs(gaps(amps, d, modes))))
+
+
+def solve_matched(amps, modes, delta0=None, it=15, h=1e-6, nsteps=None,
+                  tol=1e-11):
+    """Solve for the matched junction response.
+
+    A plain Newton from delta0 fails on roughly a quarter of probes (residuals
+    up to 5.6e-2): at the amplitudes of interest the matched response is too far
+    from delta0 for the linearisation to reach.  Fix (S7c): CONTINUATION in the
+    amplitude.  Walk the amplitude from 0 to 1 in `ns` equal stages, re-solving
+    at each and starting from the previous solution, so every solve begins inside
+    its own basin.  A stage that fails aborts that ladder rung immediately --
+    carrying a non-converged d forward was the bug in the first version.
+    """
+    d0 = np.zeros(len(SE.FREE)) if delta0 is None else delta0.copy()
+    A = np.asarray(amps, dtype=float)
+    best = (d0, float("inf"))
+    for ns in ([1, 3, 8] if nsteps is None else [nsteps]):
+        d = d0.copy()
+        res = float("inf")
+        for i in range(1, ns+1):
+            d, res = _newton(list(A*(i/ns)), modes, d, it, h, tol=tol)
+            if res > tol:
+                break                      # abort this rung, do not carry on
+        if res < best[1]:
+            best = (d, res)
+        if res <= tol:
+            return d, res
+    return best
 
 
 def main():

@@ -489,4 +489,93 @@ theorem frame_pair_coercive (c s u v m : Int)
   have e3 : m*(u*u + v*v) = m*(u*u) + m*(v*v) := Int.mul_add _ _ _
   omega
 
+/-! ## F6 — the two failure modes of the reconstruction lemma
+
+Both local-maximality arguments in this project consume `lem:superset`: any
+closed curve assembled from constraint boundaries encloses a region containing
+the sofa, so the enclosed AREA bounds the true area.  Measurement found two
+independent ways the consuming code outruns that statement.
+
+MODE 1 (chords).  The lemma's proof covers constraint subarcs; a straight CHORD
+is not a constraint boundary and may cut into the body.  `safe_closure` above is
+the corrected statement, and F6a below is the elementary area identity behind the
+resulting first-order defect.
+
+MODE 2 (signed vs region area).  The lemma bounds the enclosed REGION, while
+every reconstruction evaluates a SIGNED (shoelace / Green) sum.  The two agree
+ONLY IF the curve is simple.  F6b/F6c exhibit the gap on the smallest instance.
+
+MODE-INDEPENDENT (selection rule).  F6d is the algebra behind the Z2 grading that
+block-diagonalises the Σ second-variation form. -/
+
+/-- Twice the signed shoelace area of a triangle. -/
+def shoe3 (x0 y0 x1 y1 x2 y2 : Int) : Int :=
+  (x0*y1 - x1*y0) + (x1*y2 - x2*y1) + (x2*y0 - x0*y2)
+
+/-- Twice the signed shoelace area of a quadrilateral. -/
+def shoe4 (x0 y0 x1 y1 x2 y2 x3 y3 : Int) : Int :=
+  (x0*y1 - x1*y0) + (x1*y2 - x2*y1) + (x2*y3 - x3*y2) + (x3*y0 - x0*y3)
+
+/-- **F6a (chord sliver).**  The sliver cut off between the wall line `y = 0`
+    and a chord running from `(0,h)` to `(l,0)` has twice-area `l*h`, i.e. area
+    `l*h/2`.  With `h` the rate at which a chord endpoint leaves its supporting
+    line, this is the `-(l/2)·h` term of the rank-one defect, one such term per
+    chord. -/
+theorem chord_sliver (l h : Int) : shoe3 0 0 l 0 0 h = l*h := by
+  simp [shoe3]
+
+/-- **F6b (signed area is not region area).**  The bowtie
+    `(0,0) → (1,0) → (0,1) → (1,1)` is a closed quadrilateral whose signed
+    shoelace VANISHES: its two lobes are traversed with opposite orientation and
+    cancel.  The region it covers is not empty, so signed area ≠ region area. -/
+theorem bowtie_signed_zero : shoe4 0 0 1 0 0 1 1 1 = 0 := by decide
+
+/-- **F6c.**  The same four points traversed as a SIMPLE quadrilateral give
+    twice-area `2`.  Together with `bowtie_signed_zero` this is the whole of
+    Mode 2: the identical vertex set yields `0` or `2` according only to whether
+    the traversal self-intersects, so a reconstruction that evaluates the signed
+    sum can report an area strictly below the region it encloses — and hence
+    below the true area, while still enclosing the body. -/
+theorem square_signed : shoe4 0 0 1 0 1 1 0 1 = 2 := by decide
+
+/-- **F6d (selection rule).**  Let `T` be an involution acting on two vectors by
+    signs `a`, `b ∈ {1,-1}`, and let `B` be the value of a `T`-invariant
+    bilinear form on that pair, so `B = a*b*B`.  If the signs differ then
+    `B = 0`.
+
+    This is the algebra behind the Z2 grading `g(c,k) = (k+c) mod 2` of the Σ
+    second-variation form: with `U(η)(t) = (η_x(π/2−t), −η_y(π/2−t))` one has
+    `U(x,k) = (-1)^(k+1)(x,k)` and `U(y,k) = (-1)^k (y,k)`, so `U = +1` exactly
+    on `g = 1` and `-1` on `g = 0`, and no `U`-invariant form couples the two. -/
+theorem selection_rule {B a b : Int}
+    (ha : a = 1 ∨ a = -1) (hb : b = 1 ∨ b = -1) (hab : a ≠ b)
+    (hinv : B = a * b * B) : B = 0 := by
+  rcases ha with rfl | rfl <;> rcases hb with rfl | rfl <;> omega
+
+/-- The `U`-eigenvalue of the mode indexed by component `c` (0 for x, 1 for y)
+    and frequency `k`, as a function of the grading `(k+c) mod 2`. -/
+def ueig (c k : Nat) : Int := if (k + c) % 2 = 1 then 1 else -1
+
+/-- **F6e.**  Modes in different grading classes have opposite `U`-eigenvalue,
+    hence (by `selection_rule`) are uncoupled by any `U`-invariant form.  This is
+    the statement verified numerically at K = 32 to relative size 1e-10: same
+    component entries vanish unless `k+k'` is even, cross component entries
+    unless `k+k'` is odd. -/
+theorem ueig_opposite {c1 k1 c2 k2 : Nat}
+    (h : (k1 + c1) % 2 ≠ (k2 + c2) % 2) :
+    ueig c1 k1 * ueig c2 k2 = -1 := by
+  have h1 : (k1 + c1) % 2 = 0 ∨ (k1 + c1) % 2 = 1 := Nat.mod_two_eq_zero_or_one _
+  have h2 : (k2 + c2) % 2 = 0 ∨ (k2 + c2) % 2 = 1 := Nat.mod_two_eq_zero_or_one _
+  unfold ueig
+  rcases h1 with e1 | e1 <;> rcases h2 with e2 | e2 <;>
+    simp [e1, e2] at h ⊢
+
+/-- **F6f.**  The grading selection rule in the form it is used: a `U`-invariant
+    form vanishes between modes of different grading. -/
+theorem grading_selection {c1 k1 c2 k2 : Nat} {B : Int}
+    (h : (k1 + c1) % 2 ≠ (k2 + c2) % 2)
+    (hinv : B = ueig c1 k1 * ueig c2 k2 * B) : B = 0 := by
+  rw [ueig_opposite h] at hinv
+  omega
+
 end MovingSofa
