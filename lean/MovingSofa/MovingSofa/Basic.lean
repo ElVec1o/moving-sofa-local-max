@@ -108,6 +108,23 @@ theorem area_bound {α ι β : Type _} [LE β]
     μ (fullInter H) ≤ μ (famInter H P) :=
   mono (superset_principle H P)
 
+/-- **N1e (safe closure).**  If the body lies inside EVERY assembled piece,
+    it lies inside their intersection.  Stated this way it is the exact content
+    the paper's one-sided reconstruction lemma needs: a reconstruction may be
+    built from any collection of pieces PROVIDED each one still contains the
+    body -- i.e. each lies on a SUPPORTING boundary of the family.
+
+    A straight chord is NOT in general of this form.  It is not a constraint
+    boundary, so nothing supplies the hypothesis `Subset S (H t)` for it, and a
+    chord may cut into the body.  For Gerver's sofa two chords of the standard
+    reconstruction do exactly that under perturbation, at first order.  Hence
+    `superset_principle` -- which concerns intersections of CONSTRAINTS only --
+    does not license a chorded reconstruction, and the chord-free construction
+    is the one this theorem covers. -/
+theorem safe_closure {α ι : Type _} {S : SetP α} (H : ι → SetP α)
+    (h : ∀ t, SetP.Subset S (H t)) : SetP.Subset S (fullInter H) :=
+  fun _ hx t _ => h t hx
+
 /-- **N1d (certified upper envelope).**  Along ANY deformation ε ↦ H ε of the
     constraint family, a per-ε subfamily choice gives an upper bound for the
     true area at EVERY deformation parameter simultaneously — the exact

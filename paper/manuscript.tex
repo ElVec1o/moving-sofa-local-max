@@ -2197,7 +2197,8 @@ toward arbitrary $\eta$.
 \begin{lemma}[One-sided reconstruction]\label{lem:superset}
 Let $\Gamma$ be any closed curve assembled from subarcs of the
 constraint boundaries of the family $\{H_{t}(c)\}$ (envelope arcs,
-corner path, wall lines) together with straight chords, enclosing a
+corner path, wall lines) together with straight chords \emph{each of
+which lies on a supporting line of the family}, enclosing a
 region $R(\Gamma)$.  Then $S(c) = \bigcap_{t}H_{t}(c) \subseteq
 R(\Gamma)$, so $|S(c)| \leq |R(\Gamma)|$ and, for any reconstruction
 family $\Gamma_{\varepsilon}$ agreeing with $S(\cG)$ at
@@ -2214,8 +2215,25 @@ corrections are one-signed, favourable for negativity.
 \begin{proof}
 Each point excluded from $R(\Gamma)$ by a constraint subarc is excluded
 from $S(c)$ by that same constraint; points inside $R(\Gamma)$ may or
-may not satisfy the remaining constraints.  Hence $S \subseteq R$.
+may not satisfy the remaining constraints.  A chord lying on a
+supporting line of the family excludes only points already excluded by
+that constraint, so the same applies to it.  Hence $S \subseteq R$.
 \end{proof}
+
+\begin{remark}[The supporting-line hypothesis is not removable]
+\label{rem:chord-hypothesis}
+Earlier versions of this lemma omitted the italicised hypothesis, and
+the omission is not harmless: Remark~\ref{rem:chord-gap} exhibits a
+one-parameter family along which two chords of the Gerver
+reconstruction leave their supporting lines at rate $\eta_{x}'(0)$ and
+$\eta_{x}'(\pi/2)$, so that $S\not\subseteq R(\Gamma)$ and
+$g_{\mathrm{true}} \leq g_{\Gamma}$ fails at \emph{first} order.  The
+machine-checked formalisation
+(\texttt{lean/MovingSofa}, \texttt{superset\_principle}) proves only the
+chord-free statement --- that dropping constraints enlarges an
+intersection --- and so is unaffected; but for the same reason it does
+not by itself license the chorded use made of this lemma.
+\end{remark}
 
 This lemma retroactively upgrades every oracle measurement in this
 paper to a rigorous \emph{upper bound} for the true area response ---

@@ -1217,6 +1217,117 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## 🌊 Σ'S SUPERSET PROPERTY FAILS AT SECOND ORDER — Theorem 9 has the same hole
+
+This was found by asking the item-5 question ("does Σ need the chord-free
+treatment too?") and it is the most consequential result of the session.
+
+Σ's closure chords are degenerate at c_R (max 2.5e-6, the junction-solve
+residual) but they OPEN UP LINEARLY under perturbation.  Measured max closure
+chord length over random directions:
+
+    c_R          2.501e-06
+    eps = 1e-4   1.158e-03,  1.560e-03
+    eps = 1e-3   1.090e-02,  7.848e-03
+    eps = 1e-2   1.755e-01,  6.316e-02      (Gerver's, fixed: 8.069e-01)
+
+so l(eps) ~ C eps with C ~ 8-18.  For Gerver l is O(1) and the chord defect is
+-(l/2)L = O(eps), first order.  For Σ, l = O(eps) makes the defect O(eps^2) --
+which is exactly the order the Σ-local theorem lives at.  This is why Σ's FIRST
+variation looked clean (1e-6) while the problem was there all along.
+
+DIRECT TEST.  Delta(eps) := [A_rec - A_true](eps) - offset, exact Rust oracle
+(n=4801, offset -3.140e-05 subtracted), K=6 random directions:
+
+    random #1   Delta/eps^2 = -1.8602, -6.1912 (eps=+-0.004);  -1.7762, -5.9424 (+-0.002)
+    random #2                 +1.4402, -2.9152             ;   +1.6142, -2.8155
+    random #3                 -0.3873, +0.0251             ;   -0.3711, +0.0624
+
+8 of 12 probes have Delta < 0.  Crucially Delta/eps^2 is STABLE as eps halves
+(-1.86 vs -1.78; -6.19 vs -5.94), so this is a genuine eps^2 effect and NOT the
+oracle offset -- an offset contamination would scale like C/eps and blow up as
+eps shrinks.
+
+CONSEQUENCE.  The Σ ladder (m(M) ~ 6.45, the whole S1-S7 chain, Theorem 9) does
+NOT establish local maximality as it stands, for exactly the same structural
+reason as Gerver's Part II: the reconstruction is closed with chords, and chords
+are not constraint boundaries.  The ladder NUMBERS remain valid computations; the
+INFERENCE from them does not.
+
+The fix is known and demonstrated (see below for Gerver): rebuild Σ's Γ so every
+closure is a constraint boundary.  Σ's arcs meet at junctions at c_R, so at c_R
+there is nothing to do; the work is in closing the gaps that open under
+perturbation with wall lines rather than chords.
+
+## ITEM D5 — CONTAINMENT CERTIFICATE FOR THE CHORD-FREE Γ PASSES  🔥
+
+Two wrong tests before the right one, recorded so they are not repeated:
+
+  (a) "check S_finite ⊆ R(Γ)".  WRONG DIRECTION: S_finite ⊇ S_true (dropping
+      constraints enlarges), so this is STRONGER than needed and must fail at
+      c_G where R(Γ) = S_true exactly.  It did, identically at c_G and under
+      perturbation (-1.33e-3), with the area gap 8.4e-4 = C/n = 0.589/700.
+  (b) same test with outward normals from a centroid heuristic.  WRONG on the
+      CORNER arc, which is re-entrant (the wedge is subtracted), so the normal
+      pointed inward and min viol came out as exactly -delta.
+
+The correct test: S ⊆ R(Γ) iff every point OUTSIDE R(Γ) violates some hallway.
+Step delta = 1e-3 outward from ∂R (orientation fixed by actual polygon
+containment, not a heuristic) and compute
+viol = max_t [ max(f_mu-1, f_nu-1, -max(f_mu,f_nu)) ]; viol > 0 means that point
+is excluded by some constraint, as required.  Result (n_s = 20001 hallways):
+
+    c_G              min viol +6.799e-04   CONTAINED
+    x sin4t  +0.01            +6.784e-04   CONTAINED
+    x sin4t  -0.01            +3.498e-04   CONTAINED
+    x sin16t -0.01            +4.556e-05   CONTAINED   <- tightest
+    y sin4t  +0.01            +6.215e-04   CONTAINED
+
+Every probe passes, INCLUDING the eps=0.01 x-modes where the area comparison had
+gone negative.  So those negative readings were the oracle's error, exactly as
+suspected, and A_rep >= A_true.  [HEURISTIC by Rule 7 -- a certificate, not a
+proof -- but the structural argument covers the wall lines and envelope arcs
+rigorously; only the corner-path piece needs the wedge-union argument.]
+
+## THE CHORD-FREE RECONSTRUCTION IN GREEN FORM — exactly stationary
+
+`gerver_rep_green.py` integrates the corrected curve term by term instead of
+shoelacing a polygon: ~100x faster and far more accurate.
+
+    A_rep(c_G) = 2.21953166887      (A* to 7.2e-11; polygon form agrees to 4.5e-7)
+
+    first variation:  x sin4t  +1.68e-10     (chorded law -3.22753)
+                      x sin8t  -1.68e-10     (chorded law -6.45505)
+                      x sin12t +1.68e-10     (chorded law -9.68258)
+                      x sin16t +1.68e-10     (chorded law -12.9101)
+                      y sin4t  -1.52e-10
+                      y sin10t +1.68e-10
+
+Machine-precision zero on every mode.  The rank-one defect is gone.
+
+## ITEM 4 — paper and Lean now match what is used
+
+Paper: `lem:superset` now carries the hypothesis that each chord "lies on a
+supporting line of the family", its proof covers that case explicitly, and
+`rem:chord-hypothesis` records that the hypothesis is NOT removable, pointing at
+the first-order counterexample.  Compiles clean, 48pp.
+
+Lean: added `safe_closure` --
+
+    theorem safe_closure {α ι} {S : SetP α} (H : ι → SetP α)
+        (h : ∀ t, SetP.Subset S (H t)) : SetP.Subset S (fullInter H)
+
+-- if the body lies in EVERY assembled piece it lies in their intersection.
+That is the exact content the corrected lemma needs, and its docstring records
+that a chord supplies no such hypothesis.  `lake build` clean, zero sorry.
+
+## ITEM 3 — NOT ATTEMPTED this turn, deliberately
+
+Closed-form Toeplitz symbol coefficients were deprioritised: item 5 turned up a
+correctness problem in Theorem 9, and a correctness problem outranks closing a
+tail bound for a theorem whose inference step is broken.  Item 12b is now
+downstream of repairing Σ's reconstruction, not upstream.
+
 ## POST-BLACKOUT SESSION: Lean audit, K=48, the chord-free rebuild, and ker L
 
 Blackout killed the K=48 job but it had already FINISHED (4656/4656, symmetric,
