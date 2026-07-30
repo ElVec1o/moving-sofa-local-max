@@ -1,3 +1,70 @@
+## RULE 4 NOVELTY AUDIT (item 1), HYPOTHESIS (iii) RESOLVED AS A DOMAIN CONSTRAINT (item 2),
+## AND THE MAIN THEOREM STATED (item 3)
+
+### The audit, against Baek's full text (pdftotext of arXiv:2411.19826)
+
+  * ARM LENGTHS f, g ARE BAEK'S (his Definition 6.2.1), via the contact points A and C.
+    Our alpha_1, alpha_2 are those shifted by the corridor width.  CITE, do not claim.
+  * HIS INJECTIVITY CONDITION (Definition 6.1.2) has three parts.  Part (1): sigma_K is
+    absolutely continuous on [0,pi/2) and on (pi/2,pi], i.e. an atom is allowed ONLY at
+    theta = pi/2.  Part (3): x'_K(t).u_t < 0 and x'_K(t).v_t > 0 on (0,pi/2).  This
+    confirms the record in this ledger verbatim.
+  * (RC) DOES NOT APPEAR IN BAEK.  It shares part (1) exactly and ADDS a bound on the
+    density, while dropping part (3).  The paper's only mentions of curvature (lines
+    948-949, 1698 of the extracted text) are the standard identification of the
+    surface-measure density with the radius of curvature, which we also use and which is
+    not ours.
+  * ARCHITECTURE DIFFERS IN BOOKKEEPING.  He ATTACHES Mamikon regions to the
+    overestimating region so the total is LINEAR in the cap; we SUBTRACT them from the
+    cap.  He works on a space L of TRIPLES (K,B,D) of convex bodies; we use the single
+    support function H on [0,pi].  Whether the two are equivalent is NOT determined.
+  * THE AMBIDEXTROUS PROBLEM IS NOT TREATED by Baek, and no upper bound for it was found
+    in the literature.  Kallus-Romik's 2.37 is the one-corner bound; Baek's conditional
+    paper gives 1 + pi^2/8 = 2.2337 under injectivity.
+  * SCOPE OF THE AUDIT: Baek and the Kallus-Romik line only, NOT the wider literature.
+
+### Hypothesis (iii): it is a LINEAR constraint, so it belongs in the domain (item 2)
+
+c_y(t) = (H(t)-1) sin t + (H(t+pi/2)-1) cos t is AFFINE in H, so {c_y <= 1/2} is an
+intersection of half-spaces: CONVEX.  It does not have to be derived; it can be part of the
+domain exactly as (RC) and the sign cell are.  After the retraction of the M <= H'(0)
+attempt there is no derivation, and stating it as a hypothesis is the honest move.
+
+Sigma satisfies it with margin 1/2 - M = 0.112161871.
+
+### THE MAIN THEOREM (item 3)
+
+  Let D be the set of support functions H on [0,pi] of admissible caps with
+    (a) H(0) = H(pi/2) = 1                     the gauge
+    (b) (RC): sigma_K a.c. on [0,pi/2) and (pi/2,pi] with density <= 1, atom only at pi/2
+    (c) c_y(t) <= 1/2 on [0,pi/2]
+    (d) alpha_1 < 0 exactly on [0,beta), alpha_2 > 0 exactly on [0,pi/2-beta)
+  Then D is CONVEX, Sigma is in D, and |T| <= A_R* for every ambidextrous moving sofa T
+  whose cap data lies in D.
+
+PROOF.  (a)-(d) are affine in H so D is convex.  (b) gives injectivity, so V = |N|.  (c)
+gives disjoint niches, so |T| <= |C2| - 2|N| = Q.  (d) gives d^2 Q <= 0; criticality gives
+dQ(Sigma) = 0; concave + critical on a convex set gives Q(H) <= Q(Sigma) = A_R*.  QED
+
+EFFECTIVE LABEL: PROVED.  Every hypothesis is either proved or an explicit convex
+constraint; nothing is assumed without being stated.
+
+D HAS INTERIOR: H + eps sin(k theta) stays in D for k = 2, 4 and |eps| <= 1e-2, both signs,
+with (RC) margin falling from 0.161 to 0.024 and the c_y margin essentially unchanged.
+
+### What the theorem is NOT
+
+D is not shown to contain every competitor, and GERVER'S CAP VIOLATES (b) -- concrete
+reason for doubt about how much of the problem D covers.  Condition (c) is a hypothesis,
+not a consequence; the attempt to derive it failed and is recorded as such.  Optimality of
+Sigma remains OPEN.
+
+### Paper restructured
+
+Abstract rewritten to the final structure; a "Relation to prior work" section added with
+the audit above; the main theorem and its limitations stated; a bibliography added
+(Baek 2024, Gerver 1992, Kallus-Romik 2018, Romik 2018).  24 pages.
+
 ## ITEMS 1-3: ONE STRUCTURAL EXPLANATION, ONE RETRACTION, ONE LEAN BLOCK
 
 ### 🔴 RETRACTION: the bound M <= H'(0) is FALSE

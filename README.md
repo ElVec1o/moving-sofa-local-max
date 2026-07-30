@@ -71,7 +71,8 @@ proof; **HEURISTIC** = computational evidence only.
 | 40 | **The construction does not recover Gerver.** (RC) fails there ($1.3960$), its face-2 sweep is not injective ($33\,002$ of $158\,802$ pairs), and $V>\lvert N\rvert$ accordingly — though Gerver *does* satisfy the one-corner injectivity condition. The two conditions are independent | PROVED |
 | 41 | The mirror decomposition gives Gerver the same value, so the failure in 40 is not an orientation artefact; the reason is that $\Sigma$'s cap has vertices at both ends (from its constant contact arcs) while Gerver's does not | PROVED |
 | 42 | $M\le H'(0)$, attempted for the separation hypothesis | **FALSE** (the ceiling atom breaks $W\le1$) |
-| 43 | **Optimality of $\Sigma$** | **not proved** |
+| 43 | **Main theorem.** $\mathcal D=\{$gauge$\}\cap\{$(RC)$\}\cap\{c_y\le\tfrac12\}\cap\{$sign cell$\}$ is convex, contains $\Sigma$, and $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa with cap data in $\mathcal D$ | PROVED |
+| 44 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is not shown to contain every competitor, and Gerver's cap violates (RC)) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the

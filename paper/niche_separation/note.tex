@@ -24,35 +24,32 @@ and the obstruction to a concavity bound}
 \maketitle
 
 \begin{abstract}
-Baek's proof that Gerver's sofa is optimal writes a moving sofa as a convex cap minus a
-niche and obtains global optimality from the concavity of a quadratic upper bound. We
-study what happens when that architecture is applied to the ambidextrous moving sofa
-problem, which is open, and to Romik's candidate $\Sig$ of area
-$A_R^\ast=1.6449552184\ldots$.
+Baek proved that Gerver's sofa is the maximum-area moving sofa for a corridor with one
+corner, by writing a sofa as a convex cap minus a niche and obtaining optimality from the
+concavity of a quadratic upper bound. We ask what that architecture gives for the
+ambidextrous moving sofa problem, which is open, and for Romik's candidate $\Sig$ of area
+$A_R^\ast=1.6449552184\ldots$
 
-Three things are established. First, the two niches of $\Sig$ are disjoint, so the
-inclusion-exclusion term that obstructs the transfer vanishes; the relevant constant is
-$M=\max_tc_y(t)=\tfrac12-(\sqrt2-f_1\sqrt{4-2\sqrt2})$, and $M<\tfrac12$ is equivalent to
-$f_1^2<(2+\sqrt2)/2$. Second, the niche area of $\Sig$ is given exactly by
-$\int_0^{\pi/2}[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2-\tfrac12(\alpha_1^-)^2]dt$
-where $\alpha_1,\alpha_2,\sigma$ are affine functionals of the support function, so every
-ingredient is convex-linear; the reported failure of the one-corner injectivity condition
-on the two outer phases of $\Sig$ is an artefact of requiring both arms to have the same
-sign at once, and no such joint hypothesis is used. Third, the resulting functional
-$Q=|C_2|-2V$ satisfies $Q(\Sig)=A_R^\ast$, has vanishing first variation at $\Sig$, and
-has negative definite second variation on the cell of support functions sharing $\Sig$'s
-sign pattern.
+The niche of an ambidextrous sofa is expressed exactly in convex-linear data: writing
+$H(\theta)=h_K(\mu_\theta)$ for the cap's support function, the two arms
+$\alpha_1,\alpha_2$ and the reach $\sigma$ are affine in $H$, and
+$|N|=\int_0^{\pi/2}[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2
+-\tfrac12(\alpha_1^-)^2]\,dt$ whenever the associated sweep is injective. Injectivity is
+implied by a single linear condition (RC), that the cap's radius of curvature be at most
+the corridor width, through a forced-oscillator argument whose kernel is non-negative
+because the rotation angle is $\pi/2$. Separately, $\Sig$'s two niches are disjoint, the
+relevant constant being $M=\tfrac12-(\sqrt2-f_1\sqrt{4-2\sqrt2})$.
 
-The bound nevertheless fails in general: $V$ is the flux of the advancing wedge boundary,
-so by Reynolds' transport theorem $V\ge|N|$, and $Q$ lies below the area it should bound
-except where the sweep is injective. We show that injectivity is cut out by inequalities
-linear in the support function, hence defines a convex subdomain $\mathcal K'$, and that
-$\Sig$ lies in $\mathcal K'$ with room around it in low-frequency directions. This yields
-a conditional bound on $\mathcal K'$, with hypotheses that are numerical and stated as
-such. Optimality of $\Sig$ remains open.
+For the functional $Q=|C_2|-2V$ we prove $Q(\Sig)=A_R^\ast$, $\delta Q(\Sig)=0$ --- Romik's
+ODE families are exactly the critical-point equations of $Q$, identically in his constants
+--- and $\delta^2Q\le0$ on the cell of $\Sig$'s sign pattern. Together these give an upper
+bound $|T|\le A_R^\ast$ on an explicit convex domain of caps containing $\Sig$.
 
-Along the way we give a closed form for Romik's constant $f_1$, which appears in the
-literature only as a decimal, and record the relation $4a_1\sin\beta=1$.
+Two limitations are recorded rather than smoothed over. The functional is the exact flux of
+the advancing wedge boundary, so $V\ge|N|$ by Reynolds' transport theorem, and $Q$ bounds
+nothing off the domain where the sweep is injective. And the construction does not recover
+Gerver's sofa: its cap violates (RC), its sweep is not injective, and $V>|N|$ there
+accordingly. Optimality of $\Sig$ remains open.
 \end{abstract}
 
 \section{Setting}
@@ -398,7 +395,7 @@ which is consistent with $\sigma\le\tau$ throughout. One obtains an inequality
 where Baek obtains an equality, and it is the equality that his argument
 consumes.
 
-\section{A relation between Romik's constants}
+\section{A relation between Romik's constants}\label{sec:cubics}
 
 The phase junctions of $\Sig$ admit a characterisation that ties two of Romik's
 constants together. Recall $a_1$ from \eqref{eq:a1} and $\beta$ from
@@ -1555,6 +1552,83 @@ it was checked in both.
 
 Hypothesis (iii) therefore remains open.
 
+\section{Relation to prior work}\label{sec:prior}
+
+The one-corner problem was settled by Baek \cite{Bae24}, who proved Gerver's sofa optimal.
+Our reading of that paper, for the purpose of separating what is his from what is not:
+
+\begin{itemize}
+\item The \emph{arm lengths} $f,g$ are his (Definition 6.2.1), defined through the contact
+points $A$ and $C$; our $\alpha_1,\alpha_2$ are these shifted by the corridor width.
+\item His injectivity condition (Definition 6.1.2) has three parts. Part (1) requires the
+surface measure $\sigma_K$ to be absolutely continuous on $[0,\pi/2)$ and on $(\pi/2,\pi]$,
+so an atom is permitted only at $\theta=\pi/2$; part (3) is
+$x_K'(t)\cdot u_t<0$ and $x_K'(t)\cdot v_t>0$ on $(0,\pi/2)$.
+\item Our (RC) shares part (1) verbatim and \emph{adds} a bound on the density, while
+dropping part (3) entirely. No curvature bound appears in \cite{Bae24}; its only mentions
+of curvature are the standard identification of the surface-measure density with the
+radius of curvature, which we also use.
+\item His concavity argument attaches Mamikon regions to the overestimating region so that
+the total is linear in the cap; ours subtracts them from the cap. He works on a space of
+triples $(K,B,D)$ of convex bodies; we work with the single support function $H$ on
+$[0,\pi]$. Whether the two bookkeepings are equivalent we do not determine.
+\item The ambidextrous problem is not treated in \cite{Bae24}, and we have found no upper
+bound for it in the literature.
+\end{itemize}
+
+The constants $a_1,\beta,f_1$ and the ODE families are Romik's \cite{Rom18}; the cubics of
+Section~\ref{sec:cubics} are the standard ones and we claim no priority for them. This
+audit was made against \cite{Bae24} and the Kallus--Romik line \cite{KR18} only, not
+against the wider literature.
+
+\section{The main theorem}\label{sec:main}
+
+\begin{theorem}\label{thm:final}
+Let $\mathcal D$ be the set of support functions $H$ on $[0,\pi]$ of admissible caps such
+that
+\begin{enumerate}
+\item[(a)] $H(0)=H(\pi/2)=1$ \emph{(the gauge: horizontal translation, unit corridor)};
+\item[(b)] \emph{(RC)} $\sigma_K$ is absolutely continuous on $[0,\pi/2)$ and $(\pi/2,\pi]$
+with density at most $1$, the only atom being at $\theta=\pi/2$;
+\item[(c)] $c_y(t)=(H(t)-1)\sin t+(H(t+\pi/2)-1)\cos t\le\tfrac12$ for $t\in[0,\pi/2]$;
+\item[(d)] $\alpha_1<0$ exactly on $[0,\beta)$ and $\alpha_2>0$ exactly on
+$[0,\pi/2-\beta)$.
+\end{enumerate}
+Then $\mathcal D$ is convex, $\Sig\in\mathcal D$, and
+\[
+  |T|\ \le\ A_R^\ast
+\]
+for every ambidextrous moving sofa $T$ whose cap data lies in $\mathcal D$.
+\end{theorem}
+
+\begin{proof}
+Each of (a)--(d) is a family of affine inequalities or equalities in $H$, by
+Lemma~\ref{lem:corner} and \eqref{eq:a1}--\eqref{eq:sig}, so $\mathcal D$ is convex.
+$\Sig$ satisfies (b) by Proposition~\ref{prop:rcsigma}, (c) with margin
+$\tfrac12-M=0.1121\ldots$ by Theorem~\ref{thm:main}, and (d) by definition of $\beta$.
+
+By (b) and Theorems~\ref{thm:rc} and \ref{thm:cross} the combined sweep is injective, so
+$V=|N|$ by Proposition~\ref{prop:V}. By (c) and Corollary~\ref{cor:sep} the two niches are
+disjoint, and $C_2$ is $\rho$-invariant, so
+$|T|\le|C_2|-|N|-|\rho N|=|C_2|-2|N|=Q$. By (d) and
+Theorem~\ref{thm:concave}, $\delta^2Q\le0$ on $\mathcal D$; by Theorem~\ref{thm:el},
+$\delta Q(\Sig)=0$. A concave function with a critical point on a convex set attains its
+maximum there, so $Q(H)\le Q(\Sig)$, and $Q(\Sig)=A_R^\ast$ by Theorem~\ref{thm:QA}.
+Combining, $|T|\le Q(H)\le A_R^\ast$.
+\end{proof}
+
+\begin{remark}[What Theorem~\ref{thm:final} is not]\label{rem:notopt}
+It is not a proof that $\Sig$ is optimal. $\mathcal D$ is an explicit convex class
+containing $\Sig$ with room around it --- perturbations $H_\Sig+\varepsilon\sin(k\theta)$
+stay in $\mathcal D$ for $k=2,4$ and $|\varepsilon|\le10^{-2}$ --- but it is \emph{not}
+shown to contain every competitor, and Remark~\ref{rem:gerver} gives concrete reason for
+doubt: the cap of Gerver's sofa violates (b). Condition (c) is stated as a hypothesis
+rather than derived; the attempt to derive it is Remark~\ref{rem:retract}, and it failed.
+So the honest reading is that the one-corner architecture transfers to the ambidextrous
+problem on an explicit convex domain, and that identifying the domain is where the
+remaining difficulty sits.
+\end{remark}
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of
@@ -1580,6 +1654,16 @@ Lemma~\ref{lem:ceiling} uses.
   Geom.\ Dedicata \textbf{42} (1992), 267--283.
 \bibitem{Romik} D.~Romik, \emph{Differential equations and exact solutions in the
   moving sofa problem}, Exp.\ Math.\ \textbf{27} (2018), 316--330.
+\end{thebibliography}
+
+\begin{thebibliography}{9}
+\bibitem{Bae24} J.~Baek, \emph{Optimality of Gerver's sofa}, arXiv:2411.19826, 2024.
+\bibitem{Ger92} J.~L.~Gerver, \emph{On moving a sofa around a corner},
+Geom.\ Dedicata \textbf{42} (1992), 267--283.
+\bibitem{KR18} Y.~Kallus and D.~Romik, \emph{Improved upper bounds in the moving sofa
+problem}, Adv.\ Math.\ \textbf{340} (2018), 960--982.
+\bibitem{Rom18} D.~Romik, \emph{Differential equations and exact solutions in the moving
+sofa problem}, Exp.\ Math.\ \textbf{27} (2018), 316--330.
 \end{thebibliography}
 
 \end{document}
