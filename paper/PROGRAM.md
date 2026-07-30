@@ -1217,6 +1217,94 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## LEAN F7/F8, and an honest analysis of what blocks "no more HEURISTIC"
+
+### What was added (7 theorems, all VERIFIED)
+
+`lake build` clean, zero sorry, `#print axioms` reports only `propext` and
+`Quot.sound` for each -- no `Classical.choice`.  32 theorems total in the file.
+
+    intersection_chain   F7a  the S8 route's chain: dominance + margin + slack
+                              gives atrue <= astar + s - m.  Pins the quantifiers
+                              and shows exactly where the slack enters.
+    slack_squeeze        F7b  x <= y + s_n for all n, some s_n <= 0, gives x <= y
+                              (the Int-exact form of "let the slack tend to 0")
+    sq_nonneg_int        F8   0 <= x*x
+    weighted_sq_nonneg   F8   0 <= d*x^2 for d > 0
+    weighted_sq_pos      F8   0 < d*x^2 for d > 0, x != 0
+    sum_nonneg           F8   non-negative entries have non-negative sum
+    sum_pos_of_one_pos   F8   non-negative entries with one positive give a
+                              positive sum -- the step from a sum-of-squares
+                              certificate to STRICT definiteness
+
+Note on tooling, recorded so it is not rediscovered: core Lean has NO `ring` and
+no `positivity`.  Degree-4 identities (e.g. the 2x2 Sylvester identity
+a(au^2+2buv+cv^2) = (au+bv)^2 + (ac-b^2)v^2) are therefore impractical: `simp` with
+`Int.add_mul, Int.mul_add, Int.mul_comm` plus `omega` handles degree 2 but fails on
+the 4-fold products.  This is why F8 formalizes the LOGIC of a certificate rather
+than the algebraic identity producing one.
+
+### The two different things being called HEURISTIC
+
+They need separating, because only one of them is a formalization problem.
+
+(1) STRUCTURAL claims measured numerically but with an available exact route.
+    Example: G8a, the corner-region coverage margin (+3.852e-05, converged under
+    t-refinement).  The obstruction is that it is stated as "min over a region of
+    max over t"; the reduction q in Q_t <=> arg(q-c(t)) - t in (pi,3pi/2) turns it
+    into 1-D root existence, which is attackable analytically.  This is ordinary
+    mathematical work, not a tooling problem.
+
+(2) LADDER MARGINS -- the eigenvalue claims (G7 -5.021155, G10 -4.948650,
+    S8a -6.029329).  These CANNOT be lifted by formalization alone, and it is worth
+    being exact about why:
+
+      * the Hessian entries are CENTRAL DIFFERENCES of a floating-point polygon
+        area.  FD truncation error is O(eps^2 * M4) with M4 a fourth-derivative
+        bound that is not currently known, so there is no rigorous enclosure of
+        the entries -- and without an enclosure there is nothing for a Lean proof
+        to consume;
+      * the polygon vertices involve cos/sin of grid angles, so exact rational
+        arithmetic is not directly available either.
+
+    Formalizing `sum_pos_of_one_pos` supplies the LAST step (certificate implies
+    definiteness).  The MISSING step is the certificate itself, in exact
+    arithmetic.
+
+### The route that already has precedent in this project
+
+`certify_sigma_struct.py` did exactly this for Q_struct: closed-form assembly, arb
+ball arithmetic at 300 bits (radius ~1e-90), Sylvester's criterion on the ball
+matrix, minors positive through order 20.  That produced a genuine
+computer-assisted proof, not a HEURISTIC.
+
+For |R_n| the same route is available and the reason is N10 (certified cell-wise
+QP): on each COMBINATORIAL CELL -- a fixed set of active constraints and a fixed
+vertex incidence -- the polygon area is a POLYNOMIAL in the trajectory
+coefficients.  So on the cell containing c_R the Hessian of |R_n| is closed-form,
+and can be assembled and certified in ball arithmetic exactly as Q_struct was.
+The steps are:
+
+  1. identify the active-constraint cell at c_R (which half-planes and which wedge
+     edges contribute vertices, and in what cyclic order);
+  2. write |R_n| on that cell as an explicit polynomial in the mode amplitudes;
+  3. differentiate it exactly (no finite differences);
+  4. certify negative definiteness in arb by Sylvester minors;
+  5. check the perturbation stays inside the cell -- a separate inequality, and
+     the one that the old ray/cell certificates (N10, ray_graph_cert.py) exist to
+     supply.
+
+Only after step 4 does the margin become PROVED, and only after step 5 does it
+mean anything for local maximality.  Until then S8a stays HEURISTIC, and saying
+otherwise would be false.
+
+### Honest status of the demand
+
+"Formalize everything" is achievable for the structural and logical content, and
+that has now been done as far as core Lean allows (F1, F6, F7, F8, plus the
+existing F2-F4).  It is NOT achievable for the ladder margins without first
+producing exact-arithmetic certificates, which is steps 1-5 above and is the
+principal remaining piece of work in the whole program.
 ## 🔥🔥🔥 S8 RESULT: THE INTERSECTION RECONSTRUCTION IS NEGATIVE DEFINITE
 
 The Hessian of |R_n| at K=16, n_theta=1201 (Rule-8 checkpointed, 528 entries,

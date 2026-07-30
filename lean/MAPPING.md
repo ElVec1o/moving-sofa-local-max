@@ -37,6 +37,13 @@ sines and cosines is a separate Mathlib-track item and is NOT claimed here.
 | `selection_rule` | 550 | F6d, M1 | a `T`-invariant form vanishes between opposite-sign eigenvectors of an involution | propext, Quot.sound |
 | `ueig_opposite` | 564 | F6e, M1 | modes in different grading classes have opposite `U`-eigenvalue | propext |
 | `grading_selection` | 575 | F6f, M1 | hence a `U`-invariant form vanishes between them (the Z2 block-diagonalisation) | propext, Quot.sound |
+| `intersection_chain` | 592 | F7a, S8 | dominance + margin + slack ⟹ `atrue ≤ astar + s - m` | propext, Quot.sound |
+| `slack_squeeze` | 601 | F7b, S8 | `x ≤ y + s_n` for all n with some `s_n ≤ 0` ⟹ `x ≤ y` | propext, Quot.sound |
+| `sq_nonneg_int` | 618 | F8 | `0 ≤ x*x` | propext |
+| `weighted_sq_nonneg` | 626 | F8 | `0 ≤ d*x²` for `d > 0` | propext |
+| `weighted_sq_pos` | 630 | F8 | `0 < d*x²` for `d > 0`, `x ≠ 0` | propext |
+| `sum_nonneg` | 640 | F8 | non-negative entries ⟹ non-negative sum | propext, Quot.sound |
+| `sum_pos_of_one_pos` | 656 | F8 | non-negative entries with one positive ⟹ positive sum: certificate ⟹ strict definiteness | propext, Quot.sound |
 
 ## What is NOT formalized, and why
 
@@ -60,5 +67,21 @@ Recorded so the VERIFIED label is not read as covering more than it does.
   content would be the norm-preservation of the frame map, which requires ring
   normalisation of a degree-4 identity and is not available in core Lean.
   Label stays PROVED for the reduction, HEURISTIC for the coverage margin.
-* **Every numerical margin.**  Ladder eigenvalues, containment margins, symbol
-  minima and the like are HEURISTIC by Rule 7 and are not Lean targets.
+* **Every numerical margin.**  Ladder eigenvalues, containment margins and symbol
+  minima are HEURISTIC by Rule 7.  `sum_pos_of_one_pos` supplies the LAST step of a
+  definiteness argument (certificate ⟹ strict definiteness); what is missing is the
+  CERTIFICATE, in exact arithmetic.  The entries are currently central differences
+  of a floating-point polygon area, so there is no rigorous enclosure for a Lean
+  proof to consume: the FD truncation error is `O(ε²·M₄)` with `M₄` unknown, and the
+  polygon vertices involve `cos`/`sin` of grid angles so exact rationals are not
+  available either.  The route with precedent in this project is
+  `certify_sigma_struct.py` (closed-form assembly, arb at 300 bits, Sylvester
+  minors); for `|R_n|` it is available via N10, since on each combinatorial cell the
+  polygon area is a polynomial.  Until that certificate exists these stay HEURISTIC.
+
+## Tooling note
+
+Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go
+through with `simp [Int.add_mul, Int.mul_add, Int.mul_comm]` followed by `omega`;
+degree-4 identities (such as the 2×2 Sylvester identity) do not, which is why F8
+formalizes the logic of a certificate rather than the algebra that produces one.

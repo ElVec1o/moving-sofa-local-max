@@ -578,4 +578,91 @@ theorem grading_selection {c1 k1 c2 k2 : Nat} {B : Int}
   rw [ueig_opposite h] at hinv
   omega
 
+/-! ## F7 — the intersection-reconstruction route, and why its base-point slack
+is harmless
+
+The construction that avoids both failure modes is the finite-subfamily
+INTERSECTION `R_n(c) = ⋂_i H_{t_i}(c)`.  Containment is `superset_principle`,
+verbatim, with no hypothesis about chords or simplicity.  The price is that
+equality at the base point is lost: `|R_n(c₀)| = astar + s_n` with a slack
+`s_n > 0`.  F7a is the resulting chain and F7b is the passage to the limit. -/
+
+/-- **F7a (intersection chain).**  If the reconstruction dominates the true area,
+    sits below its own base value by the margin `m`, and exceeds `astar` at the
+    base point by exactly the slack `s`, then the true area is below
+    `astar + s - m`.  Trivial arithmetic — its value is that it pins the
+    quantifiers and shows exactly where the slack enters. -/
+theorem intersection_chain {atrue brec bbase astar s m : Int}
+    (hdom : atrue ≤ brec) (hmarg : brec ≤ bbase - m) (hbase : bbase = astar + s) :
+    atrue ≤ astar + s - m := by omega
+
+/-- **F7b (slack squeeze).**  If `x ≤ y + s n` for every `n` and some slack in the
+    family is non-positive, then `x ≤ y`.  Over `Int` this is the exact content of
+    "let the slack tend to zero"; the archimedean version over `ℝ` is elementary
+    but needs limits, which are outside this Mathlib-free development. -/
+theorem slack_squeeze {x y : Int} {s : Nat → Int}
+    (h : ∀ n, x ≤ y + s n) (hs : ∃ n, s n ≤ 0) : x ≤ y := by
+  obtain ⟨n, hn⟩ := hs
+  have := h n
+  omega
+
+/-! ## F8 — what a negative-definiteness certificate actually proves
+
+Every definiteness claim in this project is produced numerically and therefore
+carries the label HEURISTIC (Rule 7).  Lifting it requires a CERTIFICATE: an
+identity exhibiting the form as a negatively weighted sum of squares.  F8 is the
+logical content of such a certificate, so that once a certificate is produced in
+exact arithmetic the final step is machine-checked rather than asserted. -/
+
+/-- Squares are non-negative. -/
+theorem sq_nonneg_int (x : Int) : 0 ≤ x*x := by
+  rcases Int.lt_trichotomy x 0 with h | h | h
+  · exact Int.le_of_lt (Int.mul_pos_of_neg_of_neg h h)
+  · simp [h]
+  · exact Int.le_of_lt (Int.mul_pos h h)
+
+/-- A weighted square with positive weight is non-negative. -/
+theorem weighted_sq_nonneg {d x : Int} (hd : 0 < d) : 0 ≤ d*(x*x) :=
+  Int.mul_nonneg (Int.le_of_lt hd) (sq_nonneg_int x)
+
+/-- A weighted square with positive weight and non-zero argument is positive. -/
+theorem weighted_sq_pos {d x : Int} (hd : 0 < d) (hx : x ≠ 0) : 0 < d*(x*x) := by
+  have h1 : 0 < x*x := by
+    rcases Int.lt_trichotomy x 0 with h | h | h
+    · exact Int.mul_pos_of_neg_of_neg h h
+    · exact absurd h hx
+    · exact Int.mul_pos h h
+  exact Int.mul_pos hd h1
+
+/-- A list of non-negative entries has non-negative sum. -/
+theorem sum_nonneg : ∀ {l : List Int}, (∀ x ∈ l, 0 ≤ x) → 0 ≤ l.sum
+  | [], _ => by simp
+  | a :: t, h => by
+      have ha : 0 ≤ a := h a (by simp)
+      have ht : 0 ≤ t.sum := sum_nonneg (fun x hx => h x (by simp [hx]))
+      have : (a :: t).sum = a + t.sum := by simp
+      omega
+
+/-- **F8 (certificate ⟹ definiteness).**  If every entry of `l` is non-negative
+    and one entry is positive, the sum is positive.  With entries `dᵢ·wᵢ²` this is
+    exactly the step from a sum-of-squares certificate to strict definiteness:
+    `Q(v) = -∑ dᵢ wᵢ(v)²` is then strictly negative whenever some `wᵢ(v) ≠ 0`.
+
+    So a definiteness claim becomes VERIFIED as soon as the certificate — the
+    weights `dᵢ` and the linear forms `wᵢ` — is exhibited in exact arithmetic.
+    That exact-arithmetic certificate, not this lemma, is what the ladder margins
+    are still missing. -/
+theorem sum_pos_of_one_pos : ∀ {l : List Int}, (∀ x ∈ l, 0 ≤ x) →
+    (∃ x ∈ l, 0 < x) → 0 < l.sum
+  | [], _, ⟨_, hx, _⟩ => by simp at hx
+  | a :: t, h, ⟨x, hx, hxpos⟩ => by
+      have ht : 0 ≤ t.sum := sum_nonneg (fun y hy => h y (by simp [hy]))
+      have ha : 0 ≤ a := h a (by simp)
+      have hs : (a :: t).sum = a + t.sum := by simp
+      rcases List.mem_cons.mp hx with rfl | hxt
+      · omega
+      · have hpos : 0 < t.sum :=
+          sum_pos_of_one_pos (fun y hy => h y (by simp [hy])) ⟨x, hxt, hxpos⟩
+        omega
+
 end MovingSofa
