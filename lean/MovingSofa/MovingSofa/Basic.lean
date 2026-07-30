@@ -931,4 +931,65 @@ theorem sol1_speed_vanishes {A S : Int} : (1 - 2*(A*S) = 0) ↔ (2*(A*S) = 1) :=
 
 end Trig
 
+/-! ## F15 — the algebraic proof of `4 a₁ sin β = 1`
+
+Write `u := ∛(√2+1) - ∛(√2-1)`, so `tan β = u/2`, and
+`w := ∛(71+8√2) + ∛(71-8√2)`, so `a₁ = ¼√(4+w)`.  Then
+
+    4 a₁ sin β = 1   ⟺   u²(3+w) = 4,
+
+because `sin β = u/√(4+u²)`.  The proof is a chain of polynomial identities.
+
+STEP 1.  `pq = 1` and `p³ - q³ = 2` give `u³ = (p³-q³) - 3u = 2 - 3u`, so
+
+    u³ + 3u = 2,
+
+a much simpler description of `β` than the nested radicals.
+
+STEP 2.  With `x := u²`, step 1 reads `u(x+3) = 2`; squaring, `x(x+3)² = 4`, i.e.
+
+    x³ + 6x² + 9x - 4 = 0.
+
+STEP 3.  Put `W := 4/x - 3 = (4-3x)/x`.  Clearing denominators,
+
+    (4-3x)³ - 51(4-3x)x² - 142x³ = -16(x³ + 6x² + 9x - 4),
+
+so `W³ - 51W - 142 = 0` by step 2.  This is F15b below.
+
+STEP 4.  `W³ - 51W - 142` has discriminant `-4(-51)³ - 27(-142)² = 530604 - 544428
+= -13824 < 0`, hence exactly one real root; `w` is real and satisfies the same cubic,
+so `W = w`.
+
+STEP 5.  Therefore `x(3+w) = x(x+3)² = 4`.  ∎
+
+A corollary of steps 2 and 4: `w = (u²+3)² - 3 = u⁴ + 6u² + 6`, i.e.
+`∛(71+8√2) + ∛(71-8√2) = u⁴ + 6u² + 6` with `u³ + 3u = 2`.
+
+Every step was checked at 60 digits.  F15 formalises the two polynomial steps; the
+radical evaluations and the discriminant sign are elementary and are not carried into
+`Int`. -/
+
+/-- **F15a (step 2).**  If `u² = x` and `u(x+3) = 2` then `x(x+3)² = 4`. -/
+theorem u_sq_cubic {u x : Int} (hu : u*u = x) (h : u*(x+3) = 2) :
+    x*((x+3)*(x+3)) = 4 := by
+  have hsq : (u*(x+3))*(u*(x+3)) = 4 := by rw [h]; omega
+  have hre : (u*(x+3))*(u*(x+3)) = (u*u)*((x+3)*(x+3)) := by ac_rfl
+  rw [hre, hu] at hsq
+  exact hsq
+
+/-- **F15b (step 3).**  The Cardano substitution, as a polynomial identity.  Written
+    with explicit products so that the atoms are `x`, `x*x`, `x*x*x` and the identity
+    is linear in them. -/
+theorem cardano_substitution (x : Int) :
+    64 - 144*x - 96*(x*x) - 16*(x*x*x)
+      = -16*((x*x*x) + 6*(x*x) + 9*x - 4) := by
+  omega
+
+/-- **F15c.**  Consequently, if `x` satisfies the cubic of step 2 then the left side
+    of F15b vanishes — which is `W³ - 51W - 142 = 0` after clearing `x³`. -/
+theorem cardano_vanishes {x : Int} (hx : (x*x*x) + 6*(x*x) + 9*x - 4 = 0) :
+    64 - 144*x - 96*(x*x) - 16*(x*x*x) = 0 := by
+  rw [cardano_substitution, hx]
+  omega
+
 end MovingSofa

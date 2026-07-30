@@ -393,6 +393,63 @@ $4a_1\sin\beta=1$.
 \end{theorem}
 
 \begin{proof}
+Write $u:=\sqrt[3]{\sqrt2+1}-\sqrt[3]{\sqrt2-1}$, so that $\tan\beta=u/2$ by
+\eqref{eq:beta} and hence $\sin\beta=u/\sqrt{4+u^{2}}$, and
+$w:=\sqrt[3]{71+8\sqrt2}+\sqrt[3]{71-8\sqrt2}$, so that $a_1=\tfrac14\sqrt{4+w}$
+by \eqref{eq:a1}. Then
+\[
+  4a_1\sin\beta=\frac{u\sqrt{4+w}}{\sqrt{4+u^{2}}},
+\]
+so the assertion is equivalent to $u^{2}(4+w)=4+u^{2}$, that is to
+\begin{equation}\label{eq:key}
+  u^{2}\,(3+w)=4 .
+\end{equation}
+
+Put $p:=\sqrt[3]{\sqrt2+1}$ and $q:=\sqrt[3]{\sqrt2-1}$. Then $pq=1$ and
+$p^{3}-q^{3}=2$, so
+\[
+  u^{3}=(p-q)^{3}=p^{3}-q^{3}-3pq(p-q)=2-3u,
+\]
+i.e.
+\begin{equation}\label{eq:ucubic}
+  u^{3}+3u=2 .
+\end{equation}
+Set $x:=u^{2}$. Then \eqref{eq:ucubic} reads $u(x+3)=2$; squaring and using
+$u^{2}=x$ gives
+\begin{equation}\label{eq:xcubic}
+  x(x+3)^{2}=4,\qquad\text{i.e.}\qquad x^{3}+6x^{2}+9x-4=0 .
+\end{equation}
+Now let $W:=4/x-3$. Clearing denominators,
+\[
+  W^{3}-51W-142
+   =\frac{(4-3x)^{3}-51(4-3x)x^{2}-142x^{3}}{x^{3}}
+   =\frac{-16\bigl(x^{3}+6x^{2}+9x-4\bigr)}{x^{3}}=0
+\]
+by \eqref{eq:xcubic}, the middle equality being the polynomial identity
+$(4-3x)^{3}-51(4-3x)x^{2}-142x^{3}=-16(x^{3}+6x^{2}+9x-4)$.
+
+On the other hand $w$ satisfies the same cubic: with
+$A:=\sqrt[3]{71+8\sqrt2}$, $B:=\sqrt[3]{71-8\sqrt2}$ one has
+$AB=\sqrt[3]{71^{2}-128}=\sqrt[3]{4913}=17$ and $A^{3}+B^{3}=142$, so
+$w^{3}=A^{3}+B^{3}+3AB\,w=142+51w$. The cubic $W^{3}-51W-142$ has discriminant
+$-4(-51)^{3}-27(-142)^{2}=530604-544428=-13824<0$ and therefore exactly one real
+root; both $4/x-3$ and $w$ are real roots, so $4/x-3=w$. This is
+\eqref{eq:key}.
+\end{proof}
+
+\begin{corollary}\label{cor:ucubic}
+$2\tan\beta$ is the real root of $u^{3}+3u=2$, and
+\[
+  \sqrt[3]{71+8\sqrt2}+\sqrt[3]{71-8\sqrt2}=u^{4}+6u^{2}+6 .
+\]
+\end{corollary}
+
+\begin{proof}
+The first assertion is \eqref{eq:ucubic}. For the second, \eqref{eq:xcubic} gives
+$(x+3)^{2}=4/x$, so $w=4/x-3=(x+3)^{2}-3=x^{2}+6x+6$ with $x=u^{2}$.
+\end{proof}
+
+\begin{proof}[Proof of the junction statement]
 On $[0,\beta)$ Romik's path is $c(t)=R_tv(t)+\kappa^{(1)}$ with
 $v(t)=(a_1\cos t-1,\;a_1\sin t-\tfrac12)$. Differentiating,
 $c'=R_t(Jv+v')$ with $J$ the rotation by $\pi/2$, and since $\mu_t=R_te_1$ the
@@ -411,9 +468,11 @@ reduce to $\sin\beta=1/(4a_1)$.
 \end{proof}
 
 \begin{remark}
-Evaluated at $60$ digits, $1/(4a_1)$ and $\sin\beta$ agree to $3.9\cdot10^{-62}$.
-Romik tabulates $a_1$ and $\beta$ separately; we have not found
-Theorem~\ref{thm:a1beta} stated in the literature.
+Every step was also checked numerically at $60$ digits. Romik tabulates $a_1$ and
+$\beta$ separately; we have not found Theorem~\ref{thm:a1beta} or
+Corollary~\ref{cor:ucubic} stated in the literature. The two polynomial steps
+\eqref{eq:xcubic} and the Cardano substitution are machine-checked
+(\verb|u_sq_cubic|, \verb|cardano_substitution|).
 \end{remark}
 
 Theorem~\ref{thm:a1beta} has a consequence for the transfer of Baek's method.
