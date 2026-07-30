@@ -1,3 +1,137 @@
+## 🎆 THE CONSTANT IS NOW WITHIN 9% OF SHARP: 0.1532 -> 2/3, PROVED
+
+### 🔥 Item 1: the concavity constant, by two Sturm-Liouville eigenvalues
+
+The previous chain lost a factor of 4.8 in two places.  It split [0,pi/2] into [0,beta]
+and [beta,pi/2] and applied a SEPARATE Poincare inequality on each (P1 = 29.4135,
+P2 = 1.5035, P3 = 1), and it DISCARDED the E2 term of (Q2) instead of spending it.  Both
+losses go away if each half is treated as ONE weighted eigenvalue problem.
+
+Two Cauchy-Schwarz steps, with free parameters lambda in (0,1) and kappa in (0,1):
+
+  (S1)  -(a+b)^2 <= -lambda b^2 + [lambda/(1-lambda)] a^2,   a = eta(t), b = eta'(t+pi/2)
+        on E2.  Exact, because (1+r)(1-lambda) = 1 makes
+        (1+r)a^2 + 2ab + (1-lambda)b^2 = (sqrt(1+r) a + sqrt(1-lambda) b)^2.
+        BUYS gradient weight lambda on [pi/2,pi-beta]; PAYS mass r on [0,pi/2-beta).
+  (S2)  (x-y)^2 <= (1+1/kappa) x^2 + (1+kappa) y^2,   x = eta(t+pi/2), y = eta'(t) on E1.
+        PAYS mass q = 1+1/kappa on [pi/2,pi/2+beta]; PAYS gradient weight 1+kappa
+        on [0,beta).
+
+After substituting s = t + pi/2 the two halves DECOUPLE:
+
+  (1/2) d^2 Q[eta] <= int_0^{pi/2} (m_L eta^2 - w_L eta'^2)
+                    + int_{pi/2}^pi (m_R eta^2 - w_R eta'^2)  =: B[eta]
+
+  w_L = 1-kappa on [0,beta), 2 after      m_L = 2+r on [0,pi/2-beta), 2 after
+  w_R = 1+lambda on [pi/2,pi-beta), 1 after   m_R = 1+q on [pi/2,pi/2+beta), 1 after
+
+so B[eta] <= -min(c_L,c_R) ||eta||^2_{L^2(0,pi)} with c_L, c_R the first eigenvalues of
+
+  -(w_L eta')' - m_L eta = c eta on (0,pi/2),  eta(0) = eta(pi/2) = 0        [the GAUGE]
+  -(w_R eta')' - m_R eta = c eta on (pi/2,pi), eta(pi/2) = 0, eta'(pi) = 0   [pi is free]
+
+CERTIFYING THEM IN THE RIGHT DIRECTION.  FEM / Rayleigh-Ritz gives an UPPER bound on an
+eigenvalue, which is useless here.  Both coefficients are piecewise constant with three
+pieces, so the IVP solution is a product of three 2x2 transfer matrices, and by Sturm
+oscillation the first eigenvalue is the SMALLEST ZERO of the shooting function Phi, with
+Phi > 0 strictly below it.  So ONE SIGN EVALUATION is a lower bound.  At kappa = 1/4,
+lambda = 37/50:
+
+    Phi_L(2/3) = +0.00467395 > 0        Phi_R(2/3) = +0.00264479 > 0
+
+hence c_L, c_R > 2/3 and, PROVED,
+
+    (1/2) d^2 Q[eta] <= -(2/3) ||eta||^2_{L^2(0,pi)} .
+
+    certified 0.1532 -> 2/3          sharp 0.732285 (m=256)
+    20.9% of sharp  ->  91.0%        grid optimum 0.674944 at (kappa,lambda)=(0.26,0.74)
+
+Since ||eta||_{L^2(0,pi/2)} <= ||eta||_{L^2(0,pi)}, this also lifts the [0,pi/2] constant
+from 0.371 to 2/3, so the stability theorem now carries ONE constant, not two.
+
+FALSIFICATION (Rule 3).  The chain is only valid if B - Hessian is positive semidefinite.
+Assembled on the same hat basis, its smallest eigenvalue is +0.00e+00, -1.81e-14,
+-4.92e-14 at m = 32, 64, 128: PSD at every resolution, so nothing was tightened anywhere.
+The transfer-matrix roots also agree with a P1 FEM computation to 6 digits.
+
+### 🔥 Item 2: the [pi/2,pi] eigenvalue IN CLOSED FORM, and Lambda > 1 PROVED
+
+With mass 1 and weight w = 1+lambda_J on [pi/2,pi-beta], 1 on [pi-beta,pi], the transfer
+product collapses to a transcendental equation:
+
+    sqrt(w_1) cot( L_1 sqrt(Lambda/w_1) ) = tan( L_2 sqrt(Lambda) ),
+    w_1 = 1 + lambda_J,   L_1 = pi/2 - beta,   L_2 = beta.                        (SL)
+
+At lambda_J = 0 this reads cot(L_1 sqrt Lambda) = cot(pi/2 - L_2 sqrt Lambda), so
+sqrt(Lambda)(L_1 + L_2) = pi/2; and L_1 + L_2 = pi/2 EXACTLY, so Lambda(0) = 1 EXACTLY.
+That is precisely the marginal P3 = 1 that blocked the old chain, and it explains WHY
+nothing was available on [pi/2,pi] until the weight was raised.
+
+PROOF THAT Lambda > 1 FOR lambda_J > 0.  Put G(w_1) := sqrt(w_1) cot(L_1/sqrt(w_1))
+- tan(beta).  Then G(1) = 0, and G INCREASES in w_1: the prefactor increases, while
+L_1/sqrt(w_1) decreases and cot decreases on (0,pi), so the cotangent increases.  Hence
+G > 0 for w_1 > 1.  The left side of (SL) decreases in Lambda and the right increases, so
+the root moves right.  QED
+
+    lambda_J     0       0.05      0.10     0.16483    0.25      0.35
+    Lambda (SL)  1     1.049467  1.098883  1.162878  1.246819  1.345183
+    Lambda (FEM) 1     1.049466  1.098881  1.162875  1.246814  1.345175
+    G(1+lam_J)   0     0.042139  0.083948  0.137745  0.207843  0.289487
+
+### 🟢 Item 3: the sigma term is assembled without evaluating tan anywhere
+
+hess_sets in ambi_concavity.py now assembles -int_0^{pi/2}(eta tan t + eta')^2 in the
+equivalent form +int_0^{pi/2}(eta^2 - eta'^2), valid because eta(0) = eta(pi/2) = 0 and
+sec^2 - tan^2 = 1.  Identical spectrum (-0.735818, -0.733924, -0.733086, -0.732285 at
+m = 32/64/128/256), and no unbounded coefficient is evaluated in the Hessian at all.
+make_Q still uses tan: that is the FUNCTIONAL, not the Hessian, and is correct there.
+
+### 🟢 Item 4: the lam_max/h proxies are RETIRED project-wide
+
+Earlier turns quoted "lambda_max/h" for the concavity check.  Its SIGN is right (the mass
+matrix is positive definite, so lam_max(M) < 0 iff lam_max(Mass^{-1}M) < 0), but its
+MAGNITUDE is not a constant.  Every quoted magnitude is now normalised against
+mass_stiff, in note.tex and in ambi_concavity.py:
+
+    sign pattern                              old proxy    mass-normalised (m=128)
+    Sigma's own cell                            -0.7216         -0.7331
+    Baek injectivity (E1 empty, E2 all)         -0.8616         -0.8751
+    crude worst case (E2 empty, E1 all)         +1.2306         +1.2499
+    E1 = E2 = [0.4,1.2]  (NOT anchored)         +0.4071         +0.4123
+    E1 = E2, three pieces                       +0.4156         +0.4225
+
+and the eleven anchored (tau1,tau2) entries of Prop "beyond" likewise, all still negative.
+ZERO sign changes, so no conclusion moves.  Two stale numbers in note.tex were fixed at
+the same time: Remark "garding" quoted the pre-fix 0.7285 sequence, and the paragraph
+after Theorem "concave" compared a half-interval bound against a full-interval measurement.
+
+### 🔴 A duplicate LaTeX label found while recompiling
+
+`eq:a1` was defined TWICE: on the constant a_1 = (1/4)sqrt(4+w) and on the arm
+alpha_1(t) = G-1-F'.  LaTeX resolves duplicates to the LAST definition, so the three
+references meaning the CONSTANT were silently pointing at the ARM.  The arm is now
+`eq:arm1` and its five references were repointed.  note.tex compiles with 0 errors,
+0 multiply-defined labels, 0 undefined references, 28 pages.
+
+### 🟢 Lean F27
+
+`e2_completion`  M*(P a^2 + 2K ab + M b^2) = (Ka + Mb)^2  when  M*P = K*K
+`e1_split`       n(m+n)x^2 + m(m+n)y^2 - mn(x-y)^2 = (nx+my)^2   (no side condition)
+`form_nonneg_of_completion`  M > 0 and M*F = S*S  =>  F >= 0
+
+97 theorems, 14 defs, zero sorry.  Axioms [propext, Quot.sound]; the third needs only
+[propext].  Core Lean has no `ring`; both identities go through as
+`simp [Int.mul_add, Int.mul_sub, Int.mul_comm, Int.mul_left_comm]` then `omega`, which
+works because simp's AC normalisation leaves a LINEAR identity in product atoms.  The `2`
+in F27a had to be written `K*(a*b) + K*(a*b)`: with the literal, simp normalises to
+`M*(K*(a*b)*2)` and omega no longer sees the same atom.
+
+### New file
+
+`algorithm/rigorous/ambi_sturm.py` reproduces all of the above: the PSD falsification
+test, the two-parameter optimisation, the transfer-matrix roots at 30 digits, the sign
+certificate, the sharp constants, and the closed form (SL) against FEM.
+
 ## THE ENDPOINT BUG AUDITED ACROSS THE PROJECT; THE J3 OBSTRUCTION REMOVED; LEAN F26
 
 ### Item 4 first: audit the endpoint-hat bug everywhere it could have propagated
@@ -1282,7 +1416,8 @@ vanishes on most of the domain is not thereby validated on the rest.
     E1 = E2 = [0.4, 1.2]                     +0.3838  +0.3964  +0.4071   NOT
     E1 = E2, three pieces                    +0.3578  +0.3853  +0.4156   NOT
 
-(lam_max/h, L^2-normalised.)  Sigma's cell IS convex: alpha_1, alpha_2 are affine in H so
+(lam_max/h; a SIGN proxy only -- superseded by the mass-normalised table above.)
+Sigma's cell IS convex: alpha_1, alpha_2 are affine in H so
 each pointwise sign condition is a half-space.  Concave + critical on a convex set gives
 that Sigma maximises Q ON THAT CELL.
 

@@ -119,6 +119,20 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F27 — the two Cauchy-Schwarz steps of the sharp constant (note, Thm "Concavity, sharp order")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| `M·(P a² + 2K ab + M b²) = (Ka + Mb)²` when `MP = K²` — the `E₂` completion behind `−(a+b)² ≤ −λb² + (λ/(1−λ))a²` | `e2_completion` | VERIFIED |
+| `n(m+n)x² + m(m+n)y² − mn(x−y)² = (nx + my)²` — the `E₁` split `(x−y)² ≤ (1+1/κ)x² + (1+κ)y²` at `κ = m/n`, with no side condition | `e1_split` | VERIFIED |
+| `M > 0` and `M·F = S²` ⟹ `F ≥ 0`: dividing the weight back out | `form_nonneg_of_completion` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`; `form_nonneg_of_completion` needs only `propext`.  These
+are the two steps that decouple the halves of `[0,π]`, reducing the second variation to
+two Sturm-Liouville eigenvalue problems and lifting the certified constant from `0.1532`
+to `2/3` against a sharp `0.7323`.  NOT formalized: the Sturm oscillation theorem, the
+transfer-matrix representation, and the sign evaluations `Φ_L(2/3), Φ_R(2/3) > 0`.
+
 ## F26 — the sigma term has no singularity (note, Prop "$H^1$ stability")
 
 | Statement (note) | Lean declaration | Status |

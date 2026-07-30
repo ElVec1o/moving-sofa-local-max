@@ -16,7 +16,7 @@
 \DeclareMathOperator{\arctanop}{arctan}
 
 \title{The niche of Romik's ambidextrous sofa in convex-linear data,\\
-and the obstruction to a concavity bound}
+and a stability bound under a curvature condition}
 \author{Vico Bonfioli\\ \small\texttt{vicobonfioli@gmail.com}}
 \date{July 2026}
 
@@ -43,13 +43,16 @@ freely inside a unit ball, up to the corridor facets --- so what is new is its u
 
 For the functional $Q=|C_2|-2V$ we prove $Q(\Sig)=A_R^\ast$; that $\delta Q(\Sig)=0$, so
 Romik's ODE families are exactly the critical-point equations of $Q$, identically in his
-constants; and that $\delta^2Q<0$, with explicit constants. On the convex domain
-$\mathcal D$ cut out by (RC), a separation inequality and $\Sig$'s own sign pattern, this
-gives
+constants; and that $\delta^2Q<0$, with an explicit constant. Two Cauchy--Schwarz steps
+decouple the two halves of $[0,\pi]$ and reduce the second variation to a pair of
+Sturm--Liouville eigenvalue problems, certified from below by Sturm oscillation; this
+gives $\tfrac12\delta^2Q\le-\tfrac23\|\eta\|^2_{L^2(0,\pi)}$, against a measured sharp
+value of $0.7323$. On the convex domain $\mathcal D$ cut out by (RC), a separation
+inequality and $\Sig$'s own sign pattern,
 \[
-  |T|\ \le\ A_R^\ast-\tfrac{371}{1000}\|H-H_\Sig\|^2_{L^2(0,\pi/2)}
+  |T|\ \le\ A_R^\ast-\tfrac23\,\|H-H_\Sig\|^2_{L^2(0,\pi)}
 \]
-for every ambidextrous sofa $T$ with cap data in $\mathcal D$, and $\Sig$ as the unique
+for every ambidextrous sofa $T$ with cap data in $\mathcal D$, and $\Sig$ is the unique
 member attaining $A_R^\ast$. The domain is a $C^2$-neighbourhood of $\Sig$: its radius
 along $\sin(2k\theta)$ scales like $k^{-2}$.
 
@@ -578,7 +581,7 @@ intersection of the two inner half-planes through $c$.
 Since $h\mapsto h$ is linear under Minkowski sum, \eqref{eq:corner} makes $c(t)$,
 and hence each of
 \begin{align}
-  \alpha_1(t)&:=-\langle c'(t),\mu_t\rangle=G(t)-1-F'(t),\label{eq:a1}\\
+  \alpha_1(t)&:=-\langle c'(t),\mu_t\rangle=G(t)-1-F'(t),\label{eq:arm1}\\
   \alpha_2(t)&:=\ \ \langle c'(t),\nu_t\rangle=F(t)-1+G'(t),\label{eq:a2}\\
   \sigma(t)&:=c_y(t)/\cos t=\bigl(F(t)-1\bigr)\tan t+G(t)-1,\label{eq:sig}
 \end{align}
@@ -599,7 +602,7 @@ Face~1 lies on $\ell_t=\{\langle p,\mu_t\rangle=F(t)-1\}$. For $p$ fixed the
 signed gap to $\ell_t$ is $F(t)-1-\langle p,\mu_t\rangle$, whose $t$-derivative is
 $F'(t)-\langle p,\nu_t\rangle$ because $\mu_t'=\nu_t$. At $p=c-s\nu_t$ we have
 $\langle p,\nu_t\rangle=G-1-s$, so the speed is $F'-G+1+s=s-\alpha_1$ by
-\eqref{eq:a1}. Face~2 lies on $\{\langle p,\nu_t\rangle=G(t)-1\}$ and
+\eqref{eq:arm1}. Face~2 lies on $\{\langle p,\nu_t\rangle=G(t)-1\}$ and
 $\nu_t'=-\mu_t$, so the same computation gives $G'+\langle p,\mu_t\rangle
 =G'+F-1-s=\alpha_2-s$ at $p=c-s\mu_t$.
 \end{proof}
@@ -785,7 +788,7 @@ bounded above and has at most finitely many non-negative eigenvalues.
 
 \begin{proof}
 $\delta\alpha_1=\eta(t+\tfrac\pi2)-\eta'(t)$, $\delta\alpha_2=\eta(t)+\eta'(t+\tfrac\pi2)$
-and $\delta\sigma=\eta(t)\tan t+\eta(t+\tfrac\pi2)$ by \eqref{eq:a1}--\eqref{eq:sig};
+and $\delta\sigma=\eta(t)\tan t+\eta(t+\tfrac\pi2)$ by \eqref{eq:arm1}--\eqref{eq:sig};
 in the middle term the $\eta(t+\pi/2)$ cancels, leaving
 $\delta(\sigma-\alpha_1)=\eta(t)\tan t+\eta'(t)$. The integrand of \eqref{eq:V} is $C^1$
 across $\alpha_1=0$ and $\alpha_2=0$, so the moving boundaries of $E_1,E_2$ contribute
@@ -808,10 +811,11 @@ finite-difference check.)
 
 \emph{Concavity, on $\Sig$'s cell only.} With $\Sig$'s own sign pattern
 $E_1=[0,\beta)$, $E_2=[0,\pi/2-\beta)$, the form \eqref{eq:Q2} is negative definite:
-$\lambda_{\max}/h=-0.6905,-0.7111,-0.7216$ at $m=32,64,128$. Under Baek's injectivity
-condition, which is exactly $E_1=\emptyset$, $E_2=[0,\pi/2]$, it is $-0.8616$. But
-\eqref{eq:Q2} is \emph{not} negative for every sign pattern: with $E_1=E_2=[0.4,1.2]$ it
-is $+0.4071$, and with $E_1=E_2$ a union of three intervals $+0.4156$. An earlier scan
+$\sup\tfrac12\delta^2Q[\eta]/\|\eta\|^2_{L^2(0,\pi)}=-0.7358,-0.7339,-0.7331$ at
+$m=32,64,128$, against the exact mass matrix. Under Baek's injectivity condition, which is
+exactly $E_1=\emptyset$, $E_2=[0,\pi/2]$, it is $-0.8751$. But \eqref{eq:Q2} is
+\emph{not} negative for every sign pattern: with $E_1=E_2=[0.4,1.2]$ it is $+0.4123$, and
+with $E_1=E_2$ a union of three intervals $+0.4225$. An earlier scan
 over intervals \emph{anchored at $0$} suggested that $\tau_1\le\tau_2$ suffices; the
 unanchored cases refute that and the suggestion is \textbf{retracted}.
 
@@ -1107,7 +1111,7 @@ $Q(H)\ge|T|$ there, using (iii) to get the factor $2$ in $|T|\le|C_2|-2|N|$.
 \begin{remark}[Honest status of Theorem~\ref{thm:cond}]\label{rem:honest}
 Hypothesis (i) is \emph{numerical}: $Q(\Sig)=A_R^\ast$ to $61$ digits
 (Remark~\ref{rem:61}), $\|\delta Q\|_\infty/h=1.8\cdot10^{-8}$, and
-$\lambda_{\max}/h\to-0.72$ for a discretised form. Hypothesis (ii) is measured on a
+$\sup\tfrac12\delta^2Q/\|\eta\|_{L^2}^2\to-0.733$ for a discretised form. Hypothesis (ii) is measured on a
 grid, not proved. Hypothesis (iii) is the conditional part of
 Theorem~\ref{thm:ceiling}. So the effective label of Theorem~\ref{thm:cond} is
 HEURISTIC, and it does not assert optimality of $\Sig$: the class
@@ -1189,7 +1193,7 @@ kernel $\sin(\tau-u)$ vanishes. So the atom contributes nothing.
 
 For \eqref{eq:C11} put $m(t')=\langle c(t),\mu_{t'}\rangle-(F(t')-1)$ and
 $\Psi(\tau)=m(t-\tau)+\alpha_1(t)\sin\tau$. Then $m(t)=0$, $m'(t)=\alpha_1(t)$ by
-\eqref{eq:a1}, so $\Psi(0)=\Psi'(0)=0$, and $\mu''=-\mu$ gives in the same way
+\eqref{eq:arm1}, so $\Psi(0)=\Psi'(0)=0$, and $\mu''=-\mu$ gives in the same way
 \[
   \Psi''(\tau)+\Psi(\tau)=1-(F+F'')(t-\tau),
 \]
@@ -1352,13 +1356,13 @@ and the $r^2$ remainder, of coefficient $3.22\ldots$, is absorbed by the $E_2$ t
 $\eta(\pi/2)=0$ gives
 $\int_{\pi/2}^{\pi/2+\beta}\eta^2\le(\beta^2/2)\int\eta'^2$, the requirement is
 $3.22\cdot0.0420=0.135\le\tfrac12$. So every ingredient of a Gårding inequality
-$\delta^2Q\le-c\|\eta\|_{L^2}^2$ is in place; assembling the chain with explicit constants
-is not carried out here.
+$\delta^2Q\le-c\|\eta\|_{L^2}^2$ is in place; Theorem~\ref{thm:concave} assembles it and
+Theorem~\ref{thm:sharp} sharpens the constant to $\tfrac23$.
 
-Measured, the constant is $c=0.7285\ldots$: the supremum of
-$\delta^2Q[\eta]/\|\eta\|_{L^2}^2$ over the hat space, as a symmetric generalised
-eigenvalue problem against the exact mass matrix, is
-$-0.7059,-0.7188,-0.7255,-0.7285$ at $m=32,64,128,256$.
+Measured, $\tfrac12 c=0.7323\ldots$: the supremum of
+$\tfrac12\delta^2Q[\eta]/\|\eta\|_{L^2(0,\pi)}^2$ over the hat space, as a symmetric
+generalised eigenvalue problem against the exact mass matrix, is
+$-0.735818,-0.733924,-0.733086,-0.732285$ at $m=32,64,128,256$.
 \end{remark}
 
 \section{Concavity, and the area identity}\label{sec:final}
@@ -1408,9 +1412,10 @@ $\eta\equiv0$ on $[0,\pi/2]$ the $E_2$ term contributes
 $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2<0$.
 \end{proof}
 
-The bound $\delta^2Q\le-0.7419\|\eta\|_{L^2(0,\pi/2)}^2$ that \eqref{eq:garding} yields
-may be compared with the measured supremum of $\delta^2Q/\|\eta\|_{L^2(0,\pi)}^2$, which
-is $-0.7285\ldots$; the two agree to the extent the proof's $J_3$ coefficient is slack.
+The bound $\tfrac12\delta^2Q\le-0.3710\|\eta\|_{L^2(0,\pi/2)}^2$ that \eqref{eq:garding}
+yields is half of the measured $-0.7323\ldots$ for the full interval, the shortfall being
+the $J_3$ coefficient that \eqref{eq:garding} leaves at zero. Theorem~\ref{thm:sharp}
+recovers it.
 
 \begin{proposition}\label{prop:sigx}
 $\sigma-\alpha_1=\cos t\;x'(t)$ on each phase, with $x=(F-1)/\cos t$ as in
@@ -1419,7 +1424,7 @@ $\tfrac12\int\cos^2t\;x'(t)^2\,dt$, an energy of the intercept path.
 \end{proposition}
 
 \begin{proof}
-$\sigma-\alpha_1=(F-1)\tan t+F'$ by \eqref{eq:a1} and \eqref{eq:sig}, and
+$\sigma-\alpha_1=(F-1)\tan t+F'$ by \eqref{eq:arm1} and \eqref{eq:sig}, and
 $\cos^2t\;x'=F'\cos t+(F-1)\sin t$ by \eqref{eq:xint}; dividing by $\cos t$ gives the
 claim. Verified symbolically on SOL1, SOL5 and SOL6, residual $0$ in each case, which
 also recovers the first and third closed forms of Proposition~\ref{prop:mono}.
@@ -1649,7 +1654,7 @@ for every ambidextrous moving sofa $T$ whose cap data lies in $\mathcal D$.
 
 \begin{proof}
 Each of (a)--(d) is a family of affine inequalities or equalities in $H$, by
-Lemma~\ref{lem:corner} and \eqref{eq:a1}--\eqref{eq:sig}, so $\mathcal D$ is convex.
+Lemma~\ref{lem:corner} and \eqref{eq:arm1}--\eqref{eq:sig}, so $\mathcal D$ is convex.
 $\Sig$ satisfies (b) by Proposition~\ref{prop:rcsigma}, (c) with margin
 $\tfrac12-M=0.1121\ldots$ by Theorem~\ref{thm:main}, and (d) by definition of $\beta$.
 
@@ -1667,61 +1672,122 @@ maximum there, so $Q(H)\le Q(\Sig)$, and $Q(\Sig)=A_R^\ast$ by Theorem~\ref{thm:
 Combining, $|T|\le Q(H)\le A_R^\ast$.
 \end{proof}
 
+The constant of Theorem~\ref{thm:concave} is far from the measured one, because the proof
+splits $[0,\pi/2]$ into $[0,\beta]$ and $[\beta,\pi/2]$ and applies a separate Poincaré
+inequality on each, and because it discards the $E_2$ term instead of spending it. Treating
+each half as a \emph{single} weighted eigenvalue problem removes both losses.
+
+\begin{theorem}[Concavity, sharp order]\label{thm:sharp}
+On the cell $\mathcal C$, for every $\eta$ with $\eta(0)=\eta(\pi/2)=0$,
+\begin{equation}\label{eq:sharp}
+  \tfrac12\,\delta^2Q[\eta]\ \le\ -\tfrac23\,\|\eta\|^2_{L^2(0,\pi)} .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Fix $\lambda\in(0,1)$ and $\kappa\in(0,1)$, and put $r=\lambda/(1-\lambda)$ and
+$q=1+1/\kappa$. Two elementary inequalities dispose of the two coupling terms of
+\eqref{eq:Q2}. Since $(1+r)(1-\lambda)=1$,
+\[
+  (1+r)a^2+2ab+(1-\lambda)b^2=\bigl(\sqrt{1+r}\,a+\sqrt{1-\lambda}\,b\bigr)^2\ \ge\ 0,
+  \qquad\text{that is}\qquad -(a+b)^2\ \le\ -\lambda\,b^2+r\,a^2 ,
+\]
+applied with $a=\eta(t)$, $b=\eta'(t+\pi/2)$ on $E_2=[0,\pi/2-\beta)$; it buys gradient
+weight $\lambda$ on $[\pi/2,\pi-\beta]$ at the price of mass $r$ on $[0,\pi/2-\beta)$. And
+$(x-y)^2\le(1+1/\kappa)x^2+(1+\kappa)y^2$ with $x=\eta(t+\pi/2)$, $y=\eta'(t)$ on
+$E_1=[0,\beta)$ pays mass $q$ on $[\pi/2,\pi/2+\beta]$ and gradient weight $1+\kappa$ on
+$[0,\beta)$. Substituting $s=t+\pi/2$ in both, the two halves decouple:
+\[
+  \tfrac12\delta^2Q[\eta]\ \le\ \int_0^{\pi/2}\bigl(m_L\eta^2-w_L\eta'^2\bigr)
+    +\int_{\pi/2}^{\pi}\bigl(m_R\eta^2-w_R\eta'^2\bigr)\ =:\ B[\eta] ,
+\]
+\[
+  \begin{array}{ll}
+   w_L=1-\kappa\ \text{on }[0,\beta),\ 2\ \text{after}, &
+   m_L=2+r\ \text{on }[0,\tfrac\pi2-\beta),\ 2\ \text{after},\\[2pt]
+   w_R=1+\lambda\ \text{on }[\tfrac\pi2,\pi-\beta),\ 1\ \text{after}, &
+   m_R=1+q\ \text{on }[\tfrac\pi2,\tfrac\pi2+\beta),\ 1\ \text{after}.
+  \end{array}
+\]
+Each half is a Rayleigh quotient, so $B[\eta]\le-\min(c_L,c_R)\,\|\eta\|^2_{L^2(0,\pi)}$,
+where $c_L$ and $c_R$ are the first eigenvalues of
+\[
+  -(w_L\eta')'-m_L\eta=c\,\eta \ \text{ on }(0,\tfrac\pi2),\quad \eta(0)=\eta(\tfrac\pi2)=0;
+  \qquad
+  -(w_R\eta')'-m_R\eta=c\,\eta \ \text{ on }(\tfrac\pi2,\pi),\quad
+  \eta(\tfrac\pi2)=0,\ \eta'(\pi)=0 .
+\]
+The Dirichlet conditions at $0$ and $\pi/2$ are the gauge, not a restriction, and nothing
+pins $\eta(\pi)$.
+
+Both coefficients are piecewise constant with three pieces, so the solution of the initial
+value problem $\eta=0$, $w\eta'=1$ at the left endpoint is a product of three transfer
+matrices acting on $(\eta,\,w\eta')^{\!\top}$,
+\[
+  T(\ell,w,m;c)=\begin{pmatrix}\cos k\ell & (wk)^{-1}\sin k\ell\\[2pt]
+   -wk\sin k\ell & \cos k\ell\end{pmatrix},\qquad k=\sqrt{(m+c)/w}
+\]
+(hyperbolic when $m+c<0$). Write $\Phi_L(c)$ for the resulting $\eta(\pi/2)$ and
+$\Phi_R(c)$ for $(w\eta')(\pi)$. By Sturm oscillation the first eigenvalue is the smallest
+zero of $\Phi$, and $\Phi>0$ strictly below it, so one sign evaluation is a lower bound --
+the direction a certificate needs, and the one a Rayleigh--Ritz computation cannot supply.
+At $\kappa=\tfrac14$, $\lambda=\tfrac{37}{50}$ and $c=\tfrac23$,
+\[
+  \Phi_L(\tfrac23)=+0.00467395\ldots>0,\qquad \Phi_R(\tfrac23)=+0.00264479\ldots>0 ,
+\]
+so $c_L,c_R>\tfrac23$, which is \eqref{eq:sharp}.
+\end{proof}
+
+Optimising the two parameters gives $\min(c_L,c_R)=0.674944$ at
+$(\kappa,\lambda)=(0.26,0.74)$, against a measured sharp constant of $0.7323$: the chain
+loses $8\%$, and the certified $\tfrac23$ loses $9\%$. Since
+$\|\eta\|_{L^2(0,\pi/2)}\le\|\eta\|_{L^2(0,\pi)}$, \eqref{eq:sharp} also improves the
+$[0,\pi/2]$ constant of Theorem~\ref{thm:concave} from $0.371$ to $\tfrac23$.
+
+\begin{remark}[{The $[\pi/2,\pi]$ eigenvalue in closed form}]\label{rem:SL}
+When only the weight is raised and the mass is left at $1$ -- that is, $w=1+\lambda_J$ on
+$[\pi/2,\pi-\beta]$ and $1$ on $[\pi-\beta,\pi]$ -- the transfer product collapses to a
+transcendental equation for the first eigenvalue $\Lambda(\lambda_J)$ of
+$-(w\eta')'=\Lambda\eta$ with $\eta(\pi/2)=0$, $\eta'(\pi)=0$:
+\begin{equation}\label{eq:SL}
+  \sqrt{w_1}\,\cot\bigl(L_1\sqrt{\Lambda/w_1}\bigr)=\tan\bigl(L_2\sqrt\Lambda\bigr),
+  \qquad w_1=1+\lambda_J,\quad L_1=\tfrac\pi2-\beta,\quad L_2=\beta .
+\end{equation}
+At $\lambda_J=0$ this reads $\cot(L_1\sqrt\Lambda)=\cot(\pi/2-L_2\sqrt\Lambda)$, so
+$\sqrt\Lambda\,(L_1+L_2)=\pi/2$; since $L_1+L_2=\pi/2$ \emph{exactly}, $\Lambda(0)=1$
+exactly. That is the marginal case $P_3=1$ of Theorem~\ref{thm:concave}, and it explains
+why no gain is available on $[\pi/2,\pi]$ until the weight is raised. For $\lambda_J>0$ put
+$G(w_1)=\sqrt{w_1}\cot(L_1/\sqrt{w_1})-\tan\beta$. Then $G(1)=0$, and $G$ increases: the
+prefactor increases, while $L_1/\sqrt{w_1}$ decreases and $\cot$ decreases on $(0,\pi)$.
+So $G>0$ for $w_1>1$. The left side of \eqref{eq:SL} decreases in $\Lambda$ and the right
+side increases, so the root moves right and $\Lambda(\lambda_J)>1$ for every $\lambda_J>0$:
+\[
+  \begin{array}{r|cccccc}
+    \lambda_J & 0 & 0.05 & 0.10 & 0.16483 & 0.25 & 0.35\\\hline
+    \Lambda & 1 & 1.049467 & 1.098883 & 1.162878 & 1.246819 & 1.345183
+  \end{array}
+\]
+Theorem~\ref{thm:sharp} runs this mechanism on both halves at once, raising the mass as
+well as the weight.
+\end{remark}
+
 Because $Q$ is exactly quadratic on the cell and $\delta Q(\Sig)=0$, the same ingredients
 give more than a bound.
 
 \begin{theorem}[Stability]\label{thm:stab}
 For every ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in $\mathcal D$,
 \begin{equation}\label{eq:stab}
-  |T|\ \le\ A_R^\ast-\tfrac{371}{1000}\,\|\eta\|_{L^2(0,\pi/2)}^2
-  \qquad\text{and}\qquad
-  |T|\ \le\ A_R^\ast-\tfrac{153}{1000}\,\|\eta\|_{L^2(0,\pi)}^2 .
+  |T|\ \le\ A_R^\ast-\tfrac23\,\|\eta\|_{L^2(0,\pi)}^2 .
 \end{equation}
-Neither implies the other: the first has the better constant, the second controls the whole
-interval.
 \end{theorem}
 
 \begin{proof}
 On the cell $\mathcal C$ the functional $Q$ is a quadratic polynomial in $H$, so
 $Q(H_\Sig+\eta)=Q(\Sig)+\delta Q(\Sig)[\eta]+\tfrac12\delta^2Q[\eta]$ exactly. The first
 variation vanishes by Theorem~\ref{thm:el} and $Q(\Sig)=A_R^\ast$ by
-Theorem~\ref{thm:QA}, while \eqref{eq:garding} gives
-$\tfrac12\delta^2Q[\eta]\le-1.6013\,J_1-0.3710\,J_2\le-0.3710\,\|\eta\|^2_{L^2(0,\pi/2)}$,
-and Proposition~\ref{prop:SL} with $\delta=0.07$, $\kappa=3$, $\lambda=0.257$ gives
-coefficients $-0.4194,-0.1572,-0.1532$ on $J_1,J_2,J_3$, hence
-$\tfrac12\delta^2Q[\eta]\le-0.1532\|\eta\|^2_{L^2(0,\pi)}$.
-Combining each with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
+Theorem~\ref{thm:QA}, while Theorem~\ref{thm:sharp} bounds the second variation. Combining
+with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
 \end{proof}
-
-The second constant needs the $J_3$ coefficient to be negative, which the proof of
-Theorem~\ref{thm:concave} does not deliver: there it is $1-P_3=0$. The fix is to stop
-splitting the $E_2$ term off from the cap.
-
-\begin{proposition}[{The $[\pi/2,\pi]$ block}]\label{prop:SL}
-Write the $E_2$ bound as $-\lambda\int_{\pi/2}^{\pi-\beta}\eta'^2
-+\tfrac{\lambda}{1-\lambda}\int_0^{\pi/2-\beta}\eta^2$ and split
-$\lambda=\lambda_r+\lambda_J$, with $\lambda_r=B\beta^2/2$ absorbing the $r^2$ remainder as
-before. Then the $[\pi/2,\pi]$ block of $\tfrac12\delta^2Q$ is
-\[
-  \int_{\pi/2}^\pi\eta^2-\int_{\pi/2}^{\pi-\beta}(1+\lambda_J)\eta'^2
-  -\int_{\pi-\beta}^\pi\eta'^2 ,
-\]
-whose sign is governed by the weighted Sturm--Liouville eigenvalue
-\[
-  \Lambda(\lambda_J)=\min\frac{\int_{\pi/2}^\pi w\,\eta'^2}{\int_{\pi/2}^\pi\eta^2},
-  \qquad w=1+\lambda_J \text{ on }[\pi/2,\pi-\beta],\quad w=1\text{ on }[\pi-\beta,\pi],
-\]
-over $\eta$ with $\eta(\pi/2)=0$ and $\eta(\pi)$ free. The $J_3$ coefficient is
-$1-\Lambda(\lambda_J)$, and
-\[
-  \begin{array}{r|cccccc}
-    \lambda_J & 0 & 0.05 & 0.10 & 0.165 & 0.25 & 0.35\\\hline
-    \Lambda & 1 & 1.0495 & 1.0989 & 1.1629 & 1.2468 & 1.3452
-  \end{array}
-\]
-so $\Lambda(0)=1$ exactly, recovering the marginal case $P_3=1$, and $\Lambda>1$ for every
-$\lambda_J>0$.
-\end{proposition}
 
 \begin{corollary}[Uniqueness]\label{cor:uniq}
 $\Sig$ is the unique ambidextrous moving sofa of area $A_R^\ast$ whose cap data lies in
@@ -1744,24 +1810,24 @@ is not needed. In particular this holds whenever the segment meets only cells wh
 sets are the anchored intervals $E_1=[0,\tau_1)$, $E_2=[0,\tau_2)$ with $\tau_1\le\tau_2$:
 across $(\tau_1,\tau_2)=(0,\tfrac\pi2),(0.1,0.2),(0.3,0.5),(0.5,0.9),(0.8,1.2),
 (1.0,1.3),(1.2,1.4),(1.4,1.5),(1.5,\tfrac\pi2),(0.2,1.5),(0.05,0.06)$ the values of
-$\lambda_{\max}$ are $-0.863,-0.139,-0.355,-0.533,-0.445,-0.340,-0.228,-0.109,-0.047,
--0.777,-0.040$, all negative, with $\Sig$'s own cell giving $-0.723$.
+$\sup\tfrac12\delta^2Q/\|\eta\|^2_{L^2(0,\pi)}$ at $m=128$ are
+$-0.8751,-0.1404,-0.3602,-0.5397,-0.4497,-0.3431,-0.2285,-0.1074,-0.0457,-0.7876,-0.0421$,
+all negative, with $\Sig$'s own cell giving $-0.7331$.
 \end{proposition}
 
 Since $\Sig$ sits at $(\beta,\pi/2-\beta)$ with $\beta<\pi/2-\beta$, it lies in that
 family, and the class of competitors covered is strictly larger than $\mathcal D$ and is
 checkable from the sign pattern alone. (The restriction to \emph{anchored} intervals is
 essential: Remark~\ref{rem:conc} exhibits $E_1=E_2=[0.4,1.2]$, unanchored, with
-$\lambda_{\max}=+0.407$.)
+$\sup\tfrac12\delta^2Q/\|\eta\|^2_{L^2(0,\pi)}=+0.4123$.)
 
-The constant in \eqref{eq:stab} is the one the proof of Theorem~\ref{thm:concave} delivers.
-Measured, the sharp constant for the $L^2(0,\pi)$ norm is larger:
-$\sup\tfrac12\delta^2Q[\eta]/\|\eta\|^2_{L^2(0,\pi)}$ equals
-$-0.7339,-0.7331,-0.7323$ at $m=64,128,256$. The factor between $0.371$ and
-$0.732$ is the $J_3$ coefficient that the proof of Theorem~\ref{thm:concave} discards:
-$P_3=1$ makes $\int_{\pi/2}^\pi(\eta^2-\eta'^2)\le0$ only marginally, and recovering a
-positive coefficient there needs the $E_2$ term to be spent on $[\pi/2,\pi]$ rather than
-on $J_1$ and $J_2$. We have not carried that out.
+The constant in \eqref{eq:stab} is within $9\%$ of the measured one:
+$\sup\tfrac12\delta^2Q[\eta]/\|\eta\|^2_{L^2(0,\pi)}$ equals $-0.735818,-0.733924,
+-0.733086,-0.732285$ at $m=32,64,128,256$, against the certified $\tfrac23$. What closed
+most of the earlier factor of $4.8$ was giving up the pointwise splitting: the proof of
+Theorem~\ref{thm:concave} uses three separate Poincaré constants, of which
+$P_3=1$ is marginal and $P_2=1.5035$ nearly so, while Theorem~\ref{thm:sharp} replaces all
+three by two weighted eigenvalues that see the whole of each half at once.
 
 \begin{proposition}[$H^1$ stability]\label{prop:h1}
 The second variation controls the derivative as well: measured against correctly assembled

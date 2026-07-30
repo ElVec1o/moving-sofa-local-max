@@ -1,12 +1,12 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
-title: "The niche of Romik's ambidextrous sofa in convex-linear data, and the obstruction to a concavity bound"
+title: "The niche of Romik's ambidextrous sofa in convex-linear data, and a stability bound under a curvature condition"
 authors:
   - family-names: Bonfioli
     given-names: Vico
     email: vicobonfioli@gmail.com
-version: "0.6.0"
-date-released: 2026-07-30
+version: "0.7.0"
+date-released: 2026-07-31
 license: MIT
 doi: "10.5281/zenodo.20434287"
 repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
@@ -27,43 +27,47 @@ identifiers:
     value: "10.5281/zenodo.20434288"
     description: "Version DOI (v0.1.0)"
 abstract: >
-  Computer-assisted numerical evidence for a strict local maximum of the
-  moving-sofa area functional, on the Sobolev space H^2 of corner
-  trajectories (modulo translation symmetry). The headline new
-  contribution is the first quantitative local-maximality evidence for
-  Romik's ambidextrous candidate Sigma (the second half of Romik's 2018
-  Open Problem 1), which is implied by no prior work; the identical
-  apparatus is also developed on Gerver's sofa, whose global (hence
-  local) optimality is in any case established by Baek (2024). We stress
-  that these are NOT theorems in the strict computer-assisted-proof
-  sense: they are conditional on three explicitly identified
-  non-rigorous ingredients, flagged throughout. Conditional on these,
-  the Gerver evidence yields a coercivity constant m >= 4.27 in the
-  H^2-norm and a uniqueness radius delta >= 0.044; the ambidextrous
-  evidence yields m^R >= 2.2. The three ingredients are: (i) the
-  finite-dimensional Hessian is evaluated with a floating-point
-  polygon-intersection oracle (Shapely) rather than true interval
-  arithmetic; (ii) the cross-term coupling between low and high Fourier
-  modes is bounded by a numerical placeholder rather than an analytic
-  estimate; (iii) the second variation Q decomposes as Q_smooth +
-  Q_jump, where Lemma 8 characterizes Q_smooth analytically but the
-  dominant jump piece Q_jump (from the four contact-transition
-  breakpoints, whose locations move under perturbation) is captured only
-  empirically; a closed-form derivation of Q_jump is identified as the
-  principal remaining analytic item. v0.4.0 trims the Richardson
-  cross-validation material and reports a diagnostic sharpening the
-  Q_jump target: its dominant diagonal contribution grows like a
-  mode-uniform k^2 that any closed form must reproduce. We note this
-  does not settle the rank of Q_jump, since the diagonal of a
-  finite-rank breakpoint-jet operator is itself dominated by a
-  mode-uniform k^2 term; resolving the rank requires the off-diagonal
-  operator together with an analytically assembled Q_smooth. Earlier, v0.3.0
-  reframed the work from
-  "proof/theorem/certified" to honest conditional numerical evidence,
-  foregrounded the ambidextrous result, added explicit Sobolev-space
-  definitions and a coercivity-implies-maximality discussion, assumed
-  Baek's global resolution throughout, and reconciled the constants
-  (m >= 4.27, tail <= 0.28, delta >= 0.044).
+  The ambidextrous moving sofa problem asks for the largest shape that can be
+  manoeuvred around a right-angled corner of a unit-width hallway turning both
+  ways. Romik's candidate Sigma has area A_R* = 1.6449552184254408...; its
+  optimality is open. (Baek, arXiv:2411.19826, settled the one-corner problem,
+  proving Gerver's sofa optimal; his hallway has a single corner and his argument
+  does not address the ambidextrous variant.)
+
+  This work develops the cap/niche decomposition Sigma = C_2 minus two congruent
+  niches, in which the corner path is AFFINE in the cap's support function, so the
+  two arms and the reach are convex-linear. In those coordinates the niche area has
+  an exact closed form, the cap area is an exact quadratic form, and the functional
+  Q = |C_2| - 2V satisfies Q(Sigma) = A_R* structurally, with no integral evaluated.
+  Its first variation vanishes identically in Romik's constants, so his ODE families
+  ARE the Euler-Lagrange equations of Q.
+
+  The load-bearing hypothesis is (RC): the cap is nowhere flatter than a circle of
+  the corridor's width, i.e. the absolutely continuous part of H + H'' is at most 1.
+  (RC) is linear in the support function, hence convex; it is classical, being the
+  dual of Blaschke's rolling theorem, so what is new is its use. (RC) implies all
+  three injectivity conditions, via a forced harmonic oscillator whose kernel is
+  non-negative because the rotation angle is pi/2.
+
+  Main theorem: on the convex domain D cut out by (RC), a separation inequality and
+  Sigma's own sign pattern, every ambidextrous sofa T with cap data H = H_Sigma + eta
+  satisfies |T| <= A_R* - (2/3) ||eta||^2 in L^2(0,pi), with Sigma the unique member
+  attaining A_R*. The constant comes from two Cauchy-Schwarz steps that decouple the
+  two halves of [0,pi] into a pair of Sturm-Liouville eigenvalue problems, each
+  certified from below by Sturm oscillation; it is within 9 percent of the measured
+  sharp value 0.7323.
+
+  Limits are recorded rather than smoothed over. D is a C^2-neighbourhood of Sigma
+  (its radius along sin(2k theta) scales like k^-2); (RC) is sharp; the separation
+  inequality is independent of (RC) and cannot be removed; and V is the exact flux of
+  the advancing wedge boundary, so V >= |N| by Reynolds' transport theorem and Q
+  bounds nothing where the sweep fails to be injective. In particular the construction
+  does not recover Gerver's sofa, whose cap violates (RC). Optimality of Sigma remains
+  open. Lean 4 (no Mathlib): 97 theorems, no sorry.
+
+  An earlier line of work in this repository, on local maximality via second variation
+  in H^2, is WITHDRAWN; see paper/PROGRAM.md.
+
 keywords:
   - moving sofa problem
   - Gerver's sofa

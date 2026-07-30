@@ -1575,4 +1575,53 @@ theorem sigma_term_bounded {E D SQ TQ : Int} (h : SQ - TQ = 1) :
   rw [h] at this
   omega
 
+/-! ## F27 — the two Cauchy-Schwarz steps of the sharp concavity constant
+
+The second variation couples the two halves of `[0,pi]` through two terms of `(Q2)`:
+
+    - int_{E2} ( eta(t) + eta'(t+pi/2) )^2 dt   (right sign, a resource)
+    + int_{E1} ( eta(t+pi/2) - eta'(t) )^2 dt   (wrong sign, the obstruction)
+
+Decoupling them is what turns the estimate into two one-dimensional Sturm-Liouville
+eigenvalue problems, one per half, and lifts the certified constant from `0.1532` to
+`2/3` against a sharp value of `0.7323`.  Both steps are exact sum-of-squares identities
+over the integers, once cleared of denominators; F27 records them.
+
+F27a is the `E2` step.  Over the rationals it reads
+`-(a+b)^2 <= -lam*b^2 + (lam/(1-lam))*a^2`, which is `(1+r)a^2 + 2ab + (1-lam)b^2 >= 0`
+with `(1+r)(1-lam) = 1`.  Writing `P` for `1+r` and `M` for `1-lam` scaled to integers,
+the condition becomes `M*P = K*K` and multiplying the form by `M` completes the square.
+
+F27b is the `E1` step, `(x-y)^2 <= (1+1/kap)x^2 + (1+kap)y^2` with `kap = m/n`.  Cleared
+by `m*n` it is an identity with no side condition at all. -/
+
+/-- **F27a (the `E2` completion).**  If `M*P = K*K` then `M` times the quadratic form
+    `P*a^2 + 2*K*a*b + M*b^2` is the perfect square `(K*a + M*b)^2`.  With `M > 0` this
+    makes the form non-negative, which is exactly
+    `-(a+b)^2 <= -lam*b^2 + (lam/(1-lam))*a^2`: the step that buys gradient weight on
+    `[pi/2, pi-beta]` at the price of mass on `[0, pi/2-beta)`. -/
+theorem e2_completion {P M K a b : Int} (h : M*P = K*K) :
+    M*(P*(a*a) + (K*(a*b) + K*(a*b)) + M*(b*b)) = (K*a + M*b)*(K*a + M*b) := by
+  have h2 : (M*P)*(a*a) = (K*K)*(a*a) := by rw [h]
+  simp [Int.mul_add, Int.mul_comm, Int.mul_left_comm] at h2 ⊢
+  omega
+
+/-- **F27b (the `E1` split).**  For every `m, n`,
+    `n(m+n)x^2 + m(m+n)y^2 - mn(x-y)^2 = (nx + my)^2`.  Dividing by `mn > 0` this is
+    `(x-y)^2 <= (1+1/kap)x^2 + (1+kap)y^2` at `kap = m/n`: the step that pays mass on
+    `[pi/2, pi/2+beta]` and gradient weight on `[0,beta)` to remove the obstruction. -/
+theorem e1_split {m n x y : Int} :
+    n*(m+n)*(x*x) + m*(m+n)*(y*y) - m*n*((x-y)*(x-y)) = (n*x + m*y)*(n*x + m*y) := by
+  simp [Int.mul_add, Int.mul_sub, Int.mul_comm, Int.mul_left_comm]
+  omega
+
+/-- **F27c (dividing the weight back out).**  F27a and F27b both certify the form only
+    after multiplying by a positive weight.  If `M > 0` and `M*F = S*S` then `F` itself is
+    non-negative, which is what the estimate consumes. -/
+theorem form_nonneg_of_completion {M F S : Int} (hM : 0 < M) (h : M*F = S*S) : 0 ≤ F := by
+  have h1 : M*0 ≤ M*F := by
+    rw [h, Int.mul_zero]
+    exact sq_nonneg_int S
+  exact Int.le_of_mul_le_mul_left h1 hM
+
 end MovingSofa

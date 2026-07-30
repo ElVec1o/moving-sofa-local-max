@@ -23,7 +23,7 @@ ambidextrous variant.
 
 ## Results
 
-`paper/niche_separation/note.tex` (8pp) is the mathematical content. Labels:
+`paper/niche_separation/note.tex` (28pp) is the mathematical content. Labels:
 **VERIFIED** = machine-checked in Lean 4, no `sorry`; **PROVED** = complete human
 proof; **HEURISTIC** = computational evidence only.
 
@@ -44,9 +44,9 @@ proof; **HEURISTIC** = computational evidence only.
 | 13 | **The niche area in convex-linear data.** $\lvert N\rvert=\int_0^{\pi/2}\bigl[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2-\tfrac12(\alpha_1^-)^2\bigr]dt=0.184193197089\ldots$, against $0.184193171$ measured on the region from the under-measuring side | HEURISTIC ($10^{-8}$) |
 | 14 | $\tfrac12\int(\alpha_1^-)^2=\tfrac\beta8-a_1(1-\cos\beta)+a_1^2(\beta-\tfrac12\sin2\beta)=0.0119502700\ldots$, supported exactly on $[0,\beta)$. Granted 13, this is the one term of the wrong curvature | PROVED (the value) |
 | 15 | **The cap is an exact quadratic form**: $\lvert C_2\rvert=\int_0^\pi(H^2-H'^2)d\theta-H(0)-H(\pi)$ where $H(\theta)=h_K(\mu_\theta)$, using $h_{\rho A}(u)=h_A(Ru)+u_y$ | PROVED |
-| 16 | $Q:=\lvert C_2\rvert-2V$ satisfies $Q(\Sigma)=A_R^\ast$ ($5\cdot10^{-13}$), $\delta Q(\Sigma)=0$ in every direction ($1.8\cdot10^{-8}$), and $\delta^2Q\prec0$ on $\Sigma$'s cell ($\lambda_{\max}/h\to-0.72$) — all three of Baek's Thm 7.1.5 hypotheses, at $\Sigma$ | HEURISTIC |
+| 16 | $Q:=\lvert C_2\rvert-2V$ satisfies $Q(\Sigma)=A_R^\ast$ ($5\cdot10^{-13}$), $\delta Q(\Sigma)=0$ in every direction ($1.8\cdot10^{-8}$), and $\delta^2Q\prec0$ on $\Sigma$'s cell ($\sup\tfrac12\delta^2Q/\lVert\eta\rVert^2_{L^2}\to-0.733$) — all three of Baek's Thm 7.1.5 hypotheses, at $\Sigma$ | HEURISTIC |
 | 17 | The principal part of $\delta^2Q$ is negative everywhere, so concavity is a **finite** question; and $\Sigma$'s cell is convex | PROVED |
-| 18 | $\delta^2Q$ is **not** negative on every cell: $E_1=E_2=[0.4,1.2]$ gives $+0.407$ | HEURISTIC |
+| 18 | $\delta^2Q$ is **not** negative on every cell: $E_1=E_2=[0.4,1.2]$ gives $+0.4123$ | HEURISTIC |
 | 19 | **$V\ge\lvert N\rvert$ always** (Reynolds: the flux counts advance into already-swept territory), so $Q\le\lvert C_2\rvert-2\lvert N\rvert=\lvert T_{\max}\rvert$ — **$Q$ is not an upper bound**, and $\Sigma$ is an isolated zero of $V-\lvert N\rvert$ | PROVED |
 | 20 | $x(t)=(F(t)-1)/\cos t$ is the face-1 line's $x$-intercept and is strictly increasing; $\cos^2t\,x'=\tfrac12-\sin t$ on $[0,\beta)$ (positive since $\beta<\pi/6$) and $\tfrac12(1-\sin t)$ on the last phase | PROVED |
 | 21 | $x(\pi/2)=1-\tfrac23a_1=0.4164750917\ldots$ — a closed form for the right end of the corridor floor facet | PROVED |
@@ -62,7 +62,7 @@ proof; **HEURISTIC** = computational evidence only.
 | 31 | **(RC) implies the cross condition too**, so it implies all three injectivity conditions: $V=\lvert N\rvert$ and $Q\ge\lvert\text{sofa}\rvert$ on $\{(\mathrm{RC})\}$ | PROVED |
 | 32 | $\delta Q(\Sigma)=0$: all six Euler–Lagrange residuals vanish **identically in $a_1,f_1,f_2$**. Romik's ODE families are exactly the critical-point equations of $Q$ | PROVED |
 | 33 | $-p^2-(qT+p)^2+(r-p)^2=-(p+qT+r)^2+2r^2+2qTr$: the added term is absorbed exactly, leaving a derivative-free remainder | PROVED |
-| 34 | Gårding constant $c=0.7285\ldots$ measured; the ingredients (Poincaré constants $4$, $1$, $29.41$; coefficient $-1.83$; requirement $0.135\le\tfrac12$) are all in place, the chain not assembled | HEURISTIC |
+| 34 | Gårding constant $\tfrac12c=0.7323\ldots$ measured against the exact mass matrix; the ingredients (Poincaré constants $4$, $1$, $29.41$; coefficient $-1.83$; requirement $0.135\le\tfrac12$) are all in place, and rows 35 and 52 assemble the chain | HEURISTIC |
 | 35 | $\delta^2Q\le0$ on $\Sigma$'s cell, with explicit constants $-1.6013,-0.3710,0,-0.005$; strict for $\eta\ne0$. So $Q$ is concave there | PROVED |
 | 36 | $\sigma-\alpha_1=\cos t\,x'(t)$: the middle term of the niche formula is $\tfrac12\int\cos^2t\,x'^2$, an energy of the intercept path | PROVED |
 | 37 | $A_R^\ast=1+4\tan^2\beta+\beta$, and $Q(\Sigma)$ matches it to $2.7\cdot10^{-51}$ | PROVED / HEURISTIC |
@@ -74,13 +74,15 @@ proof; **HEURISTIC** = computational evidence only.
 | 43 | **Main theorem.** $\mathcal D=\{$gauge$\}\cap\{$(RC)$\}\cap\{c_y\le\tfrac12\}\cap\{$sign cell$\}$ is convex, contains $\Sigma$, and $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa with cap data in $\mathcal D$ | PROVED |
 | 44 | $\mathcal D$ is a **$C^2$-ball**: its radius along $\sin(2k\theta)$ scales like $k^{-2}$, so result 43 is a **$C^2$-local** statement. (RC) is always the binding constraint; $c_y\le\tfrac12$ never binds | HEURISTIC |
 | 45 | **(RC) is sharp**: face-2 injectivity fails exactly as the curvature density crosses $1$ | HEURISTIC |
-| 46 | **Stability.** $\lvert T\rvert\le A_R^\ast-\tfrac{371}{1000}\lVert\eta\rVert^2_{L^2(0,\pi/2)}$ and $\lvert T\rvert\le A_R^\ast-\tfrac{153}{1000}\lVert\eta\rVert^2_{L^2(0,\pi)}$; neither implies the other | PROVED |
+| 46 | **Stability.** $\lvert T\rvert\le A_R^\ast-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$, from row 53 | PROVED |
 | 47 | **Uniqueness.** $\Sigma$ is the unique ambidextrous sofa of area $A_R^\ast$ with cap data in $\mathcal D$ | PROVED |
 | 48 | The separation hypothesis is **independent** of (RC): adding $\delta\sin(\theta-\pi/2)$ on $[\pi/2,\pi]$ preserves (RC) and the gauge exactly while pushing $M$ past $\tfrac12$ | PROVED |
 | 49 | The bound and uniqueness **extend beyond $\mathcal D$**: concavity along the segment $[H_\Sigma,H]$ suffices, and holds whenever that segment meets only anchored cells with $\tau_1\le\tau_2$ | PROVED |
 | 50 | **$H^1$ stability**: $\tfrac12\delta^2Q\le-0.357\lVert\eta\rVert^2_{L^2}-0.3\lVert\eta'\rVert^2_{L^2}$, strictly stronger than the $L^2$ form | HEURISTIC |
 | 51 | $-\int_0^{\pi/2}(\eta\tan t+\eta')^2=\int_0^{\pi/2}(\eta^2-\eta'^2)$, so the second variation has no unbounded coefficients | PROVED |
-| 52 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 52 | **The concavity constant, within 9% of sharp.** Two Cauchy–Schwarz steps decouple the halves of $[0,\pi]$, leaving two Sturm–Liouville problems; Sturm oscillation certifies each first eigenvalue from below by ONE sign evaluation of a transfer-matrix shooting function. $\tfrac12\delta^2Q\le-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$, against a measured sharp $0.7323$ (was $0.1532$) | PROVED |
+| 53 | **The $[\pi/2,\pi]$ eigenvalue in closed form**: $\sqrt{w_1}\cot(L_1\sqrt{\Lambda/w_1})=\tan(L_2\sqrt\Lambda)$ with $L_1+L_2=\pi/2$ *exactly*, so $\Lambda(0)=1$ exactly — the marginal case that blocked the earlier chain — and $\Lambda>1$ for every $\lambda_J>0$ | PROVED |
+| 54 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -143,21 +145,32 @@ with zero initial data, whose kernel is nonnegative because the rotation angle i
 $\pi/2$. Across twelve perturbations (RC) holds exactly when the conditions hold, on both
 sides of the transition.
 
-What this is not: a proof of optimality. The cross condition of result 23 is not covered
-and is still only measured; the hypothesis class is not shown to contain every competitor;
-and hypothesis (i) of result 25 remains numerical, though result 30 gives it an explicit
-pointwise form. By result 19 bodies violating (RC) genuinely violate
-$Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
+*And then the conditional bound became unconditional, on a smaller domain.* Result 31
+covers the cross condition too, so (RC) implies all three injectivity conditions; results
+32, 39 and 43 make tightness, criticality and the bound itself proofs rather than
+measurements. Result 52 supplies the missing constant: two Cauchy--Schwarz steps decouple
+the halves of $[0,\pi]$, each half becomes a Sturm--Liouville eigenvalue problem, and
+Sturm oscillation certifies both first eigenvalues from below by a single sign evaluation.
+The result is $\tfrac12\delta^2Q\le-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$ against a
+measured sharp $0.7323$ -- within $9\%$, where the previous chain reached $21\%$.
+
+What this is not: a proof of optimality. $\mathcal D$ is a $C^2$-neighbourhood of
+$\Sigma$ (result 44) and (RC) is sharp (result 45), so the domain cannot be widened by
+relaxing (RC); by result 19 bodies violating it genuinely violate
+$Q\ge\lvert\text{sofa}\rvert$, and Gerver's cap is one of them. Widening $\mathcal D$
+needs a concave upper bound on the flux excess $V-\lvert N\rvert$, which is open.
 
 ## Layout
 
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 94 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 97 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
-                          by one of these
+                          by one of these.  ambi_sturm.py carries the concavity
+                          constant: the falsification test, the transfer-matrix
+                          roots, and the sign certificate
 
 superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:

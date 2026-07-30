@@ -25,9 +25,13 @@ WHAT IS FOUND
         assembly reported a nonzero gradient on [0,beta) and [pi/2,pi/2+beta); that was
         a sign error on d(-(1/2)(a1^-)^2) = +a1^- da1, and the finite-difference check
         is what caught it.  The corrected analytic gradient agrees with FD.)
-  (iii) d^2 Q is NEGATIVE DEFINITE at Sigma's own sign pattern, lam_max/h -> -0.71.
+  (iii) d^2 Q is NEGATIVE DEFINITE at Sigma's own sign pattern: the mass-normalised
+        sup (1/2) d^2 Q / ||eta||^2_{L^2(0,pi)} is -0.7331 at m = 128.  (Earlier turns
+        quoted a coefficient-space proxy lam_max/h; it has the right SIGN, since the mass
+        matrix is positive definite, but its magnitude is not a constant.  All quoted
+        magnitudes are now normalised against mass_stiff.)
         It is NOT negative for every sign pattern: with E1 = E2 = [0.4,1.2] the form is
-        +0.397.  Concavity therefore holds on Sigma's CELL -- which is convex, since
+        +0.4123.  Concavity therefore holds on Sigma's CELL -- which is convex, since
         a1, a2 are affine in H so each pointwise sign condition is a half-space -- and
         NOT on the whole domain.  An earlier scan suggested "tau1 <= tau2 suffices";
         that scan only tested intervals ANCHORED AT 0 and the claim is RETRACTED.
@@ -58,7 +62,7 @@ import numpy as np
 
 THIS = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, THIS); sys.path.insert(0, os.path.dirname(THIS))
-from ambi_hessian import Hats, gl_split, PI, PI2, H_and_dH
+from ambi_hessian import Hats, gl_split, PI, PI2, H_and_dH, mass_stiff
 from ambi_functional import data, A_R
 from sofa_romik2017_reference import BETA, A1_const
 
@@ -80,9 +84,13 @@ def hess_sets(m, E1, E2, nq=8):
         T, W = gl_split(sub, nq)
         P, _ = B.val_grad(T); _, D2 = B.val_grad(T + PI2)
         M += acc(W, P + D2, -1.0)
+    # sigma term, in the SINGULARITY-FREE form.  For eta with eta(0) = eta(pi/2) = 0,
+    #     -int_0^{pi/2} (eta tan t + eta')^2 dt = int_0^{pi/2} (eta^2 - eta'^2) dt,
+    # because -2 int eta eta' tan t = int eta^2 sec^2 t by parts and sec^2 - tan^2 = 1.
+    # Assembling this way removes the only unbounded coefficient in the form.
     T, W = gl_split(np.array(sorted(set(bps[bps <= PI2].tolist()) | {PI2})), nq)
     P, D = B.val_grad(T)
-    M += acc(W, P*np.tan(T)[:, None] + D, -1.0)                        # sigma, good
+    M += acc(W, P, 1.0) + acc(W, D, -1.0)                              # sigma, good
     for lo, hi in E1:                                                   # obstruction
         if hi - lo < 1e-12: continue
         sub = np.array(sorted(set(bps[(bps >= lo) & (bps <= hi)].tolist()) | {lo, hi}))
@@ -133,7 +141,8 @@ def main():
     print(f"      worst node theta = {B.keep[np.argmax(np.abs(g))]*B.h:.5f}")
     print(f"      => CRITICAL to numerical precision, in every direction.\n")
 
-    print("(iii) the Hessian, by sign pattern.  lam_max/h < 0 means concave.")
+    print("(iii) the Hessian, by sign pattern, as sup (1/2)d^2Q / ||eta||^2_{L^2(0,pi)}")
+    print("      against the exact mass matrix.  Negative means concave.")
     cases = [([(0.0, BETA)], [(0.0, PI2 - BETA)], "Sigma's own pattern"),
              ([(0.0, 0.0)], [(0.0, PI2)], "Baek's injectivity (a1>0, a2>0)"),
              ([(0.0, PI2)], [(0.0, PI2)], "a1<0 everywhere, a2>0 everywhere"),
@@ -146,7 +155,10 @@ def main():
         row = []
         for mm in (32, 64, 128):
             Bm, M = hess_sets(mm, E1, E2)
-            row.append(np.linalg.eigvalsh(M).max()/Bm.h)
+            Mass, _ = mass_stiff(Bm)
+            L = np.linalg.cholesky(Mass)
+            A = np.linalg.solve(L, np.linalg.solve(L, M).T).T
+            row.append(np.linalg.eigvalsh(0.5*(A + A.T)).max())
         print(f"      {lab:>38} " + "".join(f"{v:>9.4f}" for v in row))
     print("\n      Sigma's cell is CONVEX (a1, a2 affine in H, so each pointwise sign")
     print("      condition is a half-space), so concave + critical => Sigma maximises")
