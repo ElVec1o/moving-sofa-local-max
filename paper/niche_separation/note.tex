@@ -1114,6 +1114,113 @@ work, and is finite: (i) reduces to a Hessian sign and a first-order identity in
 form, and (ii) to the linear inequalities \eqref{eq:C22}, \eqref{eq:C11}.
 \end{remark}
 
+\section{One curvature condition implies injectivity}\label{sec:rc}
+
+The conditions of Definition~\ref{def:kprime} were verified on a grid. We now prove them,
+for all pairs at once, from a single linear condition on the cap.
+
+\begin{definition}\label{def:rc}
+Say $H$ satisfies (RC) if the absolutely continuous part of the surface measure obeys
+\[
+  H(\theta)+H''(\theta)\ \le\ 1\qquad\text{for a.e. }\theta\in[0,\pi],
+\]
+the only atoms being the corridor ceiling and floor facets at $\theta=\pm\pi/2$.
+Equivalently: the cap is nowhere flatter than a circle whose radius is the corridor
+width.
+\end{definition}
+
+Since $H+H''\le1$ is linear in $H$, (RC) cuts out a convex set.
+
+\begin{theorem}\label{thm:rc}
+If $H$ satisfies (RC), then \eqref{eq:C22} and \eqref{eq:C11} hold for every pair
+$0\le t'<t\le\pi/2$. Hence each of the two sweeps is injective.
+\end{theorem}
+
+\begin{proof}
+Fix $t$ and set $\tau=t-t'\in(0,t]$. For \eqref{eq:C22} put
+$n(t')=\langle c(t),\nu_{t'}\rangle-(G(t')-1)$ and
+\[
+  \Phi(\tau)=n(t-\tau)-\alpha_2(t)\sin\tau ,
+\]
+so that \eqref{eq:C22} reads $\Phi\ge0$. Now $n(t)=0$ because
+$\langle c(t),\nu_t\rangle=G(t)-1$, and
+$n'(t')=-\langle c(t),\mu_{t'}\rangle-G'(t')$ equals $-(F(t)-1)-G'(t)=-\alpha_2(t)$ at
+$t'=t$ by \eqref{eq:a2}; hence $\Phi(0)=\Phi'(0)=0$. Differentiating again and using
+$\nu''=-\nu$,
+\[
+  n''(t')=-\langle c(t),\nu_{t'}\rangle-G''(t')
+        =-\bigl(n(t')+G(t')-1\bigr)-G''(t') ,
+\]
+so with $n(t-\tau)=\Phi(\tau)+\alpha_2(t)\sin\tau$ the $\alpha_2$ terms cancel and
+\begin{equation}\label{eq:osc}
+  \Phi''(\tau)+\Phi(\tau)=1-(G+G'')(t-\tau)=:R(\tau).
+\end{equation}
+With $\Phi(0)=\Phi'(0)=0$, \eqref{eq:osc} gives
+$\Phi(\tau)=\int_0^\tau\sin(\tau-u)R(u)\,du$. Since $\tau\le t\le\pi/2<\pi$ we have
+$\sin(\tau-u)\ge0$ for $u\in[0,\tau]$, and $R\ge0$ by (RC) because
+$G(s)=H(s+\pi/2)$. Therefore $\Phi\ge0$.
+
+The ceiling atom of $H$ sits at $\theta=\pi/2$, i.e.\ at $t-u+\pi/2=\pi/2$, i.e.\ $u=t$.
+For $\tau<t$ that is outside $[0,\tau]$, and for $\tau=t$ it is the endpoint, where the
+kernel $\sin(\tau-u)$ vanishes. So the atom contributes nothing.
+
+For \eqref{eq:C11} put $m(t')=\langle c(t),\mu_{t'}\rangle-(F(t')-1)$ and
+$\Psi(\tau)=m(t-\tau)+\alpha_1(t)\sin\tau$. Then $m(t)=0$, $m'(t)=\alpha_1(t)$ by
+\eqref{eq:a1}, so $\Psi(0)=\Psi'(0)=0$, and $\mu''=-\mu$ gives in the same way
+\[
+  \Psi''(\tau)+\Psi(\tau)=1-(F+F'')(t-\tau),
+\]
+whence $\Psi(\tau)=\int_0^\tau\sin(\tau-u)\bigl[1-(H+H'')(t-u)\bigr]du\ge0$. Multiplying
+by $-\sin\tau<0$ turns $\Psi\ge0$ into $s_{11}\le\alpha_1$, which is \eqref{eq:C11}. Here
+the atom needs $t-u=\pi/2$, i.e.\ $u=t-\pi/2\le0$, reachable only at $t=\pi/2$, where
+$\sigma(\pi/2)=\alpha_1(\pi/2)$ makes the face-1 segment empty and the condition vacuous.
+\end{proof}
+
+\begin{remark}[Verification]\label{rem:rcnum}
+For $\Sig$ the absolutely continuous part of $H+H''$ has maximum $0.8385682\ldots$, at
+$\theta=\pi-\beta$, so (RC) holds with margin $0.1614\ldots$; the atom at $\theta=\pi/2$
+has mass $1.1670498\ldots$, the ceiling facet length. The reduction \eqref{eq:osc} was
+checked against direct evaluation of $n(t-\tau)-\alpha_2(t)\sin\tau$ at several
+$(t,\tau)$, agreeing to $2.4\cdot10^{-5}$, the finite-difference floor for $H''$.
+
+Theorem~\ref{thm:rc} also explains the failure mode of Remark~\ref{rem:kprime}. Across
+twelve perturbations, (RC) holds exactly when \eqref{eq:C11} holds:
+the compactly supported bumps give
+$\max(H+H'')_{\mathrm{ac}}=1.08,\,1.45,\,2.18,\,2.67,\,4.58,\,8.41$ and all violate
+\eqref{eq:C11}; $H_\Sig+\varepsilon\sin(2\theta)$ at $|\varepsilon|=0.03$ gives $0.888$
+and holds; $H_\Sig+\varepsilon\sin(4\theta)$ gives $0.976$ at $|\varepsilon|=0.01$ and
+holds, $1.267$ at $|\varepsilon|=0.03$ and fails. The agreement is exact on both sides of
+the transition.
+\end{remark}
+
+\begin{remark}[What Theorem~\ref{thm:rc} does and does not give]
+It replaces hypothesis (ii) of Theorem~\ref{thm:cond}, for the two self-intersection
+conditions, by (RC): a single explicit linear inequality with a geometric reading. The
+cross condition, that $\ell_2(t)\cap\ell_1(t')$ avoid both segments, is not covered; it is
+measured to hold at $\Sig$ ($0$ of $58\,081$ pairs) and remains a hypothesis. So the
+hypothesis class of Theorem~\ref{thm:cond} may be replaced by
+$\{(\text{RC})\}\cap\{\text{cross}\}\cap\mathcal C$, an intersection of two convex sets
+with one measured condition.
+\end{remark}
+
+\begin{remark}[The first variation, pointwise]\label{rem:el}
+Hypothesis (i) of Theorem~\ref{thm:cond} contains $\delta Q(\Sig)=0$. Integrating every
+$\eta'$ in $\delta Q$ by parts and collecting the coefficient of $\eta(\theta)$ gives the
+Euler--Lagrange equations of $Q$:
+\[
+  H+H''=\alpha_2^++(\sigma-\alpha_1)\tan\theta-(\sigma-\alpha_1)'+(\alpha_1^-)'
+  \qquad(0<\theta<\pi/2),
+\]
+\[
+  H+H''=-(\alpha_2^+)'(s)+\alpha_1^-(s),\qquad s=\theta-\pi/2
+  \qquad(\pi/2<\theta<\pi).
+\]
+Evaluated on $\Sig$ at eighteen values of $\theta$ spanning all six regions, the residual
+is at most $9.4\cdot10^{-6}$, which is the finite-difference floor. So $\delta Q(\Sig)=0$
+has an explicit pointwise form; proving it amounts to substituting the closed forms of
+SOL1, SOL5, SOL6 phase by phase, and is not carried out here.
+\end{remark}
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of

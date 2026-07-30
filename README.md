@@ -55,7 +55,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 24 | $\Sigma\in\mathcal K'$ (0 of 158802 face-2, 0 of 158802 face-1, 0 of 58081 cross violations), and $\mathcal K'$ has **nonempty interior**: $H_\Sigma+\varepsilon\sin(k\theta)$ stays inside for $k=2$, $\lvert\varepsilon\rvert\le3\cdot10^{-2}$, both signs | HEURISTIC |
 | 25 | **Conditional bound.** $\lvert T\rvert\le A_R^\ast$ for cap data in $\mathcal K'\cap\mathcal C$, given (i) tight/critical/concave at $\Sigma$, (ii) the conditions of 23 on $\mathcal K'\cap\mathcal C$, (iii) $M<\tfrac12$ | HEURISTIC |
 | 26 | $x$ is strictly increasing on all of $[0,\pi/2]$: the middle-phase inequality $W>0$ is certified by 32 subintervals at 40 digits, $\min L=+6.1\cdot10^{-3}$ | PROVED |
-| 27 | **Optimality of $\Sigma$** | **not proved** |
+| 27 | **(RC)**: the cap is nowhere flatter than a circle of the corridor's width, i.e. $(H+H'')_{\mathrm{ac}}\le1$. Linear in $H$, hence convex | PROVED |
+| 28 | **(RC) implies both self-intersection conditions of 23, for every pair.** The reduction is $\Phi''+\Phi=1-(H+H'')(t-\tau+\pi/2)$ with zero initial data, so $\Phi=\int_0^\tau\sin(\tau-u)R\,du\ge0$; the facet atoms sit where the kernel vanishes | PROVED |
+| 29 | $\Sigma$ satisfies (RC) with margin $0.1614$; across twelve perturbations (RC) holds exactly when the conditions of 23 hold | HEURISTIC |
+| 30 | The Euler–Lagrange equations of $Q$, pointwise; residual $9.4\cdot10^{-6}$ at $\Sigma$ | HEURISTIC |
+| 31 | **Optimality of $\Sigma$** | **not proved** |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -111,18 +115,25 @@ $\mathcal K'=\{V=\lvert N\rvert\}$ is convex, contains $\Sigma$, and has nonempt
 interior around it in low-frequency directions. On $\mathcal K'\cap\mathcal C$ the
 architecture transfers and gives a conditional bound.
 
-What that is not: a proof of optimality. $\mathcal K'\cap\mathcal C$ is not shown to
-contain every competitor, and by result 19 bodies outside $\mathcal K'$ genuinely violate
-$Q\ge\lvert\text{sofa}\rvert$. The conditional bound's hypotheses are numerical, so its
-effective label is HEURISTIC. Proving them is finite work: a Hessian sign and a
-first-order identity in closed form, plus the linear inequalities of result 23.
+Results 27–28 then prove the linear inequalities of result 23, for every pair at once,
+from a single condition with a geometric reading: the cap is nowhere flatter than a circle
+of the corridor's width. The proof reduces each condition to a forced harmonic oscillator
+with zero initial data, whose kernel is nonnegative because the rotation angle is at most
+$\pi/2$. Across twelve perturbations (RC) holds exactly when the conditions hold, on both
+sides of the transition.
+
+What this is not: a proof of optimality. The cross condition of result 23 is not covered
+and is still only measured; the hypothesis class is not shown to contain every competitor;
+and hypothesis (i) of result 25 remains numerical, though result 30 gives it an explicit
+pointwise form. By result 19 bodies violating (RC) genuinely violate
+$Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
 
 ## Layout
 
 ```
 paper/niche_separation/   the note (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including retractions
-lean/MovingSofa/          Lean 4 development, 68 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 72 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/                computations (ambi_*, sigma_*, gerver_*)
 ```

@@ -1180,4 +1180,78 @@ theorem facet_tangency {A1 A2 G CX0 CXP : Int} (h0 : CX0 = 0) (hG : G = -CXP) :
     (CX0 - A2) + (A2 + A1 - G) = CXP + A1 := by
   subst h0; subst hG; omega
 
+/-! ## F19 — the curvature condition (RC) and the ODE reduction it feeds
+
+Section 10 of the note proves that BOTH injectivity conditions follow from one linear
+condition on the cap,
+
+    (RC)   H(theta) + H''(theta) <= 1      (absolutely continuous part),
+
+i.e. the cap is nowhere flatter than a circle of the corridor's width.  The proof reduces
+each condition to a forced harmonic oscillator.  For (C22), with
+n(t') = <c(t),nu_t'> - (G(t')-1) and Phi(tau) = n(t-tau) - alpha_2(t) sin tau,
+
+    n(t) = 0,   n'(t) = -alpha_2(t)   so   Phi(0) = Phi'(0) = 0,
+    n'' = -<c(t),nu_t'> - G''  and  <c(t),nu_t'> = n + G - 1,
+    so  n'' = -n + 1 - (G + G''),  and the alpha_2 terms CANCEL, leaving
+
+        Phi'' + Phi = 1 - (G + G'')(t-tau) =: R(tau) ,
+
+whence Phi(tau) = int_0^tau sin(tau-u) R(u) du >= 0, because tau <= pi/2 < pi makes the
+kernel non-negative and (RC) makes R non-negative.
+
+Four steps are arithmetic and are recorded here.  F19a is the substitution that produces
+`n'' = -n + 1 - (G+G'')`.  F19b is the cancellation giving `Phi'' + Phi = R`.  F19c is the
+sign conclusion in its discrete form: a sum of products of non-negative terms is
+non-negative (the Riemann-sum shadow of the integral representation).  F19d is convexity
+of the constraint set cut out by (RC), which is what makes the domain convex.
+
+NOT formalized: that the integral representation solves the ODE, and that the facet atom
+at theta = pi/2 contributes nothing because it sits where the kernel vanishes.  Both are
+analysis. -/
+
+/-- **F19a (the substitution).**  With `C = <c(t),nu_t'>` satisfying `C = n + G - 1`, the
+    second derivative `N2 = -C - G2` becomes `-n + 1 - (G + G2)`. -/
+theorem curvature_substitution {C n G G2 N2 : Int}
+    (hC : C = n + G - 1) (hN : N2 = -C - G2) :
+    N2 = -n + 1 - (G + G2) := by
+  subst hC; subst hN; omega
+
+/-- **F19b (the cancellation).**  `Phi = n - A*S` and `Phi2 = N2 + A*S` with
+    `N2 = -n + K` give `Phi2 + Phi = K`: the `alpha_2` terms cancel identically, which is
+    why the resulting oscillator is forced by the curvature alone. -/
+theorem phi_ode {Phi Phi2 n N2 A S K : Int}
+    (hPhi : Phi = n - A*S) (hPhi2 : Phi2 = N2 + A*S) (hN2 : N2 = -n + K) :
+    Phi2 + Phi = K := by
+  subst hPhi; subst hPhi2; subst hN2; omega
+
+/-- **F19c (the sign conclusion, discrete form).**  If every kernel value and every
+    forcing value is non-negative then so is the sum of their products.  This is the
+    Riemann-sum shadow of `Phi(tau) = int sin(tau-u) R(u) du >= 0`, with the kernel
+    `sin(tau-u) >= 0` supplied by `tau <= pi/2 < pi` and the forcing `R >= 0` by (RC). -/
+theorem kernel_sum_nonneg : ∀ (ws rs : List Int),
+    (∀ x ∈ ws, 0 ≤ x) → (∀ x ∈ rs, 0 ≤ x) →
+    0 ≤ (List.zipWith (fun a b => a * b) ws rs).sum
+  | [], _, _, _ => by simp
+  | _ :: _, [], _, _ => by simp
+  | w :: ws, r :: rs, hw, hr => by
+      have h1 : 0 ≤ w * r :=
+        Int.mul_nonneg (hw w List.mem_cons_self) (hr r List.mem_cons_self)
+      have h2 : 0 ≤ (List.zipWith (fun a b => a * b) ws rs).sum :=
+        kernel_sum_nonneg ws rs
+          (fun x hx => hw x (List.mem_cons_of_mem _ hx))
+          (fun x hx => hr x (List.mem_cons_of_mem _ hx))
+      simpa using Int.add_nonneg h1 h2
+
+/-- **F19d ((RC) cuts out a convex set).**  `H + H'' ≤ 1` is linear in `H`, so the
+    constraint is preserved by non-negative combinations: if `X ≤ D` and `Y ≤ D` then
+    `a*X + b*Y ≤ (a+b)*D` for `a, b ≥ 0`.  Taking `a + b` to be the common denominator
+    of a convex combination gives convexity of the domain. -/
+theorem rc_convex {a b X Y D : Int} (ha : 0 ≤ a) (hb : 0 ≤ b)
+    (hX : X ≤ D) (hY : Y ≤ D) : a*X + b*Y ≤ (a + b)*D := by
+  have h1 : a*X ≤ a*D := Int.mul_le_mul_of_nonneg_left hX ha
+  have h2 : b*Y ≤ b*D := Int.mul_le_mul_of_nonneg_left hY hb
+  have h3 : (a + b)*D = a*D + b*D := by simp [Int.add_mul]
+  omega
+
 end MovingSofa

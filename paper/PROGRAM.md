@@ -1,3 +1,95 @@
+## 🎆 ONE LINEAR CURVATURE CONDITION PROVES BOTH INJECTIVITY CONDITIONS
+
+The previous section identified K' = {V = |N|} as convex but verified it only on a grid.
+It is now PROVED, from a single linear condition with a geometric reading.
+
+    (RC)  the absolutely continuous part of H + H'' is <= 1 on [0,pi], the only atoms
+          being the corridor ceiling and floor facets at theta = +- pi/2.
+
+Equivalently: THE CAP IS NOWHERE FLATTER THAN A CIRCLE OF THE CORRIDOR'S WIDTH.  H + H''
+is the radius of curvature (the surface-measure density), and H + H'' <= 1 is LINEAR in H,
+so (RC) cuts out a convex set.
+
+### THEOREM.  (RC) implies (C22) and (C11) for every pair t' < t.
+
+PROOF.  Fix t, put tau = t - t' in (0,t], n(t') = <c(t),nu_t'> - (G(t')-1), and
+
+    Phi(tau) = n(t-tau) - alpha_2(t) sin tau,     so (C22) reads Phi >= 0.
+
+n(t) = 0 since <c(t),nu_t> = G-1; and n'(t') = -<c(t),mu_t'> - G'(t') equals
+-(F-1) - G' = -alpha_2(t) at t' = t.  So Phi(0) = Phi'(0) = 0.  Using nu'' = -nu,
+
+    n''(t') = -<c(t),nu_t'> - G''(t') = -(n(t') + G(t') - 1) - G''(t'),
+
+and substituting n(t-tau) = Phi(tau) + alpha_2 sin tau, THE alpha_2 TERMS CANCEL:
+
+    Phi'' + Phi = 1 - (G+G'')(t-tau) =: R(tau).                                    (osc)
+
+A forced harmonic oscillator with zero initial data, so
+
+    Phi(tau) = int_0^tau sin(tau-u) R(u) du .
+
+tau <= t <= pi/2 < pi makes sin(tau-u) >= 0 on [0,tau], and (RC) makes R >= 0 because
+G(s) = H(s+pi/2).  Hence Phi >= 0.  The ceiling atom sits at u = t: outside [0,tau] when
+tau < t, and at the endpoint where the kernel VANISHES when tau = t.  So it contributes
+nothing.  For (C11), m(t') = <c(t),mu_t'> - (F(t')-1) and Psi = m(t-tau) + alpha_1 sin tau
+give Psi'' + Psi = 1 - (F+F'')(t-tau) by the same computation with mu'' = -mu, so
+Psi >= 0; multiplying by -sin tau < 0 turns that into s11 <= alpha_1.  Its atom needs
+u = t - pi/2 <= 0, reachable only at t = pi/2, where sigma(pi/2) = alpha_1(pi/2) makes the
+face-1 segment EMPTY.  QED
+
+### Verification, and the I12 control is now EXACT
+
+Sigma: max of the AC part of H+H'' = 0.838568216 at theta = pi-beta, margin +0.161432.
+Atom at pi/2: mass 1.167049816 = the ceiling facet length.  (osc) checked against direct
+evaluation of n(t-tau) - alpha_2 sin tau: agreement 2.4e-5, the finite-difference floor.
+
+TWELVE perturbations, (RC) holds exactly when (C11) holds -- no exceptions:
+
+    perturbation                max AC H+H''   (RC)    (C11)
+    H_S +-0.05 bump             2.666, 1.080   FAILS   FAILS
+    H_S +-0.10 bump             4.580, 1.447   FAILS   FAILS
+    H_S +-0.20 bump             8.407, 2.182   FAILS   FAILS
+    H_S +- 0.03 sin(2 theta)    0.888          holds   holds
+    H_S +- 0.01 sin(4 theta)    0.976          holds   holds
+    H_S +- 0.03 sin(4 theta)    1.267          FAILS   FAILS
+
+The k=4 transition is captured on BOTH sides.  The bump family fails because
+exp(-1/(1-z^2)) has large second derivatives, which is exactly a curvature violation.
+
+### Consequence for the conditional theorem
+
+Hypothesis (ii) is replaced, for the two self-intersection conditions, by (RC): one
+explicit linear inequality.  The CROSS condition (l2(t) ^ l1(t') avoiding both segments)
+is NOT covered and remains measured (0 of 58081 pairs at Sigma).  So the hypothesis class
+becomes {(RC)} ^ {cross} ^ C, an intersection of two convex sets with one measured
+condition.
+
+## 🔥 THE FIRST VARIATION, POINTWISE
+
+Integrating every eta' in dQ by parts and collecting the coefficient of eta(theta):
+
+    0 < theta < pi/2 :  H+H'' = a2^+ + (sig-a1) tan th - (sig-a1)' + (a1^-)'
+    pi/2 < theta < pi:  H+H'' = -(a2^+)'(s) + a1^-(s),      s = theta - pi/2
+
+Evaluated on Sigma at 18 values of theta spanning all six regions: max residual 9.4e-6,
+the finite-difference floor.  On [0,beta) both sides are 0 (the vertex interval); on
+(pi/2, pi/2+beta) both sides are 1/2 (the radius-1/2 arc).  So dQ(Sigma) = 0 now has an
+explicit pointwise form; proving it means substituting SOL1/SOL5/SOL6 phase by phase, and
+is not done.
+
+## 🟢 LEAN F19
+
+  curvature_substitution   n'' = -n + 1 - (G+G'') from <c,nu_t'> = n + G - 1
+  phi_ode                  the alpha_2 cancellation: Phi'' + Phi = R
+  kernel_sum_nonneg        sum of products of non-negative kernel and forcing is >= 0
+                           (the Riemann-sum shadow of the integral representation)
+  rc_convex                a*X + b*Y <= (a+b)*D for a,b >= 0: (RC) cuts out a convex set
+
+72 theorems, 14 defs, zero sorry.  Axioms: [propext, Quot.sound] (kernel_sum_nonneg needs
+only propext).  NOT formalized: that the integral representation solves the oscillator,
+and that the facet atom contributes nothing.  Both are analysis.
+
 ## 🔥🔥🔥🔥 THE REPAIR: {V = |N|} IS CUT OUT BY LINEAR INEQUALITIES, SO IT IS CONVEX
 
 The previous section proved V >= |N| always (Reynolds), so Q = |C2| - 2V is not an upper

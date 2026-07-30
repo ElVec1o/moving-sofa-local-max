@@ -126,6 +126,20 @@ the cap identity (that `⟨h″,h⟩ = −∫h′²` with no boundary terms, the
 the middle-phase positivity `W > 0`, which core Lean cannot express; and
 Proposition "V over-estimates the niche", whose proof is Reynolds' transport theorem.
 
+## F19 — the curvature condition (RC) (note §10)
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| `n'' = -n + 1 - (G+G'')` from `⟨c(t),ν_t'⟩ = n + G - 1` | `curvature_substitution` | VERIFIED |
+| the `α₂` cancellation giving `Φ'' + Φ = R` | `phi_ode` | VERIFIED |
+| a sum of products of nonnegative kernel and forcing is nonnegative (Riemann-sum shadow of `Φ = ∫ sin(τ-u)R du ≥ 0`) | `kernel_sum_nonneg` | VERIFIED |
+| (RC) cuts out a convex set: `a·X + b·Y ≤ (a+b)·D` for `a,b ≥ 0` | `rc_convex` | VERIFIED |
+
+Axioms: `[propext, Quot.sound]`; `kernel_sum_nonneg` needs only `propext`.  NOT formalized:
+that the integral representation solves the oscillator, and that the facet atom at
+`θ = π/2` contributes nothing because it sits where the kernel vanishes.  Both are
+analysis, not `Int` arithmetic.
+
 ## Tooling note
 
 Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go
