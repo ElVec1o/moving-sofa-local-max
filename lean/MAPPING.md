@@ -2,15 +2,19 @@
 
 Required by Rule 5.  Every declaration below is in `MovingSofa/Basic.lean`.
 `lake build` is clean, there is no `sorry` anywhere in the file, and
-`#print axioms` reports nothing beyond `propext`, `Quot.sound` and, for
-`strip_covers_iff` alone, `Classical.choice`.  An earlier version of this file claimed
-no `Classical.choice` anywhere; that claim was correct until F13 was added and is now
-corrected.
+`#print axioms` reports nothing beyond `propext` and `Quot.sound`, except for exactly two
+declarations, `strip_covers_iff` and `cone_nu_iff`, which also use `Classical.choice`.
+That list was checked by running `#print axioms` over every theorem in the file, not by
+inspection.  Two earlier versions of this note were wrong about it: one claimed no
+`Classical.choice` anywhere, the next named only `strip_covers_iff`.
 
 Toolchain: Lean 4.30, no Mathlib.  Trigonometric quantities are carried as
 formal symbols under Pythagorean side conditions, and arithmetic is over `Int`
 so that the identities stay decidable; the instantiation of the symbols at actual
 sines and cosines is a separate Mathlib-track item and is NOT claimed here.
+
+(The `Line` column is indicative only and rots as the file grows; `grep` the declaration
+name for the current position.)
 
 | Lean declaration | Line | Paper / PROGRAM item | Statement | Axioms |
 |---|---|---|---|---|
@@ -90,6 +94,30 @@ Recorded so the VERIFIED label is not read as covering more than it does.
   `certify_sigma_struct.py` (closed-form assembly, arb at 300 bits, Sylvester
   minors); for `|R_n|` it is available via N10, since on each combinatorial cell the
   polygon area is a polynomial.  Until that certificate exists these stay HEURISTIC.
+
+## F14, F15, F16 — blocks that had no table row
+
+| Statement | Lean declaration | Status |
+|---|---|---|
+| SOL1's `μ`-speed is `2a₁ sin t + ½cos t − ½`, constant-free, and vanishes at `t=0` | `Trig.sol1_speed_mu`, `sol1_speed_const`, `sol1_speed_vanishes` | VERIFIED |
+| `u² = x` and `u(x+3) = 2` give `x(x+3)² = 4` (step 2 of the T3 proof) | `u_sq_cubic` | VERIFIED |
+| the Cardano substitution as a polynomial identity, and its vanishing on the cubic | `cardano_substitution`, `cardano_vanishes` | VERIFIED |
+| the `ν`-half of cone membership is `y·C < p_y·C − ε·S`, and the `μ`-half is then automatic | `cone_nu_iff`, `cone_mu_of_nu` | VERIFIED |
+| a concave function with a nonpositive derivative attains its max; a subtracted square is concave; the far endpoint of a segment | `concave_critical_global`, `concavity_of_subtracted_square`, `segment_far_endpoint` | VERIFIED |
+
+`cone_nu_iff` is one of the two declarations using `Classical.choice`.
+
+## F23 — the boundary term of the first variation (note §9, Theorem "δQ(Σ)=0")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| in doubled units the reflection is `y ↦ 2−y`, so a `ρ`-fixed height is `1`, i.e. `½` | `rho_fixed_height` | VERIFIED |
+| the leftmost boundary point has height `−H'(π)`; `ρ`-fixedness forces `H'(π) = −½`, so the coefficient `2H'(π)+1` of `η(π)` vanishes | `boundary_term_vanishes` | VERIFIED |
+| the same at `θ=0` gives `H'(0) = ½` | `right_extreme_height` | VERIFIED |
+| both extreme points of the cap sit at the same height | `extremes_same_height` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
+`μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
 ## F17 — the niche functional in convex-linear data (note §8, P3c)
 
@@ -174,6 +202,14 @@ Poincaré inequalities, and that the continuum ODE has the stated integral repre
 
 Axioms `[propext, Quot.sound]`.  This is why (RC) for `Σ` reduces to `f₁²(4−2√2) ≤ 16/9`
 with no information about `t`.
+
+## Declarations with no table row
+
+`SetP`, `famInter`, `fullInter`, `psum`, `pp`, `D`, `L`, `const`, `lamA`, `lamD`, `ueig`,
+`shoe3`, `shoe4`, `neg_add_one`, `pp_nonneg` are definitions or one-line helpers used
+inside the proofs above; they carry no independent mathematical content and are
+deliberately not mapped.  Every *theorem* in `Basic.lean` is either in a table above or is
+such a helper.
 
 ## Tooling note
 

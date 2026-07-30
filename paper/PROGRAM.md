@@ -1,3 +1,57 @@
+## ITEMS 2-4: (RC) IS SHARP; LEAN F23; AND THE MAPPING AUDIT FOUND REAL GAPS
+
+### 🟢 (RC) IS SHARP -- D CANNOT BE WIDENED THERE (item 4)
+
+The constant 1 in the forcing R = 1 - (G+G'') is the CORRIDOR WIDTH: it traces to
+c(t) = (F-1) mu_t + (G-1) nu_t, hence <c(t),nu_t'> = n + G - 1 and n'' = -n + 1 - (G+G'').
+So the proof cannot tolerate density > 1.  The question was whether INJECTIVITY itself
+survives past 1.  It does not.  With exact derivatives, H = H_Sigma + eps sin(k theta):
+
+    max density   0.838  0.921  0.976  1.004  1.047  1.119    (k=4)
+    face-2 viols      0      0      0    160   1510   3086
+    max density   0.976  1.045  1.114                          (k=6)
+    face-2 viols      0    200    526
+
+Face-2 injectivity dies exactly as the density crosses 1.  So (RC) is not merely
+sufficient: the constant is forced, and GERVER'S CAP (density 1.3986) IS OUTSIDE THE
+DOMAIN FOR REAL REASONS, not by an artefact of the proof.  D cannot be widened this way.
+
+A BUG CAUGHT EN ROUTE: the first version of this experiment computed dF, dG by central
+differences on a CLAMPED H, which corrupts the derivative at the ends of [0,pi] and
+[pi/2,pi].  It reported 596 face-1 violations for SIGMA -- contradicting the exact
+computation's 0.  Redone with exact derivatives: 0/0 for Sigma, and the face-1 column is
+identically 0 throughout.  The face-2 signal above is from the corrected run.
+
+### 🟢 LEAN F23: the boundary term (item 2)
+
+  rho_fixed_height       in doubled units (reflection y -> 2-y) a fixed height is 1
+  boundary_term_vanishes leftmost point has height -H'(pi); rho-fixed forces H'(pi) = -1/2,
+                         so the coefficient 2H'(pi)+1 of eta(pi) vanishes
+  right_extreme_height   the same at theta = 0 gives H'(0) = 1/2
+  extremes_same_height   both extreme points of the cap sit at the same height
+
+86 theorems, 14 defs, zero sorry, axioms [propext, Quot.sound].
+
+### 🔴 THE MAPPING AUDIT FOUND REAL GAPS (item 3)
+
+Rule 5 requires a complete paper-to-Lean table.  It was NOT complete.
+
+  1. F14, F15, F16 had NO rows at all -- 12 substantive theorems unmapped, including the
+     two cone-membership lemmas and the whole Cardano chain.  The F16 section had been
+     WRITTEN in an earlier session and was LOST, almost certainly to the same
+     release->source copy that destroyed the note patches.  Added.
+  2. F23 (just added) had no rows.  Added.
+  3. The Classical.choice claim was STALE.  Checked properly this time, by running
+     #print axioms over EVERY theorem in the file rather than by inspection: exactly TWO
+     declarations use it, strip_covers_iff AND cone_nu_iff.  The header had named only the
+     first.  This is the THIRD version of that sentence: the first claimed none anywhere,
+     the second named only strip_covers_iff.  Corrected, with the history recorded.
+  4. The table's Line column has rotted as the file grew; marked indicative.
+  5. 15 definitions and one-line helpers are now explicitly declared as deliberately
+     unmapped, so "unmapped" no longer hides anything.
+
+RE-AUDIT AFTER THE FIX: 86 theorems, 0 unmapped that are not declared helpers.
+
 ## RULE 6 ADVERSARIAL REVIEW OF THE ASSEMBLED NOTE, plus release preparation
 
 ### The DAG is acyclic

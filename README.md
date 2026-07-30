@@ -146,7 +146,7 @@ $Q\ge\lvert\text{sofa}\rvert$, so the restriction is not a technicality.
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 82 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 86 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these
@@ -168,7 +168,8 @@ under sign or Pythagorean side conditions and arithmetic is over `Int`, so the
 identities stay decidable. Instantiating those symbols at actual sines and cosines is a
 separate Mathlib-track task and is **not** claimed. `#print axioms` reports nothing
 beyond `propext` and `Quot.sound`, except `strip_covers_iff` and `cone_nu_iff`, which
-also use `Classical.choice`.
+also use `Classical.choice`. That list was checked by running `#print axioms` over every
+theorem in the file.
 
 ## Method note
 

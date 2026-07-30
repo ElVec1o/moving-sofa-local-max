@@ -1421,4 +1421,47 @@ theorem rc_block {a b c s : Int} (hp : c*c + s*s = 1) (hab : 9*(a*a + b*b) ≤ 1
     Int.mul_le_mul_of_nonneg_left hle (by omega)
   omega
 
+/-! ## F23 — the boundary term of the first variation
+
+The adversarial review of the note found that `delta Q` carries, besides the pointwise
+Euler-Lagrange equations, a boundary term
+
+    -(2 H'(pi) + 1) eta(pi) .
+
+It vanishes because `H'(pi) = -1/2`, and that is forced by the reflection symmetry rather
+than assumed: the boundary point of `C2` with outer normal `mu_pi = (-1,0)` is
+`H(pi) mu_pi + H'(pi) nu_pi = (-H(pi), -H'(pi))`, so its height is `-H'(pi)`; `C2` is
+symmetric under `rho(x,y) = (x, 1-y)`, so its leftmost point is `rho`-fixed when unique.
+The same mechanism at `theta = 0` gives `H'(0) = 1/2`: both extreme points of the cap sit
+at height `1/2`, and they are the two `rho`-fixed points.
+
+Everything is doubled here so that the halves become integers: heights are in units of
+`1/2`, the corridor has height `2`, and the reflection is `y |-> 2 - y`.  `DP` denotes
+`2 H'(pi)` and `DZ` denotes `2 H'(0)`. -/
+
+/-- **F23a (a `rho`-fixed height is the mid-height).**  In doubled units the reflection is
+    `y ↦ 2 - y`, so a fixed point has height `1`, i.e. `1/2` undoubled. -/
+theorem rho_fixed_height {y : Int} (h : y = 2 - y) : y = 1 := by omega
+
+/-- **F23b (the boundary term vanishes).**  The leftmost boundary point has height
+    `-H'(pi)`, doubled `-DP`.  If it is `rho`-fixed then `DP = -1`, i.e.
+    `H'(pi) = -1/2`, and the coefficient `2H'(pi) + 1` of `eta(pi)` vanishes. -/
+theorem boundary_term_vanishes {DP hgt : Int}
+    (hpt : hgt = -DP) (hfix : hgt = 2 - hgt) : DP + 1 = 0 := by
+  have := rho_fixed_height hfix
+  omega
+
+/-- **F23c (the other end).**  The rightmost boundary point has height `H'(0)`, doubled
+    `DZ`; `rho`-fixedness gives `DZ = 1`, i.e. `H'(0) = 1/2`.  Together with F23b this says
+    both extreme points of the cap lie at the mid-height. -/
+theorem right_extreme_height {DZ hgt : Int}
+    (hpt : hgt = DZ) (hfix : hgt = 2 - hgt) : DZ = 1 := by
+  have := rho_fixed_height hfix
+  omega
+
+/-- **F23d (the two extremes agree).**  Both `rho`-fixed heights are equal, so the cap's
+    leftmost and rightmost boundary points sit at the same height. -/
+theorem extremes_same_height {DZ DP : Int} (hz : DZ = 1) (hp : DP = -1) :
+    DZ = -DP := by omega
+
 end MovingSofa
