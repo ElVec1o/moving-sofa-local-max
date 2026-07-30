@@ -1217,6 +1217,80 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## S12: the N12 bite does NOT absorb the lens — they live on OPPOSITE branches  💧💧
+
+Time-boxed cheap test before committing to the expensive route.  The Mode-2 repair
+costs L/gl of margin; the Σ dichotomy already credits a one-sided bite bonus
+2(N1+N2).  Does the bite cover the lens, branch by branch?
+
+    dir  eps      L(v)     L/gl    2(N1+N2)   absorbed?
+    1   +0.004   1.1006   1.4013     6.1968     yes
+    1   -0.004  10.4068  13.2503     0.4677     NO
+    1   +0.002   1.1116   1.4154     6.1968     yes
+    1   -0.002   9.8576  12.5511     0.4677     NO
+    2   +0.004   1.3458   1.7135     8.7690     yes
+    2   -0.004   3.9058   4.9730     0.0623     NO
+    2   +0.002   1.1748   1.4958     8.7690     yes
+    2   -0.002   3.8279   4.8739     0.0623     NO
+    3   +0.004   0.7606   0.9685     0.1269     NO
+    3   +0.002   0.8092   1.0303     0.1269     NO
+    (dir3 negative branch skipped: matched residual 2.5e-1)
+
+NO on 5 of 10 probes, and the pattern is worse than a mere shortfall: **the bite is
+small exactly where the lens is large.**  On direction 1 the bite is 6.20 on the +
+branch where the lens costs 1.40, and collapses to 0.4677 on the − branch where the
+lens costs 13.25.  The two one-sided objects are supported on OPPOSITE branches, so
+no reweighting of the dichotomy can absorb Mode 2.  S12 is a clean negative and the
+cheap route is closed.
+
+METHOD ERROR CAUGHT AND FIXED, recorded because it nearly produced a false
+positive.  The first version of the test compared G_corr = -Q/gl + bite - L/gl
+against 0 on RANDOM directions and reported "the dichotomy absorbs Mode 2".  That
+is meaningless: -Q/gl is the RAYLEIGH QUOTIENT on a random direction (measured
+128-308), which has nothing to do with the margin, which is the MINIMUM eigenvalue
+(6.4563).  Any random direction passes.  The correct statistic is the absorption
+ratio bite/(L/gl), which must be >= 1; its worst value here is far below 1.
+
+## S8: the reconstruction that avoids ALL THREE failure modes is not a curve
+
+Trimming arcs at their crossings was the plan.  There is a cleaner object.  Take
+
+    R_n(c) := intersection over a grid t_1..t_n of H_{t_i}(c).
+
+Then:
+
+  * S(c) ⊆ R_n(c) for EVERY c, directly by `superset_principle` -- no hypothesis
+    about chords, supporting lines, or simplicity.  MODE 1 cannot arise (there are
+    no chords at all) and MODE 2 cannot arise (a region area is computed, never a
+    signed Green sum).
+  * |R_n(c)| is computed EXACTLY by polygon arithmetic: half-plane clipping plus
+    the exact wedge subtraction already implemented and validated in
+    `sigma_area.rs`.
+  * |R_n(c_R)| = A_R* + C/n, so equality at the base point holds only in the
+    limit.  Measured at n = 1201: 1.6450802579 against A_R* = 1.6449552184, slack
+    +1.250e-04, positive as a superset bound must be.
+
+The base-point slack is harmless.  If the Hessian margin m is uniform in n,
+
+    A_true(c_R + eps eta) <= |R_n(c_R + eps eta)|
+                          <= A_R* + C/n - (m/2) eps^2 ||eta||^2,
+
+and letting n -> infinity gives the exact statement: the offset vanishes, the
+quadratic decrease survives.  So uniformity in n replaces equality at the base
+point, and that is a ladder in n rather than a new geometric construction.
+
+### The realisation that makes this cheap
+
+`sigma_area.rs` ALREADY COMPUTES |R_n|.  It is the same binary this project has
+been calling "the exact true-area oracle", and what was recorded throughout as its
+"offset C/n" is precisely the superset slack -- not an error to be subtracted, but
+the very quantity that vanishes in the limit.  No new Rust is needed; the object to
+certify is the Hessian of the oracle itself, and `sigma_inter_hess.py` computes it
+with Rule-8 progress, ETA, atomic checkpoint and resume.
+
+This also retires a caveat carried for several sessions ("the oracle overestimates,
+so area comparisons at the 1e-5 level are not decisive").  The overestimate was
+never noise; it was the bound doing its job.
 ## 🌊🌊 THE MODE-2 CORRECTION DESTROYS Σ's MARGIN — Theorem 9's strategy fails
 
 The Mode-2 repair (evaluate the REGION, not the signed sum) removes the domination
