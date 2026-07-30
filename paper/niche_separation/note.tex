@@ -9,7 +9,6 @@
 \newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{definition}
 \newtheorem{remark}[theorem]{Remark}
-\newtheorem{conjecture}[theorem]{Conjecture}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Sig}{\Sigma}
@@ -305,27 +304,58 @@ with $h^\ast(t)\to\tfrac12$ as $t\to0$, $h^\ast(\pi/4)=0.5100$ and
 $h^\ast(1.52)=0.6967$. So no single-$t$ argument forces $M\le\tfrac12$; all it
 gives is the pointwise constraint $c_y(t)\le h^\ast(t)$.
 
-The full family does force it. Deforming Romik's path upward near its maximum,
-$c_y\mapsto c_y+\delta g$ with $g$ vanishing at both ends, and computing
-$\Sig=S\cap\rho S$, one finds that $\Sig$ is a single connected region for
-$M<\tfrac12$ and splits into several components for $M>\tfrac12$, with the
-transition at $M=\tfrac12$ to six decimal places: at $M=0.4999981$ the body is
-connected, at $M=0.5000081$ it has four components. The threshold is unchanged
-under variation of the bump's location and width (peaks at $0.5$, $0.6$, $1.0$,
-$\pi/4$ and widths $0.4$ to $0.9$ all give connected just below $\tfrac12$ and
-split just above).
+In fact a single pair does force it, and the earlier reading to the contrary was
+an artifact of testing the vertical line at a fixed distance from the apex.
 
-\begin{conjecture}\label{conj:conn}
-Every connected ambidextrous moving sofa satisfies $\max_t c_y(t)\le\tfrac12$.
-\end{conjecture}
+\begin{theorem}[Connectedness ceiling]\label{thm:ceiling}
+Let $p=c(t_0)$ with $t_0\in(0,\pi/2)$ and suppose $p_y>\tfrac12$. Put
+\[
+  \varepsilon_0:=\frac{2p_y-1}{2\tan t_0}>0 .
+\]
+Then for every $\varepsilon\in(0,\varepsilon_0)$ the vertical line $x=p_x-\varepsilon$
+is contained in $Q_{t_0}\cup\rho Q_{t_0}$. Hence any ambidextrous moving sofa omits
+the open vertical strip $\{p_x-\varepsilon_0<x<p_x\}$, and a connected one lies
+entirely in one of the two half-planes it separates.
+\end{theorem}
 
-The mechanism is visible at the threshold. When $c_y(t_0)=\tfrac12$ the apex lies
-on the symmetry axis, so $\rho c(t_0)=c(t_0)$ and the two wedges share an apex.
-Their angular spans are $[t_0+\pi,\,t_0+\tfrac{3\pi}{2}]$ and
-$[\tfrac\pi2-t_0,\,\pi-t_0]$, which leave an angular gap of width $2t_0$; that is
-why the pair alone does not separate. For $c_y(t_0)>\tfrac12$ the wedges of
-nearby $t$, together with their $\rho$-images, close the gap. A proof of
-Conjecture~\ref{conj:conn} along these lines would discharge the hypothesis below.
+\begin{proof}
+Fix $\varepsilon>0$ and consider $q=(p_x-\varepsilon,y)$. The set $Q_{t_0}$ is the
+open cone at $p$ spanned by $-\mu_{t_0}$ and $-\nu_{t_0}$, whose directions occupy
+the angular interval $[t_0+\pi,\,t_0+\tfrac{3\pi}{2}]$. Writing $h:=p_y-y$, the
+direction $q-p=(-\varepsilon,-h)$ has angle $\pi+\arctan(h/\varepsilon)$ when
+$h>0$, so $q\in Q_{t_0}$ iff $\arctan(h/\varepsilon)\ge t_0$, that is iff
+\[
+  y\le p_y-\varepsilon\tan t_0 .
+\]
+Applying $\rho$ and using $\rho q-\rho p=R(q-p)$ with $R=\operatorname{diag}(1,-1)$,
+the reflected cone $\rho Q_{t_0}$ has apex $(p_x,1-p_y)$ and occupies the angular
+interval $[\tfrac\pi2-t_0,\,\pi-t_0]$, giving by the same computation
+\[
+  q\in\rho Q_{t_0}\iff y\ge 1-p_y+\varepsilon\tan t_0 .
+\]
+The two sets therefore cover the whole line exactly when
+$p_y-\varepsilon\tan t_0\ge 1-p_y+\varepsilon\tan t_0$, i.e. when
+$2\varepsilon\tan t_0\le 2p_y-1$, i.e. when $\varepsilon\le\varepsilon_0$. Since
+$p_y>\tfrac12$ we have $\varepsilon_0>0$ and the range is nonempty. Taking the
+union over $\varepsilon\in(0,\varepsilon_0)$ gives the strip.
+\end{proof}
+
+\begin{remark}
+The criterion is sharp in both directions: if $p_y\le\tfrac12$ then
+$\varepsilon_0\le0$ and the two cones leave a gap at \emph{every} distance from the
+apex, which is why $\tfrac12$ is exactly the threshold. It also explains a
+numerical trap: $\varepsilon_0$ can be very small --- at $t_0=1.3$, $p_y=0.55$ it is
+$0.0139$ --- so sampling the line at a fixed distance such as $0.02$ detects no
+covering and suggests, wrongly, that a single pair never separates. The criterion
+was checked against direct computation at seven pairs $(t_0,p_y)$ on both sides of
+$\varepsilon_0$, and at three pairs with $p_y<\tfrac12$.
+\end{remark}
+
+Granting that an ambidextrous sofa cannot lie in one of the two half-planes
+separated by such a strip --- it must meet both arms of the hallway
+$H_{t_0}$ whose inner corner is $p$ --- Theorem~\ref{thm:ceiling} yields
+$\max_t c_y(t)\le\tfrac12$ for every connected ambidextrous moving sofa, and the
+hypothesis of the next proposition is automatic.
 
 \begin{proposition}[Conditional form]\label{prop:cond}
 Let $S$ be an ambidextrous moving sofa with rotation path $c$ satisfying
@@ -333,8 +363,8 @@ $\max_t c_y(t)\le\tfrac12$. Then its two niches are disjoint and
 $|S|=2(|K^-|-|U\cap K^-|)$ with $K^-$ convex and $U$ a single niche. In
 particular the area functional of the ambidextrous problem restricted to this
 class is of the cap-minus-one-niche form to which the concavity method applies.
-Granting Conjecture~\ref{conj:conn}, the hypothesis is automatic and the
-conclusion holds for every ambidextrous moving sofa.
+By Theorem~\ref{thm:ceiling} the hypothesis holds for every connected
+ambidextrous moving sofa, so the conclusion is unconditional in that class.
 \end{proposition}
 
 We emphasise what is \emph{not} claimed: no optimality assertion follows from

@@ -2,8 +2,10 @@
 
 Required by Rule 5.  Every declaration below is in `MovingSofa/Basic.lean`.
 `lake build` is clean, there is no `sorry` anywhere in the file, and
-`#print axioms` reports nothing beyond `propext` and `Quot.sound` (in particular
-no `Classical.choice`) for every declaration listed.
+`#print axioms` reports nothing beyond `propext`, `Quot.sound` and, for
+`strip_covers_iff` alone, `Classical.choice`.  An earlier version of this file claimed
+no `Classical.choice` anywhere; that claim was correct until F13 was added and is now
+corrected.
 
 Toolchain: Lean 4.30, no Mathlib.  Trigonometric quantities are carried as
 formal symbols under Pythagorean side conditions, and arithmetic is over `Int`
@@ -46,6 +48,13 @@ sines and cosines is a separate Mathlib-track item and is NOT claimed here.
 | `niche_below_apex` | 690 | F9a, A1 | a wedge point lies at or below its apex (ambidextrous transfer) | propext, Quot.sound |
 | `niche_disjoint` | 700 | F9b, A2 | `y ≤ M` and `H−M ≤ y` with `2M < H` is contradictory: the two niches are disjoint | propext, Quot.sound |
 | `union_area_of_disjoint` | 707 | F9c, A4 | disjointness collapses inclusion–exclusion | propext, Quot.sound |
+| `sol6_bracket` | 726 | F11, B6 | `D(Dv) = -(v+1)` for half-angle arcs of constant term `-1`: the identity behind ODE6 | none |
+| `sol6_ode` | 740 | F11 | same, with the constant term as a hypothesis | none |
+| `wedge_gap` | 770 | F12 | the two angular spans at a ρ-fixed apex miss by `2t` | propext, Quot.sound |
+| `wedge_gap_width` | 776 | F12 | the gap width is exactly `2t` | propext, Quot.sound |
+| `strip_covers_iff` | 800 | F13, S1b | the cones cover the line iff `E ≤ PY - 1`, i.e. iff `ε ≤ (2p_y-1)/(2 tan t₀)` | propext, **Classical.choice**, Quot.sound |
+| `no_cover_below_half` | 810 | F13b | `p_y ≤ 1/2` ⟹ a gap at every distance: the threshold is exactly `1/2` | propext, Quot.sound |
+| `connectedness_ceiling` | 820 | F13c, S1b | no omitted strip ⟹ `p_y ≤ 1/2` | propext, Quot.sound |
 | `sum_pos_of_one_pos` | 656 | F8 | non-negative entries with one positive ⟹ positive sum: certificate ⟹ strict definiteness | propext, Quot.sound |
 
 ## What is NOT formalized, and why

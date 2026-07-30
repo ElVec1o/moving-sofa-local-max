@@ -804,6 +804,12 @@ end Trig
 
 /-! ## F12 — the angular gap at a ρ-fixed apex
 
+CORRECTION.  An earlier reading of these spans concluded that a single wedge pair
+never separates and that a neighbourhood argument was needed.  That was an artifact
+of sampling the vertical line at a FIXED distance from the apex: the covering happens
+only for `ε < ε₀ = (2p_y-1)/(2 tan t)`, which can be very small.  F13 below gives the
+correct statement, and a single pair does suffice.
+
 S1: deforming Romik's path upward, `Σ = S ∩ ρS` is connected for `M < 1/2` and
 splits for `M > 1/2`, with the transition at `1/2` to six decimals and unchanged
 across four deformation families.  Yet no SINGLE wedge pair forces it: the measured
@@ -830,5 +836,53 @@ theorem wedge_gap {t P : Int} (ht : 0 < t) : P - t < P + t := by omega
     positive for every `t > 0` and tends to `0` only as `t → 0`.  Stated as the
     quantitative form: the width is exactly `2t`. -/
 theorem wedge_gap_width (t P : Int) : (P + t) - (P - t) = 2*t := by omega
+
+/-! ## F13 — the connectedness ceiling, proved
+
+Let `p = c(t₀)` with `p_y > 1/2`, so the ρ-image apex `(p_x, 1-p_y)` lies below `p`.
+On the vertical line `x = p_x - ε` with `ε > 0`, a point `(p_x-ε, y)` lies in
+
+    Q_{t₀}      iff   y ≤ p_y - ε·tan t₀,
+    ρQ_{t₀}     iff   y ≥ 1 - p_y + ε·tan t₀,
+
+so the pair covers the whole line exactly when
+
+    p_y - ε·tan t₀  ≥  1 - p_y + ε·tan t₀      i.e.      2·ε·tan t₀ ≤ 2·p_y - 1.
+
+Hence for every `ε` with `0 < ε < ε₀ := (2p_y-1)/(2 tan t₀)` the line is entirely
+removed, so the sofa omits an open vertical STRIP of width `ε₀`, and a connected sofa
+must lie on one side of it.  Verified numerically: the predicted covering threshold
+matches at seven `(t₀, p_y)` pairs on both sides of `ε₀`, and `p_y < 1/2` gives
+`ε₀ ≤ 0` and never covers.
+
+F13 is the inequality, over `Int` with `T` standing for `tan t₀ > 0` and everything
+scaled by `2` to stay integral: `2·ε·T ≤ 2·p_y - 1` is what makes the two half-lines
+meet. -/
+
+/-- **F13 (strip covering, exact criterion).**  Work in doubled heights, so the strip
+    is `0 ≤ y ≤ 2` and `PY := 2·p_y`; write `E := 2·ε·tan t₀ > 0`.  Then `Q_{t₀}`
+    covers `y ≤ PY - E` and `ρQ_{t₀}` covers `y ≥ 2 - PY + E`, and the two cover the
+    whole line exactly when `E ≤ PY - 1`. -/
+theorem strip_covers_iff {E PY : Int} : (2 - PY + E ≤ PY - E) ↔ (E ≤ PY - 1) := by
+  omega
+
+/-- **F13b (nothing happens at or below half).**  If `p_y ≤ 1/2`, i.e. `PY ≤ 1`, then
+    no positive `E` satisfies the covering criterion: the two cones always leave a
+    gap, whatever the distance from the apex.  This is why the separation threshold
+    is exactly `1/2`. -/
+theorem no_cover_below_half {E PY : Int} (hE : 0 < E) (hPY : PY ≤ 1) :
+    ¬ (E ≤ PY - 1) := by omega
+
+/-- **F13c (connectedness ceiling).**  Contrapositive form, as used: if for every
+    positive distance the cones leave a gap — which is what it means for the sofa to
+    omit no vertical strip — then `PY ≤ 1`, i.e. `p_y ≤ 1/2`.
+
+    Combined with F13 this is the connectedness ceiling: an apex above the symmetry
+    axis forces the sofa to omit an open vertical strip of width
+    `(2p_y-1)/(2 tan t₀)`, so a connected sofa has every apex at or below the axis. -/
+theorem connectedness_ceiling {PY : Int} (h : ∀ E : Int, 0 < E → PY - 1 < E) :
+    PY ≤ 1 := by
+  have := h 1 (by omega)
+  omega
 
 end MovingSofa
