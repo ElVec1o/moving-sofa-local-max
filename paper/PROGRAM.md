@@ -1217,6 +1217,90 @@ closing terms seg(Ce,D0), seg(Ae,C0), seg(Be,A0).
 **The arc table's structure is correct.** Fourth hypothesis eliminated (after
 basin jump, swallowtail, and mis-specified ranges).
 
+## Σ's SECOND MECHANISM: chords are NOT the only problem  💧💧
+
+`sigma_envelope.py`'s contract reads: "Every such reconstruction is superset-valid,
+so its second-order coefficient Q_beta bounds the true second variation from above
+for EVERY beta, and the envelope over beta is attained at the implicit-function
+response: Q_true = min_beta Q_beta = Q_frz − Cᵀ H_bb⁻¹ C."
+
+The defect is exactly in "for EVERY beta".  Diagnosis: of Σ's ten closures, the
+four anchored at t = 0 and t = π/2 stay shut to 1e-17 (the perturbations vanish
+there), but the SIX at the interior junctions t = β and π/2−β open up under
+perturbation.  Measured at ε = 1e-3, random direction:
+
+    dA(0)      -> rA(0)          1.628e-02
+    dB(β)      -> dX(β)          8.492e-03
+    dX(π/2−β)  -> dD(π/2−β)      5.587e-03
+    rC(π/2−β)  -> dC(π/2−β)      9.216e-03
+    rD(π/2−β)  -> rX(π/2−β)      5.587e-03
+    rX(β)      -> rB(β)          8.492e-03
+
+(the ρ-conjugate pairs agree exactly, as they must).  area_rec closes these with
+CHORDS, so those members of the β-family are not superset-valid, and a minimum
+taken over all β can dip below the true second variation.  **S4 is FALSE.**
+
+So the natural repair is to restrict the envelope to the MATCHED response: the β
+making the ten interior arc ends coincide pairwise, leaving no chords.  That is a
+square system (5 interior junctions x 2 arcs = 10 parameters; 5 junctions x 2
+coordinates = 10 equations), solved by Newton in `sigma_matched.py`.
+
+RESULT: **the matched response ALSO fails.**  Offset −3.140e-05 subtracted,
+exact Rust oracle n=4801, K=6:
+
+    dir eps      max|gap|   Delta frozen   Delta matched   D/eps^2 matched
+    1  +0.004    1.9e-10    -2.976e-05     -1.569e-06      -0.0980
+    1  -0.004    1.5e-10    -9.906e-05     -8.270e-05      -5.1688
+    1  +0.002    2.1e-10    -7.105e-06     -5.160e-07      -0.1290
+    2  +0.004    1.1e-10    +2.304e-05     +4.237e-05      +2.6482
+    2  -0.004    6.1e-11    -4.664e-05     -3.016e-05      -1.8853
+    2  +0.002    1.1e-10    +6.457e-06     +1.102e-05      +2.7540
+    2  -0.002    1.4e-10    -1.126e-05     -7.066e-06      -1.7665
+
+(one further probe, dir 1 at ε=−0.002, had Newton residual 5.6e-2 -- NOT converged
+-- and is excluded.)
+
+Reading: matching helps a great deal on the ε>0 branch (−2.976e-05 → −1.569e-06,
+a factor 19, essentially zero) but the ε<0 branch stays negative at −1.8 to −5.2
+times ε², and Δ/ε² is STABLE as ε halves (dir 2: −1.885 at ±0.004 vs −1.767 at
+±0.002), so it is a genuine ε² effect and not the oracle offset.
+
+CONCLUSION: **Σ's superset failure has a second, one-sided mechanism beyond the
+chords.**  Note the sign rules out the obvious candidate: a cap/fan bite makes the
+TRUE area smaller, hence Δ = A_rec − A_true MORE positive, whereas the observed
+Δ < 0 means the reconstruction UNDERestimates -- its curve cuts inside the true
+sofa.  Identifying that mechanism (S6) is now the critical path for Theorem 9;
+S7 (chord-free Σ) and S8 (recomputed ladder) wait on it.
+
+## GERVER PART II IS REPAIRED AT K=16  🔥🔥
+
+The chord-free reconstruction now has the complete local chain at K=16:
+
+    A_rep(c_G)          = 2.21953166887          (A* to 7.2e-11)
+    stationarity        = +-1.7e-10 on every mode tested
+    containment         = min viol > 0 on every probe (certificate)
+    Hessian spectrum    : min -1473.727246,  max -4.273730   -> NEGATIVE DEFINITE
+      8 largest: -71.2316 -61.7756 -40.7427 -34.8940 -17.4304 -14.8770 -5.0212 -4.2737
+      translation projected out: max -5.021155 -> NEGATIVE DEFINITE
+
+Command: `python3 gerver_rep_hess.py 16 22 1e-5` -> gerver_rep_K16.npy.
+Note for future sizing: the high-k entries are much slower than a linear ETA
+suggests, because sin(2kt) integrands with k ~ 16 are oscillatory and mp.quad
+needs far more nodes; the reported ETA drifted from 10.9m to 12.8m+.
+
+What remains for Part II: G8 (turn the containment certificate into a proof --
+the wall lines and envelope arcs are rigorous, only the corner-path/wedge-union
+step is open) and G9 (a tail bound against A_rep rather than A_rec).
+
+## RULE 10 / RULE 17 COMPLIANCE FIXED
+
+`private/` did not exist, was not in either `.gitignore`, and there was no
+`private/RESEARCH_LOG.md` -- a standing violation of Rules 10 and 17 through this
+whole program.  Now created: `private/` gitignored in both the working tree and
+the repo, and `private/RESEARCH_LOG.md` carries the GOAL, the full atom table, key
+decisions, ten logged dead ends with reasons, exact job commands, and the standing
+numerical caveats.
+
 ## 🌊 Σ'S SUPERSET PROPERTY FAILS AT SECOND ORDER — Theorem 9 has the same hole
 
 This was found by asking the item-5 question ("does Σ need the chord-free
