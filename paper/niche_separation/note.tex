@@ -1,0 +1,289 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[colorlinks,linkcolor=blue,citecolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sig}{\Sigma}
+\DeclareMathOperator{\arctanop}{arctan}
+
+\title{Separation of the two niches of Romik's ambidextrous sofa,\\
+and a closed form for Romik's constant $f_1$}
+\author{Vico Bonfioli\\ \small\texttt{vicobonfioli@gmail.com}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Baek's proof that Gerver's sofa is optimal represents a moving sofa as a convex
+cap minus a single niche, and obtains global optimality from the concavity of a
+quadratic upper bound. Transferring that architecture to the ambidextrous moving
+sofa problem, which remains open, meets an immediate obstruction: the
+ambidextrous sofa is a convex cap minus a \emph{union of two} niches, and the
+inclusion--exclusion term enters the upper bound with the sign opposite to the
+one concavity requires. We show the obstruction is vacuous. The two niches of
+Romik's candidate $\Sig$ are disjoint, because every niche point lies at or below
+the apex of its own wedge and the apex path stays strictly below the axis of the
+reflection exchanging the two niches. The relevant constant is
+$M=\max_t c_y(t)=\tfrac12-\bigl(\sqrt2-f_1\sqrt{4-2\sqrt2}\bigr)$, and the
+condition $M<\tfrac12$ is equivalent to $f_1^2<(2+\sqrt2)/2$, which holds with a
+margin of $0.2600\ldots$. Along the way we give a closed form for Romik's
+constant $f_1$, which appears in the literature only as a decimal.
+\end{abstract}
+
+\section{Setting}
+
+Write $L$ for the closed L-shaped hallway of unit width with its corner at the
+origin, $\mu_t=(\cos t,\sin t)$, $\nu_t=(-\sin t,\cos t)$, and for a rotation
+path $c:[0,\pi/2]\to\R^2$ let
+\[
+  C_t=\{p:\langle p-c(t),\mu_t\rangle\le 1\}\cap\{p:\langle p-c(t),\nu_t\rangle\le 1\},
+  \qquad
+  Q_t=\{p:\langle p-c(t),\mu_t\rangle<0\}\cap\{p:\langle p-c(t),\nu_t\rangle<0\},
+\]
+so that the hallway in position $t$ is $H_t=C_t\setminus Q_t$. The one-sided
+sofa is $S=\bigcap_t H_t$, and writing $C=\bigcap_t C_t$ and
+$U=\bigcup_t Q_t$ we have $S=C\setminus U$ with $C$ convex.
+
+Let $\rho(x,y)=(x,1-y)$ be the reflection in the line $y=\tfrac12$. Romik's
+ambidextrous sofa is
+\begin{equation}\label{eq:sigma}
+  \Sig=S\cap\rho(S)=C_2\setminus\bigl(U\cup\rho U\bigr),
+  \qquad C_2:=C\cap\rho C \text{ convex},
+\end{equation}
+with $|\Sig|=A_R^\ast=1.6449552184\ldots$, and $c$ is Romik's piecewise path with
+breakpoints at $\beta$ and $\pi/2-\beta$, where
+\begin{equation}\label{eq:beta}
+  \beta=\arctanop\Bigl(\tfrac12\bigl(\sqrt[3]{\sqrt2+1}-\sqrt[3]{\sqrt2-1}\bigr)\Bigr)
+      =0.2896538208\ldots
+\end{equation}
+
+Baek's argument for the one-corner problem builds an overestimating region whose
+area is a quadratic functional on a convex domain of convex bodies, and proves it
+concave by exhibiting it as a linear functional minus Mamikon regions, whose areas
+are convex quadratics. Concavity reduces global optimality to a first-order
+condition. The construction is organised around $S=K\setminus\mathcal N(K)$: one
+cap, one niche.
+
+By \eqref{eq:sigma} the ambidextrous analogue has \emph{two} niches, and
+\begin{equation}\label{eq:ie}
+  |U\cup\rho U|=|U|+|\rho U|-|U\cap\rho U|.
+\end{equation}
+The last term appears in the upper bound with a $+$ sign. Since concavity is
+obtained by \emph{subtracting} convex quadratics, an added overlap term is not
+covered by the mechanism. The purpose of this note is Theorem~\ref{thm:main}:
+the term is zero.
+
+\section{The niches are disjoint}
+
+\begin{lemma}[Niche ceiling]\label{lem:ceiling}
+For every $t\in[0,\pi/2]$ we have $Q_t\subseteq\{(x,y):y\le c_y(t)\}$.
+\end{lemma}
+
+\begin{proof}
+$Q_t$ is the open convex cone with apex $c(t)$ spanned by $-\mu_t$ and $-\nu_t$,
+so $q\in Q_t$ means $q-c(t)=-a\mu_t-b\nu_t$ with $a,b>0$. For $t\in[0,\pi/2]$
+both $\sin t\ge0$ and $\cos t\ge0$, hence
+\[
+  q_y-c_y(t)=-a\sin t-b\cos t\le 0. \qedhere
+\]
+\end{proof}
+
+\begin{corollary}\label{cor:sep}
+Put $M:=\max_{t\in[0,\pi/2]}c_y(t)$. Then $U\subseteq\{y\le M\}$ and
+$\rho U\subseteq\{y\ge 1-M\}$. If $M<\tfrac12$ then $U\cap\rho U=\emptyset$.
+\end{corollary}
+
+\begin{proof}
+The first inclusion is Lemma~\ref{lem:ceiling} applied to each $t$; the second is
+its image under $\rho$. If $M<\tfrac12$ then $1-M>\tfrac12>M$, so the two
+half-planes are disjoint.
+\end{proof}
+
+It remains to evaluate $M$ for Romik's path. On the middle piece
+$[\beta,\pi/2-\beta]$ Romik's path is
+\begin{equation}\label{eq:x6}
+  c(t)=R(t)v(t)+\kappa,\qquad
+  v(t)=\begin{pmatrix} f_1\cos\frac t2+f_2\sin\frac t2-1\\[2pt]
+                      -f_2\cos\frac t2+f_1\sin\frac t2-1\end{pmatrix},
+\end{equation}
+with $R(t)$ the rotation by $t$, and the two facts we use are
+\begin{equation}\label{eq:kf}
+  \kappa_y=\tfrac12 \quad\text{exactly},
+  \qquad f_2=(1-\sqrt2)\,f_1 .
+\end{equation}
+
+\begin{proposition}\label{prop:cy}
+For $t\in[\beta,\pi/2-\beta]$,
+\begin{equation}\label{eq:cy}
+  c_y(t)-\tfrac12
+   = f_1\sin\tfrac{3t}{2}-f_2\cos\tfrac{3t}{2}-(\sin t+\cos t)
+   = f_1\sqrt{4-2\sqrt2}\,\sin\!\Bigl(\tfrac{3t}{2}+\tfrac\pi8\Bigr)-\sqrt2\,\sin\!\Bigl(t+\tfrac\pi4\Bigr).
+\end{equation}
+In particular $c_y$ is symmetric about $t=\pi/4$ on this interval, and
+\begin{equation}\label{eq:M}
+  M=c_y(\pi/4)=\tfrac12-\Bigl(\sqrt2-f_1\sqrt{4-2\sqrt2}\Bigr).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+By \eqref{eq:x6} and $\kappa_y=\tfrac12$, $c_y(t)-\tfrac12=\sin t\,v_x+\cos t\,v_y$.
+Write $S=\sin\frac t2$, $C=\cos\frac t2$, so $\sin t=2SC$ and $\cos t=C^2-S^2$.
+Expanding and collecting the coefficients of $f_1$ and $f_2$ gives
+\[
+  \sin t\,v_x+\cos t\,v_y
+  = f_1 S(3C^2-S^2)+f_2 C(3S^2-C^2)-(\sin t+\cos t),
+\]
+and the triple-angle identities $S(3C^2-S^2)=\sin\frac{3t}{2}$,
+$C(3S^2-C^2)=-\cos\frac{3t}{2}$ give the first equality in \eqref{eq:cy}. For the
+second, substitute $f_2=(1-\sqrt2)f_1$ from \eqref{eq:kf}: the bracket becomes
+$\sin\frac{3t}{2}+(\sqrt2-1)\cos\frac{3t}{2}$, of amplitude
+$\sqrt{1+(\sqrt2-1)^2}=\sqrt{4-2\sqrt2}$ and phase $\arctanop(\sqrt2-1)=\pi/8$.
+
+Both sinusoids in \eqref{eq:cy} are invariant under $t\mapsto\pi/2-t$: indeed
+$\sin(\tfrac{3}{2}(\pi/2-t)+\pi/8)=\sin(7\pi/8-\tfrac{3t}{2})=\sin(\pi/8+\tfrac{3t}{2})$
+and $\sin(3\pi/4-t)=\sin(\pi/4+t)$. Hence $c_y$ is symmetric about $\pi/4$, where
+both sinusoids attain the value $1$ simultaneously; \eqref{eq:M} follows. \end{proof}
+
+That $\pi/4$ maximises $c_y$ over all of $[0,\pi/2]$, and not merely over the
+middle piece, follows from the corresponding closed form on the outer pieces.
+
+\begin{proposition}\label{prop:outer}
+For $t\in[0,\beta]$,
+\begin{equation}\label{eq:cyouter}
+  c_y(t)=\tfrac12+a_1\sin 2t-\sin t-\tfrac12\cos t,
+\end{equation}
+and $c_y$ is strictly increasing there, so $\max_{[0,\beta]}c_y=c_y(\beta)$. By
+the symmetry $c_y(t)=c_y(\pi/2-t)$ the same bound holds on $[\pi/2-\beta,\pi/2]$.
+Consequently $M=c_y(\pi/4)$ as claimed in \eqref{eq:M}.
+\end{proposition}
+
+\begin{proof}
+On $[0,\beta)$ Romik's path is $c(t)=R(t)v_1(t)+\kappa^{(1)}$ with
+$v_1(t)=(a_1\cos t-1,\,a_1\sin t-\tfrac12)$ and $\kappa^{(1)}_y=\tfrac12$, so
+$c_y(t)-\tfrac12=\sin t\,v_{1x}+\cos t\,v_{1y}=2a_1\sin t\cos t-\sin t-\tfrac12\cos t$,
+which is \eqref{eq:cyouter}. Differentiating,
+\[
+  c_y'(t)=2a_1\cos 2t-\cos t+\tfrac12\sin t
+        \ \ge\ 2a_1\cos 2\beta-1\ =\ 0.4650\ldots>0
+        \qquad (t\in[0,\beta]),
+\]
+using $\cos 2t\ge\cos 2\beta$ and $\cos t-\tfrac12\sin t\le 1$ for $t\ge0$.
+Hence $c_y$ is strictly increasing on $[0,\beta]$, with
+$c_y(\beta)=0.2143795161\ldots$, which is below
+$c_y(\pi/4)=0.3878381292\ldots$.
+\end{proof}
+
+\begin{remark}
+Evaluating \eqref{eq:cyouter} and \eqref{eq:cy} at $t=\beta$ gives the same value
+to $4.4\cdot 10^{-31}$ at $30$-digit precision. Since the two expressions were
+derived from different pieces of Romik's path, this is an independent check on
+both, and on \eqref{eq:f1}.
+\end{remark}
+
+\section{A closed form for $f_1$}
+
+Romik's constant $f_1$ is recorded in the literature as the decimal
+$1.202938908156911389$. The following determines it in closed form. Let
+\begin{equation}\label{eq:a1}
+  a_1=\tfrac14\sqrt{\,4+\sqrt[3]{71+8\sqrt2}+\sqrt[3]{71-8\sqrt2}\,}
+     =0.8752873624\ldots
+\end{equation}
+
+\begin{proposition}\label{prop:f1}
+\begin{equation}\label{eq:f1}
+  f_1=\frac{\tfrac43\,a_1\cos\beta}{\cos\frac\beta2+(1-\sqrt2)\sin\frac\beta2}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+On $[0,\beta)$ Romik's path is $c(t)=R(t)v_1(t)+\kappa^{(1)}$ with
+$v_1(t)=(a_1\cos t-1,\;a_1\sin t-\tfrac12)$ and
+$\kappa^{(1)}=(1-a_1,\tfrac12)$; on $[\beta,\pi/2-\beta]$ it is \eqref{eq:x6}
+with $\kappa=(1-\tfrac43 a_1,\tfrac12)$. Both $\kappa$'s have second coordinate
+$\tfrac12$ and their first coordinates differ by exactly $\tfrac13 a_1$.
+Continuity at $t=\beta$ therefore gives
+$R(\beta)\bigl(v_1(\beta)-v(\beta)\bigr)=(-\tfrac13a_1,0)$, so
+\[
+  v_1(\beta)-v(\beta)=R(-\beta)\bigl(-\tfrac13a_1,0\bigr)
+     =\bigl(-\tfrac13a_1\cos\beta,\;\tfrac13a_1\sin\beta\bigr).
+\]
+Reading the first coordinate and using $f_2=(1-\sqrt2)f_1$,
+\[
+  \bigl(a_1\cos\beta-1\bigr)-\Bigl(f_1\bigl(\cos\tfrac\beta2+(1-\sqrt2)\sin\tfrac\beta2\bigr)-1\Bigr)
+   =-\tfrac13a_1\cos\beta,
+\]
+which rearranges to \eqref{eq:f1}.
+\end{proof}
+
+\begin{remark}
+Evaluating \eqref{eq:f1} at $50$ digits gives
+$f_1=1.202938908156911389070223\ldots$, so the tabulated decimal is its rounding.
+As an independent check, the \emph{second} coordinate of the junction relation,
+which was not used in the derivation, is satisfied to $1.7\cdot10^{-51}$ at the
+same precision.
+\end{remark}
+
+\section{Main theorem}
+
+\begin{theorem}\label{thm:main}
+For Romik's ambidextrous sofa, $U\cap\rho U=\emptyset$, and consequently
+\[
+  |\Sig|=|C_2|-|U|-|\rho U|=|C_2|-2|U| .
+\]
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:cy}, $M<\tfrac12$ is equivalent to
+$f_1\sqrt{4-2\sqrt2}<\sqrt2$, i.e. to
+\begin{equation}\label{eq:ineq}
+  f_1^2<\frac{2+\sqrt2}{2}.
+\end{equation}
+With $f_1$ given by \eqref{eq:f1} in terms of the algebraic numbers
+\eqref{eq:beta} and \eqref{eq:a1}, both sides of \eqref{eq:ineq} are explicit
+algebraic numbers, and
+\[
+  f_1^2=1.4470620167577420940\ldots,
+  \qquad \frac{2+\sqrt2}{2}=1.7071067811865475244\ldots,
+\]
+so \eqref{eq:ineq} holds with margin $0.2600447644\ldots$. Corollary~\ref{cor:sep}
+gives $U\cap\rho U=\emptyset$, and then \eqref{eq:ie} together with
+\eqref{eq:sigma}. Finally $|\rho U|=|U|$ because $\rho$ is an isometry.
+\end{proof}
+
+\begin{corollary}
+$M=0.3878381292441942964\ldots$, the two niches are separated by the horizontal
+band of width $1-2M=0.2243237415116114\ldots$ about $y=\tfrac12$, and the
+ambidextrous upper bound requires only \emph{one} niche to be modelled: one core
+and two tails, the same shape as in the one-corner problem.
+\end{corollary}
+
+\section{Formalisation}
+
+Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of
+\eqref{eq:ie} are machine-checked in Lean~4 without Mathlib as
+\verb|niche_below_apex|, \verb|niche_disjoint| and
+\verb|union_area_of_disjoint|; \verb|lake build| is clean with no \verb|sorry|,
+and \verb|#print axioms| reports nothing beyond \verb|propext| and
+\verb|Quot.sound|. Trigonometric quantities are carried as formal symbols with
+the sign hypotheses $\sin t\ge0$, $\cos t\ge0$, which is all
+Lemma~\ref{lem:ceiling} uses.
+
+\begin{thebibliography}{9}
+\bibitem{Baek} J.~Baek, \emph{Optimality of Gerver's sofa},
+  arXiv:2411.19826, 2024.
+\bibitem{Gerver} J.~L.~Gerver, \emph{On moving a sofa around a corner},
+  Geom.\ Dedicata \textbf{42} (1992), 267--283.
+\bibitem{Romik} D.~Romik, \emph{Differential equations and exact solutions in the
+  moving sofa problem}, Exp.\ Math.\ \textbf{27} (2018), 316--330.
+\end{thebibliography}
+
+\end{document}
