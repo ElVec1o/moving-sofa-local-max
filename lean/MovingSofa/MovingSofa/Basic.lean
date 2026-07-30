@@ -1499,4 +1499,51 @@ theorem boundary_chain {H D C S hgt : Int} (hC : C = -1) (hS : S = 0)
   have := rho_fixed_height hfix
   omega
 
+/-! ## F25 — the segment argument
+
+`Q` is `C^1` and piecewise quadratic, so along the segment from `H_Sigma` to a competitor
+`H` it is a `C^1` piecewise-quadratic function of one variable.  If every cell met has
+`d^2 Q <= 0` then that function has non-positive second derivative throughout, and with
+`dQ(Sigma) = 0` it cannot exceed its value at the start.  Convexity of the union of the
+cells met is NOT needed -- only concavity along the one segment.
+
+Sampled on a grid, "non-positive second derivative" is "non-positive second difference",
+and the argument is: the slopes are non-increasing, the first is `<= 0`, hence all are, hence
+the function never rises.  That is what F25 records. -/
+
+/-- **F25a (slopes are non-increasing).**  A non-positive second difference makes the
+    successive slopes decrease. -/
+theorem second_diff_nonpos_mono (P : Nat → Int)
+    (hc : ∀ n, P (n+2) - P (n+1) ≤ P (n+1) - P n) :
+    ∀ n, P (n+1) - P n ≤ P 1 - P 0 := by
+  intro n
+  induction n with
+  | zero => show P 1 - P 0 ≤ P 1 - P 0; omega
+  | succ k ih =>
+      have h := hc k
+      show P (k+2) - P (k+1) ≤ P 1 - P 0
+      omega
+
+/-- **F25b (the segment argument).**  If in addition the first slope is non-positive --- at
+    `Sigma` it is zero, by `delta Q(Sigma) = 0` --- then the function never exceeds its
+    starting value: `Q(H) <= Q(Sigma)` for every competitor whose segment stays in cells
+    with `d^2 Q <= 0`. -/
+theorem concave_along_segment (P : Nat → Int) (hstart : P 1 ≤ P 0)
+    (hc : ∀ n, P (n+2) - P (n+1) ≤ P (n+1) - P n) :
+    ∀ n, P n ≤ P 0 := by
+  intro n
+  induction n with
+  | zero => show P 0 ≤ P 0; omega
+  | succ k ih =>
+      have h := second_diff_nonpos_mono P hc k
+      show P (k+1) ≤ P 0
+      omega
+
+/-- **F25c (the critical case).**  With `delta Q(Sigma) = 0` the first slope vanishes, which
+    is the hypothesis actually available. -/
+theorem concave_from_critical (P : Nat → Int) (hcrit : P 1 = P 0)
+    (hc : ∀ n, P (n+2) - P (n+1) ≤ P (n+1) - P n) :
+    ∀ n, P n ≤ P 0 :=
+  concave_along_segment P (by omega) hc
+
 end MovingSofa

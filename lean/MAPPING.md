@@ -119,6 +119,14 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F25 — the segment argument (note, Proposition "Beyond Sigma's own cell")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| non-positive second difference ⟹ slopes non-increasing | `second_diff_nonpos_mono` | VERIFIED |
+| + first slope `≤ 0` ⟹ the function never exceeds its starting value | `concave_along_segment` | VERIFIED |
+| the case used: first slope `= 0`, from `δQ(Σ) = 0` | `concave_from_critical` | VERIFIED |
+
 ## F24 — the support-point coordinates (note §9)
 
 | Statement (note) | Lean declaration | Status |

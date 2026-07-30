@@ -1,3 +1,72 @@
+## 🎆 THE H^1 ESTIMATE HOLDS.  ONE WRONG MATRIX ENTRY CAUSED TWO FALSE NEGATIVES.
+
+### 🔴 The bug
+
+The hat at theta = pi is an ENDPOINT hat: its support is [pi-h, pi] only, so
+int phi^2 = h/3 and int phi'^2 = 1/h -- HALF the interior values 2h/3 and 2/h.  My
+hand-built mass and stiffness matrices used the interior values there.  One entry.
+
+Consequences, all now corrected:
+
+  * "The H^1 estimate could not be confirmed" -- WRONG.  It holds.
+  * "The tan singularity in the sigma term is to blame" -- WRONG.  The singularity-free
+    form gives IDENTICAL numbers.
+  * "The maximiser concentrates on [pi-beta,pi] where cross terms offset the derivative" --
+    an artefact of the wrong pencil.
+  * The measured sharp L^2 constant 0.7285 -- WRONG; it is 0.7323.
+
+The PROVED constant 0.3710 is unaffected: it comes from the analytic Poincare chain, not
+from any matrix.  So the stability theorem in the paper stands as stated.
+
+### 🔥 With correct matrices, the H^1 estimate holds and CONVERGES
+
+    c1     0.0      0.1      0.3      0.5      0.7      1.0
+    c0    0.7323   0.6114   0.3571   0.0760  -0.2560  -1.0000     (m = 256)
+
+each converging in m.  So
+
+    (1/2) d^2 Q  <=  -0.357 ||eta||^2_{L^2}  -  0.3 ||eta'||^2_{L^2} ,
+
+and the frontier is close to c0 = 0.732 - 1.31 c1, vanishing near c1 = 0.56.  This is
+STRICTLY STRONGER than the L^2 estimate.
+
+### 🟢 A genuine simplification found en route (not the bug, but worth keeping)
+
+    -int_0^{pi/2} (eta tan t + eta')^2 dt  =  int_0^{pi/2} (eta^2 - eta'^2) dt
+
+for eta vanishing at 0 and pi/2, because -2 int eta eta' tan t = -int (eta^2)' tan t =
+int eta^2 sec^2 t and sec^2 - tan^2 = 1.  Verified to 1e-12 on five test functions.  The
+second variation therefore has NO unbounded coefficients anywhere.
+
+### Item 1: the J3 gap is located, not closed
+
+Reallocating the E2 budget CAN give J3' (on [pi/2,pi-beta]) a negative coefficient --
+best found -0.1969 at delta=0.08, kappa=3, lambda=0.234 -- but J3'' on [pi-beta,pi] stays
+at 0.  P3 = 1 is sharp there: the first Dirichlet-Neumann mode eta = sin(theta-pi/2) has
+int(eta^2 - eta'^2) = 0 EXACTLY, so all of its negativity must come from the E2 term, which
+acts only on [pi/2,pi-beta].  Closing the gap needs E2 handled JOINTLY with the cap on
+[pi/2,pi], not split off first.  Still open, now precisely located.
+
+### Item 3: anchoredness is stable near Sigma
+
+    perturbation        tau1        tau2
+    Sigma             0.2895      1.2800
+    +-0.01 sin(2t)    0.3157/0.2751   1.2944/1.2538
+    +-0.005 sin(4t)   0.2922/0.2869   1.2826/1.2773
+    +-0.002 sin(6t)   0.2895          1.2800
+
+Both sign sets stay anchored intervals with tau1 < tau2, so the segment argument's
+hypothesis holds on a neighbourhood of Sigma and the extension is not vacuous.  Whether it
+holds on all of D is untested.
+
+### Item 4: Lean F25
+
+  second_diff_nonpos_mono  non-positive second difference => slopes non-increasing
+  concave_along_segment    + first slope <= 0 => the function never exceeds its start
+  concave_from_critical    the case actually used, first slope = 0 from dQ(Sigma) = 0
+
+92 theorems, 14 defs, zero sorry, axioms [propext, Quot.sound].
+
 ## ITEM 3 DELIVERED: THE RESULT EXTENDS BEYOND SIGMA'S CELL.  ITEMS 1 AND 2 DID NOT.
 
 ### 🔥 The bound and the uniqueness extend past the single cell
