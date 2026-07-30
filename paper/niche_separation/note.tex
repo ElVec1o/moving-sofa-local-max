@@ -37,7 +37,9 @@ $|N|=\int_0^{\pi/2}[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2
 -\tfrac12(\alpha_1^-)^2]\,dt$ whenever the associated sweep is injective. Injectivity is
 implied by a single linear condition (RC), that the cap's radius of curvature be at most
 the corridor width, through a forced-oscillator argument whose kernel is non-negative
-because the rotation angle is $\pi/2$. Separately, $\Sig$'s two niches are disjoint, the
+because the rotation angle is $\pi/2$. (RC) is classical --- by the dual of Blaschke's
+rolling theorem it says the cap slides freely inside a unit ball, up to the corridor
+facets --- so what is new is its use, not the condition. Separately, $\Sig$'s two niches are disjoint, the
 relevant constant being $M=\tfrac12-(\sqrt2-f_1\sqrt{4-2\sqrt2})$.
 
 For the functional $Q=|C_2|-2V$ we prove $Q(\Sig)=A_R^\ast$, $\delta Q(\Sig)=0$ --- Romik's
@@ -1128,6 +1130,24 @@ width.
 
 Since $H+H''\le1$ is linear in $H$, (RC) cuts out a convex set.
 
+\begin{remark}[(RC) is classical]\label{rem:rcclassical}
+The bound $h+h''\le R$ is not new. By the dual of Blaschke's rolling theorem, a convex
+body $K$ slides freely inside a ball of radius $R$ exactly when $h_K+h_K''\le R$, and
+that in turn says $K$ is a Minkowski summand of $RB$; see
+Schneider \cite[\S3.2]{Sch14}. Our (RC) is that condition at $R=1$, the corridor width,
+\emph{relaxed} to permit atoms at $\theta=\pm\pi/2$. Since Minkowski addition adds surface
+area measures, and a body whose surface measure is two equal atoms at $\pm\pi/2$ is a
+horizontal segment,
+\[
+  \text{(RC)}\quad\Longleftrightarrow\quad
+  C_2=\bigl[\text{a horizontal segment}\bigr]\oplus D,\qquad
+  D\ \text{a Minkowski summand of the unit disc.}
+\]
+For $\Sig$ the segment has length $1.1670498\ldots$, the corridor facet, and $D$ has
+curvature radius at most $0.8389$. What we claim is not the condition but its use: that it
+forces the niche sweep to be injective (Theorems~\ref{thm:rc}, \ref{thm:cross}).
+\end{remark}
+
 \begin{theorem}\label{thm:rc}
 If $H$ satisfies (RC), then \eqref{eq:C22} and \eqref{eq:C11} hold for every pair
 $0\le t'<t\le\pi/2$. Hence each of the two sweeps is injective.
@@ -1494,7 +1514,11 @@ $\min(s_{22}-\alpha_2)=-0.0944$. The face-1 sweep is injective.
 $721$ constraints, i.e.\ $V>|N|$ as Proposition~\ref{prop:reynolds} requires.
 \end{itemize}
 So (RC) and the one-corner injectivity condition are independent: $\Sig$ satisfies the
-first and not the second, Gerver the second and not the first. The decomposition
+first and not the second, Gerver the second and not the first. By
+Remark~\ref{rem:rcclassical} the difference has a classical reading: $\Sig$'s cap is a
+corridor facet plus a body that slides freely inside the unit disc, whereas part of
+Gerver's cap boundary is \emph{flatter than the corridor is wide}, its curvature radius
+reaching $1.3986$. The decomposition
 $N=W_2\sqcup W_1^{\mathrm{out}}$ is therefore not the one the one-corner argument uses,
 and the fact that it fails on the solved case is a standing caution about the framework,
 recorded rather than explained.
@@ -1567,7 +1591,9 @@ $x_K'(t)\cdot u_t<0$ and $x_K'(t)\cdot v_t>0$ on $(0,\pi/2)$.
 \item Our (RC) shares part (1) verbatim and \emph{adds} a bound on the density, while
 dropping part (3) entirely. No curvature bound appears in \cite{Bae24}; its only mentions
 of curvature are the standard identification of the surface-measure density with the
-radius of curvature, which we also use.
+radius of curvature, which we also use. The bound itself is classical, however: it is the
+sliding-ball condition of Remark~\ref{rem:rcclassical}, so (RC) is a known condition put to
+a new use rather than a new condition.
 \item His concavity argument attaches Mamikon regions to the overestimating region so that
 the total is linear in the cap; ours subtracts them from the cap. He works on a space of
 triples $(K,B,D)$ of convex bodies; we work with the single support function $H$ on
@@ -1662,6 +1688,8 @@ Lemma~\ref{lem:ceiling} uses.
 Geom.\ Dedicata \textbf{42} (1992), 267--283.
 \bibitem{KR18} Y.~Kallus and D.~Romik, \emph{Improved upper bounds in the moving sofa
 problem}, Adv.\ Math.\ \textbf{340} (2018), 960--982.
+\bibitem{Sch14} R.~Schneider, \emph{Convex Bodies: The Brunn--Minkowski Theory},
+2nd ed., Cambridge Univ.\ Press, 2014.
 \bibitem{Rom18} D.~Romik, \emph{Differential equations and exact solutions in the moving
 sofa problem}, Exp.\ Math.\ \textbf{27} (2018), 316--330.
 \end{thebibliography}

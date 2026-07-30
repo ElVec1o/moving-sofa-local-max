@@ -1,3 +1,56 @@
+## 🔴 RULE 4: (RC) IS NOT NEW. It is the classical sliding-ball condition, relaxed.
+
+The audit gap is closed, and it forces a reframing.
+
+### What (RC) actually is
+
+The dual of Blaschke's rolling theorem: a convex body K SLIDES FREELY INSIDE A BALL of
+radius R exactly when h_K + h_K'' <= R, equivalently when K is a MINKOWSKI SUMMAND of RB.
+(Schneider, Convex Bodies: The Brunn-Minkowski Theory, 2nd ed., section 3.2.)  Our (RC) is
+that condition at R = 1, the corridor width, RELAXED to permit atoms at theta = +- pi/2.
+
+Since Minkowski addition ADDS surface area measures, and a body whose surface measure is
+two equal atoms at +-pi/2 is a horizontal SEGMENT,
+
+    (RC)  <=>  C2 = [a horizontal segment] (+) D,  D a Minkowski summand of the unit disc.
+
+MEASURED: sigma_{C2} for Sigma has exactly ONE atom in [0,pi], at theta = pi/2, of mass
+1.167048 (the corridor facet), and a.c. density at most 0.8389.  So Sigma's cap is a
+corridor facet plus a body of curvature radius <= 0.8389, which slides freely in the unit
+disc.
+
+SO (RC) IS NOT A NEW CONDITION.  What is claimed is its USE: that it forces the niche
+sweep to be injective.  The note, README and abstract are corrected accordingly, and
+Schneider is cited.
+
+### The Gerver failure, now classical (item 2)
+
+Gerver's cap also has exactly one atom in [0,pi] at theta = pi/2, of mass 1.613762, but its
+a.c. density reaches 1.3986 > 1.  So
+
+    GERVER'S CAP IS NOT A SEGMENT (+) (SUMMAND OF THE UNIT DISC): part of its boundary is
+    FLATTER THAN THE CORRIDOR IS WIDE.  Sigma's is not.
+
+That is the one-line classical statement of the difference found last session, and it
+replaces the descriptive "Sigma has vertices, Gerver does not" with a standard notion.
+
+### What survives as ours
+
+  * the niche formula in convex-linear data, and its bookkeeping (subtract from the cap,
+    single support function H) -- different from Baek's (attach to R, triples (K,B,D)),
+    equivalence not determined;
+  * (RC) => injectivity, by the forced-oscillator argument;
+  * V >= |N| always (Reynolds), hence Q bounds nothing off the injective domain;
+  * the main theorem on the convex domain D;
+  * dQ = 0 identically in the constants, i.e. Romik's ODEs ARE the critical-point
+    equations of Q;
+  * the closed forms for Sigma's cap, and A_R* = 1 + 4 tan^2 beta + beta;
+  * the negative result that the construction does not recover Gerver, now with a
+    classical explanation.
+
+NOT ours: the arm lengths f, g (Baek Def 6.2.1); the cubics (standard); (RC) as a
+condition (classical); radius of curvature = surface-measure density (standard).
+
 ## RULE 4 NOVELTY AUDIT (item 1), HYPOTHESIS (iii) RESOLVED AS A DOMAIN CONSTRAINT (item 2),
 ## AND THE MAIN THEOREM STATED (item 3)
 
