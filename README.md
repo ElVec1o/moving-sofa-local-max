@@ -77,7 +77,8 @@ proof; **HEURISTIC** = computational evidence only.
 | 46 | **Stability.** $\lvert T\rvert\le A_R^\ast-\tfrac{371}{1000}\lVert H-H_\Sigma\rVert^2_{L^2(0,\pi/2)}$ for every ambidextrous sofa with cap data in $\mathcal D$ | PROVED |
 | 47 | **Uniqueness.** $\Sigma$ is the unique ambidextrous sofa of area $A_R^\ast$ with cap data in $\mathcal D$ | PROVED |
 | 48 | The separation hypothesis is **independent** of (RC): adding $\delta\sin(\theta-\pi/2)$ on $[\pi/2,\pi]$ preserves (RC) and the gauge exactly while pushing $M$ past $\tfrac12$ | PROVED |
-| 49 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 49 | The bound and uniqueness **extend beyond $\mathcal D$**: concavity along the segment $[H_\Sigma,H]$ suffices, and holds whenever that segment meets only anchored cells with $\tau_1\le\tau_2$ | PROVED |
+| 50 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the

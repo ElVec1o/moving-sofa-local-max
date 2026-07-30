@@ -1,3 +1,51 @@
+## ITEM 3 DELIVERED: THE RESULT EXTENDS BEYOND SIGMA'S CELL.  ITEMS 1 AND 2 DID NOT.
+
+### 🔥 The bound and the uniqueness extend past the single cell
+
+Q is C^1 and piecewise quadratic, so if EVERY cell met by the segment [H_Sigma, H] has
+d^2 Q <= 0, then Q is concave ALONG THAT SEGMENT and
+
+    Q(H) <= Q(Sigma) + dQ(Sigma)[H - H_Sigma] = A_R*,
+
+using dQ(Sigma) = 0.  Convexity of the union of those cells is NOT needed -- only concavity
+along the one segment.  This holds in particular whenever the segment meets only cells whose
+sign sets are ANCHORED intervals E1 = [0,tau1), E2 = [0,tau2) with tau1 <= tau2:
+
+  (tau1,tau2)  (0,pi/2) (.1,.2) (.3,.5) (.5,.9) (.8,1.2) (1,1.3) (1.2,1.4) (1.4,1.5) (1.5,pi/2) (.2,1.5) (.05,.06)
+  lambda_max    -0.863   -0.139  -0.355  -0.533   -0.445  -0.340   -0.228    -0.109    -0.047   -0.777   -0.040
+
+all negative, with Sigma's own cell at -0.723.  Sigma sits at (beta, pi/2-beta) with
+beta < pi/2-beta, so it lies in the family, and the class of competitors covered is
+STRICTLY LARGER than D and checkable from the sign pattern alone.
+
+The restriction to ANCHORED intervals is essential: the unanchored E1 = E2 = [0.4,1.2] has
+lambda_max = +0.407, which is what killed the earlier "tau1 <= tau2 suffices" claim.
+
+### 🔴 Item 1 NOT delivered: the constant gap is identified, not closed
+
+The proof gives 0.3710 on L^2(0,pi/2); the measured sharp value is 0.7285 on L^2(0,pi).
+The factor is exactly the J3 coefficient the concavity proof DISCARDS: P3 = 1 makes
+int_{pi/2}^pi (eta^2 - eta'^2) <= 0 only marginally, and recovering a positive coefficient
+there requires spending the E2 term on [pi/2,pi] instead of on J1 and J2.  Sketched, not
+carried out.  The note says so.
+
+### 🔴 Item 2 NOT delivered: the H^1 estimate could not be confirmed, and my reasoning
+###    for expecting it was too quick
+
+The coefficient of eta'(theta)^2 in (Q2) is -1 or -2 throughout, so an H^1 estimate SHOULD
+exist.  It could not be confirmed.  Testing (1/2)d^2Q + c1*K against the mass matrix gives
+values that GROW with the mesh (+667 at m=64, +2669 at m=128 for c1 = 1) instead of
+converging, and c0 turns non-positive already near c1 = 0.03.
+
+The reason is a delicate cancellation the basis cannot hold: the sigma term contains
+-2 int eta eta' tan t, which integrates by parts against eta(pi/2) = 0 into
++ int eta^2 sec^2 t, so two unbounded quantities cancel near theta = pi/2.  In exact
+arithmetic that is fine; in the piecewise-linear basis it is not.  So the DISCRETISATION
+fails, not necessarily the claim -- but the claim is unconfirmed and is recorded as open.
+
+Recorded as a caution: "the principal symbol is negative, therefore the form dominates the
+stiffness" is exactly the kind of step that skips a cross term.  It did.
+
 ## 🔥🔥🔥 TWO NEW POSITIVE THEOREMS, FREE FROM WHAT WAS ALREADY PROVED
 
 Strict concavity had been proved and never cashed.  Q is EXACTLY quadratic on the cell, so

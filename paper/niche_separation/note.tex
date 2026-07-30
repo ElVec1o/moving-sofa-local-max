@@ -1699,10 +1699,41 @@ contributes $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2dt<0$ unless $\eta$ is constan
 $[\pi/2,\pi]$, and $\eta(\pi/2)=0$ makes that constant zero.
 \end{proof}
 
+\begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
+$Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
+$[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
+$Q(H)\le Q(\Sig)+\delta Q(\Sig)[H-H_\Sig]=A_R^\ast$. Convexity of the union of those cells
+is not needed. In particular this holds whenever the segment meets only cells whose sign
+sets are the anchored intervals $E_1=[0,\tau_1)$, $E_2=[0,\tau_2)$ with $\tau_1\le\tau_2$:
+across $(\tau_1,\tau_2)=(0,\tfrac\pi2),(0.1,0.2),(0.3,0.5),(0.5,0.9),(0.8,1.2),
+(1.0,1.3),(1.2,1.4),(1.4,1.5),(1.5,\tfrac\pi2),(0.2,1.5),(0.05,0.06)$ the values of
+$\lambda_{\max}$ are $-0.863,-0.139,-0.355,-0.533,-0.445,-0.340,-0.228,-0.109,-0.047,
+-0.777,-0.040$, all negative, with $\Sig$'s own cell giving $-0.723$.
+\end{proposition}
+
+Since $\Sig$ sits at $(\beta,\pi/2-\beta)$ with $\beta<\pi/2-\beta$, it lies in that
+family, and the class of competitors covered is strictly larger than $\mathcal D$ and is
+checkable from the sign pattern alone. (The restriction to \emph{anchored} intervals is
+essential: Remark~\ref{rem:conc} exhibits $E_1=E_2=[0.4,1.2]$, unanchored, with
+$\lambda_{\max}=+0.407$.)
+
 The constant in \eqref{eq:stab} is the one the proof of Theorem~\ref{thm:concave} delivers.
 Measured, the sharp constant for the $L^2(0,\pi)$ norm is larger:
 $\sup\tfrac12\delta^2Q[\eta]/\|\eta\|^2_{L^2(0,\pi)}$ equals
-$-0.7059,-0.7188,-0.7255,-0.7285$ at $m=32,64,128,256$.
+$-0.7059,-0.7188,-0.7255,-0.7285$ at $m=32,64,128,256$. The factor between $0.371$ and
+$0.729$ is the $J_3$ coefficient that the proof of Theorem~\ref{thm:concave} discards:
+$P_3=1$ makes $\int_{\pi/2}^\pi(\eta^2-\eta'^2)\le0$ only marginally, and recovering a
+positive coefficient there needs the $E_2$ term to be spent on $[\pi/2,\pi]$ rather than
+on $J_1$ and $J_2$. We have not carried that out.
+
+An $H^1$ version of \eqref{eq:stab} should also exist, since the coefficient of
+$\eta'(\theta)^2$ in \eqref{eq:Q2} is $-1$ or $-2$ throughout. We could not confirm one
+numerically: the $\sigma$ term contains $-2\int\eta\eta'\tan t$, which integrates by parts
+against $\eta(\pi/2)=0$ into $+\int\eta^2\sec^2t$, and the cancellation of two unbounded
+quantities near $\theta=\pi/2$ is not resolved by the piecewise-linear basis. Testing
+$\tfrac12\delta^2Q+c_1K$ against the mass matrix gives values that grow with the mesh
+rather than converging, so the question is open and the discretisation, not the claim, is
+what fails.
 
 \begin{remark}[The size of $\mathcal D$, and what Theorem~\ref{thm:final} is not]
 \label{rem:notopt}
