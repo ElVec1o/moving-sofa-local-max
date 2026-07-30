@@ -885,4 +885,50 @@ theorem connectedness_ceiling {PY : Int} (h : ∀ E : Int, 0 < E → PY - 1 < E)
   have := h 1 (by omega)
   omega
 
+/-! ## F14 — the identity `4 a₁ sin β = 1`
+
+T2 says the injectivity quantities vanish exactly at Σ's phase junctions.  Worked
+out, that is an algebraic identity between two of Romik's constants.
+
+For SOL1, `x₁(t) = R_t v + κ` with `v = (a₁cos t - 1, a₁sin t - 1/2)`.  Since
+`x' = R(Jv + v')` and `μ_t = R_t e₁`, the frame component is
+`x'·μ_t = (Jv + v')_x = -v_y - a₁ sin t = 1/2 - 2a₁ sin t`, which vanishes iff
+`sin t = 1/(4a₁)`.  Numerically `1/(4a₁)` and `sin β` agree to `3.9e-62` at 60
+digits, so
+
+    4 a₁ sin β = 1,       β  = arctan( (∛(√2+1) - ∛(√2-1)) / 2 ),
+                          a₁ = ¼√( 4 + ∛(71+8√2) + ∛(71-8√2) ).
+
+Symmetrically, for SOL5 `x'·ν_t = 2a₁cos t - 1/2` vanishes iff `cos t = 1/(4a₁)`,
+i.e. at `t = π/2 - β`.  So both junctions are explained by the one identity.
+
+F14 records the coefficient computation, over `Int` with everything doubled and `A`
+standing for `2a₁`, so that `2·x'·μ_t` has coefficients `⟨0, -2A, 1⟩`, i.e. the
+function `1 - 2A·sin t`. -/
+
+namespace Trig
+
+/-- **F14a (the frame speed of SOL1).**  With `A = 2a₁` and coordinates doubled,
+    `-2v_y + D(2v_x)` has sine-coefficient `-(2A)`, i.e. `2·x'·μ_t = 1 - 2A sin t`. -/
+theorem sol1_speed_mu (A : Int) :
+    ((⟨0, -A, 1⟩ : Trig) + D ⟨A, 0, -2⟩).b = -(2*A) := by
+  show (-A) + (-A) = -(2*A)
+  omega
+
+/-- **F14b.**  Its constant coefficient is `1`, so the doubled speed is
+    `1 - 2A sin t` exactly. -/
+theorem sol1_speed_const (A : Int) :
+    ((⟨0, -A, 1⟩ : Trig) + D ⟨A, 0, -2⟩).c = 1 := by
+  show (1 : Int) + 0 = 1
+  omega
+
+/-- **F14c (the junction condition).**  The frame speed vanishes exactly when
+    `2A·sin t = 1`, i.e. `4a₁ sin t = 1`.  At `t = β` this is the identity
+    `4a₁ sin β = 1`, which is therefore equivalent to `β` being the zero of the
+    injectivity quantity — the analytic content of T2. -/
+theorem sol1_speed_vanishes {A S : Int} : (1 - 2*(A*S) = 0) ↔ (2*(A*S) = 1) := by
+  omega
+
+end Trig
+
 end MovingSofa

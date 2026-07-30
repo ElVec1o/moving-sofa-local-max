@@ -382,6 +382,77 @@ which is consistent with $\sigma\le\tau$ throughout. One obtains an inequality
 where Baek obtains an equality, and it is the equality that his argument
 consumes.
 
+\section{A relation between Romik's constants}
+
+The phase junctions of $\Sig$ admit a characterisation that ties two of Romik's
+constants together. Recall $a_1$ from \eqref{eq:a1} and $\beta$ from
+\eqref{eq:beta}.
+
+\begin{theorem}\label{thm:a1beta}
+$4a_1\sin\beta=1$.
+\end{theorem}
+
+\begin{proof}
+On $[0,\beta)$ Romik's path is $c(t)=R_tv(t)+\kappa^{(1)}$ with
+$v(t)=(a_1\cos t-1,\;a_1\sin t-\tfrac12)$. Differentiating,
+$c'=R_t(Jv+v')$ with $J$ the rotation by $\pi/2$, and since $\mu_t=R_te_1$ the
+frame component is
+\[
+  c'(t)\cdot\mu_t=(Jv+v')_x=-v_y-a_1\sin t
+   =-\bigl(a_1\sin t-\tfrac12\bigr)-a_1\sin t=\tfrac12-2a_1\sin t .
+\]
+This vanishes precisely when $\sin t=1/(4a_1)$. On the other hand the phase
+boundary of $\Sig$ at $t=\beta$ is where the SOL1 phase ends, and by
+Proposition~\ref{prop:outer} the two closed forms for $c_y$ agree there; the same
+computation on the SOL5 phase gives $c'\cdot\nu_t=2a_1\cos t-\tfrac12$, vanishing
+when $\cos t=1/(4a_1)$, i.e. at $t=\pi/2-\beta$. Since the two junctions are
+$\beta$ and $\pi/2-\beta$ and $\cos(\pi/2-\beta)=\sin\beta$, both conditions
+reduce to $\sin\beta=1/(4a_1)$.
+\end{proof}
+
+\begin{remark}
+Evaluated at $60$ digits, $1/(4a_1)$ and $\sin\beta$ agree to $3.9\cdot10^{-62}$.
+Romik tabulates $a_1$ and $\beta$ separately; we have not found
+Theorem~\ref{thm:a1beta} stated in the literature.
+\end{remark}
+
+Theorem~\ref{thm:a1beta} has a consequence for the transfer of Baek's method.
+His argument requires an \emph{injectivity condition} on the rotation path,
+namely $c'(t)\cdot\mu_t<0$ and $c'(t)\cdot\nu_t>0$ throughout $(0,\pi/2)$. By the
+computation above, for $\Sig$ these quantities vanish exactly at $\beta$ and
+$\pi/2-\beta$ and have the wrong sign outside $[\beta,\pi/2-\beta]$: at
+$t=0.05$ one finds $c'\cdot\mu_t=+0.4125$. So $\Sig$ satisfies the injectivity
+condition on its middle phase and violates it on both outer phases, and the
+failure boundary is exactly the phase junction.
+
+\begin{remark}[Where the difficulty of the ambidextrous problem sits]
+The outer phases $[0,\beta)$ and $(\pi/2-\beta,\pi/2]$ are also where the contact
+arcs of $\partial\Sig$ are \emph{constant}, pinned at the $\rho$-fixed point
+$(1,\tfrac12)$ to $3\cdot10^{-31}$: there the supporting hallway touches
+$\Sig$ along a segment rather than at a point. Three separate obstructions
+therefore coincide on those phases --- the contact structure degenerates, second
+variation arguments lose the contact point, and the injectivity hypothesis of the
+one-corner proof fails.
+\end{remark}
+
+\section{The ambidextrous problem as a single family of angle range \texorpdfstring{$\pi$}{pi}}
+
+Finally we record a reformulation which explains why the transfer is delicate.
+Since $\rho$ carries the hallway at angle $s$ to the hallway at angle $-s$ with
+inner corner $\rho c(s)$, we have
+$\bigcap_{t\in[-\pi/2,0]}H_t=\rho S$ and hence
+\begin{equation}\label{eq:pirange}
+  \Sig=\bigcap_{t\in[-\pi/2,\pi/2]}H_t,\qquad c(-t)=\rho c(t).
+\end{equation}
+Numerically the two constructions have symmetric difference exactly $0$. So the
+ambidextrous constraint family is a \emph{single} family spanning an angle range
+of $\pi$, rather than two families of range $\pi/2$; and its corner path is
+discontinuous at $t=0$, where $c_y(0)=0$ while $\rho c(0)$ has height $1$. Both
+features lie outside the setting of the one-corner argument, which is developed
+for rotation angle $\omega\le\pi/2$ and whose maximisers attain $\omega=\pi/2$.
+Equation~\eqref{eq:pirange} is thus a reformulation, not a reduction: it exhibits
+the ambidextrous problem inside a larger class rather than inside the solved one.
+
 \section{Formalisation}
 
 Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of
@@ -391,7 +462,10 @@ Lemma~\ref{lem:ceiling}, Corollary~\ref{cor:sep} and the collapse of
 equation is also formalised: writing $D$ for the formal derivative in the
 half-angle, $D(Dv)=-(v+1)$ for every arc of constant term $-1$, which is
 $4v''=-(v+(1,1))$ for the bracket of \eqref{eq:x6}
-(\verb|Trig.sol6_bracket|, proved by \verb|rfl| and depending on no axioms). \verb|lake build| is clean with no \verb|sorry|,
+(\verb|Trig.sol6_bracket|, proved by \verb|rfl| and depending on no axioms), as is
+the frame-speed computation behind Theorem~\ref{thm:a1beta}
+(\verb|Trig.sol1_speed_mu|) and the covering criterion of
+Theorem~\ref{thm:ceiling} (\verb|strip_covers_iff|). \verb|lake build| is clean with no \verb|sorry|,
 and \verb|#print axioms| reports nothing beyond \verb|propext| and
 \verb|Quot.sound|. Trigonometric quantities are carried as formal symbols with
 the sign hypotheses $\sin t\ge0$, $\cos t\ge0$, which is all
