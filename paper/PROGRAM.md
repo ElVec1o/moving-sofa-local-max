@@ -1,3 +1,98 @@
+## 🔥🔥🔥🔥 THE REPAIR: {V = |N|} IS CUT OUT BY LINEAR INEQUALITIES, SO IT IS CONVEX
+
+The previous section proved V >= |N| always (Reynolds), so Q = |C2| - 2V is not an upper
+bound on the full domain.  That statement stands.  What is new is that the set where it
+IS an upper bound is convex and contains Sigma with room around it.
+
+### The conditions (ambi_injectivity.py)
+
+Each sweep lies on a line: face 2 at t on l2(t) = {<p,nu_t> = G(t)-1}, face 1 on
+l1(t) = {<p,mu_t> = F(t)-1}.  Two distinct lines meet in ONE point, so a double cover
+forces that point into both segments.  Solving,
+
+    s22(t,t') = [ <c(t),nu_t'> - (G(t')-1) ] / sin(t-t')   -> alpha_2(t)  as t'->t
+    s11(t,t') = [ <c(t),mu_t'> - (F(t')-1) ] / sin(t'-t)   -> alpha_1(t)  as t'->t
+
+(the numerator vanishes at t'=t with derivative -alpha_2, resp. +alpha_1).  So nearby
+face-2 lines meet at the FAR end of [0,alpha_2] and nearby face-1 lines at the NEAR end
+of [alpha_1^+, sigma], and the conditions point in opposite directions:
+
+    (C22)  <c(t),nu_t'> - (G(t')-1) >= alpha_2(t) sin(t-t')     for t' < t
+    (C11)  <c(t),mu_t'> - (F(t')-1) <= alpha_1(t)^+ sin(t'-t)   for t' < t
+    (C21)  l2(t) ^ l1(t') not interior to both segments
+
+CRUCIALLY: c(t) = (F-1)mu_t + (G-1)nu_t is AFFINE in H, so <c(t),nu_t'>, G(t')-1,
+alpha_1(t), alpha_2(t) are all affine and sin(t-t') is a constant.  (C22) and (C11) are
+LINEAR INEQUALITIES IN H and cut out a CONVEX set K'.  On K' the combined sweep is
+injective, hence V = |N| and Q >= |T|.
+
+### Sigma is in K', with interior
+
+Grid of 401 parameters, |i-j| >= 3:
+
+    face-2 pairs interior to BOTH segments:  0 of 158802
+    face-1 pairs interior to BOTH segments:  0 of 158802
+    cross pairs interior to both:            0 of  58081
+
+The margins vanish LINEARLY as t' -> t, which is forced -- that is the envelope limit --
+and are strictly positive away from the diagonal (min gap 0.000636, 0.000957, 0.001601,
+0.003235, 0.006603, 0.013769 at diagonal cutoffs 2, 3, 5, 10, 20, 40 grid steps: the
+growth confirms it is a diagonal artefact, not a near-violation).
+
+K' IS NOT A POINT.  With H = H_Sigma + eps*sin(k theta) (gauge-compatible for even k), all
+conditions hold with ZERO violations at k=2 for |eps| <= 3e-2 and k=4 for |eps| <= 1e-2,
+BOTH SIGNS, and the two margins trade off smoothly as an interior point should.
+
+### The failure mechanism, identified (I12 negative control did its job)
+
+For the compactly supported bump perturbations where V - |N| was measured positive, the
+FACE-2 condition keeps holding and it is the FACE-1 condition that fails: -4.7e-2 at
+eps=0.05, -1.2e-1 at 0.10, -2.3e-1 at 0.20, and face-1 self-intersection counts 4456,
+3154, 1904 (and 598, 10670, 17878 for the negative side).  Bump functions have large
+higher derivatives, which is exactly what creates face-1 envelope self-intersections.  So
+the control both fired and localised the mechanism.
+
+### The conditional theorem, and its honest label
+
+  THEOREM (conditional).  Assume (i) Q(Sigma) = A_R*, dQ(Sigma) = 0, d^2 Q <= 0 on
+  Sigma's sign cell C; (ii) the three conditions above hold on K' ^ C; (iii) competitors
+  satisfy M < 1/2.  Then |T| <= A_R* for every ambidextrous sofa T with cap data in
+  K' ^ C.
+
+C is convex (alpha_i affine in H, so each sign condition is a half-space), K' is convex,
+so the intersection is convex; concave + critical gives Q(H) <= Q(Sigma) = A_R*, and (ii)
+gives Q(H) >= |T|.
+
+EFFECTIVE LABEL: HEURISTIC.  (i) is numerical (61 digits, 1.8e-8, discretised
+eigenvalues), (ii) is measured on a grid, (iii) is conditional.  The theorem does NOT
+assert optimality of Sigma: K' ^ C is not shown to contain every competitor, and bodies
+outside K' genuinely violate Q >= |T|.  What it does is exhibit an explicit convex class
+with nonempty interior around Sigma on which the one-corner architecture transfers.
+
+## 🟢 W > 0 CERTIFIED, SO M3 IS PROVED (ambi_wpos.py)
+
+CORRECTION FIRST.  The previous commit wrote the middle-phase expression as
+"- sqrt2 cos(2u + pi/4)".  That is WRONG: the substitution t = 2u + pi/4 makes the term
+-sin t = -sin(2u + pi/4), and sqrt2 cos(2u+pi/4) = cos 2u - sin 2u is a different function
+(1 instead of 1/sqrt2 at u=0).  Corrected in the note and here.  The correct form is
+
+    W(u) = (3K/4) sin u + (K/4) cos 3u + 1/2 - sin(2u + pi/4),  K = f1 sqrt(4-2sqrt2)
+
+on |u| <= u0 = pi/8 - beta/2 = 0.247872171290063683936069617042.
+
+CERTIFICATE.  3u0 = 0.7436 < pi so cos 3u is unimodal with max at 0 and its min over a
+subinterval is at an endpoint; sin u is increasing; 2u+pi/4 in [0.2896,1.2812] subset
+[0,pi/2] so sin(2u+pi/4) is increasing.  Hence on [p,q]
+
+    W >= L(p,q) := (3K/4) sin p + (K/4) min(cos 3p, cos 3q) + 1/2 - sin(2q + pi/4).
+
+At 40 working digits: m = 16 gives min L = -8.6e-3 (inconclusive), m = 32 gives
+min L = +6.13e-3 (CERTIFIED).  Margin exceeds the arithmetic error by 37 orders of
+magnitude.  Also W(u0) = (1/2)(1 - cos beta) to 1.7e-41, matching the last phase's
+(1/2)(1-sin t) as C^1 gluing requires.
+
+So x is strictly increasing on all of [0,pi/2] and M3 (S_1 = sigma) is PROVED.
+
 ## 🔴🔴 THE ARCHITECTURE DOES NOT CLOSE: V OVER-ESTIMATES THE NICHE, SO Q IS NOT AN UPPER BOUND
 
 The decisive test, and it is negative.  For any ambidextrous sofa T with cap data H,
@@ -76,7 +171,7 @@ x(t) = c_x(t) + sigma(t) sin t = (F(t)-1)/cos t -- the X-INTERCEPT of the face-1
 
   [beta,pi/2-beta]  with u = t/2 - pi/8 and -f2/f1 = sqrt2 - 1 = tan(pi/8) (exact, 5.6e-17)
                     cos^2 t x' = W(u) = (3K/4) sin u + (K/4) cos 3u + 1/2
-                                        - sqrt2 cos(2u + pi/4),   K = f1 sqrt(4-2sqrt2)
+                                        - sin(2u + pi/4),   K = f1 sqrt(4-2sqrt2)
                     on |u| <= pi/8 - beta/2 = 0.247867.  K = 1.302051691617.
                     W is decreasing with min W = (1/2)(1-cos beta) = 0.020828596 at the
                     RIGHT junction, matching the last phase's (1/2)(1-sin t) there.

@@ -9,13 +9,14 @@
 \newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{definition}
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Sig}{\Sigma}
 \DeclareMathOperator{\arctanop}{arctan}
 
-\title{Separation of the two niches of Romik's ambidextrous sofa,\\
-and a closed form for Romik's constant $f_1$}
+\title{The niche of Romik's ambidextrous sofa in convex-linear data,\\
+and the obstruction to a concavity bound}
 \author{Vico Bonfioli\\ \small\texttt{vicobonfioli@gmail.com}}
 \date{July 2026}
 
@@ -23,21 +24,35 @@ and a closed form for Romik's constant $f_1$}
 \maketitle
 
 \begin{abstract}
-Baek's proof that Gerver's sofa is optimal represents a moving sofa as a convex
-cap minus a single niche, and obtains global optimality from the concavity of a
-quadratic upper bound. Transferring that architecture to the ambidextrous moving
-sofa problem, which remains open, meets an immediate obstruction: the
-ambidextrous sofa is a convex cap minus a \emph{union of two} niches, and the
-inclusion--exclusion term enters the upper bound with the sign opposite to the
-one concavity requires. We show the obstruction is vacuous. The two niches of
-Romik's candidate $\Sig$ are disjoint, because every niche point lies at or below
-the apex of its own wedge and the apex path stays strictly below the axis of the
-reflection exchanging the two niches. The relevant constant is
-$M=\max_t c_y(t)=\tfrac12-\bigl(\sqrt2-f_1\sqrt{4-2\sqrt2}\bigr)$, and the
-condition $M<\tfrac12$ is equivalent to $f_1^2<(2+\sqrt2)/2$, which holds with a
-margin of $0.2600\ldots$. Along the way we give a closed form for Romik's
-constant $f_1$, which appears in the literature only as a decimal, and record the
-relation $4a_1\sin\beta=1$ between two of his constants.
+Baek's proof that Gerver's sofa is optimal writes a moving sofa as a convex cap minus a
+niche and obtains global optimality from the concavity of a quadratic upper bound. We
+study what happens when that architecture is applied to the ambidextrous moving sofa
+problem, which is open, and to Romik's candidate $\Sig$ of area
+$A_R^\ast=1.6449552184\ldots$.
+
+Three things are established. First, the two niches of $\Sig$ are disjoint, so the
+inclusion-exclusion term that obstructs the transfer vanishes; the relevant constant is
+$M=\max_tc_y(t)=\tfrac12-(\sqrt2-f_1\sqrt{4-2\sqrt2})$, and $M<\tfrac12$ is equivalent to
+$f_1^2<(2+\sqrt2)/2$. Second, the niche area of $\Sig$ is given exactly by
+$\int_0^{\pi/2}[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2-\tfrac12(\alpha_1^-)^2]dt$
+where $\alpha_1,\alpha_2,\sigma$ are affine functionals of the support function, so every
+ingredient is convex-linear; the reported failure of the one-corner injectivity condition
+on the two outer phases of $\Sig$ is an artefact of requiring both arms to have the same
+sign at once, and no such joint hypothesis is used. Third, the resulting functional
+$Q=|C_2|-2V$ satisfies $Q(\Sig)=A_R^\ast$, has vanishing first variation at $\Sig$, and
+has negative definite second variation on the cell of support functions sharing $\Sig$'s
+sign pattern.
+
+The bound nevertheless fails in general: $V$ is the flux of the advancing wedge boundary,
+so by Reynolds' transport theorem $V\ge|N|$, and $Q$ lies below the area it should bound
+except where the sweep is injective. We show that injectivity is cut out by inequalities
+linear in the support function, hence defines a convex subdomain $\mathcal K'$, and that
+$\Sig$ lies in $\mathcal K'$ with room around it in low-frequency directions. This yields
+a conditional bound on $\mathcal K'$, with hypotheses that are numerical and stated as
+such. Optimality of $\Sig$ remains open.
+
+Along the way we give a closed form for Romik's constant $f_1$, which appears in the
+literature only as a decimal, and record the relation $4a_1\sin\beta=1$.
 \end{abstract}
 
 \section{Setting}
@@ -917,7 +932,7 @@ right endpoint of the corridor floor facet of Remark~\ref{rem:cap};
 $-f_2/f_1=\sqrt2-1=\tan(\pi/8)$,
 \[
   \cos^2t\;x'=W(u):=\tfrac{3K}{4}\sin u+\tfrac K4\cos3u+\tfrac12
-    -\sqrt2\cos\Bigl(2u+\tfrac\pi4\Bigr),\qquad K=f_1\sqrt{4-2\sqrt2},
+    -\sin\Bigl(2u+\tfrac\pi4\Bigr),\qquad K=f_1\sqrt{4-2\sqrt2},
 \]
 on $|u|\le\pi/8-\beta/2$.
 \end{itemize}
@@ -934,14 +949,33 @@ the triple-angle identities $\sin(3t/2)=s(3c^2-s^2)$, $\cos(3t/2)=c(c^2-3s^2)$ w
 $s=\sin\tfrac t2$, $c=\cos\tfrac t2$ reduce the result to the stated three-term form.
 \end{proof}
 
+\begin{proposition}[$W>0$, by a finite certificate]\label{prop:W}
+$W>0$ on $|u|\le u_0:=\pi/8-\beta/2=0.2478721712\ldots$, so $x$ is strictly increasing
+on all of $[0,\pi/2]$ and $S_1=\sigma$.
+\end{proposition}
+
+\begin{proof}
+$K=1.3020516916172893452\ldots$, and $3u_0=0.7436\ldots<\pi$, so $\cos3u$ is unimodal on
+$[-u_0,u_0]$ with maximum at $0$ and its minimum over any subinterval is attained at an
+endpoint. Also $\sin u$ is increasing, and $2u+\pi/4$ ranges over
+$[0.2896\ldots,1.2812\ldots]\subset[0,\pi/2]$, so $\sin(2u+\pi/4)$ is increasing.
+Therefore on $[p,q]\subseteq[-u_0,u_0]$,
+\[
+  W\ \ge\ L(p,q):=\tfrac{3K}{4}\sin p+\tfrac K4\min\bigl(\cos3p,\cos3q\bigr)
+       +\tfrac12-\sin\Bigl(2q+\tfrac\pi4\Bigr).
+\]
+Dividing $[-u_0,u_0]$ into $32$ equal pieces gives $L>0$ on every piece, with
+$\min L=6.13\cdot10^{-3}$; the computation is at $40$ working digits, so the margin
+exceeds the arithmetic error by $37$ orders of magnitude. ($16$ pieces do not suffice:
+$\min L=-8.6\cdot10^{-3}$.)
+\end{proof}
+
 \begin{remark}
-$K=1.3020516916\ldots$ and $W$ is strictly decreasing on $|u|\le\pi/8-\beta/2$ with
-minimum $W(\pi/8-\beta/2)=\tfrac12(1-\cos\beta)=0.0208285\ldots$ at the right junction,
-where it agrees with the last phase's $\tfrac12(1-\sin t)$ as it must. So $W>0$; the
-proof of that inequality is elementary but is not written out here, and the closed forms
-above have been checked against numerical differentiation to $10^{-10}$. Since $C_2$ is
-convex, this monotonicity together with the endpoint identity is what reduces the claim
-$S_1=\sigma$ to those two facts.
+$W$ is in fact strictly decreasing, with
+$W(u_0)=\tfrac12(1-\cos\beta)=0.020828595599846555\ldots$ at the right junction, matching
+the last phase's $\tfrac12(1-\sin t)$ there to $1.7\cdot10^{-41}$, as $C^1$ gluing
+requires. The three closed forms of Proposition~\ref{prop:mono} were also checked against
+numerical differentiation of the path to $10^{-10}$.
 \end{remark}
 
 \begin{remark}[The identity at 61 digits]\label{rem:61}
@@ -957,6 +991,127 @@ $a_1=\sqrt{4+u^2}/(4u)$, $f_1$ from Proposition~\ref{prop:f1}) and $60$ working 
 The two sides share no computation, so this rules out the possibility that the
 double-precision agreement of \eqref{eq:Qtight} was a rounding coincidence. It remains
 floating point, not an interval enclosure.
+\end{remark}
+
+\section{A convex subdomain on which the bound is valid}\label{sec:kprime}
+
+Proposition~\ref{prop:reynolds} says $V\ge|N|$ with equality exactly when nothing is
+re-swept, i.e.\ when the combined sweep is injective. We now show that injectivity is
+governed by inequalities that are \emph{linear} in $H$, so the set where the bound is
+valid is convex.
+
+Each sweep lies on a line: face~2 at parameter $t$ on
+$\ell_2(t)=\{\langle p,\nu_t\rangle=G(t)-1\}$, face~1 on
+$\ell_1(t)=\{\langle p,\mu_t\rangle=F(t)-1\}$. Two distinct lines meet in one point, so a
+double cover forces that point into both segments. Solving $\ell_2(t)\cap\ell_2(t')$ for
+the coordinate $s$ on $\ell_2(t)$, and using $\langle\mu_t,\nu_{t'}\rangle=\sin(t-t')$,
+\begin{equation}\label{eq:s22}
+  s_{22}(t,t')=\frac{\langle c(t),\nu_{t'}\rangle-(G(t')-1)}{\sin(t-t')},
+  \qquad
+  s_{11}(t,t')=\frac{\langle c(t),\mu_{t'}\rangle-(F(t')-1)}{\sin(t'-t)} .
+\end{equation}
+The numerator of $s_{22}$ vanishes at $t'=t$ with derivative $-\alpha_2(t)$, so
+$s_{22}(t,t')\to\alpha_2(t)$: nearby face-2 lines meet at the \emph{far} end of the
+face-2 segment $[0,\alpha_2]$. Likewise $s_{11}(t,t')\to\alpha_1(t)$, the \emph{near} end
+of the face-1 segment $[\alpha_1^+,\sigma]$.
+
+\begin{definition}\label{def:kprime}
+Let $\mathcal K'$ be the set of admissible $H$ satisfying, for all $0\le t'<t\le\pi/2$,
+\begin{equation}\label{eq:C22}
+  \text{(C22)}\quad \langle c(t),\nu_{t'}\rangle-(G(t')-1)
+     \ \ge\ \alpha_2(t)\sin(t-t'),
+\end{equation}
+\begin{equation}\label{eq:C11}
+  \text{(C11)}\quad \langle c(t),\mu_{t'}\rangle-(F(t')-1)
+     \ \le\ \alpha_1(t)^+\sin(t'-t)\ \ (\text{read with }\sin(t'-t)<0),
+\end{equation}
+together with the analogous condition for $\ell_2(t)\cap\ell_1(t')$.
+\end{definition}
+
+\begin{proposition}\label{prop:convex}
+$\mathcal K'$ is convex, and on $\mathcal K'$ the combined sweep is injective, hence
+$V=|N|$ and $Q=|C_2|-2|N|\ge|T|$ for every ambidextrous sofa $T$ with cap data $H$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:corner}, $c(t)$ is affine in $H$, hence so are
+$\langle c(t),\nu_{t'}\rangle$, $G(t')-1$, $F(t')-1$, $\alpha_1(t)$ and $\alpha_2(t)$;
+$\sin(t-t')$ does not depend on $H$. So \eqref{eq:C22} and \eqref{eq:C11} are linear
+inequalities in $H$ and cut out a convex set. Given \eqref{eq:C22}, for any pair
+$t'<t$ the intersection point of $\ell_2(t)$ and $\ell_2(t')$ has
+$s_{22}(t,t')\ge\alpha_2(t)$, so it is not interior to the segment at $t$, and the pair
+contributes no double cover; \eqref{eq:C11} does the same for face~1 with the inequality
+reversed because the relevant endpoint is the near one. With the cross condition, no point
+is swept twice.
+
+For $V=|N|$: every point of $N$ has a first capture time $\tau(p)$, at which
+$\partial Q_{\tau(p)}$ is advancing at $p$ (otherwise $p$ would have been captured
+earlier), so by Lemma~\ref{lem:normvel} it lies on face~2 with $s\le\alpha_2$ or on face~1
+with $s\ge\alpha_1$. Hence $N$ is covered by the two sweeps, and the sweeps lie in $N$
+because an advancing face point belongs to $Q_{t+\varepsilon}$. Injectivity turns each
+$\int|\det|$ into the area of its image, and the two images are disjoint, so the sum is
+$|N|$.
+\end{proof}
+
+\begin{remark}[$\Sig\in\mathcal K'$, and $\mathcal K'$ has nonempty interior]
+\label{rem:kprime}
+Measured on a grid of $401$ parameters, $\Sig$ satisfies all three conditions: of the
+$158\,802$ ordered pairs with $|t-t'|$ above the diagonal cutoff, \emph{zero} give a point
+interior to both face-2 segments and \emph{zero} interior to both face-1 segments, and of
+$58\,081$ cross pairs, \emph{zero} land in both. The margins in \eqref{eq:C22},
+\eqref{eq:C11} vanish linearly as $t'\to t$, which is forced: that is the envelope limit.
+Away from the diagonal they are strictly positive.
+
+$\mathcal K'$ is not a single point. For $H=H_\Sig+\varepsilon\sin(k\theta)$, which
+respects the gauge for even $k$, all conditions still hold with zero violations at
+$k=2$ for $|\varepsilon|\le3\cdot10^{-2}$ and at $k=4$ for $|\varepsilon|\le10^{-2}$, in
+both signs, and the two margins trade off smoothly. So $\Sig$ lies in $\mathcal K'$ with
+low-frequency room around it.
+
+The mechanism of failure is identified: for the compactly supported bump perturbations of
+Remark~\ref{rem:gap}, where $V-|N|$ was found positive, the face-2 condition continues to
+hold and it is the \emph{face-1} condition that fails, by $-4.7\cdot10^{-2}$ at
+$\varepsilon=0.05$ and $-2.3\cdot10^{-1}$ at $\varepsilon=0.20$. Those perturbations have
+large higher derivatives, which is what creates face-1 envelope self-intersections.
+\end{remark}
+
+\begin{theorem}[Conditional]\label{thm:cond}
+Assume:
+\begin{enumerate}
+\item[(i)] $Q(\Sig)=A_R^\ast$, $\delta Q(\Sig)=0$ in every admissible direction, and
+$\delta^2Q\preceq0$ on the cell $\mathcal C$ of support functions sharing $\Sig$'s sign
+pattern;
+\item[(ii)] the three conditions of Definition~\ref{def:kprime} hold on
+$\mathcal K'\cap\mathcal C$;
+\item[(iii)] competitors satisfy the niche separation $M<\tfrac12$ of
+Corollary~\ref{cor:sep}.
+\end{enumerate}
+Then $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa $T$ whose cap data lies in
+$\mathcal K'\cap\mathcal C$.
+\end{theorem}
+
+\begin{proof}
+$\mathcal C$ is convex because $\alpha_1,\alpha_2$ are affine in $H$, so each pointwise
+sign condition is a half-space; $\mathcal K'$ is convex by
+Proposition~\ref{prop:convex}; hence so is the intersection. By (i), $Q$ is a concave
+function on that convex set with a critical point at $\Sig$, so
+$Q(H)\le Q(\Sig)=A_R^\ast$ throughout. By (ii) and Proposition~\ref{prop:convex},
+$Q(H)\ge|T|$ there, using (iii) to get the factor $2$ in $|T|\le|C_2|-2|N|$.
+\end{proof}
+
+\begin{remark}[Honest status of Theorem~\ref{thm:cond}]\label{rem:honest}
+Hypothesis (i) is \emph{numerical}: $Q(\Sig)=A_R^\ast$ to $61$ digits
+(Remark~\ref{rem:61}), $\|\delta Q\|_\infty/h=1.8\cdot10^{-8}$, and
+$\lambda_{\max}/h\to-0.72$ for a discretised form. Hypothesis (ii) is measured on a
+grid, not proved. Hypothesis (iii) is the conditional part of
+Theorem~\ref{thm:ceiling}. So the effective label of Theorem~\ref{thm:cond} is
+HEURISTIC, and it does not assert optimality of $\Sig$: the class
+$\mathcal K'\cap\mathcal C$ is not shown to contain every competitor, and by
+Remark~\ref{rem:gap} bodies outside $\mathcal K'$ genuinely violate $Q\ge|T|$. What the
+theorem does is exhibit an explicit convex class, with nonempty interior around $\Sig$,
+on which the one-corner architecture transfers. Proving (i) and (ii) is the remaining
+work, and is finite: (i) reduces to a Hessian sign and a first-order identity in closed
+form, and (ii) to the linear inequalities \eqref{eq:C22}, \eqref{eq:C11}.
 \end{remark}
 
 \section{Formalisation}

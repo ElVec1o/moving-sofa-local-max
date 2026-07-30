@@ -16,3 +16,7 @@ venv/
 outcmaes/
 *.swp
 private/
+*.npy
+*.json
+!lean/MovingSofa/lake-manifest.json
+cross_K*.txt

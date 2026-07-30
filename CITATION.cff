@@ -1,11 +1,12 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
-title: "Two rank-one degeneracies in the moving-sofa second variation, and a moving-breakpoint obstruction to local maximality"
+title: "The niche of Romik's ambidextrous sofa in convex-linear data, and the obstruction to a concavity bound"
 authors:
   - family-names: Bonfioli
     given-names: Vico
-version: "0.7.0"
-date-released: 2026-07-21
+    email: vicobonfioli@gmail.com
+version: "0.5.0"
+date-released: 2026-07-30
 license: MIT
 doi: "10.5281/zenodo.20434287"
 repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
@@ -14,11 +15,8 @@ identifiers:
     value: "10.5281/zenodo.20434287"
     description: "Concept DOI (always resolves to latest version)"
   - type: doi
-    value: "10.5281/zenodo.21449258"
-    description: "Version DOI (v0.5.0)"
-  - type: doi
     value: "10.5281/zenodo.20450018"
-    description: "Version DOI (v0.4.0; superseded — see v0.5.0 correction)"
+    description: "Version DOI (v0.4.0)"
   - type: doi
     value: "10.5281/zenodo.20436636"
     description: "Version DOI (v0.3.0)"
@@ -29,59 +27,43 @@ identifiers:
     value: "10.5281/zenodo.20434288"
     description: "Version DOI (v0.1.0)"
 abstract: >
-  A structural analysis of the second variation of the moving-sofa area
-  functional at Gerver's sofa and at Romik's ambidextrous candidate
-  Sigma, on H^2 corner trajectories (modulo translation symmetry). The
-  conclusions are largely negative and precise: we identify exactly why
-  a second-variation argument does not establish local maximality, and
-  reduce the obstruction to a finite, explicitly located quantity.
-
-  VERSION NOTE. This work has been revised repeatedly as the analysis
-  sharpened; v0.7.0 supersedes all earlier versions. v0.1.0-v0.4.0
-  claimed a strict local maximum on H^2 with an explicit coercivity
-  constant; that was withdrawn in v0.5.0 (the constant mixed two inner
-  products). v0.6.0 argued the local maximum holds after all via an H^1
-  coercivity plus a two-norm theorem; v0.7.0 withdraws that too, because
-  the cubic-remainder hypothesis it relied on is false. Readers should
-  use v0.7.0.
-
-  WHAT v0.7.0 ESTABLISHES.
-  (1) Rank-one degeneracy of the principal symbol. In Lemma 8's form
-  C<eta,eta'> + D<eta,eta''>, the matrix D has trace 1 and determinant
-  identically 0: it is the rank-one projection onto the binding wall's
-  normal. So the one-contact second variation is blind to the tangential
-  component of eta' -- and single-wall coercivity is impossible.
-  (2) Multi-contact repair. The true symbol sums over the walls binding
-  at each theta: D_tot = n_mu (mu mu^T) + n_nu (nu nu^T), with mu, nu
-  orthogonal, so its eigenvalues are exactly (n_mu, n_nu). From Romik's
-  five phases, min(n_mu, n_nu) = 1 everywhere for Gerver, giving a
-  uniform Garding constant lambda_min = 1 (matches the oracle to 3-4
-  decimals). A second rank-one degeneracy, C^T C with determinant 0,
-  gives ||C||_op = 2 exactly, so the Garding inequality is explicit:
-  Q <= -1/2 ||eta'||^2 + 18 ||eta||^2_{L^2}.
-  (3) F is piecewise-quadratic. Each contact path is affine in (c,c'),
-  so the Green integrand is quadratic in the jet (d^3 L/d eps^3 = 0):
-  within a fixed combinatorial cell F is exactly quadratic, and the
-  entire third variation is carried by the four MOVING breakpoints
-  b_j(c).
-  (4) The obstruction, located. Among the moving-breakpoint monomials,
-  exactly eta'(b_j)^3 grows fast enough to defeat an H^1 two-norm
-  estimate, and its coefficient is measured NONZERO (~1.09 and ~1.89 in
-  the two components; controls vanish identically; the two interior
-  breakpoints are exact negatives by symmetry). So the improved-Taylor
-  hypothesis of Ioffe / Dambrine-Lamboley fails in (H^1, H^2), and no
-  such argument closes -- for Gerver as well as Sigma.
-  (5) Sigma is doubly obstructed. Its multi-contact symbol is ~4I on the
-  middle phase but degenerates at the end caps like lambda_min ~ 4.95
-  theta^1.69, so no uniform Garding constant exists there at all.
-
-  CONSEQUENCES. For Gerver, local maximality holds regardless via Baek
-  (2024) -- but not via this route. For Sigma no global result exists,
-  and local maximality of Sigma (second half of Romik's 2018 Open
-  Problem 1) REMAINS OPEN, now with two distinct located reasons. The
-  finite-dimensional Hessian uses a floating-point polygon oracle rather
-  than interval arithmetic; this affects numerical constants but not the
-  structural (symbolic) conclusions.
+  Computer-assisted numerical evidence for a strict local maximum of the
+  moving-sofa area functional, on the Sobolev space H^2 of corner
+  trajectories (modulo translation symmetry). The headline new
+  contribution is the first quantitative local-maximality evidence for
+  Romik's ambidextrous candidate Sigma (the second half of Romik's 2018
+  Open Problem 1), which is implied by no prior work; the identical
+  apparatus is also developed on Gerver's sofa, whose global (hence
+  local) optimality is in any case established by Baek (2024). We stress
+  that these are NOT theorems in the strict computer-assisted-proof
+  sense: they are conditional on three explicitly identified
+  non-rigorous ingredients, flagged throughout. Conditional on these,
+  the Gerver evidence yields a coercivity constant m >= 4.27 in the
+  H^2-norm and a uniqueness radius delta >= 0.044; the ambidextrous
+  evidence yields m^R >= 2.2. The three ingredients are: (i) the
+  finite-dimensional Hessian is evaluated with a floating-point
+  polygon-intersection oracle (Shapely) rather than true interval
+  arithmetic; (ii) the cross-term coupling between low and high Fourier
+  modes is bounded by a numerical placeholder rather than an analytic
+  estimate; (iii) the second variation Q decomposes as Q_smooth +
+  Q_jump, where Lemma 8 characterizes Q_smooth analytically but the
+  dominant jump piece Q_jump (from the four contact-transition
+  breakpoints, whose locations move under perturbation) is captured only
+  empirically; a closed-form derivation of Q_jump is identified as the
+  principal remaining analytic item. v0.4.0 trims the Richardson
+  cross-validation material and reports a diagnostic sharpening the
+  Q_jump target: its dominant diagonal contribution grows like a
+  mode-uniform k^2 that any closed form must reproduce. We note this
+  does not settle the rank of Q_jump, since the diagonal of a
+  finite-rank breakpoint-jet operator is itself dominated by a
+  mode-uniform k^2 term; resolving the rank requires the off-diagonal
+  operator together with an analytically assembled Q_smooth. Earlier, v0.3.0
+  reframed the work from
+  "proof/theorem/certified" to honest conditional numerical evidence,
+  foregrounded the ambidextrous result, added explicit Sobolev-space
+  definitions and a coercivity-implies-maximality discussion, assumed
+  Baek's global resolution throughout, and reconciled the constants
+  (m >= 4.27, tail <= 0.28, delta >= 0.044).
 keywords:
   - moving sofa problem
   - Gerver's sofa

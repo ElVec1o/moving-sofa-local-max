@@ -51,7 +51,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 20 | $x(t)=(F(t)-1)/\cos t$ is the face-1 line's $x$-intercept and is strictly increasing; $\cos^2t\,x'=\tfrac12-\sin t$ on $[0,\beta)$ (positive since $\beta<\pi/6$) and $\tfrac12(1-\sin t)$ on the last phase | PROVED |
 | 21 | $x(\pi/2)=1-\tfrac23a_1=0.4164750917\ldots$ — a closed form for the right end of the corridor floor facet | PROVED |
 | 22 | $Q(\Sigma)-A_R^\ast=-1.56\cdot10^{-61}$ at 60 working digits, from two independent closed-form routes | HEURISTIC |
-| 23 | **Optimality of $\Sigma$** | **not proved** |
+| 23 | $s_{22}(t,t')\to\alpha_2(t)$ and $s_{11}(t,t')\to\alpha_1(t)$ as $t'\to t$, and the resulting injectivity conditions are **linear in $H$**, so $\mathcal K'=\{V=\lvert N\rvert\}$ is **convex** | PROVED |
+| 24 | $\Sigma\in\mathcal K'$ (0 of 158802 face-2, 0 of 158802 face-1, 0 of 58081 cross violations), and $\mathcal K'$ has **nonempty interior**: $H_\Sigma+\varepsilon\sin(k\theta)$ stays inside for $k=2$, $\lvert\varepsilon\rvert\le3\cdot10^{-2}$, both signs | HEURISTIC |
+| 25 | **Conditional bound.** $\lvert T\rvert\le A_R^\ast$ for cap data in $\mathcal K'\cap\mathcal C$, given (i) tight/critical/concave at $\Sigma$, (ii) the conditions of 23 on $\mathcal K'\cap\mathcal C$, (iii) $M<\tfrac12$ | HEURISTIC |
+| 26 | $x$ is strictly increasing on all of $[0,\pi/2]$: the middle-phase inequality $W>0$ is certified by 32 subintervals at 40 digits, $\min L=+6.1\cdot10^{-3}$ | PROVED |
+| 27 | **Optimality of $\Sigma$** | **not proved** |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -99,14 +103,19 @@ cap: $Q$ sits *below* what it should bound. Measurement confirms $\Sigma$ is an 
 zero of $V-\lvert N\rvert$, the excess being positive on both sides and growing faster
 than $\varepsilon^2$.
 
-So results 16–17 are true but do not compose into an optimality statement. The repair is
-the one Baek performs — replace the exact flux by the flux over a sub-family on which
-the sweep is *provably* injective, so the integral is the area of a genuine subset of
-$N$, with the restriction vacuous at $\Sigma$. Producing it is that argument's Chapters
-3–6. One reformulation is recorded in the note: the whole face-2 sweep is governed by a
-single linear ODE $z'=iz-(\alpha_1+i\alpha_2)$ whose homogeneous part is an exact
-rotation, total rotation $\pi/2$, and injectivity becomes a question about that ODE
-rather than about plane geometry.
+*And then it was partly repaired.* Result 19 stands: on the full domain $Q$ is not an
+upper bound. But results 23–25 identify the set where it is one. Two lines meet in a
+single point, so a double cover forces that point into both sweep segments, and the
+resulting conditions turn out to be **linear** in the support function. So
+$\mathcal K'=\{V=\lvert N\rvert\}$ is convex, contains $\Sigma$, and has nonempty
+interior around it in low-frequency directions. On $\mathcal K'\cap\mathcal C$ the
+architecture transfers and gives a conditional bound.
+
+What that is not: a proof of optimality. $\mathcal K'\cap\mathcal C$ is not shown to
+contain every competitor, and by result 19 bodies outside $\mathcal K'$ genuinely violate
+$Q\ge\lvert\text{sofa}\rvert$. The conditional bound's hypotheses are numerical, so its
+effective label is HEURISTIC. Proving them is finite work: a Hessian sign and a
+first-order identity in closed form, plus the linear inequalities of result 23.
 
 ## Layout
 
