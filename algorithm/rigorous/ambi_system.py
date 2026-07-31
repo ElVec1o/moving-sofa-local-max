@@ -62,6 +62,17 @@ Together they give c_1 > 73/100 with no floating-point step anywhere:
 
 That is 99.9% of the sharp 0.7309566, against 91.2% for the decoupled 2/3.
 
+HOW FAR THE COVERING GOES.  Nothing about the argument stops at 73/100; the cost simply
+grows as the target approaches c*, because the enclosures of Phi must separate from 0 on
+ever-shorter intervals near the root:
+
+    target      73/100     0.7305     0.7309    0.73095    0.730956
+    gap to c*   9.6e-4     4.6e-4     5.7e-5     6.6e-6     6.2e-7
+    N needed        60         60        800     12000     > 12000
+
+So the method reaches every c < c*, and 73/100 is chosen only for being a round number
+that a reader can check with 60 balls.  The limit is compute, not a gap in the argument.
+
 A CORRECTION THIS FORCED.  Earlier turns quoted the sharp constant as 0.7323, the P1
 finite-element value at m = 256.  Rayleigh-Ritz gives an UPPER bound on an eigenvalue,
 and that sequence had not converged: 0.733086, 0.732285, 0.731311, 0.731247, 0.731073

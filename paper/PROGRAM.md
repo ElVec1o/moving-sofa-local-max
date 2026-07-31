@@ -94,6 +94,57 @@ over-estimate by about 0.2%.  NO conclusion moves: every certificate in the proj
 lower bound and every finite-element number an upper bound, so the two never crossed.  The
 target was mis-stated, not the results.  Corrected in note.tex, README and here.
 
+### 🟢 Item 3: the covering reaches every c < c*, and the limit is compute
+
+Nothing in the argument stops at 73/100.  Certifying a target c requires the enclosures of
+Phi to separate from 0 on every subinterval of [2/3, c], and near the root those intervals
+must shrink:
+
+    target      73/100     0.7305     0.7309    0.73095    0.730956
+    gap to c*   9.6e-4     4.6e-4     5.7e-5     6.6e-6     6.2e-7
+    N needed        60         60        800     12000     > 12000
+
+0.73095 is certified, i.e. 99.9991% of c*.  73/100 stays the headline because a reader can
+check it with 60 balls.  There is no residual gap in the method, only compute.
+
+### 🔴 CORRECTION TO THE PREVIOUS ENTRY: it was the GAUGE, not the ceiling atom
+
+The previous entry blamed the (1.4,0.35) blow-up on V_of being invalid across the ceiling
+facet atom.  That is WRONG, and the right explanation is simpler and more useful.
+
+sigma = (F-1) tan t + G-1 is integrated up to t = pi/2, where tan diverges.  It stays
+finite for one reason only: F(pi/2) = H(pi/2) = 1, so F-1 vanishes there at the same rate.
+That is exactly THE GAUGE, H(0) = H(pi/2) = 1, i.e. eta(0) = eta(pi/2) = 0.  A bump with
+bump(pi/2) != 0 breaks it, sigma genuinely diverges, and V is infinite.  The clean
+E/eps^2 = 4.010e4 was sigma^2 ~ eps^2 tan^2 t, a divergence sampled at fixed quadrature
+nodes -- correctly proportional to eps^2, and meaningless.
+
+    direction        bump(0)      bump(pi/2)    gauge
+    (1.0,0.45)       0            0             RESPECTED
+    (0.6,0.30)       0            0             RESPECTED
+    (1.4,0.35)       0            2.691e-1      VIOLATED
+
+So V_of is not broken and the ceiling atom is not involved.  The direction was never an
+admissible competitor.  ambi_excess.py now ASSERTS the gauge before measuring, which is
+the durable fix; the same trap would catch any future bump straddling pi/2.
+
+### 🔥 AND THE NOISE FLOOR IS |N|, NOT V -- SO IT IS REMOVABLE
+
+V is a one-dimensional integral of an analytic integrand and is already converged: at
+eps = 0.02 it agrees to 14 digits at 200, 400 and 800 Gauss-Legendre nodes per phase.
+The floor is entirely the polygon oracle for |N|, and it is a clean 1/n bias:
+
+    n         2000        4000        8000       16000
+    E       3.976e-5    2.119e-5    1.192e-5    7.278e-6
+    diffs      1.857e-5    9.27e-6     4.64e-6           ratios 2.003, 1.997
+
+Differences halving exactly means bias = C/n with C independent of n, so Richardson
+removes it: E_inf = 2 E(2n) - E(n).  Both pairs give E_inf = 2.6e-6 at eps = 0.02,
+against a raw reading of 2.1e-5 -- the "floor" was 8x the signal.  Extracting 2.6e-6 by
+differencing two numbers of size 0.187 is a 5-digit cancellation, which is what stalled
+the earlier sweep.  ambi_excess.py does the extrapolation and sweeps eps to read off the
+order of vanishing.
+
 ### 🔴 TASK #21 PIVOT IDENTIFIED, MEASUREMENT INCONCLUSIVE, AND A TOOL BUG FOUND
 
 The question that decides #21 is narrower than "find a concave upper bound on the excess".
@@ -114,7 +165,8 @@ measurement is consistent with d^2 E = 0 and does NOT establish it.  Settling it
 EXACT excess computation, which by Rule 8 belongs in Rust, not in a floating-point
 polygon oracle.  NOT claimed either way.
 
-🔴 A TOOL BUG THAT NEARLY BECAME A FINDING.  A third direction, the bump at c0 = 1.4 with
+🔴 SUPERSEDED BY THE CORRECTION ABOVE -- the cause is the gauge, not the atom.
+A DIRECTION THAT NEARLY BECAME A FINDING.  A third direction, the bump at c0 = 1.4 with
 w = 0.35, gave E/eps^2 = 4.010e4 CONSTANT across eps = 0.08, 0.04, 0.02, 0.01 -- a
 textbook clean second-order term, and it would have refuted the pivot.  It is an artefact.
 That bump spans [1.05, 1.75] and straddles theta = pi/2, where the cap carries the ceiling

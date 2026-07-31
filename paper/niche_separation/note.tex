@@ -1831,7 +1831,13 @@ at or below $\tfrac{73}{100}$.
 \end{proof}
 
 The certified $\tfrac{73}{100}$ is $99.9\%$ of $c^\ast$; the decoupled $\tfrac23$ is
-$91.2\%$. Both are lower bounds, and no step in either is floating point.
+$91.2\%$. Both are lower bounds, and no step in either is floating point. Nothing in the
+argument stops at $\tfrac{73}{100}$: certifying a target $c$ needs the enclosures to
+separate from $0$ on every subinterval of $[\tfrac23,c]$, and those must shrink as $c$
+approaches the root, so the number of balls grows --- $60,60,800,12000$ for targets
+$0.73,0.7305,0.7309,0.73095$. The last is $99.9991\%$ of $c^\ast$. We quote
+$\tfrac{73}{100}$ because a reader can check it with $60$ balls; the limit is arithmetic
+cost, not a gap.
 
 \begin{remark}[{The $[\pi/2,\pi]$ eigenvalue in closed form}]\label{rem:SL}
 When only the weight is raised and the mass is left at $1$ -- that is, $w=1+\lambda_J$ on
