@@ -1,3 +1,102 @@
+## 🧮🔥 INVENTION SPRINT: (RC) IS REPLACEABLE BY AN EXCESS BUDGET.  GERVER IS STILL OUT.
+
+Crux (I1): (RC) enters at exactly one point -- it forces E := V - |N| = 0 so that
+Q = |C2| - 2V is TIGHT.  Separation and Reynolds give, with NO curvature hypothesis,
+
+    |T| = |C2| - 2|N| = Q + 2E ,    E >= 0 .
+
+Unblocking criterion: the weakest convex condition replacing {E = 0}, at PROVED, with a
+measurably larger domain.
+
+### 🧮🎆 (a) NO-GO: task #21 as stated is IMPOSSIBLE.  PROVED.
+
+Task #21 asked for a CONCAVE upper bound Etil on the excess.  There is none.  If Etil is
+concave with Etil >= 0 and Etil(Sigma) = 0, and Sigma is in the algebraic interior of a
+convex D', pick a, b in D' with Sigma = (a+b)/2; concavity gives
+
+    0 = Etil(Sigma) >= (1/2) Etil(a) + (1/2) Etil(b) >= 0 ,
+
+so Etil(a) = Etil(b) = 0, hence Etil = 0 and E = 0 on all of D'.  Any architecture of that
+shape is confined to the injectivity locus, which is where the theorem already lives.
+Four sessions of task #21 were chasing an object that cannot exist.  Kill it.
+
+### 🧮🔥 (b) The spec was too strong.  (EB_theta), and it is a two-line proof.
+
+U = Q + 2 Etil concave does NOT need Etil concave, only that Etil's convexity fit inside
+Q's STRICT concavity.  With (1/2) d^2 Q <= -c ||eta||^2 there is a budget of exactly c.
+
+  THEOREM (EB_theta).  D' convex, Sigma in D', theta in [0,1], with separation M < 1/2,
+  (1/2) d^2 Q <= -c ||eta||^2 on D', and
+
+      (EB_theta)    E(H) <= (1/2) theta c ||H - H_Sigma||^2_{L^2(0,pi)} ,
+
+  then  |T| <= A_R* - (1-theta) c ||H - H_Sigma||^2.
+
+I13 BACK-TRANSLATION.  Compiling the U-construction down, it is elementary and U is
+scaffolding:  |T| = Q + 2E <= (A_R* - c||eta||^2) + theta c ||eta||^2.  Reported as the
+two-line chain, machinery demoted.  Rule 4: neither ingredient is new -- a non-negative
+concave function vanishing at an interior point is identically zero, and restoring
+concavity by adding a quadratic is ordinary semiconcavity.  What is new is WHICH condition
+this identifies.  theta = 0 is the existing theorem; theta > 0 ADMITS E > 0.  The size of
+the escape is proportional to c, so this session's 0.1532 -> 0.7310 is a 4.8x larger
+budget, not a cosmetic gain.
+
+### 🧮🔥 (c) CASH VALUE (I14): the domain radius grows about 4.8x
+
+Along the bump at c0 = 1.0, w = 0.45, using the excess scan and theta = 2E/(c*||eta||^2):
+
+    eps      0.0141   0.0200   0.0283   0.0400   0.0566   0.0800
+    theta     0.100    0.301    0.683    1.276    2.090    3.106
+
+theta = 1 is crossed between eps = 0.0283 and 0.0400, both in the RELIABLE range of the
+Richardson extrapolation.  (RC) fails at eps_c = 0.006492.  So (EB) extends the admissible
+radius from 0.0065 to about 0.031: a factor of 4.8, with a positive stability constant
+retained for any theta < 1.  Separation does not bind until eps = 0.444, i.e. 68x later.
+
+### 💧💧 (d) BUT GERVER IS STILL OUT, AND NOT BECAUSE OF (RC)
+
+Along H_s = (1-s) H_Sigma + s H_Gerver, with |N| Richardson-corrected at n = 2000, 4000:
+
+    s        0.15     0.30     0.45     0.60     0.75     0.90     1.00
+    tau_1  0.2568   0.2188   0.1769   0.1284   0.0694   0.0210   0.0000
+    tau_2  1.3127   1.3507   1.3926   1.4411   1.5001   1.5485   1.5708
+    E      2.4e-8   7.6e-8   1.5e-7   1.2e-6   2.2e-5   4.3e-4   1.2e-3
+    theta  0.0000   0.0000   0.0000   0.0000   0.0002   0.0030   0.0066
+
+(EB) holds all the way to Gerver at theta = 0.0066, and at theta = 0.0072 even if every
+unreliable row's excess is bounded by its own Richardson correction.  The concavity
+constant RISES along the segment (0.753 at s = 0.15 to 0.875 at s = 1), so Sigma's own
+cell is binding and c = c* is correct.  All cells are anchored with tau_1 <= tau_2, which
+is exactly the family Proposition "Beyond Sigma's own cell" covers.
+
+So (RC) is NOT what keeps Gerver out.  SEPARATION is:
+
+    (RC) fails at        s = 0.3979
+    separation fails at  s = 0.4058        <- binds 2% later, and the chain stops
+    (EB) fails at        never (s > 1)
+
+M = max c_y crosses 1/2 at s = 0.406.  Past that the two niches OVERLAP, so
+|U u rho U| < 2|N| and the true area EXCEEDS |C2| - 2|N|: the identity |T| = Q + 2E fails
+in the wrong direction and the bound is void.  Gerver sits at s = 1, still 2.5x away.
+
+I12 TOO-STRONG TEST, passed.  The maximal ambidextrous sofa with Gerver's cap data has
+area |C2| - 2|N| = 1.213, against A_R* = 1.645, so nothing false is proved.  The (EB)
+bound at s = 1 would read |T| <= 1.292, which is consistent and not vacuous.
+(Gerver's own 2.2195 is its area as a ONE-CORNER sofa; that shape is not ambidextrous.)
+
+### I13 DIFFICULTY ACCOUNTING, and a correction to my own advice
+
+The obstruction MOVED, it did not disappear.  Last session I said the highest-leverage
+move was "find a substitute for (RC) that Gerver's cap satisfies".  The substitute exists,
+Gerver satisfies it with 150x room, and it does not help: on the Gerver segment (RC) and
+separation fail 2% apart, so (RC) was never the binding constraint in that direction by
+any margin worth having.  The real obstruction on the road to Gerver is OVERLAPPING
+NICHES, and it is a different problem: it needs |U u rho U| rather than 2|N|, i.e. an
+inclusion-exclusion term, not a curvature condition.
+
+I19 EXIT STATE: SHIPPED for the domain widening (contracts proved, cash value banked at
+4.8x radius), and the Gerver target is a fresh crux entry, not this one.
+
 ## 🔥 TASK #21: THE PIVOT WAS TRUE AND VACUOUS.  THE REAL QUESTION IS THE ONSET AT (RC).
 
 ### 🔴 My framing of #21 was wrong, and the answer needs no measurement

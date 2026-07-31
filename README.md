@@ -85,7 +85,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 54 | **The sharp constant.** No splitting: $p(t)=\eta(t)$, $q(t)=\eta(t+\pi/2)$ makes $\delta^2Q$ one $2\times2$ Sturm–Liouville system on $[0,\pi/2]$, whose first eigenvalue $c^\ast=0.7309566\ldots$ **is** the sharp constant. On $E_1\cap E_2$ the cross terms are a total derivative $2(pq)'$, so the coupling is never pointwise — which is why every pointwise splitting loses. Certified $\tfrac12\delta^2Q\le-\tfrac{73}{100}\lVert\eta\rVert^2$, i.e. $99.9\%$ of sharp, by composing row 52 with an interval covering of $[\tfrac23,\tfrac{73}{100}]$ | PROVED |
 | 55 | **The flux excess vanishes identically near $\Sigma$**, not merely to second order: (RC) $\Rightarrow V=\lvert N\rvert\Rightarrow E=0$, and (RC) holds on a $C^2$-ball. So $\delta^2E(\Sigma)=0$ trivially and $\delta^2A(\Sigma)=\delta^2Q(\Sigma)$ — but only where $E=0$, i.e. on $\mathcal D$ itself, so it widens nothing. $E$ is a **threshold**, zero until the perturbation pushes $\max(H+H'')$ past $1$ | PROVED |
 | 56 | **The onset exponent at the (RC) boundary.** Whether $\mathcal D$ widens turns on $p$ in $E\sim(\varepsilon-\varepsilon_c)^p$: $p\ge2$ keeps $\delta^2(Q+2E)\le0$ across the boundary. Every reliable row in two directions gives $p>2$ (smallest $2.143$), but the directions disagree ($\approx2.95$ vs $\approx2.6$) and the second trends down. **Suggested, not established** — the $1/n$ polygon bias in $\lvert N\rvert$ exceeds the signal near threshold | HEURISTIC |
-| 57 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 57 | **No concave majorant of the flux excess.** If $\widetilde E$ is concave, $\ge0$, and vanishes at $\Sigma$ interior to a convex domain, then $\widetilde E\equiv0$. Any tight concave architecture is confined to the injectivity locus $\{E=0\}$ — the sought concave upper bound on the excess cannot exist | PROVED |
+| 58 | **Excess budget (EB$_\theta$).** $Q+2\widetilde E$ concave does not need $\widetilde E$ concave, only that its convexity fit inside $Q$'s strict concavity. If $E\le\tfrac12\theta c\lVert H-H_\Sigma\rVert^2$ then $\lvert T\rvert\le A_R^\ast-(1-\theta)c\lVert H-H_\Sigma\rVert^2$ — two lines given row 54. The room is proportional to $c$, so $0.1532\to0.7310$ is a $4.8\times$ larger budget | PROVED |
+| 59 | Measured: (EB) extends the admissible radius from $\varepsilon_c=0.0065$ to $\approx0.031$, a factor of $4.8$, along the $(1.0,0.45)$ bump | HEURISTIC |
+| 60 | **(RC) is not what excludes Gerver.** (EB) holds along the whole segment $[H_\Sigma,H_{\text{Gerver}}]$ at $\theta=0.0072$. **Separation** $M<\tfrac12$ fails at $s=0.406$, only $2\%$ past where (RC) fails ($s=0.398$), and Gerver is at $s=1$. Past $M=\tfrac12$ the niches overlap, $\lvert U\cup\rho U\rvert<2\lvert N\rvert$, and $\lvert T\rvert=Q+2E$ fails in the wrong direction | HEURISTIC |
+| 61 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -190,7 +194,8 @@ algorithm/rigorous/ambi_* computations for the paper; every number is regenerate
                           by one of these.  ambi_sturm.py carries the decoupled
                           chain, ambi_certify.py its certificate in arb ball
                           arithmetic, ambi_system.py the sharp constant,
-                          ambi_excess.py the order of vanishing of the flux excess
+                          ambi_excess.py the flux excess, ambi_budget.py the
+                          excess budget along the segment to Gerver
 
 superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:

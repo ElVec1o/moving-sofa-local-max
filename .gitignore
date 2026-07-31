@@ -20,4 +20,5 @@ private/
 *.json
 !lean/MovingSofa/lake-manifest.json
 !algorithm/rigorous/excess_scan.json
+!algorithm/rigorous/budget_scan.json
 cross_K*.txt

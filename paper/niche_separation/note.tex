@@ -1897,6 +1897,64 @@ contributes $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2dt<0$ unless $\eta$ is constan
 $[\pi/2,\pi]$, and $\eta(\pi/2)=0$ makes that constant zero.
 \end{proof}
 
+The domain $\mathcal D$ is cut out in part by (RC), and (RC) enters at exactly one
+point: it forces the flux excess $E:=V-|N|$ to vanish, so that $Q$ is tight. Separation and
+Reynolds give, with no curvature hypothesis,
+\begin{equation}\label{eq:QplusE}
+  |T|\ =\ |C_2|-2|N|\ =\ Q+2E,\qquad E\ge0 .
+\end{equation}
+It is natural to ask for a concave majorant of $E$, which would replace $\{E=0\}$ by
+something larger. There is none.
+
+\begin{proposition}[No concave majorant]\label{prop:nogo}
+Let $\mathcal D'$ be convex with $\Sig$ in its algebraic interior, and let
+$\widetilde E:\mathcal D'\to\mathbb R$ be concave with $\widetilde E\ge0$ and
+$\widetilde E(\Sig)=0$. Then $\widetilde E\equiv0$, and hence $E\equiv0$ on $\mathcal D'$.
+\end{proposition}
+
+\begin{proof}
+Let $a,b\in\mathcal D'$ with $\Sig=\tfrac12(a+b)$. Concavity gives
+$0=\widetilde E(\Sig)\ge\tfrac12\widetilde E(a)+\tfrac12\widetilde E(b)\ge0$, so
+$\widetilde E(a)=\widetilde E(b)=0$. As $\Sig$ is interior, every point of $\mathcal D'$
+arises this way.
+\end{proof}
+
+So any architecture with a concave, tight majorant is confined to the injectivity locus.
+The hypothesis to weaken is concavity of $\widetilde E$: what the argument needs is that
+$Q+2\widetilde E$ be concave, and the strict concavity of $Q$ leaves room.
+
+\begin{theorem}[Excess budget]\label{thm:budget}
+Let $\mathcal D'$ be convex with $\Sig\in\mathcal D'$ and $\theta\in[0,1]$. Suppose
+$M<\tfrac12$ on $\mathcal D'$, that $\tfrac12\delta^2Q\le-c\|\eta\|^2_{L^2(0,\pi)}$ there,
+and that
+\begin{equation}\label{eq:EB}
+  E(H)\ \le\ \tfrac12\,\theta\,c\,\|H-H_\Sig\|^2_{L^2(0,\pi)}\qquad\text{on }\mathcal D' .
+\end{equation}
+Then $|T|\le A_R^\ast-(1-\theta)\,c\,\|H-H_\Sig\|^2_{L^2(0,\pi)}$ for every ambidextrous
+moving sofa $T$ with cap data in $\mathcal D'$.
+\end{theorem}
+
+\begin{proof}
+Concavity of $Q$ with $\delta Q(\Sig)=0$ gives $Q(H)\le A_R^\ast-c\|\eta\|^2$. Adding
+\eqref{eq:QplusE} and \eqref{eq:EB},
+$|T|=Q+2E\le A_R^\ast-c\|\eta\|^2+\theta c\|\eta\|^2$.
+\end{proof}
+
+At $\theta=0$ this is Theorem~\ref{thm:stab}. For $\theta>0$ it admits $E>0$, so
+Proposition~\ref{prop:nogo} is evaded, and the room available is proportional to $c$: the
+constant $c^\ast=0.7309566$ of Theorem~\ref{thm:system} is what makes \eqref{eq:EB}
+usable. Measured along $H_\Sig+\varepsilon\phi$ with $\phi$ the bump at $\theta_0=1$ of
+half-width $0.45$, the least admissible $\theta$ is
+\[
+  \begin{array}{r|cccccc}
+    \varepsilon & 0.0141 & 0.0200 & 0.0283 & 0.0400 & 0.0566 & 0.0800\\\hline
+    \theta & 0.100 & 0.301 & 0.683 & 1.276 & 2.090 & 3.106
+  \end{array}
+\]
+so $\theta<1$ holds out to $\varepsilon\approx0.031$, against $\varepsilon_c=0.006492$ for
+(RC): the admissible radius grows by a factor of about $4.8$ in that direction. This is a
+measurement, not a proof.
+
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
 $Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
 $[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
