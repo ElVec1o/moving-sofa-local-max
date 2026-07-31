@@ -19,4 +19,5 @@ private/
 *.npy
 *.json
 !lean/MovingSofa/lake-manifest.json
+!algorithm/rigorous/excess_scan.json
 cross_K*.txt
