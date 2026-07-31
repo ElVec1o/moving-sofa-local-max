@@ -48,7 +48,12 @@ decouple the two halves of $[0,\pi]$ and reduce the second variation to a pair o
 Sturm--Liouville eigenvalue problems, certified from below by Sturm oscillation; this
 gives $\tfrac12\delta^2Q\le-\tfrac23\|\eta\|^2_{L^2(0,\pi)}$. Not splitting at all
 turns the second variation into a single $2\times2$ system whose first eigenvalue is the
-sharp constant $c^\ast=0.7309566\ldots$, certified to exceed $\tfrac{73}{100}$. On the
+sharp constant $c^\ast=0.7309566\ldots$, certified to exceed $\tfrac{73}{100}$. The same
+system, with the cell boundaries as parameters, proves concavity for every cell whose
+sign sets are ordered and anchored, by a one-line monotonicity reduction to a
+one-parameter family certified by an adaptive interval covering; on the mirror class the
+constant is uniform, $\tfrac3{10}$, and the resulting stability bound assumes no
+smallness of $H-H_\Sig$ beyond (RC). On the
 convex domain $\mathcal D$ cut out by (RC), a separation inequality and $\Sig$'s own sign
 pattern,
 \[
@@ -1955,6 +1960,177 @@ so $\theta<1$ holds out to $\varepsilon\approx0.031$, against $\varepsilon_c=0.0
 (RC): the admissible radius grows by a factor of about $4.8$ in that direction. This is a
 measurement, not a proof.
 
+\subsection*{Concavity on every ordered anchored cell}
+
+The concavity results so far concern single cells: $\Sig$'s own
+(Theorems~\ref{thm:concave}, \ref{thm:sharp}, \ref{thm:system}) and the eleven measured
+entries of Proposition~\ref{prop:beyond} below. This subsection proves concavity for the
+whole ordered anchored family at once. In the variables $p(t)=\eta(t)$,
+$q(t)=\eta(t+\pi/2)$ on $[0,\pi/2]$, with $p(0)=p(\pi/2)=q(0)=0$ and $q(\pi/2)$ free, the
+cell form is
+\begin{equation}\label{eq:cellform}
+  B_{E_1,E_2}[\eta]=\int_0^{\pi/2}\bigl[2p^2-2p'^2+q^2-q'^2\bigr]
+  -\int_{E_2}(p+q')^2+\int_{E_1}(q-p')^2 ,
+\end{equation}
+where $E_1=\{\alpha_1<0\}$ and $E_2=\{\alpha_2>0\}$.
+
+\begin{lemma}[Monotonicity in the sign sets]\label{lem:mono}
+If $E_1\subseteq E_2$ then
+$B_{E_1,E_2}[\eta]=B_{E_2,E_2}[\eta]-\int_{E_2\setminus E_1}(q-p')^2\le B_{E_2,E_2}[\eta]$.
+\end{lemma}
+
+\begin{proof}
+The two forms differ only in the set carrying the $(q-p')^2$ term.
+\end{proof}
+
+So every cell with $E_1\subseteq E_2$ and $E_2$ \emph{anchored} is dominated by a member
+of the one-parameter diagonal family
+$D_\tau:=B_{[0,\tau),[0,\tau)}$, and it suffices to treat that family.
+
+\begin{theorem}[Diagonal concavity]\label{thm:diag}
+$D_\tau[\eta]\le0$ for every $\tau\in[0,\pi/2]$ and every admissible $\eta$.
+\end{theorem}
+
+\begin{proof}
+On $[0,\tau)$ the integrand of \eqref{eq:cellform} combines, by the algebra of
+Theorem~\ref{thm:system}, into $(p^2-p'^2)+2(q^2-q'^2)-2(pq)'$, so with $p(0)q(0)=0$,
+\begin{equation}\label{eq:Dtau}
+  D_\tau=\int_0^\tau\bigl[(p^2-p'^2)+2(q^2-q'^2)\bigr]-2p(\tau)q(\tau)
+  +\int_\tau^{\pi/2}\bigl[2(p^2-p'^2)+(q^2-q'^2)\bigr].
+\end{equation}
+Three overlapping ranges of $\tau$ are treated by three arguments.
+
+\emph{Range (a): $\tau\le1/\sqrt3$.} Write \eqref{eq:Dtau} as
+$B_{\mathrm{bare}}+\int_0^\tau[(p'^2-p^2)+(q^2-q'^2)]-2p(\tau)q(\tau)$ with
+$B_{\mathrm{bare}}:=\int_0^{\pi/2}[2(p^2-p'^2)+(q^2-q'^2)]$. The Poincar\'e constants for
+the boundary conditions are $4$ (Dirichlet--Dirichlet, for $p$) and $1$
+(Dirichlet--Neumann, for $q$), so $B_{\mathrm{bare}}\le-\tfrac32\int_0^{\pi/2}p'^2$. The
+added terms are bounded by $\int_0^\tau p'^2\le\int_0^{\pi/2}p'^2$, by
+$\int_0^\tau q^2\le\tau^2\int_0^\tau q'^2$ (from $q(t)^2\le t\int_0^tq'^2$), and, using
+Young's inequality at weight $s=1/(2\tau)$ together with $p(\tau)^2\le\tau\int_0^\tau p'^2$
+and $q(\tau)^2\le\tau\int_0^\tau q'^2$,
+\[
+  2|p(\tau)q(\tau)|\ \le\ \frac{p(\tau)^2}{2\tau}+2\tau\,q(\tau)^2
+  \ \le\ \tfrac12\int_0^{\pi/2}p'^2+2\tau^2\int_0^\tau q'^2 .
+\]
+Collecting, $D_\tau\le\bigl(-\tfrac32+1+\tfrac12\bigr)\int_0^{\pi/2}p'^2
++(3\tau^2-1)\int_0^\tau q'^2\le0$ for $\tau^2\le\tfrac13$.
+
+\emph{Range (b): $\sigma:=\pi/2-\tau\le\tfrac1{18}$.} The obstruction here is that the
+bound must degenerate: $D_{\pi/2}$ annihilates the mode $(p,q)=(0,\sin t)$, so no estimate
+with a uniform negative constant exists near $\tau=\pi/2$, and the argument must see the
+mode. Expand $q=a\varphi_1+r$ in the Dirichlet--Neumann eigenbasis
+$\varphi_k=\sin((2k-1)t)$ of $[0,\pi/2]$, with $r\perp\varphi_1$ in both inner products,
+and set $D:=\int q'^2-\int q^2\ge0$. From the eigenvalues $(2k-1)^2$,
+\begin{equation}\label{eq:spec}
+  \int r'^2\le\tfrac98D,\qquad \|r\|_{L^2}^2\le\tfrac{D}8,\qquad
+  r(t)^2\le t\!\int_0^t\!r'^2\le\tfrac{9\pi}{16}D .
+\end{equation}
+Since $\varphi_1''=-\varphi_1$ and $r(0)=0$, integration by parts gives
+$\int_0^\tau(\varphi_1r-\varphi_1'r')=-\varphi_1'(\tau)r(\tau)=-\sin\sigma\,r(\tau)$, and
+$\int_0^\tau(\varphi_1^2-\varphi_1'^2)=-\tfrac12\sin2\sigma$. Hence, using
+\eqref{eq:spec} and Young's inequality $2XY\le3X^2+\tfrac13Y^2$ on the middle term,
+\[
+  2\!\int_0^\tau\!(q^2-q'^2)+\int_\tau^{\pi/2}\!(q^2-q'^2)
+  \ \le\ -\Bigl(\tfrac78-\tfrac{3\pi}{16}\Bigr)D-a^2\sin\sigma(\cos\sigma-3\sin\sigma)
+  \ \le\ -\tfrac27D-\tfrac45\sigma a^2 ,
+\]
+the last step using $\tfrac78-\tfrac{3\pi}{16}\ge\tfrac27$ and
+$\sin\sigma(\cos\sigma-3\sin\sigma)\ge\sigma(1-3\sigma-\sigma^2)\ge\tfrac45\sigma$ for
+$\sigma\le\tfrac1{18}$. For $p$, with $P^2:=\int_\tau^{\pi/2}p'^2$ and the Dirichlet
+Poincar\'e constant $(2\sigma/\pi)^2\le\tfrac1{400}$ on $[\tau,\pi/2]$,
+\[
+  \int_0^\tau(p^2-p'^2)+2\!\int_\tau^{\pi/2}\!(p^2-p'^2)
+  \ \le\ -\tfrac34\int_0^{\pi/2}p'^2-\bigl(1-\tfrac1{400}\bigr)P^2\ \le\ -\tfrac{174}{100}P^2 .
+\]
+The boundary term couples the pieces through $p(\tau)^2\le\sigma P^2$ and
+$q(\tau)=a\cos\sigma+r(\tau)$:
+\[
+  2|p(\tau)||a|\cos\sigma\le\tfrac54P^2+\tfrac45\sigma\cos^2\!\sigma\,a^2,\qquad
+  2|p(\tau)||r(\tau)|\le\tfrac9{25}P^2+\tfrac{25}9\,\sigma\cdot\tfrac{9\pi}{16}D ,
+\]
+and $\tfrac{25}9\cdot\tfrac{9\pi}{16}\,\sigma=\tfrac{25\pi}{16}\sigma\le\tfrac{25\pi}{288}
+\le\tfrac27$ for $\sigma\le\tfrac1{18}$. Summing the three displays, the coefficients of
+$a^2$, $D$ and $P^2$ are respectively $\tfrac45\sigma(\cos^2\sigma-1)\le0$, at most
+$-\tfrac27+\tfrac{25\pi}{288}\le0$, and $-\tfrac{174}{100}+\tfrac54+\tfrac9{25}
+=-\tfrac{13}{100}<0$. Hence $D_\tau\le0$.
+
+\emph{Range (c): $\tau\in[0.55,\,1.5153]$.} The form $D_\tau$ is the $2\times2$
+Sturm--Liouville system of Theorem~\ref{thm:system} with pieces of lengths
+$\tau,\ \pi/2-\tau$ and coefficient rows $(1,2,-1,-2,1,1)$, $(2,1,-2,-1,0,0)$, so its
+eigenvalues are the zeros of the same shooting determinant $\Phi(c;\tau)$. Two facts
+combine. First, the spectrum is bounded below by $-4$: pointwise,
+$2pq'\ge-(2p^2+\tfrac12q'^2)$ and $2qp'\ge-(2q^2+\tfrac12p'^2)$ absorb the cross terms of
+$-D_\tau$ leaving non-negative derivative coefficients, so
+$-D_\tau[\eta]\ge-\int(3p^2+4q^2)\ge-4\|\eta\|^2$. Second, $\Phi(c;\tau)\ne0$ for every
+$(c,\tau)\in[-4,0]\times[0.55,1.5153]$: the rectangle is covered adaptively by $305$
+boxes on which the ball-arithmetic enclosure of $\Phi$ excludes zero, with the lengths
+carried as balls containing $[\tau_{\mathrm{lo}},\tau_{\mathrm{hi}}]$. Hence no eigenvalue
+lies in $[-4,0]$ and none lies below $-4$, so the first eigenvalue is positive and
+$D_\tau\le0$ (indeed $<0$) on this range.
+
+The ranges $[0,1/\sqrt3]$, $[0.55,1.5153]$ and $[\pi/2-\tfrac1{18},\pi/2]$ overlap and
+cover $[0,\pi/2]$.
+\end{proof}
+
+The covering was validated by negative controls: enlarged $c$-ranges crossing the
+measured first eigenvalue are refused, with the failing boxes localising the eigenvalue
+curve to $(\tau,c)=(0.785,0.377)$ for the mirror family below and $(1.514,0.041)$ for the
+diagonal, matching the measured values.
+
+\begin{corollary}[Ordered anchored concavity]\label{cor:anchored}
+$\delta^2Q\le0$ on every cell whose sign sets satisfy
+$\{\alpha_1<0\}\subseteq\{\alpha_2>0\}$ with $\{\alpha_2>0\}=[0,\tau)$ anchored. The set
+$\{\alpha_1<0\}$ need not be an interval.
+\end{corollary}
+
+\begin{theorem}[Uniform constant on the mirror family]\label{thm:mirroruniform}
+For every $\tau\in[0,\pi/4]$ the mirror-anchored cell $(\tau,\pi/2-\tau)$ satisfies
+\[
+  \tfrac12\,\delta^2Q[\eta]\ \le\ -\tfrac3{10}\,\|\eta\|^2_{L^2(0,\pi)} .
+\]
+\end{theorem}
+
+\begin{proof}
+The cell form is the system of Theorem~\ref{thm:system} with lengths
+$\tau,\ \pi/2-2\tau,\ \tau$; $\Sig$'s cell is $\tau=\beta$. The lower bound $-4$ on the
+spectrum holds as in range (c), and the covering of
+$[-4,\tfrac3{10}]\times[0,0.7854]$ by $249$ boxes shows $\Phi\ne0$ there; since
+$0.7854>\pi/4$, every $\tau\in[0,\pi/4]$ is included. (For $\tau$ slightly past $\pi/4$
+the middle length crosses zero and the transfer formula is an analytic continuation of no
+further relevance; the enclosure covers every real $\tau$ in each ball, in particular the
+range where the formula is the shooting determinant of the cell.) Hence the first
+eigenvalue exceeds $\tfrac3{10}$ on the whole family. Measured, it decreases from $0.875$
+at $\tau=0$ to $0.370$ at $\tau=\pi/4$, with $0.7331$ at $\Sig$'s cell.
+\end{proof}
+
+\begin{theorem}[Stability on the mirror class]\label{thm:mirrorstab}
+Let $T$ be a connected ambidextrous moving sofa whose cap data $H$ satisfies the gauge,
+the mirror condition \eqref{eq:mirror}, and (RC), and suppose that along the segment
+$H_s=(1-s)H_\Sig+sH$ the set $\{\alpha_1(\cdot;H_s)<0\}$ is an interval $[0,\tau_1(s))$
+with $\tau_1(s)\le\pi/4$ for every $s$. Then
+\[
+  |T|\ \le\ A_R^\ast-\tfrac3{10}\,\|H-H_\Sig\|^2_{L^2(0,\pi)} ,
+\]
+and equality forces $H=H_\Sig$.
+\end{theorem}
+
+\begin{proof}
+The mirror condition is linear and holds at $H_\Sig$, so every $H_s$ satisfies it, and by
+Lemma~\ref{lem:mirror} each cell met by the segment is mirror-anchored with parameter
+$\tau_1(s)\le\pi/4$. By Theorem~\ref{thm:mirroruniform}, $g(s):=Q(H_s)$ has
+$g''(s)\le-\tfrac35\|H-H_\Sig\|^2$ on each cell, $g$ is $C^1$ across cell boundaries as in
+Proposition~\ref{prop:beyond}, $g(0)=A_R^\ast$ and $g'(0)=0$; integrating,
+$Q(H)\le A_R^\ast-\tfrac3{10}\|H-H_\Sig\|^2$. Connectedness gives $M\le\tfrac12$
+(Theorem~\ref{thm:ceiling}), and (RC) gives $V=|N|$, so
+$|T|=|C_2|-2|N|=Q(H)$.
+\end{proof}
+
+The hypotheses of Theorem~\ref{thm:mirrorstab} are non-perturbative: no smallness of
+$H-H_\Sig$ is assumed, and the class contains data as far from $\Sig$ as the mirror caps
+with $\tau_1$ anywhere in $[0,\pi/4]$. The binding smallness constraint that remains in
+$\mathcal D$ is (RC) alone.
+
 The sign cell is the least structural part of $\mathcal D$. On a natural linear
 subclass it collapses to a single scalar inequality.
 
@@ -2011,14 +2187,15 @@ curvature hypothesis. Weakening (RC) cannot reach Gerver, and should not.
 $Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
 $[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
 $Q(H)\le Q(\Sig)+\delta Q(\Sig)[H-H_\Sig]=A_R^\ast$. Convexity of the union of those cells
-is not needed. In particular this holds whenever the segment meets only cells whose sign
-sets are the anchored intervals $E_1=[0,\tau_1)$, $E_2=[0,\tau_2)$ with $\tau_1\le\tau_2$:
-across $(\tau_1,\tau_2)=(0,\tfrac\pi2),(0.1,0.2),(0.3,0.5),(0.5,0.9),(0.8,1.2),
-(1.0,1.3),(1.2,1.4),(1.4,1.5),(1.5,\tfrac\pi2),(0.2,1.5),(0.05,0.06)$ the values of
-$\sup\tfrac12\delta^2Q/\|\eta\|^2_{L^2(0,\pi)}$ at $m=128$ are
-$-0.8751,-0.1404,-0.3602,-0.5397,-0.4497,-0.3431,-0.2285,-0.1074,-0.0457,-0.7876,-0.0421$,
-all negative, with $\Sig$'s own cell giving $-0.7331$ (at $m=128$; the converged value
-is $-0.7309566$ by Theorem~\ref{thm:system}).
+is not needed. In particular this holds whenever the segment meets only cells with
+$\{\alpha_1<0\}\subseteq\{\alpha_2>0\}$ and $\{\alpha_2>0\}$ anchored, which is no
+longer a measured condition: Corollary~\ref{cor:anchored} proves concavity on every such
+cell. The eleven sample values
+$-0.8751,-0.1404,-0.3602,-0.5397,-0.4497,-0.3431,-0.2285,-0.1074,-0.0457,-0.7876,-0.0421$
+at $(\tau_1,\tau_2)=(0,\tfrac\pi2),(0.1,0.2),(0.3,0.5),(0.5,0.9),(0.8,1.2),(1.0,1.3),
+(1.2,1.4),(1.4,1.5),(1.5,\tfrac\pi2),(0.2,1.5),(0.05,0.06)$, all negative, stand as a
+numerical cross-check, with $\Sig$'s own cell giving $-0.7331$ at $m=128$ (converged
+value $-0.7309566$ by Theorem~\ref{thm:system}).
 \end{proposition}
 
 Since $\Sig$ sits at $(\beta,\pi/2-\beta)$ with $\beta<\pi/2-\beta$, it lies in that

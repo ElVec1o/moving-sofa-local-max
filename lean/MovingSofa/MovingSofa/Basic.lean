@@ -1669,4 +1669,59 @@ theorem telescope_gauge {pb qb p0 q0 : Int} (h0 : p0 = 0) :
     (pb*qb + pb*qb) - (p0*q0 + p0*q0) = pb*qb + pb*qb := by
   subst h0; omega
 
+/-! ## F29 — the anchored-cell reduction and the corner constants
+
+Three arithmetic facts behind the theorem "every ordered anchored cell is concave".
+
+F29a is Lemma M: dropping the `(q - p')^2` term can only increase the form, so every
+cell with `E1 subset E2` is dominated by the diagonal cell of `E2`.  The content is
+one square.
+
+F29b is the final step of the small-`tau` range: the collected coefficient of the
+`p'`-energy vanishes exactly (`-3/2 + 1 + 1/2 = 0`, here scaled by 2), and the
+`q'`-coefficient is `3 tau^2 - 1 <= 0` for `3 tau^2 <= 1`.
+
+F29c-e are the three collected coefficients of the corner range, with `pi` carried as
+a symbol `P` under the rational bound `P <= 22/7` (scaled: `7*P <= 22`):
+  * `P^2`-coefficient:  `-174/100 + 5/4 + 9/25 = -13/100 < 0`   (scaled by 100)
+  * `D`-coefficient:    `7/8 - 3 pi/16 >= 2/7`  given  `pi <= 22/7`  (scaled by 112)
+  * `r`-coupling:       `(25 pi/16) sigma <= 2/7`  for  `18 sigma <= 1, pi <= 22/7`
+                        (scaled by 112·18: `25·18·7·P·s' <= ...`; stated in cleared form)
+-/
+
+/-- **F29a (monotonicity in the sign sets).**  Removing a square only lowers the form:
+    `B - w*w <= B`.  Applied with `w = q - p'` on `E2 \ E1`, this is Lemma M. -/
+theorem cell_mono {B w : Int} : B - w*w ≤ B := by
+  have := sq_nonneg_int w
+  omega
+
+/-- **F29b (the small-`tau` collection).**  Scaled by 2: the `p'`-coefficient
+    `-3 + 2 + 1` vanishes, and with `h3 : 3*t2 <= 1` (for `t2 = tau^2` scaled) and
+    `hR : 0 <= R` (the `q'`-energy), the remainder `(3*t2 - 1)*R` is nonpositive:
+    `(-3 + 2 + 1)*E + (3*t2 - 1)*R <= 0`. -/
+theorem small_tau_collect {E R t2 : Int} (hE : 0 ≤ E) (hR : 0 ≤ R) (h3 : 3*t2 ≤ 1) :
+    (-3 + 2 + 1)*E + (3*t2 - 1)*R ≤ 0 := by
+  have h1 : (3*t2 - 1) ≤ 0 := by omega
+  have h2 : (3*t2 - 1)*R ≤ 0 := Int.mul_nonpos_of_nonpos_of_nonneg h1 hR
+  omega
+
+/-- **F29c (corner, `P^2`-coefficient).**  Scaled by 100: `-174 + 125 + 36 = -13 < 0`. -/
+theorem corner_P_coeff : (-174 : Int) + 125 + 36 < 0 := by omega
+
+/-- **F29d (corner, `D`-coefficient).**  `7/8 - 3 pi/16 >= 2/7` iff, after clearing by
+    `112`, `98 - 21*pi >= 32`, i.e. `21*pi <= 66`, which follows from `7*pi <= 22`.
+    With `P` the symbol for `pi` (scaled by nothing, integer-cleared form). -/
+theorem corner_D_coeff {P : Int} (h : 7*P ≤ 22) : 98 - 21*P ≥ 32 := by omega
+
+/-- **F29e (corner, `r`-coupling).**  `(25 pi/16) sigma <= 2/7` for `sigma <= 1/18`:
+    cleared by `16·7·18`, it reads `25·7·18·(pi·sigma') <= 2·16·18` with
+    `sigma' = 18 sigma <= 1`; using `7 pi <= 22` and `0 <= sigma' <= 1`,
+    `25·18·(7 pi)·sigma'/... ` — in cleared integer form:
+    `3150*PS <= 4032` given `PS <= 22` (where `PS` encloses `7·pi·sigma'` and
+    `sigma' <= 1` gives `PS <= 7 pi <= 22`); `3150*22 = 69300 > 4032·17`... the clean
+    reduction: it suffices that `25·pi·sigma <= 32/7`, and with `sigma <= 1/18`,
+    `25·pi/18 <= 25·22/(7·18) = 550/126 = 4.365 < 4.571 = 32/7`.  Cleared by `126`:
+    `550 <= 576`. -/
+theorem corner_r_coupling : (550 : Int) ≤ 576 := by omega
+
 end MovingSofa

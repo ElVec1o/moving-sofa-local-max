@@ -119,6 +119,20 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F29 — the anchored-cell reduction and the corner constants (note, Thm "Diagonal concavity")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| Lemma M: `B − w² ≤ B` — dropping the `(q−p')²` term dominates every ordered cell by a diagonal cell | `cell_mono` | VERIFIED |
+| small-τ collection: `(−3+2+1)E + (3t²−1)R ≤ 0` for `3t² ≤ 1`, `E,R ≥ 0` | `small_tau_collect` | VERIFIED |
+| corner `P²`-coefficient `−174+125+36 < 0` (scaled by 100) | `corner_P_coeff` | VERIFIED |
+| corner `D`-coefficient `98−21π ≥ 32` given `7π ≤ 22` | `corner_D_coeff` | VERIFIED |
+| corner `r`-coupling, cleared form `550 ≤ 576` | `corner_r_coupling` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`.  NOT formalized: the Poincaré inequalities, the
+Dirichlet–Neumann eigenbasis expansion, the transfer-matrix representation, and the
+interval covering (305 + 249 boxes, `ambi_anchored.py`).
+
 ## F28 — the coupling is a total derivative (note, Thm "The sharp constant")
 
 | Statement (note) | Lean declaration | Status |

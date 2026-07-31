@@ -92,7 +92,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 61 | **Mirror caps.** If the cap is symmetric about a vertical line, $H(\theta)-H(\pi-\theta)=A\cos\theta$ with $A=H(0)-H(\pi)$, then $\alpha_2(\pi/2-t)=\alpha_1(t)$ identically, so $E_2=\pi/2-E_1$ and $\tau_1+\tau_2=\pi/2$. The condition is **linear** in $H$, so it preserves convexity; $\Sigma$ and Gerver's cap both satisfy it to $7\cdot10^{-16}$. The sign-cell order condition collapses to $\tau_1\le\pi/4$ (margin $0.496$ at $\Sigma$), and this is what makes $L_1+L_2=\pi/2$ exact in row 53 | PROVED |
 | 62 | **Gerver is excluded by connectedness, not by (RC).** Along $[H_\Sigma,H_{\text{Gerver}}]$ the excess budget holds throughout and (RC) fails at $s=0.398$, but $M=\max c_y$ crosses $\tfrac12$ at $s=0.406$ and reaches $0.6643$ at Gerver. By the connectedness ceiling the sofa then omits a strip of width $0.1646$. **No connected ambidextrous sofa has Gerver's cap data** — the exclusion is a property of the competitor class, not a defect | PROVED |
 | 63 | The sign cell is **not** automatic: 125 of 400 random admissible perturbations give non-anchored sign sets | HEURISTIC |
-| 64 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 64 | **Monotonicity in the sign sets.** $B_{E_1,E_2}=B_{E_2,E_2}-\int_{E_2\setminus E_1}(q-p')^2$, so every cell with $\{\alpha_1<0\}\subseteq\{\alpha_2>0\}$ is dominated by a diagonal cell. One line | PROVED |
+| 65 | **Diagonal concavity, hence concavity on every ordered anchored cell.** $D_\tau\le0$ for all $\tau\in[0,\pi/2]$: by hand for $\tau\le1/\sqrt3$ and for $\pi/2-\tau\le1/18$ (spectral splitting at the marginal corner mode $(0,\sin t)$), certified by adaptive interval covering (305 boxes) in between. Upgrades the eleven-entry measured table to a theorem with a weaker hypothesis ($E_1$ need not be an interval) | PROVED |
+| 66 | **Uniform constant on the mirror family**: $c_1(\tau)>\tfrac3{10}$ for every $\tau\in[0,\pi/4]$ (249 boxes). Negative controls refuse exactly on the measured eigencurves | PROVED |
+| 67 | **Non-perturbative stability.** Connected + mirror + (RC) + single-crossing $\alpha_1$ along the segment $\Rightarrow\lvert T\rvert\le A_R^\ast-\tfrac3{10}\lVert H-H_\Sigma\rVert^2$, with **no smallness of $H-H_\Sigma$**. The only smallness constraint left in the architecture is (RC) | PROVED |
+| 68 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -191,14 +195,15 @@ signal.
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 100 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 105 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these.  ambi_sturm.py carries the decoupled
                           chain, ambi_certify.py its certificate in arb ball
                           arithmetic, ambi_system.py the sharp constant,
                           ambi_excess.py the flux excess, ambi_budget.py the
-                          excess budget along the segment to Gerver
+                          excess budget along the segment to Gerver,
+                          ambi_anchored.py the anchored-cell coverings
 
 superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:

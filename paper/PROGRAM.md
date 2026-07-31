@@ -1,3 +1,79 @@
+## 🧮🎆 CONCAVITY ON EVERY ORDERED ANCHORED CELL, PROVED.  UNIFORM CONSTANT ON MIRROR.
+
+Crux (I1): CRUX-C -- the main theorem was perturbative for two reasons, (RC) and
+concavity known only on measured cells.  The second reason is now REMOVED.
+
+### The reduction (Lemma M, one line)
+
+  B_{E1,E2}[eta] = B_{E2,E2}[eta] - int_{E2 \ E1} (q-p')^2  <=  B_{E2,E2}[eta]
+
+for ANY E1 subset E2 (E1 need not be an interval).  So concavity for every cell with
+{a1<0} subset {a2>0} and {a2>0} = [0,tau) anchored reduces to the DIAGONAL family
+D_tau = B_{[0,tau),[0,tau)}.  Falsified first: 60 random (t1,t2,eta), min slack +1.5e-2.
+
+### THEOREM (diagonal concavity): D_tau <= 0 for every tau in [0, pi/2].  PROVED.
+
+Three overlapping ranges:
+  (a) tau <= 1/sqrt(3): by hand.  Trace + Poincare + Young at s = 1/(2tau); the
+      p'-coefficient collapses to (-3/2 + 1 + 1/2) = 0 exactly and the q'-coefficient is
+      3tau^2 - 1 <= 0.  Verified on 1000 random (p,q): zero violations.
+  (b) sigma = pi/2 - tau <= 1/18: by hand, spectral splitting q = a sin t + r.  The
+      marginal mode (0, sin t) of the corner (D_{pi/2} annihilates it -- this is the
+      "-0.0001 E1-all-E2-all" mystery row of the old table, EXPLAINED) forces the
+      argument to see the mode: DN gap 9 gives int r'^2 <= (9/8)D, ||r||^2 <= D/8; the
+      damping is -(1/2) a^2 sin 2sigma; collected coefficients (x = 5/4, y = 9/25):
+      a^2: (4/5)sigma(cos^2 sigma - 1) <= 0;  D: -2/7 + 25pi sigma/16 <= 0 for
+      sigma <= 1/18;  P^2: -174/100 + 5/4 + 9/25 = -13/100 < 0.  600 random checks pass.
+  (c) tau in [0.55, 1.5153]: CERTIFIED.  D_tau is ambi_system's 2x2 system with lens
+      [tau, 0, pi/2 - tau].  Spectrum bounded below by -4 (one-line absorption), and
+      Phi(c;tau) != 0 on [-4,0] x [0.55,1.5153] by ADAPTIVE INTERVAL COVERING: 305 boxes,
+      no enclosure contains 0, lengths carried as balls.  ambi_anchored.py, checkpointed.
+
+Ranges overlap: [0, 0.5774] u [0.55, 1.5153] u [1.51524, pi/2].  QED
+
+NEGATIVE CONTROLS (I12/I16).  Sub-second certification triggered the too-fast alarm; the
+controls answered it: widening the c-window past the measured first eigenvalue is REFUSED,
+and the failing boxes LOCALISE the eigencurve -- mirror at (0.7853, 0.376) matching the
+family minimum 0.370 at pi/4, diagonal at (1.514, 0.041) matching c1 ~ 0.043.  The
+covering is fast because the certified region is far from the spectrum, not because it is
+vacuous.
+
+🔴 AN ENDPOINT GAP CAUGHT IN MY OWN RUN.  The first mirror covering used tau <= 0.7853,
+which is LESS than pi/4 = 0.78539816: a 1e-4 sliver of the family was uncovered.  Re-run
+with tau <= 0.7854 > pi/4.  For tau slightly past pi/4 the middle length crosses zero and
+the transfer formula is an analytic continuation, harmless: the enclosure covers every
+real tau in each ball, in particular all of [0, pi/4] where the formula IS the shooting
+determinant.
+
+### THEOREM (uniform constant on the mirror family).  c1(tau) > 3/10 for all tau in
+[0, pi/4]: covering of [-4, 3/10] x [0, 0.7854], 249 boxes.  Measured: c1 falls 0.875 ->
+0.370 along the family; Sigma's cell 0.733.
+
+### THEOREM (stability on the mirror class).  For every CONNECTED ambidextrous sofa with
+mirror cap data satisfying (RC), whose alpha_1 stays single-crossing with tau_1 <= pi/4
+along the segment from Sigma:
+
+    |T| <= A_R* - (3/10) ||H - H_Sigma||^2_{L^2(0,pi)} .
+
+NO SMALLNESS of H - H_Sigma is assumed.  The class is explicit and contains data as far
+from Sigma as tau_1 anywhere in [0, pi/4] (Sigma sits at beta = 0.2897).  The one
+smallness constraint remaining in the architecture is (RC) itself.
+
+### Why the decoupled chain could never do this
+
+The scalar chain, optimised over its parameters, gives -0.04 at tau = pi/4 and -1.9 at
+tau = 1.45 on the diagonal against true values +0.37 and +0.08.  Past tau ~ 0.6 the
+pointwise Cauchy-Schwarz losses exceed the entire eigenvalue.  Only the system
+formulation (the F28 total-derivative structure) reaches the family.
+
+### Ledger
+
+Lemma M PROVED (+ Lean cell_mono).  Theorem D PROVED (ranges (a),(b) by hand with 1600
+random-function checks, range (c) certified; Lean F29 verifies the collected rational
+coefficients incl. the pi-bound steps).  Corollary anchored PROVED.  Mirror-uniform
+PROVED.  Mirror stability PROVED.  Prop "beyond"'s eleven-entry table DEMOTED to a
+cross-check.  105 Lean theorems, zero sorry.  Exit state: SHIPPED (I19).
+
 ## 🎆 GERVER IS EXCLUDED BY CONNECTEDNESS, NOT BY (RC).  AND A MIRROR IDENTITY.
 
 ### 🎆 (a) The answer to "find a substitute for (RC) that Gerver satisfies"
