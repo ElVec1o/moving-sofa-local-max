@@ -1,3 +1,74 @@
+## 🎆 GERVER IS EXCLUDED BY CONNECTEDNESS, NOT BY (RC).  AND A MIRROR IDENTITY.
+
+### 🎆 (a) The answer to "find a substitute for (RC) that Gerver satisfies"
+
+The substitute exists ((EB_theta), previous entry), Gerver satisfies it with 150x room,
+and it changes nothing, because (RC) was never what excluded Gerver.  Along
+H_s = (1-s) H_Sigma + s H_Gerver:
+
+    s          0.000   0.200   0.400   0.406   0.500   0.700   1.000
+    M = max c_y  0.388   0.443   0.498   0.500   0.526   0.581   0.664
+    omitted strip  0       0       0    1.3e-5  0.0261  0.0815  0.1646
+
+M crosses 1/2 at s = 0.406.  By the Connectedness ceiling (already in the note), M > 1/2
+forces every ambidextrous sofa with that corner path to OMIT a vertical strip of width
+(2M-1)/(2 tan t_0), and a CONNECTED one to lie entirely on one side of it, contradicting
+that it meets both arms of the hallway.  At Gerver M = 0.6643 and the omitted strip has
+width 0.1646.
+
+    NO CONNECTED AMBIDEXTROUS MOVING SOFA HAS GERVER'S CAP DATA.
+
+So the framework excludes Gerver CORRECTLY.  It is a property of the competitor class, not
+a defect of the curvature hypothesis, and no weakening of (RC) can or should reach it.
+The standing objection "the method fails on the one solved case" is answered: Gerver's
+sofa is a one-corner sofa, and its cap is not the cap of any connected ambidextrous sofa.
+This is the single most useful thing for the paper's defensibility.
+
+### 💧 (b) The sign cell is NOT automatic -- falsified
+
+Rule 3, 400 random admissible perturbations of H_Sigma (4 modes, sigma = 0.05):
+125 gave NON-ANCHORED sign sets.  So the sign-cell restriction cannot simply be dropped;
+it is a genuine "near Sigma" condition, consistent with D being a C^2-ball.  0 of the
+anchored ones had tau_1 > tau_2.
+
+### 🎆 (c) THE MIRROR IDENTITY, found while testing (b)
+
+Every row of the Gerver-segment table had tau_1 + tau_2 = 1.5695 at grid spacing 0.0026.
+At high resolution the sum is pi/2 to 1e-10 along the whole segment, and NOT for random
+perturbations (errors up to 7e-2).  So it is structural.
+
+🔴 MY FIRST EXPLANATION WAS FALSE.  I proposed left-right symmetry H(pi-th) = H(th) and
+tested it: the discrepancy is 0.33 for Sigma and 1.23 for Gerver.  Not small, not it.
+
+The pointwise test then gave the answer: a2(pi/2 - t) = a1(t), ratio 1.0000 at every
+sampled point.  The condition behind it is
+
+    H(theta) - H(pi - theta) = A cos(theta),     A := H(0) - H(pi),                (M)
+
+which says h(u) - h(sigma u) = <(A,0), u> for the mirror sigma(x,y) = (-x,y): the cap
+equals its own mirror image TRANSLATED by (A,0), i.e. it is symmetric about the vertical
+line x = A/2.  The axis is not x = 0, which is exactly why the naive test failed.
+Verified to 7e-16 for Sigma (A = -0.3341), Gerver (A = -1.2275), and arbitrary
+interpolations.
+
+  LEMMA (mirror caps).  Under (M), a2(pi/2 - t) = a1(t) for all t, hence E2 = pi/2 - E1
+  as sets and tau_1 + tau_2 = pi/2.
+
+  Proof.  (M) gives H(pi/2 - t) = H(pi/2 + t) + A sin t and, on differentiating,
+  H'(pi - t) = -H'(t) - A sin t.  Then
+    a2(pi/2 - t) = [H(pi/2+t) + A sin t] - 1 + [-H'(t) - A sin t] = H(pi/2+t) - 1 - H'(t)
+                 = a1(t).   QED
+
+WHAT IT BUYS.
+  * (M) is LINEAR in H once A is a free parameter, so the mirror caps form a linear
+    SUBSPACE and intersecting D with it preserves convexity.  Free of charge.
+  * On that subclass the anchored sign pattern is fixed by ONE number tau_1, and the
+    order condition tau_1 <= tau_2 of Proposition "beyond" collapses to the scalar
+    inequality tau_1 <= pi/4 = 0.785398.  At Sigma tau_1 = beta = 0.289654, margin 0.4957.
+  * It explains the Sturm-Liouville "miracle": L_1 + L_2 = pi/2 exactly, which forced
+    Lambda(0) = 1 exactly, IS this identity -- the two lengths are tau_2 and tau_1.
+  * Both Sigma and Gerver's cap satisfy (M), so it is not a restriction tuned to Sigma.
+
 ## 🧮🔥 INVENTION SPRINT: (RC) IS REPLACEABLE BY AN EXCESS BUDGET.  GERVER IS STILL OUT.
 
 Crux (I1): (RC) enters at exactly one point -- it forces E := V - |N| = 0 so that

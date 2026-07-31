@@ -1955,6 +1955,58 @@ so $\theta<1$ holds out to $\varepsilon\approx0.031$, against $\varepsilon_c=0.0
 (RC): the admissible radius grows by a factor of about $4.8$ in that direction. This is a
 measurement, not a proof.
 
+The sign cell is the least structural part of $\mathcal D$. On a natural linear
+subclass it collapses to a single scalar inequality.
+
+\begin{lemma}[Mirror caps]\label{lem:mirror}
+Suppose the cap is symmetric about some vertical line, equivalently
+\begin{equation}\label{eq:mirror}
+  H(\theta)-H(\pi-\theta)=A\cos\theta,\qquad A:=H(0)-H(\pi) .
+\end{equation}
+Then $\alpha_2(\pi/2-t)=\alpha_1(t)$ for every $t\in[0,\pi/2]$. Consequently
+$E_2=\tfrac\pi2-E_1$ as sets, and if $E_1=[0,\tau_1)$ then $E_2=[0,\tfrac\pi2-\tau_1)$, so
+\[
+  \tau_1+\tau_2=\tfrac\pi2 .
+\]
+\end{lemma}
+
+\begin{proof}
+Condition \eqref{eq:mirror} says $h(u)-h(\sigma u)=\langle(A,0),u\rangle$ for the reflection
+$\sigma(x,y)=(-x,y)$, that is, the cap coincides with its mirror image translated by
+$(A,0)$; the axis is $x=A/2$. Replacing $\theta$ by $\pi/2+t$ in \eqref{eq:mirror} gives
+$H(\pi/2-t)=H(\pi/2+t)+A\sin t$, and differentiating \eqref{eq:mirror} gives
+$H'(\pi-\theta)=-H'(\theta)-A\sin\theta$. Hence
+\[
+  \alpha_2(\tfrac\pi2-t)=H(\tfrac\pi2-t)-1+H'(\pi-t)
+  =\bigl[H(\tfrac\pi2+t)+A\sin t\bigr]-1+\bigl[-H'(t)-A\sin t\bigr]
+  =H(\tfrac\pi2+t)-1-H'(t)=\alpha_1(t). \qedhere
+\]
+\end{proof}
+
+Condition \eqref{eq:mirror} is linear in $H$ once $A$ is treated as a free parameter, so the
+mirror caps form a linear subspace and intersecting $\mathcal D$ with it preserves
+convexity. Both $\Sig$ and Gerver's cap satisfy it, to $7\cdot10^{-16}$ in the computed
+data. On that subclass the anchored sign pattern is fixed by the single number $\tau_1$,
+and the order condition $\tau_1\le\tau_2$ of Proposition~\ref{prop:beyond} becomes
+\[
+  \tau_1\ \le\ \tfrac\pi4 ,
+\]
+which at $\Sig$ reads $\beta=0.289654\le0.785398$, a margin of $0.4957$. Lemma~\ref{lem:mirror}
+is also what makes $L_1+L_2=\pi/2$ exact in \eqref{eq:SL}, hence $\Lambda(0)=1$ exactly:
+the two lengths there are $\tau_2$ and $\tau_1$.
+
+\begin{remark}[Why Gerver's cap is excluded]\label{rem:gerverout}
+Gerver's cap satisfies \eqref{eq:mirror} and, by Theorem~\ref{thm:budget}, the excess
+budget along the whole segment $[H_\Sig,H_{\mathrm G}]$ at $\theta=0.0072$; and (RC) fails
+on that segment only at $s=0.398$. None of these is what excludes it. Along the segment
+$M=\max_tc_y(t)$ crosses $\tfrac12$ at $s=0.406$, and at Gerver $M=0.6643$, so by
+Theorem~\ref{thm:ceiling} any ambidextrous sofa with that corner path omits a vertical
+strip of width $0.1646$ and a connected one lies entirely on one side of it, contradicting
+that it meets both arms. So \emph{no connected ambidextrous moving sofa has Gerver's cap
+data}: the exclusion is a property of the competitor class, not a limitation of the
+curvature hypothesis. Weakening (RC) cannot reach Gerver, and should not.
+\end{remark}
+
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
 $Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
 $[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
