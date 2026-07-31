@@ -94,6 +94,35 @@ over-estimate by about 0.2%.  NO conclusion moves: every certificate in the proj
 lower bound and every finite-element number an upper bound, so the two never crossed.  The
 target was mis-stated, not the results.  Corrected in note.tex, README and here.
 
+### 🔴 TASK #21 PIVOT IDENTIFIED, MEASUREMENT INCONCLUSIVE, AND A TOOL BUG FOUND
+
+The question that decides #21 is narrower than "find a concave upper bound on the excess".
+Write A := |C2| - 2|N| for the TRUE area of the maximal sofa with cap data H, so that
+A = Q + 2E with E = V - |N| >= 0 the flux excess and E(Sigma) = 0.  Since Sigma minimises
+E, d^2 E(Sigma) >= 0.  If it is ZERO, then
+
+    d^2 A(Sigma) = d^2 Q(Sigma) <= -0.73 ||eta||^2 ,
+
+so the TRUE functional is strictly concave at Sigma with the sharp constant, and (RC)
+would be needed only for the non-local statement, not the local one.  That is the pivot.
+
+MEASURED, AND INCONCLUSIVE.  Along two valid bump directions E falls faster than eps^2
+between eps = 0.08 and 0.04 (by 7.2x and 5.7x, against 4x for a quadratic), consistent
+with d^2 E = 0.  But below eps = 0.02 the values stop falling -- 2.12e-5 then 1.87e-5 at
+(1.0,0.45) -- which is the Shapely polygon-oracle noise floor, not a signal.  So the
+measurement is consistent with d^2 E = 0 and does NOT establish it.  Settling it needs an
+EXACT excess computation, which by Rule 8 belongs in Rust, not in a floating-point
+polygon oracle.  NOT claimed either way.
+
+🔴 A TOOL BUG THAT NEARLY BECAME A FINDING.  A third direction, the bump at c0 = 1.4 with
+w = 0.35, gave E/eps^2 = 4.010e4 CONSTANT across eps = 0.08, 0.04, 0.02, 0.01 -- a
+textbook clean second-order term, and it would have refuted the pivot.  It is an artefact.
+That bump spans [1.05, 1.75] and straddles theta = pi/2, where the cap carries the ceiling
+FACET, an atom of the surface measure.  Checking the pieces separately: |N| = 0.1987 and
+|C2| = 2.0160 are both sane, but V_of returns 256.9 against a sofa area of 1.645.  So
+V_of is INVALID for perturbations straddling the atom, and the constant E/eps^2 was
+measuring that failure.  Recorded so the same number is not believed later.
+
 ### 🟢 Lean F28
 
 `overlap_integrand`            the integrand on E1 n E2 collapses to diagonal + 2 cross terms
