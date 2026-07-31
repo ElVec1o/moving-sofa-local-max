@@ -1,3 +1,70 @@
+## 🔴🔥 THE DISC COUNTEREXAMPLE WAS WRONG AS COMMITTED, AND THE CORRECTED ONE IS BETTER
+
+### 🔴 What I got wrong, and how
+
+Last block I committed: "for c in (0,1), H_c = 1-c+c(sin+cos) satisfies gauge + mirror +
+convexity + (RC) yet the ordering fails", instantiated at c = 0.3.  I checked H_c + H_c''
+= 1-c on (0,pi) and stopped there.  That is not the convexity of the body.
+
+C2 is rho-symmetric, so h(theta) = h(-theta) + sin(theta) DEFINES h on [pi,2pi] from H on
+[0,pi].  On (pi,2pi) one gets h + h'' = (H+H'')(2pi-theta), no new condition.  But the
+extension has DERIVATIVE JUMPS at the two junctions,
+
+    atom at 0   = 2 H'(0) - 1 ,      atom at pi = -2 H'(pi) - 1 ,
+
+which are atoms of the surface area measure there.  For the disc both equal 2c - 1.  At
+c = 0.3 they are -0.4: the extended body is NOT CONVEX.  My "counterexample" was not a
+convex body at all.
+
+### 🔥 LEMMA (forced boundary derivatives).  Under (RC),  H'(0) = 1/2 and H'(pi) = -1/2.
+
+Convexity needs both atoms >= 0; (RC) permits atoms only at +-pi/2, so both vanish.  Two
+boundary conditions that were never written down.  Sigma satisfies them: computed
+H'(0) = 0.4999999990, H'(pi) = -0.4999999987 (finite-difference error).  This is what
+makes the admissible class rigid at the endpoints.
+
+### 🎆 THE CORRECTED COUNTEREXAMPLE IS SHARPER: exactly one disc, and it IS a sofa
+
+The lemma selects c = 1/2 uniquely from the family (c < 1/2 non-convex, c > 1/2 forbidden
+atoms).  At c = 1/2 the body is the disc of radius 1/2 centred at (1/2,1/2), the incircle
+of the unit square, and everything holds with margin: gauge exact, mirror A = 1 to 3e-16,
+H + H'' = 1/2 constant.  Its arms are alpha_1 = alpha_2 = -1/2 identically, so
+{alpha_1<0} = [0,pi/2) and {alpha_2>0} = empty: the ordering fails.
+
+AND IT IS REALIZABLE.  |N| = 0 exactly (polygon oracle), |C2| = pi/4 = 0.785398163 by
+both the cap formula and the oracle, so the maximal ambidextrous sofa with this cap datum
+IS the disc; a disc of diameter 1 moves freely through a unit corridor and turns either
+corner.  So CRUX-D is answered NEGATIVELY: sofa-realizability does not force the ordered
+sign structure either.  The hypothesis in the mirror stability theorem is PERMANENT.
+
+The corrected version is strictly stronger than what I claimed: it is one canonical body
+instead of a family, and it settles realizability, which the c = 0.3 version could not
+have done.
+
+### 🔴 AND IT EXPOSED AN UNSTATED HYPOTHESIS IN THE NICHE FORMULA
+
+Running the disc through the Reynolds regression gave V = -0.142699 against |N| = 0, i.e.
+V < |N|, contradicting the proposition.  Diagnosis: the face-1 segment is
+s in [alpha_1^+, sigma], so its contribution is (1/2)((sigma - alpha_1^+)^+)^2, and
+writing it as (1/2)(sigma - alpha_1)^2 -- as the note does -- silently assumes
+
+    (SEG)   sigma >= alpha_1^+   on [0,pi/2].
+
+The disc has alpha_1^+ = 0 and sigma decreasing to -1/2, so (SEG) fails and the written
+expression over-counts.  With the segment truncated, V = 0 = |N| and the tension
+disappears.  Sigma SATISFIES (SEG), and it is already a theorem: sigma - alpha_1 =
+cos t x'(t) (Prop "sigx") with x strictly increasing (Prop "mono", PROVED), plus
+sigma >= 0; computed min of sigma - alpha_1^+ is +2.5e-7 as t -> pi/2.  Every use of the
+formula in the note is on data satisfying (SEG), which is now stated at the formula.
+
+### Ledger
+
+Forced boundary derivatives PROVED.  Disc counterexample CORRECTED and strengthened
+(PROVED, and realizable).  CRUX-D CLOSED, negative.  (SEG) hypothesis now explicit.
+Process note: the error was caught by asking whether a claimed body actually exists, which
+is I6's non-vacuity requirement -- the examples battery, applied to my own counterexample,
+is what found it.  It should have been run before the commit, not after.
+
 ## 🔥 THE SIGN HYPOTHESIS IS ESSENTIAL (A DISC SAYS SO); AN EXPLICIT C^2-BALL; ONE METHOD
 
 ### 🔥 Item 1 RESOLVED BY COUNTEREXAMPLE: single-crossing cannot be dropped

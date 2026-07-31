@@ -2156,16 +2156,65 @@ differential form of the oscillator mechanism behind Theorem~\ref{thm:rc}, and i
 the sign hypothesis of Theorem~\ref{thm:mirrorstab} checkable from the arms alone. It
 does not make it removable:
 
+\begin{lemma}[Forced boundary derivatives]\label{lem:bdry}
+Under (RC), $H'(0)=\tfrac12$ and $H'(\pi)=-\tfrac12$.
+\end{lemma}
+
+\begin{proof}
+$C_2$ is $\rho$-symmetric, so its support function satisfies $h(\theta)=h(-\theta)+\sin\theta$
+on the whole circle; this determines $h$ on $[\pi,2\pi]$ from $H$ on $[0,\pi]$. On
+$(\pi,2\pi)$, writing $\psi=2\pi-\theta$, one finds $h+h''=(H+H'')(\psi)$, so no condition
+arises there. At the two junctions the extension has derivative jumps
+\[
+  h'(0^+)-h'(0^-)=2H'(0)-1,\qquad h'(\pi^+)-h'(\pi^-)=-2H'(\pi)-1 ,
+\]
+which are the atoms of the surface area measure at $\theta=0$ and $\theta=\pi$. Convexity
+forces both to be non-negative; (RC) permits atoms only at $\pm\pi/2$, so both vanish.
+\end{proof}
+
+For $\Sig$ these read $0.4999999990$ and $-0.4999999987$ in the computed data, the
+deviation being the finite-difference error. Lemma~\ref{lem:bdry} is what makes the class
+of admissible caps rigid at the endpoints, and it is what selects a single member of the
+following family.
+
 \begin{remark}[The sign hypothesis is not removable]\label{rem:disc}
-For $c\in(0,1)$ the function $H_c(\theta)=1-c+c(\sin\theta+\cos\theta)$, the support data
-of the disc of radius $1-c$ centred at $(c,c)$, satisfies the gauge, the mirror condition
-\eqref{eq:mirror} with $A=2c$, and $H_c+H_c''\equiv1-c\in(0,1)$, so both convexity and
-(RC) hold with margin. Yet $\alpha_1\equiv\alpha_2\equiv-c$: the set
-$\{\alpha_1<0\}$ is all of $[0,\pi/2)$ while $\{\alpha_2>0\}$ is empty, and the ordering
-fails identically. So no argument from the gauge, mirror, convexity and (RC) alone can
-produce the ordered anchored sign structure, and the hypothesis in
-Theorem~\ref{thm:mirrorstab} is essential at the level of the function domain. Whether
-every \emph{sofa-realizable} cap datum satisfies it is open.
+Consider $H_c(\theta)=1-c+c(\sin\theta+\cos\theta)$, the support data of the disc of
+radius $1-c$ centred at $(c,c)$. It satisfies the gauge and the mirror condition
+\eqref{eq:mirror} with $A=2c$, and $H_c+H_c''\equiv1-c$, so the absolutely continuous
+part of (RC) holds for every $c\in(0,1)$. By Lemma~\ref{lem:bdry} only $c=\tfrac12$ is
+admissible: $H_c'(0)=c$, and $c<\tfrac12$ makes the junction atoms negative, so the
+$\rho$-extension is not convex at all, while $c>\tfrac12$ creates atoms at $0$ and $\pi$
+that (RC) forbids. At $c=\tfrac12$ the body is the disc of radius $\tfrac12$ centred at
+$(\tfrac12,\tfrac12)$, the incircle of the unit square, and every condition holds with
+$H+H''\equiv\tfrac12$. Its arms are
+\[
+  \alpha_1\equiv\alpha_2\equiv-\tfrac12 ,
+\]
+so $\{\alpha_1<0\}=[0,\pi/2)$ while $\{\alpha_2>0\}=\emptyset$, and the ordering fails
+identically. Moreover $|N|=0$ and $|C_2|=\pi/4$ (both the cap formula and a direct
+polygon computation give $0.785398163$), so the maximal ambidextrous sofa with this cap
+datum is the disc itself, and a disc of diameter $1$ moves freely through the corridor and
+turns either corner. The datum is therefore realized by a connected ambidextrous moving
+sofa. Hence the ordered anchored sign structure follows neither from the gauge, mirror,
+convexity and (RC), nor from realizability, and the hypothesis of
+Theorem~\ref{thm:mirrorstab} is permanent rather than provisional.
+\end{remark}
+
+\begin{remark}[A hypothesis of the niche formula, made explicit]\label{rem:seghyp}
+The disc also isolates an assumption implicit in \eqref{eq:V}. The face-1 segment is
+$s\in[\alpha_1^+,\sigma]$, so its contribution is $\tfrac12\bigl((\sigma-\alpha_1^+)^+
+\bigr)^2$, and writing it as $\tfrac12(\sigma-\alpha_1)^2$ presupposes
+\begin{equation}\label{eq:seghyp}
+  \sigma\ \ge\ \alpha_1^+ \qquad\text{on }[0,\pi/2].
+\end{equation}
+For the disc $\alpha_1^+=0$ while $\sigma$ decreases to $-\tfrac12$, and the unmodified
+expression returns $V=-0.1427$ against $|N|=0$, in apparent conflict with
+Proposition~\ref{prop:reynolds}; with the segment truncated, $V=0=|N|$ and the conflict
+disappears. For $\Sig$, \eqref{eq:seghyp} holds: $\sigma-\alpha_1=\cos t\,x'(t)$ by
+Proposition~\ref{prop:sigx} and $x$ is strictly increasing by
+Proposition~\ref{prop:mono}, while $\sigma\ge0$ throughout; the computed minimum of
+$\sigma-\alpha_1^+$ is $+2.5\cdot10^{-7}$, attained as $t\to\pi/2$. All uses of
+\eqref{eq:V} in this note are on data satisfying \eqref{eq:seghyp}.
 \end{remark}
 
 \begin{proposition}[An explicit ball inside the domain]\label{prop:ball}
