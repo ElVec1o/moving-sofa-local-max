@@ -1,3 +1,73 @@
+## 🎆 A GLOBAL ROUTE OPENED: THE FINITE-ANGLE RELAXATION FOR THE AMBIDEXTROUS PROBLEM
+
+Everything in this project so far is LOCAL.  This block opens the only route on the board
+to an UNCONDITIONAL statement about the ambidextrous supremum, and reports honestly how
+far it got.
+
+### The relaxation (PROVED, no hypotheses)
+
+An ambidextrous sofa turns a corner of each handedness, so in its own frame there are two
+hallway motions and S lies inside the hallway at every instant of both.  Hence for ANY
+finite angle sets and ANY placements,
+
+    |S| <= sup | (n_i L(t_i,c_i)) n (n_j R(s_j,d_j)) |                            (UB)
+
+with L the left-turning hallway and R the mirror-image one, all placements FREE.  Dropping
+continuity, monotonicity and the fact that both motions are of the same body only enlarges
+the right side.  This is the Kallus-Romik construction transferred to the ambidextrous
+problem, where it has not been applied.  Trivial bound to beat: 2.2195 (Baek, since an
+ambidextrous sofa is in particular a one-corner sofa).  No ambidextrous-specific upper
+bound is known in the literature.
+
+### 🔴 TWO BUGS CAUGHT BY THE ADMISSIBILITY CHECK, BEFORE ANY NUMBER WAS BELIEVED
+
+Rule 3 first: intersecting along Sigma's OWN corner path must give an area decreasing to
+|Sigma| from above.
+  (1) First attempt gave 0.  The inner corner quadrant was built as hp(-mu,-<c,mu>), which
+      is {<p,mu> >= <c,mu>} -- the OPPOSITE quadrant.
+  (2) Second attempt decreased THROUGH |Sigma| to 0.6165.  The right-turning family was
+      written as L(-t).  That is wrong: rho carries nu_t to -nu_{-t}, not nu_{-t}, so the
+      mirrored hallway is NOT a member of the same one-parameter family.  Rebuilt by an
+      exact affine reflection.
+Correct construction, both families:
+    k per side      3        9       33      129      513
+    area      1.766816 1.667280 1.649873 1.646140 1.645249   -> |Sigma| = 1.6449552
+
+### 🎆 What the first runs give, and the direction of the inequality
+
+At k = 3 (angles 0, pi/4, pi/2 each side) the supremum is AT LEAST
+
+    2 sqrt(2) - 1 = 1.8284271 ,
+
+an explicit placement, with eight seeded local maximisations all converging to it; the
+clean closed form suggests a vertex of the arrangement.  Sigma's own placement gives
+1.766816 at the same k, so the optimiser beats what it was seeded from.
+
+TWO CONSEQUENCES, OPPOSITE IN DIRECTION, AND ONLY ONE IS ESTABLISHED.
+  * PROVED: no bound below 2 sqrt(2) - 1 is obtainable at k = 3, whatever global optimiser
+    is used.  One exhibited placement suffices.
+  * NOT ESTABLISHED: that A_ambi <= 1.8284271.  A multistart local maximum bounds a
+    supremum from BELOW, the wrong direction.  Proving the upper bound needs a rigorous
+    global bound -- branch and bound over the placement box in interval arithmetic, which
+    is exactly what Kallus-Romik carry out for the one-corner problem.
+
+🔴 I nearly mis-stated this.  The first optimiser run returned 1.6934 and my instinct was
+"below A_R*, remarkable".  It was neither remarkable nor usable: 1.6934 is BELOW Sigma's
+own admissible configuration at the same k (1.7668), so the optimiser had simply failed to
+find the global maximum -- and a local maximum is the wrong direction anyway.  The
+Sigma-admissibility check is what exposed it.
+
+### Where it stands
+
+If the k = 3 supremum is 2 sqrt(2) - 1, the rigorous version gives A_ambi <= 1.8284
+against 2.2195, i.e. 1.11 x A_R*.  That would be the first ambidextrous-specific upper
+bound.  It is a Rust-scale job under Rule 8: the Shapely inner loop already blows the
+Python budget at k = 3 with 24 starts, and branch and bound needs interval arithmetic on
+polygon areas, not floating-point Nelder-Mead.
+
+Proposition "relax" (the relaxation) and Proposition "relax3" (the k = 3 lower bound on
+the supremum) are in the note, both PROVED.  No upper bound on A_ambi is claimed.
+
 ## 🔥 RESTRUCTURE PASS: AN INTRODUCTION, A COMPLETED (RC), AND THE CHRONICLE CUT BACK
 
 ### 🔴 The rho-extension audit found a real gap in the MAIN THEOREM's statement

@@ -102,7 +102,9 @@ proof; **HEURISTIC** = computational evidence only.
 | 69b | The disc also exposes an unstated hypothesis of the niche formula: the face-1 segment $[\alpha_1^+,\sigma]$ needs $\sigma\ge\alpha_1^+$, which $\Sigma$ satisfies (it is $x'\ge0$) but the disc does not | PROVED |
 | 70 | **Explicit ball inside the domain**: every mirror-gauge $\eta$ with $\lVert\eta\rVert_{C^2}\le\tfrac1{20}$ keeps $H_\Sigma+\eta$ in $\mathcal D$ with ordered anchored signs along the whole segment. Replaces the load-bearing half of the old heuristic "$\mathcal D$ is a $C^2$-ball" | PROVED |
 | 71 | Σ's cell constant $\tfrac{73}{100}$ re-certified by the covering method alone (3074 boxes; control refused at $\tfrac{74}{100}$ with the failing box bracketing $c^\ast$): one certification method end to end | PROVED |
-| 72 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 72 | **Finite-angle relaxation.** $\lvert S\rvert\le\sup\lvert\bigcap L(t_i,c_i)\cap\bigcap R(s_j,d_j)\rvert$ over all free placements, for any finite angle sets — the Kallus–Romik construction transferred to the ambidextrous problem, where it has not been applied. No hypotheses | PROVED |
+| 73 | At three angles per side the supremum is $\ge2\sqrt2-1=1.8284271$, so **no bound below that is obtainable there**. Whether it *equals* that — which would give the first ambidextrous-specific upper bound, $1.8284$ against the trivial $2.2195$ from Baek — needs a rigorous global step (branch and bound in interval arithmetic) that is **not done** | PROVED (the lower bound) |
+| 74 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -209,7 +211,8 @@ algorithm/rigorous/ambi_* computations for the paper; every number is regenerate
                           arithmetic, ambi_system.py the sharp constant,
                           ambi_excess.py the flux excess, ambi_budget.py the
                           excess budget along the segment to Gerver,
-                          ambi_anchored.py the anchored-cell coverings
+                          ambi_anchored.py the anchored-cell coverings,
+                          ambi_upper.py the finite-angle relaxation
 
 superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:

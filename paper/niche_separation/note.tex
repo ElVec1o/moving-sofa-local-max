@@ -1682,6 +1682,58 @@ it was checked in both.
 
 Hypothesis (iii) therefore remains open.
 
+\section{A finite-angle relaxation, and what it can give}\label{sec:upper}
+
+Everything above is local. We record here the one construction in this note that bears on
+the \emph{global} problem, together with an honest account of how far it has been carried.
+
+\begin{proposition}[Finite-angle relaxation]\label{prop:relax}
+Let $S$ be an ambidextrous moving sofa. For any finite $F_1,F_2\subset[0,\pi/2]$,
+\[
+  |S|\ \le\ \sup\Bigl|\ \bigcap_{t\in F_1}L(t,c_t)\ \cap\ \bigcap_{s\in F_2}R(s,d_s)\ \Bigr| ,
+\]
+the supremum being over all placements $c_t,d_s\in\R^2$, where $L(t,c)$ is the
+left-turning hallway rotated by $t$ with inner corner $c$, and $R(s,d)$ the right-turning
+one, that is, the mirror image rotated by $s$ and placed at $d$.
+\end{proposition}
+
+\begin{proof}
+$S$ lies in the hallway at every instant of each of its two motions, so it lies in the
+intersection over any finite subset of instants, for the placements those instants
+realise. Dropping the constraints linking the placements to one another enlarges the
+right-hand side.
+\end{proof}
+
+The bound this yields depends on $F_1,F_2$ and requires the supremum, which is a global
+maximisation over $2(|F_1|+|F_2|)-2$ real parameters. Two facts are recorded.
+
+\begin{proposition}[A limitation at three angles]\label{prop:relax3}
+For $F_1=F_2=\{0,\pi/4,\pi/2\}$ the supremum in Proposition~\ref{prop:relax} is at least
+$2\sqrt2-1=1.8284271\ldots$, so no bound below that value is obtainable at those angles.
+\end{proposition}
+
+\begin{proof}
+An explicit placement attaining it is recorded in the accompanying computation; exhibiting
+one placement suffices.
+\end{proof}
+
+Whether $2\sqrt2-1$ \emph{is} the supremum at those angles is not determined here. A
+multistart local maximisation bounds a supremum from below, which is the wrong direction
+for an upper bound on $|S|$; establishing one requires a rigorous global bound, by branch
+and bound over the placement box in interval arithmetic, as in Kallus--Romik \cite{KR18}
+for the one-corner problem. That step is not carried out. We note only what it would give
+if the supremum at three angles is the value above: $1.8284\ldots$, against the
+$2.2195\ldots$ inherited from \cite{Bae24} because an ambidextrous sofa is in particular a
+one-corner sofa, and against $A_R^\ast=1.6449\ldots$. We have found no upper bound
+specific to the ambidextrous problem in the literature.
+
+The construction was validated before use: intersecting along $\Sig$'s own corner path
+must give an area decreasing to $|\Sig|$, and it does, through
+$2.050458,\,2.000690,\,1.991986,\,1.990120,\,1.645249$ at $3,9,33,129,513$ angles per side
+for the two-family intersection. Two errors were caught by that check, one in the side of
+the inner corner quadrant and one in the identification of the mirrored family, before any
+bound was computed.
+
 \section{Relation to prior work}\label{sec:prior}
 
 The one-corner problem was settled by Baek \cite{Bae24}, who proved Gerver's sofa optimal.
