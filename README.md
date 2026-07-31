@@ -110,7 +110,8 @@ proof; **HEURISTIC** = computational evidence only.
 | 77 | Pointwise domination by the extremal profile is **false** (exceeded in $3.9\%$ of $4\cdot10^5$ random pairs, by up to $2.72$), so the conjecture is genuinely integral. After the translation invariance it is a piecewise-quadratic maximisation in **three** parameters | HEURISTIC (the refutation is exact) |
 | 78 | **Three objects suffice**: a sofa lies in the incoming corridor strip, so $A_{\text{ambi}}\le\sup\lvert\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\rvert$, measured $=2\sqrt2-1$ over 220 starts in 4 parameters. Proving $\le$ gives the bound outright. Hammersley's $2\sqrt2$ is the same construction with one hallway; the second handedness replaces two parallelograms of area $\sqrt2$ by two caps of area $\sqrt2-\tfrac12$, removing exactly $1$ | CONJECTURE (the inequality) |
 | 76 | **Four constraints suffice, and the construction recovers Hammersley.** $\sup\lvert L_0\cap L_{\pi/4}\cap L_{\pi/2}\rvert=2\sqrt2$ is Hammersley's classical one-corner bound, reproduced; adding the second handedness at $\pi/4$ to the corridor pair gives $2\sqrt2-1$. Since dropping constraints enlarges a supremum, proving $\lvert L_0\cap R_0\cap L_{\pi/4}\cap R_{\pi/4}\rvert\le2\sqrt2-1$ would give $A_{\text{ambi}}\le1.8284271$ **outright** — no branch and bound. Stated as a conjecture | PROVED (the reduction); CONJECTURE (the inequality) |
-| 74 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 74 | **UPPER BOUND: $A_{\text{ambi}}\le1.85$.** Branch and bound over the three-parameter reduction, every box discharged; boxes enlarged eightfold still certify; targets below the attained supremum $2\sqrt2-1$ all fail, as they must. With Romik's sofa this brackets the answer: $1.6449552\le A_{\text{ambi}}\le1.85$, a factor of $1.125$. **The first bound specific to the ambidextrous problem**; the previous one, $2.2195$, was inherited from the one-corner theorem | PROVED (computer-assisted) |
+| 75 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -218,7 +219,8 @@ algorithm/rigorous/ambi_* computations for the paper; every number is regenerate
                           ambi_excess.py the flux excess, ambi_budget.py the
                           excess budget along the segment to Gerver,
                           ambi_anchored.py the anchored-cell coverings,
-                          ambi_upper.py the finite-angle relaxation
+                          ambi_upper.py the finite-angle relaxation,
+                          ambi_certbound.py the branch and bound giving 1.85
 
 superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:

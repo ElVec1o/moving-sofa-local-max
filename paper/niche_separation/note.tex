@@ -68,7 +68,10 @@ Two limits are recorded rather than smoothed over. The separation inequality is
 independent of (RC) and cannot be removed. And $V$ is the exact flux of the advancing
 wedge boundary, so $V\ge|N|$ by Reynolds' transport theorem and $Q$ bounds nothing where
 the sweep fails to be injective; in particular the construction does not recover Gerver's
-sofa, whose cap violates (RC). Optimality of $\Sig$ remains open.
+sofa, whose cap violates (RC). Separately, a finite-angle relaxation gives the first
+upper bound specific to the ambidextrous problem, $A_{\mathrm{ambi}}\le1.85$, against the
+$2.2195$ inherited from the one-corner theorem; with Romik's sofa this brackets the answer
+between $1.6449552$ and $1.85$. Optimality of $\Sig$ remains open.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -1817,6 +1820,57 @@ $\tfrac12\int_0^{\sqrt2}\bigl(4-4|\delta|\bigr)ds=\tfrac12\bigl(4\sqrt2-4\cdot\t
 A search of $600$ multistarts over $[-3,3]^4$ in exact piecewise-linear arithmetic returns
 $1.828427124746$, agreeing with $2\sqrt2-1$ to $2.7\cdot10^{-15}$, and no configuration
 exceeding it was found.
+
+The supremum in \eqref{eq:three} can be bounded rigorously, and this gives the first
+upper bound specific to the ambidextrous problem.
+
+\begin{theorem}[An unconditional upper bound]\label{thm:upper}
+Every ambidextrous moving sofa satisfies
+\[
+  |S|\ \le\ \tfrac{37}{20}\ =\ 1.85 .
+\]
+\end{theorem}
+
+\begin{proof}
+By \eqref{eq:three} and Lemma~\ref{lem:uv} it suffices to bound
+$\tfrac12\int_0^{\sqrt2}\ell(s)\,ds$ over the parameters, and by the translation
+invariance we may take $a'=0$, leaving $(a,b,b')$. On a box of parameters and a
+subinterval of $s$ every one of $p,q,r,w$ is linear, so its range is exact from the
+endpoints; the range of $\min(q,w)$ is $[\min$ of the lower ends$,\ \min$ of the upper
+ends$]$ and that of $\max(p,r)$ is $[\max$ of the lowers$,\ \max$ of the uppers$]$, whence
+\[
+  \ell\ \le\ |I|_{\max}-\bigl|(p,q)\bigr|_{\min}-\bigl|(r,w)\bigr|_{\min}
+            +\bigl|(p,q)\cap(r,w)\bigr|_{\max} ,
+\]
+each term evaluated from those endpoints. Integrating this bound over a partition of
+$[0,\sqrt2]$ into $256$ pieces gives an upper bound for the whole parameter box. Boxes
+whose bound is below $\tfrac{37}{20}$ are discharged and the rest are bisected on their
+longest side.
+
+For the region searched: $\ell\le|I|$ and $|I|$ is at most each of $2a-2s+4$, $-2b'+4$,
+$2a-2b+4$ and $2s-2b-2b'+4$, so an area of at least $\tfrac{37}{20}$ forces
+$a\ge-0.62$, $b'\le0.62$, $a-b\ge-0.62$ and $b+b'\le2.03$; and if
+$a\ge\sqrt2-b'+1$ then the interval $(s,2a-s)$ reaches the right end of $I$ for every $s$
+in the band, leaving $\ell\le2$ and an area at most $\sqrt2$. The maximiser therefore lies
+in a bounded region, and the search was run on
+$[-8,24]\times[-24,24]\times[-24,8]$, far larger than required, terminating with every box
+discharged.
+
+The arithmetic is double precision with $10^{-9}$ added to every box bound. All quantities
+are $O(10)$ and each bound uses fewer than $100$ operations, so the accumulated rounding
+error is below $100\cdot10\cdot2^{-52}<2\cdot10^{-13}$ and the allowance is rigorous.
+\end{proof}
+
+Since Romik's sofa is ambidextrous, this brackets the answer:
+\[
+  1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\ 1.85 ,
+\]
+a factor of $1.125$. The previously available bound was $2.2195\ldots$, inherited from
+\cite{Bae24} because an ambidextrous sofa is in particular a one-corner sofa; we have found
+no bound specific to the ambidextrous problem in the literature. The method stalls below
+$1.84$ at the resolution used, which is the discretisation of $s$ rather than a limit of
+the argument: the supremum itself is $2\sqrt2-1=1.8284271\ldots$ if
+Conjecture~\ref{conj:three} holds, and targets below that must fail, as they do.
 
 \begin{conjecture}\label{conj:three}
 $\bigl|\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\le2\sqrt2-1$ for all $c,d$.

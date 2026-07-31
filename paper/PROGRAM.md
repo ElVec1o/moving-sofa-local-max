@@ -1,3 +1,79 @@
+## 🎆🎆🎆 A_ambi <= 1.85.  THE FIRST UPPER BOUND SPECIFIC TO THE AMBIDEXTROUS PROBLEM.
+
+    1.6449552 = A_R*  <=  A_ambi  <=  1.85
+
+The answer is now BRACKETED, by a factor of 1.125.  The previously available bound was
+2.2195, inherited from Baek because an ambidextrous sofa is in particular a one-corner
+sofa; no bound specific to the ambidextrous problem was known.
+
+### The chain, end to end
+
+  (a) A moving sofa lies in the incoming corridor, a strip of width 1, and an ambidextrous
+      one meets a 45-degree hallway of EACH handedness.  So
+      |S| <= sup over c,d of |strip n L45(c) n R45(d)|.                       PROVED
+  (b) In the rotated coordinates u = <p,mu>, v = <p,nu> both hallways are axis-aligned and
+      their intersection is a RECTANGLE LESS TWO OPPOSITE QUADRANTS, the corridor a
+      diagonal band; the area is (1/2) int_0^{sqrt2} l(s) ds with l piecewise linear.
+                                                                              PROVED
+  (c) Gauge a' = 0 leaves three parameters (a, b, b').                        PROVED
+  (d) Branch and bound over (a,b,b') with 256 s-subintervals: every box discharged.
+                                                                              PROVED
+
+### 🔴 THE BUG THAT MADE IT LOOK IMPOSSIBLE
+
+The first bound used `hull` (the convex union) for min(q,w) and max(p,r).  That is SOUND
+but hopeless: at a box shrunk to a point around the known optimum it returned 3.4596 where
+the truth is 1.8284, so no box near the optimum could ever discharge.  The range of
+min(q,w) is [min of the lower ends, min of the upper ends], NOT the hull.  With that fixed
+the same point box gives 1.8393, and the whole search completes in six seconds.
+
+### The target ladder, with negative controls
+
+    T = 1.95   CERTIFIED     31128 boxes
+    T = 1.90   CERTIFIED    111590 boxes
+    T = 1.87   CERTIFIED    505959 boxes
+    T = 1.85   CERTIFIED
+    T = 1.84   stalls        <- discretisation floor at nS = 256
+    T = 1.83   stalls
+    T = 1.829  stalls
+    T = 1.82   stalls        <- MUST stall: below the true supremum 1.8284271
+    T = 1.80   stalls        <- MUST stall
+
+The controls behave exactly as required: everything below 2 sqrt(2) - 1 = 1.8284271 fails,
+because that value is ATTAINED.  The stalls at 1.829-1.84 are the s-discretisation, not the
+argument; finer nS would approach 1.8284271.
+
+### Box robustness
+
+The a priori bounds (l <= |I|, four crude estimates on |I|) force the maximiser into a
+small region, but the derivation was loose, so the search was re-run on boxes far larger
+than needed:
+
+    a in [-3,9],  b in [-9,9],  b' in [-9,3]      CERTIFIED at T = 1.85
+    a in [-8,24], b in [-24,24], b' in [-24,8]    CERTIFIED at T = 1.85
+
+### Rigour of the arithmetic
+
+Double precision with 1e-9 added to every box bound.  All quantities are O(10) and each
+bound uses under 100 operations, so accumulated rounding is below 100*10*2^-52 < 2e-13.
+The allowance exceeds that by four orders of magnitude.  An arb ball-arithmetic version of
+the same search was run first and was progressing (270229 boxes discharged, 13 pending at
+the budget) but is roughly a hundred times slower; the float version with the margin
+argument is what completes.
+
+### I16 check
+
+A six-second win on a problem with no known bound is exactly the case the rules say to
+distrust.  Controls run: the bound is sound at the known optimum (1.8393 >= 1.8284271);
+targets below the attained supremum all fail; the box was enlarged eightfold and still
+certifies; and the reduction (b) was verified against direct polygon computation to
+2.5e-11 before any of this.
+
+### What is still open
+
+The conjecture that the supremum IS 2 sqrt(2) - 1 would give A_ambi <= 1.8284271.  The gap
+between the certified 1.85 and that value is 1.2%, and is pure discretisation.
+
 ## 🎆🎆 THE UPPER-BOUND PROBLEM IS NOW ONE-DIMENSIONAL, AND THE EXTREMUM IS EXACT
 
 ### 🎆 THE REDUCTION.  Rotated coordinates turn it into a rectangle minus two quadrants.
