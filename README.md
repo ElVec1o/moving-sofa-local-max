@@ -62,7 +62,7 @@ proof; **HEURISTIC** = computational evidence only.
 | 31 | **(RC) implies the cross condition too**, so it implies all three injectivity conditions: $V=\lvert N\rvert$ and $Q\ge\lvert\text{sofa}\rvert$ on $\{(\mathrm{RC})\}$ | PROVED |
 | 32 | $\delta Q(\Sigma)=0$: all six Euler–Lagrange residuals vanish **identically in $a_1,f_1,f_2$**. Romik's ODE families are exactly the critical-point equations of $Q$ | PROVED |
 | 33 | $-p^2-(qT+p)^2+(r-p)^2=-(p+qT+r)^2+2r^2+2qTr$: the added term is absorbed exactly, leaving a derivative-free remainder | PROVED |
-| 34 | Gårding constant $\tfrac12c=0.7323\ldots$ measured against the exact mass matrix; the ingredients (Poincaré constants $4$, $1$, $29.41$; coefficient $-1.83$; requirement $0.135\le\tfrac12$) are all in place, and rows 35 and 52 assemble the chain | HEURISTIC |
+| 34 | Gårding constant $\tfrac12c=0.7309566\ldots$, sharp (row 54); the ingredients (Poincaré constants $4$, $1$, $29.41$; coefficient $-1.83$; requirement $0.135\le\tfrac12$) are all in place, and rows 35 and 52 assemble the chain | HEURISTIC |
 | 35 | $\delta^2Q\le0$ on $\Sigma$'s cell, with explicit constants $-1.6013,-0.3710,0,-0.005$; strict for $\eta\ne0$. So $Q$ is concave there | PROVED |
 | 36 | $\sigma-\alpha_1=\cos t\,x'(t)$: the middle term of the niche formula is $\tfrac12\int\cos^2t\,x'^2$, an energy of the intercept path | PROVED |
 | 37 | $A_R^\ast=1+4\tan^2\beta+\beta$, and $Q(\Sigma)$ matches it to $2.7\cdot10^{-51}$ | PROVED / HEURISTIC |
@@ -74,15 +74,16 @@ proof; **HEURISTIC** = computational evidence only.
 | 43 | **Main theorem.** $\mathcal D=\{$gauge$\}\cap\{$(RC)$\}\cap\{c_y\le\tfrac12\}\cap\{$sign cell$\}$ is convex, contains $\Sigma$, and $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa with cap data in $\mathcal D$ | PROVED |
 | 44 | $\mathcal D$ is a **$C^2$-ball**: its radius along $\sin(2k\theta)$ scales like $k^{-2}$, so result 43 is a **$C^2$-local** statement. (RC) is always the binding constraint; $c_y\le\tfrac12$ never binds | HEURISTIC |
 | 45 | **(RC) is sharp**: face-2 injectivity fails exactly as the curvature density crosses $1$ | HEURISTIC |
-| 46 | **Stability.** $\lvert T\rvert\le A_R^\ast-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$, from row 53 | PROVED |
+| 46 | **Stability.** $\lvert T\rvert\le A_R^\ast-\tfrac{73}{100}\lVert\eta\rVert^2_{L^2(0,\pi)}$, from row 54 | PROVED |
 | 47 | **Uniqueness.** $\Sigma$ is the unique ambidextrous sofa of area $A_R^\ast$ with cap data in $\mathcal D$ | PROVED |
 | 48 | The separation hypothesis is **independent** of (RC): adding $\delta\sin(\theta-\pi/2)$ on $[\pi/2,\pi]$ preserves (RC) and the gauge exactly while pushing $M$ past $\tfrac12$ | PROVED |
 | 49 | The bound and uniqueness **extend beyond $\mathcal D$**: concavity along the segment $[H_\Sigma,H]$ suffices, and holds whenever that segment meets only anchored cells with $\tau_1\le\tau_2$ | PROVED |
 | 50 | **$H^1$ stability**: $\tfrac12\delta^2Q\le-0.357\lVert\eta\rVert^2_{L^2}-0.3\lVert\eta'\rVert^2_{L^2}$, strictly stronger than the $L^2$ form | HEURISTIC |
 | 51 | $-\int_0^{\pi/2}(\eta\tan t+\eta')^2=\int_0^{\pi/2}(\eta^2-\eta'^2)$, so the second variation has no unbounded coefficients | PROVED |
-| 52 | **The concavity constant, within 9% of sharp.** Two Cauchy–Schwarz steps decouple the halves of $[0,\pi]$, leaving two Sturm–Liouville problems; Sturm oscillation certifies each first eigenvalue from below by ONE sign evaluation of a transfer-matrix shooting function. $\tfrac12\delta^2Q\le-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$, against a measured sharp $0.7323$ (was $0.1532$) | PROVED |
+| 52 | **The concavity constant, decoupled.** Two Cauchy–Schwarz steps split the halves of $[0,\pi]$ into two Sturm–Liouville problems; Sturm oscillation, plus a min–max bound placing $2/3$ below the *second* eigenvalue, certify each first eigenvalue from below by ONE sign evaluation. $\tfrac12\delta^2Q\le-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$, in certified ball arithmetic with $\beta$ enclosed from $u^3+3u=2$ (was $0.1532$) | PROVED |
 | 53 | **The $[\pi/2,\pi]$ eigenvalue in closed form**: $\sqrt{w_1}\cot(L_1\sqrt{\Lambda/w_1})=\tan(L_2\sqrt\Lambda)$ with $L_1+L_2=\pi/2$ *exactly*, so $\Lambda(0)=1$ exactly — the marginal case that blocked the earlier chain — and $\Lambda>1$ for every $\lambda_J>0$ | PROVED |
-| 54 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 54 | **The sharp constant.** No splitting: $p(t)=\eta(t)$, $q(t)=\eta(t+\pi/2)$ makes $\delta^2Q$ one $2\times2$ Sturm–Liouville system on $[0,\pi/2]$, whose first eigenvalue $c^\ast=0.7309566\ldots$ **is** the sharp constant. On $E_1\cap E_2$ the cross terms are a total derivative $2(pq)'$, so the coupling is never pointwise — which is why every pointwise splitting loses. Certified $\tfrac12\delta^2Q\le-\tfrac{73}{100}\lVert\eta\rVert^2$, i.e. $99.9\%$ of sharp, by composing row 52 with an interval covering of $[\tfrac23,\tfrac{73}{100}]$ | PROVED |
+| 55 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -151,8 +152,10 @@ covers the cross condition too, so (RC) implies all three injectivity conditions
 measurements. Result 52 supplies the missing constant: two Cauchy--Schwarz steps decouple
 the halves of $[0,\pi]$, each half becomes a Sturm--Liouville eigenvalue problem, and
 Sturm oscillation certifies both first eigenvalues from below by a single sign evaluation.
-The result is $\tfrac12\delta^2Q\le-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$ against a
-measured sharp $0.7323$ -- within $9\%$, where the previous chain reached $21\%$.
+Row 54 then drops the splitting altogether: the two halves are the same interval
+re-indexed, so $\delta^2Q$ is one $2\times2$ system whose first eigenvalue **is** the sharp
+constant $c^\ast=0.7309566\ldots$, certified above $\tfrac{73}{100}$ -- $99.9\%$, where the
+first chain reached $21\%$.
 
 What this is not: a proof of optimality. $\mathcal D$ is a $C^2$-neighbourhood of
 $\Sigma$ (result 44) and (RC) is sharp (result 45), so the domain cannot be widened by
@@ -165,12 +168,12 @@ needs a concave upper bound on the flux excess $V-\lvert N\rvert$, which is open
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 97 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 100 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
-                          by one of these.  ambi_sturm.py carries the concavity
-                          constant: the falsification test, the transfer-matrix
-                          roots, and the sign certificate
+                          by one of these.  ambi_sturm.py carries the decoupled
+                          chain, ambi_certify.py its certificate in arb ball
+                          arithmetic, ambi_system.py the sharp constant
 
 superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:

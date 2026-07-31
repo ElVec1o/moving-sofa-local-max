@@ -1624,4 +1624,49 @@ theorem form_nonneg_of_completion {M F S : Int} (hM : 0 < M) (h : M*F = S*S) : 0
     exact sq_nonneg_int S
   exact Int.le_of_mul_le_mul_left h1 hM
 
+/-! ## F28 — the coupling on `[0,beta)` is a total derivative
+
+F27 decouples the two halves of `[0,pi]` by two Cauchy-Schwarz steps, which is what costs
+the last 9% of the concavity constant.  The splitting turns out to be avoidable.  Both
+halves are the SAME interval re-indexed: with `p(t) = eta(t)` and `q(t) = eta(t+pi/2)` on
+`[0,pi/2]`, the whole second variation is one quadratic form in the pair `(p,q)`,
+
+    L = 2p^2 - 2p'^2 + q^2 - q'^2 - 1_{E2} (p + q')^2 + 1_{E1} (q - p')^2 ,
+
+and on `E1 = [0,beta)` --- exactly where the obstruction lives, since that is where `E1`
+and `E2` overlap --- the two cross terms COMBINE:
+
+    -2 p q' - 2 q p'  =  -2 (p q)' ,
+
+a total derivative, contributing only the boundary value `-2 p(beta) q(beta)`.  So the
+coupling was never pointwise, which is why every pointwise Cauchy-Schwarz splitting loses
+and the system formulation loses nothing: its first eigenvalue IS the sharp constant.
+
+F28 records the two algebraic steps.  Atoms: `p`, `q` for the values and `P`, `R` for
+`p'`, `q'`.  The product rule is supplied as a hypothesis, as in F26: core Lean has no
+derivative. -/
+
+/-- **F28a (the expansion on `[0,beta)`).**  On the overlap of `E1` and `E2` the integrand
+    collapses to a diagonal part plus the two cross terms:
+    `2p^2 - 2P^2 + q^2 - R^2 - (p+R)^2 + (q-P)^2 = p^2 - P^2 + 2q^2 - 2R^2 - 2pR - 2qP`. -/
+theorem overlap_integrand {p q P R : Int} :
+    2*(p*p) - 2*(P*P) + q*q - R*R - (p+R)*(p+R) + (q-P)*(q-P)
+      = p*p - P*P + 2*(q*q) - 2*(R*R) - (p*R + p*R) - (q*P + q*P) := by
+  simp [Int.mul_add, Int.mul_sub, Int.mul_comm, Int.mul_left_comm]
+  omega
+
+/-- **F28b (the cross terms are a total derivative).**  Given the product rule
+    `Dpq = p*R + q*P` for `R = q'`, `P = p'`, the two cross terms of F28a are
+    `-2*Dpq`.  Their integral is therefore a boundary value and not a pointwise cost. -/
+theorem cross_is_total_derivative {p q P R Dpq : Int} (hprod : Dpq = p*R + q*P) :
+    -(p*R + p*R) - (q*P + q*P) = -(Dpq + Dpq) := by
+  rw [hprod]; omega
+
+/-- **F28c (what the boundary value is worth).**  With `p(0) = 0` from the gauge, the
+    integral of the total derivative over `[0,beta)` is the single value `2 p(beta) q(beta)`:
+    formally, a telescoping difference with a vanishing left end. -/
+theorem telescope_gauge {pb qb p0 q0 : Int} (h0 : p0 = 0) :
+    (pb*qb + pb*qb) - (p0*q0 + p0*q0) = pb*qb + pb*qb := by
+  subst h0; omega
+
 end MovingSofa

@@ -1,3 +1,116 @@
+## 🎆🎆 THE SHARP CONSTANT, CERTIFIED.  0.1532 -> 2/3 -> 73/100, sharp 0.7309566
+
+### 🎆 Item A: the 2/3 certificate is now RIGOROUS, not 30-digit floating point
+
+Rule 7 says floating point is evidence, never proof, and the headline 2/3 ended in two
+sign evaluations at 30 working digits.  `algorithm/rigorous/ambi_certify.py` replaces them.
+Three things had to be made rigorous, not one:
+
+  beta is not a decimal but the root of a cubic, tan(beta) = u/2 with u^3+3u = 2.
+  Certified by EXACT RATIONAL bisection (f is strictly increasing, so a sign change on a
+  rational interval is a proof of enclosure), then a ball-arithmetic arctangent.
+
+  The transfer matrices: at kappa = 1/4, lambda = 37/50, c = 2/3 every weight and mass is
+  an exact rational, so each k^2 = (m+c)/w is exact.  Only the three lengths and the
+  trigonometric functions are inexact, and arb carries rigorous error bounds:
+
+      Phi_L(2/3) = 0.0046739486452026048... +/- 6.4e-73    certified > 0
+      Phi_R(2/3) = 0.0026447861413929500... +/- 8.3e-73    certified > 0
+
+  🔴 A REAL GAP IN THE PROOF, found by writing this out.  Phi(2/3) > 0 does NOT by itself
+  give c_1 > 2/3: Phi is positive on (-inf,c_1), negative on (c_1,c_2), and POSITIVE AGAIN
+  on (c_2,c_3).  One also needs 2/3 < c_2.  Min-max supplies it crudely: since
+  int w eta'^2 >= w_min int eta'^2 and -int m eta^2 >= -m_max int eta^2,
+
+      c_k >= w_min * lambda_k - m_max,   lambda_k = (2k)^2 (DD), (2k-1)^2 (DN) on length pi/2
+
+  giving c_2 >= (3/4)(16) - 63/13 = 7.15 on the left and 1*9 - 6 = 3 on the right, both far
+  above 2/3.  At k = 1 the same bound gives -1.85 and -5, useless -- which is exactly why
+  the transfer matrix is needed for c_1 and not for c_2.  The note now carries this step.
+
+Cross-checked in mpmath interval arithmetic sharing no code, with beta re-certified the
+other way round (pick rational bounds, verify tan(b_lo) < u/2 < tan(b_hi)).  Negative
+control: the certificate correctly REFUSES at c = 0.68, 0.70, 0.75.
+
+### 🎆 Item B: the splitting was unnecessary.  The SHARP constant, in closed form.
+
+The two halves of [0,pi] are the SAME interval re-indexed.  Put p(t) = eta(t) and
+q(t) = eta(t+pi/2) on [0,pi/2]; then the whole of (Q2) is ONE quadratic form in (p,q),
+
+    (1/2) d^2 Q = int_0^{pi/2} L,
+    L = 2p^2 - 2p'^2 + q^2 - q'^2 - 1_{E2}(p+q')^2 + 1_{E1}(q-p')^2 ,
+
+with every boundary condition forced: p(0) = p(pi/2) = 0 is the gauge, q(0) = eta(pi/2) = 0
+is the same gauge from the other half, q(pi/2) = eta(pi) is free.  NOTHING is discarded, so
+the first eigenvalue of this system IS the sharp constant.
+
+WHY THE SPLITTING LOST.  Writing M = -L as a p'^2 + b q'^2 + g p^2 + d q^2 + 2e pq' + 2f qp':
+
+             piece          a    b    g    d    e    f
+          [0,beta)          1    2   -1   -2    1    1
+    [beta,pi/2-beta)        2    2   -1   -1    1    0
+    [pi/2-beta,pi/2)        2    1   -2   -1    0    0
+
+On [0,beta) -- exactly where the obstruction lives, since that is where E1 and E2 overlap --
+e = f = 1 and 2pq' + 2qp' = 2(pq)' is a TOTAL DERIVATIVE.  The obstruction and the resource
+cancel there up to the single boundary value 2 p(beta) q(beta).  The coupling was never
+pointwise; that is why every pointwise Cauchy-Schwarz splitting loses and this loses nothing.
+
+SOLVING IT.  With momenta P = a p' + f q and Q = b q' + e p the EL system is first order in
+(p,P,q,Q) with piecewise constant matrix
+
+    A(c) = [[0, 1/a, -f/a, 0], [g-c-e^2/b, 0, 0, e/b],
+            [-e/b, 0, 0, 1/b], [0, f/a, d-c-f^2/a, 0]] ,
+
+so the transfer is a product of three 4x4 matrix exponentials.  p(0) = q(0) = 0 leaves a
+2-dimensional solution space; propagating a basis and imposing p(pi/2) = 0, Q(pi/2) = 0
+gives a 2x2 determinant Phi(c) whose zeros are the eigenvalues:
+
+    c* = 0.730956620836
+
+CERTIFYING IT WITHOUT A MASLOV INDEX.  For a system the oscillation count is a Maslov index,
+not a zero count, so the scalar trick is unavailable.  It is not needed.  Two facts compose:
+(a) c_1 >= 2/3, PROVED above; (b) Phi has no zero on [2/3, 73/100], certified by covering
+that interval with 60 balls at 400 bits and checking that no enclosure contains 0.  Hence
+
+    (1/2) d^2 Q[eta] <= -(73/100) ||eta||^2_{L^2(0,pi)} .        PROVED
+
+    0.1532 (20.9%)  ->  2/3 (91.2%)  ->  73/100 (99.9% of sharp)
+
+EQUIVALENCE CHECK: the system form and the hat-basis Hessian agree to 6.8e-16 relative on
+random eta at m = 64 and 128.  NEGATIVE CONTROL: the same covering of [2/3, 0.74] finds 2
+enclosures containing 0, correctly refusing.
+
+### 🔴 A CORRECTION THIS FORCED: the "sharp 0.7323" was never sharp
+
+Earlier turns quoted 0.7323, the P1 finite-element value at m = 256, as the sharp constant.
+Rayleigh-Ritz gives an UPPER bound on an eigenvalue and that sequence had not converged:
+
+    m      128       256       512      1024      2048        exact
+         0.733086  0.732285  0.731311  0.731247  0.731073   0.7309566
+
+The true sharp constant is 0.7309566, so every "sharp value" quoted before this turn is an
+over-estimate by about 0.2%.  NO conclusion moves: every certificate in the project is a
+lower bound and every finite-element number an upper bound, so the two never crossed.  The
+target was mis-stated, not the results.  Corrected in note.tex, README and here.
+
+### 🟢 Lean F28
+
+`overlap_integrand`            the integrand on E1 n E2 collapses to diagonal + 2 cross terms
+`cross_is_total_derivative`    given the product rule, those cross terms are -2 (pq)'
+`telescope_gauge`              with p(0) = 0 the telescoped integral is 2 p(beta) q(beta)
+
+100 theorems, 14 defs, zero sorry.  Axioms [propext, Quot.sound].  NOT formalized: the
+product rule, the EL system, the 4x4 matrix exponential, the interval covering.
+
+### New files
+
+`algorithm/rigorous/ambi_certify.py`  the 2/3 certificate in arb ball arithmetic, with the
+                                      min-max step, an independent mpmath recheck, and a
+                                      negative control.
+`algorithm/rigorous/ambi_system.py`   the 2x2 system, the sharp constant, the equivalence
+                                      check, the interval covering, and its negative control.
+
 ## 🎆 THE CONSTANT IS NOW WITHIN 9% OF SHARP: 0.1532 -> 2/3, PROVED
 
 ### 🔥 Item 1: the concavity constant, by two Sturm-Liouville eigenvalues

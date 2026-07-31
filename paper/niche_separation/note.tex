@@ -46,11 +46,13 @@ Romik's ODE families are exactly the critical-point equations of $Q$, identicall
 constants; and that $\delta^2Q<0$, with an explicit constant. Two Cauchy--Schwarz steps
 decouple the two halves of $[0,\pi]$ and reduce the second variation to a pair of
 Sturm--Liouville eigenvalue problems, certified from below by Sturm oscillation; this
-gives $\tfrac12\delta^2Q\le-\tfrac23\|\eta\|^2_{L^2(0,\pi)}$, against a measured sharp
-value of $0.7323$. On the convex domain $\mathcal D$ cut out by (RC), a separation
-inequality and $\Sig$'s own sign pattern,
+gives $\tfrac12\delta^2Q\le-\tfrac23\|\eta\|^2_{L^2(0,\pi)}$. Not splitting at all
+turns the second variation into a single $2\times2$ system whose first eigenvalue is the
+sharp constant $c^\ast=0.7309566\ldots$, certified to exceed $\tfrac{73}{100}$. On the
+convex domain $\mathcal D$ cut out by (RC), a separation inequality and $\Sig$'s own sign
+pattern,
 \[
-  |T|\ \le\ A_R^\ast-\tfrac23\,\|H-H_\Sig\|^2_{L^2(0,\pi)}
+  |T|\ \le\ A_R^\ast-\tfrac{73}{100}\,\|H-H_\Sig\|^2_{L^2(0,\pi)}
 \]
 for every ambidextrous sofa $T$ with cap data in $\mathcal D$, and $\Sig$ is the unique
 member attaining $A_R^\ast$. The domain is a $C^2$-neighbourhood of $\Sig$: its radius
@@ -1359,10 +1361,10 @@ $3.22\cdot0.0420=0.135\le\tfrac12$. So every ingredient of a Gårding inequality
 $\delta^2Q\le-c\|\eta\|_{L^2}^2$ is in place; Theorem~\ref{thm:concave} assembles it and
 Theorem~\ref{thm:sharp} sharpens the constant to $\tfrac23$.
 
-Measured, $\tfrac12 c=0.7323\ldots$: the supremum of
-$\tfrac12\delta^2Q[\eta]/\|\eta\|_{L^2(0,\pi)}^2$ over the hat space, as a symmetric
-generalised eigenvalue problem against the exact mass matrix, is
-$-0.735818,-0.733924,-0.733086,-0.732285$ at $m=32,64,128,256$.
+The sharp value is $\tfrac12 c=0.7309566\ldots$ by Theorem~\ref{thm:system}. A P1
+finite-element computation approaches it from above, as Rayleigh--Ritz must:
+$-0.735818,-0.733924,-0.733086,-0.732285,-0.731311,-0.731247,-0.731073$ at
+$m=32,\ldots,2048$.
 \end{remark}
 
 \section{Concavity, and the area identity}\label{sec:final}
@@ -1413,9 +1415,9 @@ $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2<0$.
 \end{proof}
 
 The bound $\tfrac12\delta^2Q\le-0.3710\|\eta\|_{L^2(0,\pi/2)}^2$ that \eqref{eq:garding}
-yields is half of the measured $-0.7323\ldots$ for the full interval, the shortfall being
-the $J_3$ coefficient that \eqref{eq:garding} leaves at zero. Theorem~\ref{thm:sharp}
-recovers it.
+yields is about half of the sharp $-0.7309566\ldots$ for the full interval, the
+shortfall being the $J_3$ coefficient that \eqref{eq:garding} leaves at zero.
+Theorems~\ref{thm:sharp} and \ref{thm:system} recover it.
 
 \begin{proposition}\label{prop:sigx}
 $\sigma-\alpha_1=\cos t\;x'(t)$ on each phase, with $x=(F-1)/\cos t$ as in
@@ -1728,21 +1730,108 @@ matrices acting on $(\eta,\,w\eta')^{\!\top}$,
    -wk\sin k\ell & \cos k\ell\end{pmatrix},\qquad k=\sqrt{(m+c)/w}
 \]
 (hyperbolic when $m+c<0$). Write $\Phi_L(c)$ for the resulting $\eta(\pi/2)$ and
-$\Phi_R(c)$ for $(w\eta')(\pi)$. By Sturm oscillation the first eigenvalue is the smallest
-zero of $\Phi$, and $\Phi>0$ strictly below it, so one sign evaluation is a lower bound --
-the direction a certificate needs, and the one a Rayleigh--Ritz computation cannot supply.
-At $\kappa=\tfrac14$, $\lambda=\tfrac{37}{50}$ and $c=\tfrac23$,
+$\Phi_R(c)$ for $(w\eta')(\pi)$. Its zeros are exactly the eigenvalues, and by Sturm
+oscillation $\Phi>0$ on $(-\infty,c_1)$ --- so a single sign evaluation bounds $c_1$ from
+\emph{below}, which is the direction a certificate needs and the one a Rayleigh--Ritz or
+finite-element computation cannot supply.
+
+Positivity alone does not locate $c$, because $\Phi>0$ again on $(c_2,c_3)$; one also
+needs $c<c_2$. That comes from min--max, crudely. Since $\int w\eta'^2\ge
+w_{\min}\int\eta'^2$ and $-\int m\eta^2\ge-m_{\max}\int\eta^2$, the form dominates the
+constant-coefficient one, so $c_k\ge w_{\min}\lambda_k-m_{\max}$ with $\lambda_k$ the
+eigenvalues on an interval of length $\pi/2$, namely $(2k)^2$ for Dirichlet--Dirichlet and
+$(2k-1)^2$ for Dirichlet--Neumann. Hence
 \[
-  \Phi_L(\tfrac23)=+0.00467395\ldots>0,\qquad \Phi_R(\tfrac23)=+0.00264479\ldots>0 ,
+  c_2^L\ \ge\ \tfrac34\cdot16-\tfrac{63}{13}=7.153\ldots,
+  \qquad
+  c_2^R\ \ge\ 1\cdot 9-6=3 ,
 \]
-so $c_L,c_R>\tfrac23$, which is \eqref{eq:sharp}.
+both above $\tfrac23$. (At $k=1$ the same bound gives $-1.85$ and $-5$, useless; the
+second eigenvalue is far enough away to be reached crudely while the first is not, which
+is exactly why the transfer matrix is needed.)
+
+It remains to evaluate two signs. At $\kappa=\tfrac14$, $\lambda=\tfrac{37}{50}$ and
+$c=\tfrac23$ every weight and mass is rational --- $w_L=\tfrac34,2,2$ and
+$m_L=\tfrac{63}{13},\tfrac{63}{13},2$; $w_R=\tfrac{87}{50},\tfrac{87}{50},1$ and
+$m_R=6,1,1$ --- so each $k^2=(m+c)/w$ is exact, and the only inexact inputs are the three
+lengths $\beta,\ \tfrac\pi2-2\beta,\ \beta$ and the trigonometric functions of $k\ell$. In
+ball arithmetic at $300$ bits, with $\beta=\arctan(u/2)$ enclosed from $u^3+3u=2$ by exact
+rational bisection,
+\[
+  \Phi_L(\tfrac23)\in0.0046739486452026048\ldots\pm6.4\cdot10^{-73},\qquad
+  \Phi_R(\tfrac23)\in0.0026447861413929500\ldots\pm8.3\cdot10^{-73},
+\]
+both certified strictly positive. Hence $c_L,c_R>\tfrac23$, which is \eqref{eq:sharp}.
 \end{proof}
 
 Optimising the two parameters gives $\min(c_L,c_R)=0.674944$ at
-$(\kappa,\lambda)=(0.26,0.74)$, against a measured sharp constant of $0.7323$: the chain
-loses $8\%$, and the certified $\tfrac23$ loses $9\%$. Since
-$\|\eta\|_{L^2(0,\pi/2)}\le\|\eta\|_{L^2(0,\pi)}$, \eqref{eq:sharp} also improves the
-$[0,\pi/2]$ constant of Theorem~\ref{thm:concave} from $0.371$ to $\tfrac23$.
+$(\kappa,\lambda)=(0.26,0.74)$. Since $\|\eta\|_{L^2(0,\pi/2)}\le\|\eta\|_{L^2(0,\pi)}$,
+\eqref{eq:sharp} also improves the $[0,\pi/2]$ constant of Theorem~\ref{thm:concave} from
+$0.371$ to $\tfrac23$.
+
+The splitting into two scalar problems is itself avoidable, and avoiding it gives the
+sharp constant.
+
+\begin{theorem}[The sharp constant]\label{thm:system}
+The best constant in \eqref{eq:sharp} is the first eigenvalue $c^\ast$ of an explicit
+$2\times2$ Sturm--Liouville system, and
+\begin{equation}\label{eq:sharpsys}
+  \tfrac12\,\delta^2Q[\eta]\ \le\ -\tfrac{73}{100}\,\|\eta\|^2_{L^2(0,\pi)},
+  \qquad c^\ast=0.7309566\ldots
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The two halves of $[0,\pi]$ are the same interval re-indexed. Put $p(t)=\eta(t)$ and
+$q(t)=\eta(t+\pi/2)$ for $t\in[0,\pi/2]$; then \eqref{eq:Q2} reads
+$\tfrac12\delta^2Q=\int_0^{\pi/2}L$ with
+\[
+  L=2p^2-2p'^2+q^2-q'^2-\mathbf 1_{E_2}(p+q')^2+\mathbf 1_{E_1}(q-p')^2 ,
+\]
+and every boundary condition is forced: $p(0)=p(\pi/2)=0$ is the gauge, $q(0)=\eta(\pi/2)=0$
+is the same gauge seen from the other half, and $q(\pi/2)=\eta(\pi)$ is free. Nothing has
+been discarded, so the first eigenvalue of this system is the best constant. Writing
+$M:=-L$ as $a p'^2+b q'^2+g p^2+d q^2+2e\,pq'+2f\,qp'$,
+\[
+  \begin{array}{r|cccccc}
+    \text{piece} & a & b & g & d & e & f\\\hline
+    {[0,\beta)} & 1 & 2 & -1 & -2 & 1 & 1\\
+    {[\beta,\tfrac\pi2-\beta)} & 2 & 2 & -1 & -1 & 1 & 0\\
+    {[\tfrac\pi2-\beta,\tfrac\pi2)} & 2 & 1 & -2 & -1 & 0 & 0
+  \end{array}
+\]
+On $[0,\beta)$ --- exactly where the obstruction sits --- $e=f=1$ and
+$2pq'+2qp'=2(pq)'$ is a total derivative: the $E_1$ obstruction and the $E_2$ resource
+cancel there up to the single boundary value $2p(\beta)q(\beta)$. The coupling is not
+pointwise, which is why every pointwise splitting loses and this one does not.
+
+Eliminating $p',q'$ in favour of the momenta $P=ap'+fq$ and $Q=bq'+ep$, the
+Euler--Lagrange system is first order in $(p,P,q,Q)$ with piecewise constant matrix
+\[
+  A(c)=\begin{pmatrix}
+    0 & 1/a & -f/a & 0\\
+    g-c-e^2/b & 0 & 0 & e/b\\
+    -e/b & 0 & 0 & 1/b\\
+    0 & f/a & d-c-f^2/a & 0
+  \end{pmatrix},
+\]
+so the transfer across a piece of length $\ell$ is $\exp\bigl(A(c)\ell\bigr)$. The left
+conditions $p(0)=q(0)=0$ leave a two-dimensional solution space; propagating a basis
+through the three pieces and imposing $p(\pi/2)=0$ and $Q(\pi/2)=0$ gives a $2\times2$
+determinant $\Phi(c)$ whose zeros are exactly the eigenvalues. A sign change brackets
+$c^\ast\in(0.7309,0.7310)$.
+
+For the certificate the oscillation argument is unavailable --- for a system the count is
+a Maslov index, not a zero count --- and it is not needed. Two facts compose:
+$c^\ast\ge\tfrac23$ by Theorem~\ref{thm:sharp}, and $\Phi$ has no zero on
+$[\tfrac23,\tfrac{73}{100}]$. The latter is checked by covering that interval with $60$
+balls and verifying in $400$-bit ball arithmetic that no enclosure of $\Phi$ contains $0$,
+with $\beta$ enclosed from $u^3+3u=2$ by exact rational bisection. Hence no eigenvalue lies
+at or below $\tfrac{73}{100}$.
+\end{proof}
+
+The certified $\tfrac{73}{100}$ is $99.9\%$ of $c^\ast$; the decoupled $\tfrac23$ is
+$91.2\%$. Both are lower bounds, and no step in either is floating point.
 
 \begin{remark}[{The $[\pi/2,\pi]$ eigenvalue in closed form}]\label{rem:SL}
 When only the weight is raised and the mass is left at $1$ -- that is, $w=1+\lambda_J$ on
@@ -1777,7 +1866,7 @@ give more than a bound.
 \begin{theorem}[Stability]\label{thm:stab}
 For every ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in $\mathcal D$,
 \begin{equation}\label{eq:stab}
-  |T|\ \le\ A_R^\ast-\tfrac23\,\|\eta\|_{L^2(0,\pi)}^2 .
+  |T|\ \le\ A_R^\ast-\tfrac{73}{100}\,\|\eta\|_{L^2(0,\pi)}^2 .
 \end{equation}
 \end{theorem}
 
@@ -1785,7 +1874,7 @@ For every ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in $\
 On the cell $\mathcal C$ the functional $Q$ is a quadratic polynomial in $H$, so
 $Q(H_\Sig+\eta)=Q(\Sig)+\delta Q(\Sig)[\eta]+\tfrac12\delta^2Q[\eta]$ exactly. The first
 variation vanishes by Theorem~\ref{thm:el} and $Q(\Sig)=A_R^\ast$ by
-Theorem~\ref{thm:QA}, while Theorem~\ref{thm:sharp} bounds the second variation. Combining
+Theorem~\ref{thm:QA}, while Theorem~\ref{thm:system} bounds the second variation. Combining
 with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
 \end{proof}
 
@@ -1812,7 +1901,8 @@ across $(\tau_1,\tau_2)=(0,\tfrac\pi2),(0.1,0.2),(0.3,0.5),(0.5,0.9),(0.8,1.2),
 (1.0,1.3),(1.2,1.4),(1.4,1.5),(1.5,\tfrac\pi2),(0.2,1.5),(0.05,0.06)$ the values of
 $\sup\tfrac12\delta^2Q/\|\eta\|^2_{L^2(0,\pi)}$ at $m=128$ are
 $-0.8751,-0.1404,-0.3602,-0.5397,-0.4497,-0.3431,-0.2285,-0.1074,-0.0457,-0.7876,-0.0421$,
-all negative, with $\Sig$'s own cell giving $-0.7331$.
+all negative, with $\Sig$'s own cell giving $-0.7331$ (at $m=128$; the converged value
+is $-0.7309566$ by Theorem~\ref{thm:system}).
 \end{proposition}
 
 Since $\Sig$ sits at $(\beta,\pi/2-\beta)$ with $\beta<\pi/2-\beta$, it lies in that
@@ -1821,13 +1911,20 @@ checkable from the sign pattern alone. (The restriction to \emph{anchored} inter
 essential: Remark~\ref{rem:conc} exhibits $E_1=E_2=[0.4,1.2]$, unanchored, with
 $\sup\tfrac12\delta^2Q/\|\eta\|^2_{L^2(0,\pi)}=+0.4123$.)
 
-The constant in \eqref{eq:stab} is within $9\%$ of the measured one:
-$\sup\tfrac12\delta^2Q[\eta]/\|\eta\|^2_{L^2(0,\pi)}$ equals $-0.735818,-0.733924,
--0.733086,-0.732285$ at $m=32,64,128,256$, against the certified $\tfrac23$. What closed
-most of the earlier factor of $4.8$ was giving up the pointwise splitting: the proof of
-Theorem~\ref{thm:concave} uses three separate Poincaré constants, of which
-$P_3=1$ is marginal and $P_2=1.5035$ nearly so, while Theorem~\ref{thm:sharp} replaces all
-three by two weighted eigenvalues that see the whole of each half at once.
+The constant in \eqref{eq:stab} is $99.9\%$ of the sharp $c^\ast=0.7309566\ldots$.
+What closed the earlier factor of $4.8$ was giving up the pointwise splitting in two
+stages: Theorem~\ref{thm:concave} uses three separate Poincaré constants, of which $P_3=1$
+is marginal and $P_2=1.5035$ nearly so; Theorem~\ref{thm:sharp} replaces all three by two
+weighted eigenvalues that see the whole of each half at once; and
+Theorem~\ref{thm:system} replaces those two by one system that sees both halves at once,
+losing nothing.
+
+A correction this forced. Earlier drafts quoted the sharp constant as $0.7323$, the P1
+value at $m=256$. Rayleigh--Ritz gives an upper bound on an eigenvalue and that sequence
+had not converged; it decreases through $0.731311,0.731247,0.731073$ at $m=512,1024,2048$
+towards $c^\ast=0.7309566$. Every certificate in this note is a lower bound and every
+finite-element number an upper bound, so nothing crossed and no conclusion moves; the
+target was mis-stated by $0.2\%$.
 
 \begin{proposition}[$H^1$ stability]\label{prop:h1}
 The second variation controls the derivative as well: measured against correctly assembled
@@ -1852,7 +1949,7 @@ $\eta(0)=\eta(\pi/2)=0$, and $\sec^2t-\tan^2t=1$,
   =\int_0^{\pi/2}\bigl(\eta^2-\eta'^2\bigr)dt ,
 \]
 checked to $10^{-12}$ on five test functions, so \eqref{eq:Q2} may be written with bounded
-coefficients throughout. Second, the sharp $L^2$ constant is $0.7323$, not the $0.7285$ of
+coefficients throughout. Second, the sharp $L^2$ constant is $0.7309566$, not the $0.7285$ of
 an earlier draft; that figure came from a mass matrix that gave the endpoint hat at
 $\theta=\pi$ the interior weight $2h/3$ instead of $h/3$.
 

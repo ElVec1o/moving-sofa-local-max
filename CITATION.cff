@@ -5,7 +5,7 @@ authors:
   - family-names: Bonfioli
     given-names: Vico
     email: vicobonfioli@gmail.com
-version: "0.7.0"
+version: "0.8.0"
 date-released: 2026-07-31
 license: MIT
 doi: "10.5281/zenodo.20434287"
@@ -51,11 +51,15 @@ abstract: >
 
   Main theorem: on the convex domain D cut out by (RC), a separation inequality and
   Sigma's own sign pattern, every ambidextrous sofa T with cap data H = H_Sigma + eta
-  satisfies |T| <= A_R* - (2/3) ||eta||^2 in L^2(0,pi), with Sigma the unique member
-  attaining A_R*. The constant comes from two Cauchy-Schwarz steps that decouple the
-  two halves of [0,pi] into a pair of Sturm-Liouville eigenvalue problems, each
-  certified from below by Sturm oscillation; it is within 9 percent of the measured
-  sharp value 0.7323.
+  satisfies |T| <= A_R* - (73/100) ||eta||^2 in L^2(0,pi), with Sigma the unique member
+  attaining A_R*. The constant is sharp to within 0.1 percent: setting p(t) = eta(t) and
+  q(t) = eta(t + pi/2) turns the second variation into a single 2x2 Sturm-Liouville
+  system on [0,pi/2], whose first eigenvalue c* = 0.7309566... IS the best constant,
+  computed as a product of three 4x4 matrix exponentials. On the region where the
+  obstruction lives, the coupling between the two halves is a total derivative, so it
+  contributes only a boundary value and no pointwise splitting is needed. Every step of
+  the certificate is carried out in arb ball arithmetic, with beta enclosed from
+  u^3 + 3u = 2 by exact rational bisection; nothing in it is floating point.
 
   Limits are recorded rather than smoothed over. D is a C^2-neighbourhood of Sigma
   (its radius along sin(2k theta) scales like k^-2); (RC) is sharp; the separation
@@ -63,7 +67,7 @@ abstract: >
   the advancing wedge boundary, so V >= |N| by Reynolds' transport theorem and Q
   bounds nothing where the sweep fails to be injective. In particular the construction
   does not recover Gerver's sofa, whose cap violates (RC). Optimality of Sigma remains
-  open. Lean 4 (no Mathlib): 97 theorems, no sorry.
+  open. Lean 4 (no Mathlib): 100 theorems, no sorry.
 
   An earlier line of work in this repository, on local maximality via second variation
   in H^2, is WITHDRAWN; see paper/PROGRAM.md.

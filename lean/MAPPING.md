@@ -119,6 +119,20 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F28 — the coupling is a total derivative (note, Thm "The sharp constant")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| `2p²−2P²+q²−R²−(p+R)²+(q−P)² = p²−P²+2q²−2R²−2pR−2qP` — the integrand on `E₁∩E₂` | `overlap_integrand` | VERIFIED |
+| given the product rule `Dpq = pR+qP`, the two cross terms equal `−2·Dpq`: a total derivative | `cross_is_total_derivative` | VERIFIED |
+| with `p(0)=0` the telescoped integral is the single value `2p(β)q(β)` | `telescope_gauge` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`.  This is why the sharp constant is reachable: on the
+overlap of `E₁` and `E₂`, where the obstruction lives, the coupling contributes only a
+boundary value, so it is not a pointwise cost and no pointwise splitting is needed.  NOT
+formalized: the product rule itself (core Lean has no derivative), the Euler-Lagrange
+system, the `4×4` matrix exponential, and the interval covering of `[2/3, 73/100]`.
+
 ## F27 — the two Cauchy-Schwarz steps of the sharp constant (note, Thm "Concavity, sharp order")
 
 | Statement (note) | Lean declaration | Status |
