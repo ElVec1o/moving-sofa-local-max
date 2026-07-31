@@ -83,7 +83,9 @@ proof; **HEURISTIC** = computational evidence only.
 | 52 | **The concavity constant, decoupled.** Two Cauchy–Schwarz steps split the halves of $[0,\pi]$ into two Sturm–Liouville problems; Sturm oscillation, plus a min–max bound placing $2/3$ below the *second* eigenvalue, certify each first eigenvalue from below by ONE sign evaluation. $\tfrac12\delta^2Q\le-\tfrac23\lVert\eta\rVert^2_{L^2(0,\pi)}$, in certified ball arithmetic with $\beta$ enclosed from $u^3+3u=2$ (was $0.1532$) | PROVED |
 | 53 | **The $[\pi/2,\pi]$ eigenvalue in closed form**: $\sqrt{w_1}\cot(L_1\sqrt{\Lambda/w_1})=\tan(L_2\sqrt\Lambda)$ with $L_1+L_2=\pi/2$ *exactly*, so $\Lambda(0)=1$ exactly — the marginal case that blocked the earlier chain — and $\Lambda>1$ for every $\lambda_J>0$ | PROVED |
 | 54 | **The sharp constant.** No splitting: $p(t)=\eta(t)$, $q(t)=\eta(t+\pi/2)$ makes $\delta^2Q$ one $2\times2$ Sturm–Liouville system on $[0,\pi/2]$, whose first eigenvalue $c^\ast=0.7309566\ldots$ **is** the sharp constant. On $E_1\cap E_2$ the cross terms are a total derivative $2(pq)'$, so the coupling is never pointwise — which is why every pointwise splitting loses. Certified $\tfrac12\delta^2Q\le-\tfrac{73}{100}\lVert\eta\rVert^2$, i.e. $99.9\%$ of sharp, by composing row 52 with an interval covering of $[\tfrac23,\tfrac{73}{100}]$ | PROVED |
-| 55 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 55 | **The flux excess vanishes identically near $\Sigma$**, not merely to second order: (RC) $\Rightarrow V=\lvert N\rvert\Rightarrow E=0$, and (RC) holds on a $C^2$-ball. So $\delta^2E(\Sigma)=0$ trivially and $\delta^2A(\Sigma)=\delta^2Q(\Sigma)$ — but only where $E=0$, i.e. on $\mathcal D$ itself, so it widens nothing. $E$ is a **threshold**, zero until the perturbation pushes $\max(H+H'')$ past $1$ | PROVED |
+| 56 | **The onset exponent at the (RC) boundary.** Whether $\mathcal D$ widens turns on $p$ in $E\sim(\varepsilon-\varepsilon_c)^p$: $p\ge2$ keeps $\delta^2(Q+2E)\le0$ across the boundary. Every reliable row in two directions gives $p>2$ (smallest $2.143$), but the directions disagree ($\approx2.95$ vs $\approx2.6$) and the second trends down. **Suggested, not established** — the $1/n$ polygon bias in $\lvert N\rvert$ exceeds the signal near threshold | HEURISTIC |
+| 57 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -160,8 +162,22 @@ first chain reached $21\%$.
 What this is not: a proof of optimality. $\mathcal D$ is a $C^2$-neighbourhood of
 $\Sigma$ (result 44) and (RC) is sharp (result 45), so the domain cannot be widened by
 relaxing (RC); by result 19 bodies violating it genuinely violate
-$Q\ge\lvert\text{sofa}\rvert$, and Gerver's cap is one of them. Widening $\mathcal D$
-needs a concave upper bound on the flux excess $V-\lvert N\rvert$, which is open.
+$Q\ge\lvert\text{sofa}\rvert$, and Gerver's cap is one of them.
+
+Widening $\mathcal D$ turns on one question. Write $A:=\lvert C_2\rvert-2\lvert N\rvert$
+for the true area of the maximal sofa with cap data $H$, so $A=Q+2E$ with $E=V-\lvert
+N\rvert\ge0$ the flux excess and $E(\Sigma)=0$. Since $\Sigma$ minimises $E$ we have
+$\delta^2E(\Sigma)\ge0$; if it is **zero**, then $\delta^2A(\Sigma)=\delta^2Q(\Sigma)$,
+so the true functional is strictly concave at $\Sigma$ with the sharp constant of row 54,
+and (RC) is needed only for the non-local statement. Rows 55 and 56 record what is and is not settled.
+
+Two traps on the way there, both recorded in `paper/PROGRAM.md` because both nearly became
+findings. A bump straddling $\theta=\pi/2$ gives a clean constant $E/\varepsilon^2$ that
+would refute the pivot; it is not a competitor, because $\sigma=(F-1)\tan t+G-1$ is finite
+at $\pi/2$ only by virtue of the gauge $H(\pi/2)=1$, and such a bump breaks it. And the
+apparent noise floor is not in $V$, which is converged, but a $1/n$ polygon bias in
+$\lvert N\rvert$ that Richardson removes; at $\varepsilon=0.02$ it was eight times the
+signal.
 
 ## Layout
 
@@ -173,7 +189,8 @@ lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these.  ambi_sturm.py carries the decoupled
                           chain, ambi_certify.py its certificate in arb ball
-                          arithmetic, ambi_system.py the sharp constant
+                          arithmetic, ambi_system.py the sharp constant,
+                          ambi_excess.py the order of vanishing of the flux excess
 
 superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:

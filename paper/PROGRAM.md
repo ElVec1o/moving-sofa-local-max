@@ -1,3 +1,65 @@
+## 🔥 TASK #21: THE PIVOT WAS TRUE AND VACUOUS.  THE REAL QUESTION IS THE ONSET AT (RC).
+
+### 🔴 My framing of #21 was wrong, and the answer needs no measurement
+
+I framed #21 as: is d^2 E(Sigma) = 0 for the flux excess E = V - |N|?  If so, A = Q + 2E
+has d^2 A(Sigma) = d^2 Q(Sigma) and the TRUE functional is sharply concave at Sigma.
+
+It is zero, and no measurement is needed.  (RC) implies all three injectivity conditions,
+hence V = |N|, hence E = 0 EXACTLY (result 31, PROVED); and (RC) holds on a
+C^2-neighbourhood of Sigma (result 44).  So E vanishes IDENTICALLY near Sigma and
+d^2 E(Sigma) = 0 trivially.
+
+The pivot is therefore TRUE and VACUOUS.  d^2 A = d^2 Q holds exactly where E = 0, which
+is exactly the domain D on which the theorem already holds.  It buys no widening at all.
+
+E is not a power of eps.  It is ZERO up to a threshold eps_c -- where the perturbation
+first pushes max(H+H'') past 1 -- and grows past it:
+
+    bump (1.0,0.45):  eps_c = 0.006475        bump (0.6,0.30):  eps_c = 0.001999
+
+My sweep ran eps in [0.0141, 0.08], i.e. 2x to 12x PAST the threshold in the first
+direction and 7x to 40x in the second.  Fitting a power of eps to a function of
+eps - eps_c is what produced the spurious "local exponent" drifting 3.14, 3.42, 3.81,
+4.35.  It was measuring the far field.
+
+### 🔥 THE QUESTION THAT ACTUALLY MATTERS, and what the data says
+
+For eps just past eps_c, how fast does E turn on?  If E ~ (eps - eps_c)^p with p >= 2,
+then A = Q + 2E still has a non-positive second variation across the (RC) boundary and D
+CAN be widened past (RC).  If p < 2, (RC) is the true limit.
+
+Refitting against eps - eps_c, with a reliability flag: corr/E is the 1/n bias SUBTRACTED
+at n = 8000 divided by what survives the subtraction.  Above 1 the extrapolation removes
+more than it keeps and the row is not evidence.
+
+  bump (1.0,0.45), eps_c = 0.006475          bump (0.6,0.30), eps_c = 0.001999
+   eps    E_inf      p     corr/E             eps    E_inf      p     corr/E
+  0.0800  4.351e-4    --    0.02  ok         0.0800  6.214e-4    --    0.02  ok
+  0.0566  1.466e-4  2.840   0.06  ok         0.0566  2.465e-4  2.592   0.04  ok
+  0.0400  4.468e-5  2.953   0.21  ok         0.0400  9.415e-5  2.656   0.10  ok
+  0.0283  1.196e-5  3.070   0.77  ok         0.0283  3.588e-5  2.621   0.26  ok
+  0.0200  2.639e-6  3.159   3.52  UNREL      0.0200  1.592e-5  2.143   0.58  ok
+  0.0141  4.361e-7  3.141  21.34  UNREL      0.0141  7.786e-6  1.801   1.19  marginal
+
+🔴 THE CLEANEST-LOOKING NUMBERS ARE THE WORST ONES.  The first direction's p = 3.159 and
+3.141 sit beautifully on p = 3 and are both UNRELIABLE: at eps = 0.0141 the Richardson
+correction is twenty-one times the value it leaves behind.  I had those two rows in hand
+and read "p is about 3" off them before the diagnostic was written.  It is not a
+conclusion, it is the extrapolation's own noise.
+
+WHAT THE RELIABLE ROWS SUPPORT.  Every one of them, in both directions, has p > 2 -- the
+smallest is 2.143.  That is the encouraging direction.  But the two directions do not
+agree (about 2.95 versus about 2.6), the second one TRENDS DOWNWARD as eps decreases, and
+its least reliable row falls to 1.801.  So:
+
+    p > 2 is SUGGESTED, NOT ESTABLISHED.  #21 stays open.
+
+The obstruction is precision, and it is well identified: |N| carries a 1/n polygon bias of
+about 7.4e-2/n, identical across directions and eps, and the signal near the threshold is
+smaller than the correction.  Settling p needs |N| computed EXACTLY, not by a
+floating-point polygon oracle -- Rule 8 puts that in Rust.  That is now the whole of #21.
+
 ## 🎆🎆 THE SHARP CONSTANT, CERTIFIED.  0.1532 -> 2/3 -> 73/100, sharp 0.7309566
 
 ### 🎆 Item A: the 2/3 certificate is now RIGOROUS, not 30-digit floating point
