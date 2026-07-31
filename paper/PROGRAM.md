@@ -1,3 +1,44 @@
+## 🔥 RESTRUCTURE PASS: AN INTRODUCTION, A COMPLETED (RC), AND THE CHRONICLE CUT BACK
+
+### 🔴 The rho-extension audit found a real gap in the MAIN THEOREM's statement
+
+Theorem "final" defines D as "support functions of admissible caps" satisfying (a)-(d),
+with (b) = (RC) stated as "sigma_K a.c. on [0,pi/2) and (pi/2,pi], only atom at pi/2".
+That is a condition on [0,pi] ONLY.  It never mentions the junction atoms 2H'(0)-1 and
+-2H'(pi)-1 of the rho-extension, which the new boundary lemma shows must vanish.
+
+The theorem itself was never wrong -- "admissible cap" means an actual rho-symmetric
+convex body, so the conditions are implied.  But (a)-(d) as LISTED are not a
+characterisation: a reader constructing a member of D from them could write down the
+c = 0.3 disc and believe it qualifies.  That is exactly the trap I fell into last block.
+(b) now states the junction conditions explicitly.
+
+### 🔥 An Introduction, which the paper did not have
+
+Rule 12 asks for "introduction with context and full statements of results"; the note went
+abstract -> Setting, so a reader met the results scattered across thirty pages in the
+order they were discovered.  The new introduction states, in order: the problem and its
+status; the coordinates in which the data is affine; (RC) and what it buys; the three
+hypotheses at Sigma; the 2x2 system and c* = 0.7309566; the anchored family and the mirror
+constant 3/10; the two optimality statements with their constants; and a section on what
+is NOT proved, listing the Reynolds obstruction, the no-go, the separation independence,
+the real reason Gerver is excluded, and the permanence of the sign hypothesis.
+
+### 🟢 Chronicle cut back
+
+  * Section "Main theorem" at page 5 was NOT the main theorem -- it is the disjointness
+    of the niches for Sigma.  Renamed.  The actual main theorem is the one so titled.
+  * Theorem "cond" (HEURISTIC, conditional on three hypotheses) sat mid-paper while the
+    PROVED unconditional Theorem "final" came twenty pages later.  Now explicitly marked
+    superseded at its statement, with its purpose (isolating what the later argument must
+    supply) stated in one line.
+  * Remarks "honest status" and "status of Theorem cond" deleted: both were revision
+    history, both had zero references.
+
+37 pages, 0 errors, 0 undefined references.  Still owed: the concavity material remains
+spread across four sections (the 0.371 chain, 2/3, 73/100, the family) rather than one;
+consolidating it is the remaining structural work.
+
 ## 🔴🔥 THE DISC COUNTEREXAMPLE WAS WRONG AS COMMITTED, AND THE CORRECTED ONE IS BETTER
 
 ### 🔴 What I got wrong, and how

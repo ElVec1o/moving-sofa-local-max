@@ -70,6 +70,100 @@ the sweep fails to be injective; in particular the construction does not recover
 sofa, whose cap violates (RC). Optimality of $\Sig$ remains open.
 \end{abstract}
 
+\section{Introduction}\label{sec:intro}
+
+The moving sofa problem asks for the largest area of a connected shape that can be
+manoeuvred around a right-angled corner of a hallway of unit width. It was settled by
+Baek \cite{Bae24}, who proved Gerver's sofa \cite{Ger92} optimal. Romik \cite{Rom18}
+posed the \emph{ambidextrous} variant, in which the shape must turn corners of both
+handedness, exhibited a candidate $\Sig$ of area
+\[
+  A_R^\ast=1.6449552184254408\ldots,
+\]
+and asked whether it is optimal. That question is open, and this note does not settle it.
+What follows is a structural analysis of the ambidextrous problem in the coordinates in
+which the constraint data is affine, and a local optimality statement for $\Sig$ on an
+explicitly described domain.
+
+\subsection*{The coordinates}
+
+Every ambidextrous sofa is $C_2\setminus(U\sqcup\rho U)$ for a convex \emph{cap} $C_2$ and
+a \emph{niche} $U$ swept by the hallway's inner corner, with $\rho$ the reflection in
+$y=\tfrac12$. Writing $H(\theta)=h_{C_2}(\mu_\theta)$ for the cap's support function on
+$[0,\pi]$, the corner path is \emph{affine} in $H$ (Lemma~\ref{lem:corner}), and so are the
+two arm lengths $\alpha_1,\alpha_2$ and the reach $\sigma$ that determine the sweep. In
+these coordinates the cap area is an exact quadratic form,
+\[
+  |C_2|=\int_0^\pi(H^2-H'^2)\,d\theta-H(0)-H(\pi)
+\]
+(Proposition~\ref{prop:cap}), and the niche area has the closed form \eqref{eq:V}. The
+functional $Q:=|C_2|-2V$, with $V$ the flux of the advancing sweep, is therefore an
+explicit quadratic polynomial in $H$ on each cell of the sign pattern of
+$(\alpha_1,\alpha_2)$.
+
+\subsection*{The results}
+
+The analysis rests on one geometric hypothesis, that the cap is nowhere flatter than a
+circle of the corridor's width:
+\[
+  \text{(RC)}\qquad (H+H'')_{\mathrm{ac}}\le1 ,
+\]
+which is linear in $H$ and hence convex. It is classical, being the sliding-ball condition
+dual to Blaschke's rolling theorem (Remark~\ref{rem:rcclassical}); what is new is its use.
+Theorem~\ref{thm:rc} shows that (RC) implies all three injectivity conditions of the
+sweep, by reducing each to a forced harmonic oscillator whose kernel is non-negative
+precisely because the rotation angle is $\pi/2$; consequently $V=|N|$ and $Q$ is tight.
+
+At $\Sig$ the three hypotheses of the concavity method hold exactly:
+$Q(\Sig)=A_R^\ast$ structurally, with no integral evaluated (Theorem~\ref{thm:QA});
+$\delta Q(\Sig)=0$ identically in Romik's constants, so his ODE families \emph{are} the
+critical-point equations of $Q$ (Theorem~\ref{thm:el}); and $\delta^2Q<0$.
+
+The second variation is the technical core. Setting $p(t)=\eta(t)$ and $q(t)=\eta(t+\pi/2)$
+identifies it with a $2\times2$ Sturm--Liouville system on $[0,\pi/2]$ whose first
+eigenvalue \emph{is} the best constant,
+\[
+  c^\ast=0.7309566\ldots,
+\]
+certified above $\tfrac{73}{100}$ in ball arithmetic (Theorem~\ref{thm:system}). On the
+overlap of the two sign sets the coupling is a total derivative, which is why every
+pointwise estimate loses and this one does not. The same system, with the cell boundaries
+as parameters, gives concavity on \emph{every} ordered anchored cell
+(Theorem~\ref{thm:diag}), and a uniform constant $\tfrac3{10}$ on the mirror class
+(Theorem~\ref{thm:mirroruniform}).
+
+These combine into two optimality statements. Theorem~\ref{thm:final} gives
+$|T|\le A_R^\ast$ for every ambidextrous sofa with cap data in the convex domain
+$\mathcal D$ cut out by the gauge, (RC), a separation inequality and $\Sig$'s sign
+pattern, with the quantitative form
+\[
+  |T|\ \le\ A_R^\ast-\tfrac{73}{100}\,\|H-H_\Sig\|^2_{L^2(0,\pi)}
+\]
+of Theorem~\ref{thm:stab} and uniqueness (Corollary~\ref{cor:uniq}). Proposition
+\ref{prop:ball} exhibits an explicit $C^2$-ball of radius $\tfrac1{20}$ inside
+$\mathcal D$. Theorem~\ref{thm:mirrorstab} is the non-perturbative version: on the mirror
+class, with no smallness of $H-H_\Sig$ assumed, $|T|\le A_R^\ast-\tfrac3{10}\|H-H_\Sig\|^2$.
+
+\subsection*{What is not proved, and why}
+
+Optimality of $\Sig$ remains open, and the obstructions are recorded rather than smoothed
+over. $V$ is the exact flux of the advancing sweep, so $V\ge|N|$ always by Reynolds'
+transport theorem (Proposition~\ref{prop:reynolds}) and $Q$ bounds nothing where the sweep
+fails to be injective; the domain cannot be widened by a concave majorant of the excess,
+since none exists (Proposition~\ref{prop:nogo}), though a semiconcave one does
+(Theorem~\ref{thm:budget}). The separation hypothesis is independent of (RC). Gerver's cap
+violates (RC), but that is not what excludes it: it is not the cap of any \emph{connected}
+ambidextrous sofa (Remark~\ref{rem:gerverout}). The sign hypothesis of
+Theorem~\ref{thm:mirrorstab} is permanent, not provisional: the incircle of the unit
+square is a connected ambidextrous sofa satisfying every other condition and violating it
+(Remark~\ref{rem:disc}).
+
+Claims are labelled throughout: \textsc{verified} means machine-checked in Lean~4 with no
+\texttt{sorry}, \textsc{proved} a complete human proof, \textsc{heuristic} computational
+evidence only. Numerical values that carry weight are computed in ball or exact rational
+arithmetic with stated precision; Section~\ref{sec:prior} separates what is ours from what
+is Baek's and Romik's.
+
 \section{Setting}
 
 Write $L$ for the closed L-shaped hallway of unit width with its corner at the
@@ -263,7 +357,7 @@ which was not used in the derivation, is satisfied to $1.7\cdot10^{-51}$ at the
 same precision.
 \end{remark}
 
-\section{Main theorem}
+\section{Disjointness of the niches for \texorpdfstring{$\Sig$}{Sigma}}
 
 \begin{theorem}\label{thm:main}
 For Romik's ambidextrous sofa, $U\cap\rho U=\emptyset$, and consequently
@@ -1104,6 +1198,13 @@ Corollary~\ref{cor:sep}.
 \end{enumerate}
 Then $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa $T$ whose cap data lies in
 $\mathcal K'\cap\mathcal C$.
+
+This statement is \emph{superseded} by Theorem~\ref{thm:final}, which reaches the same
+conclusion on an explicitly described convex domain with all three hypotheses proved. It
+is retained only because its three hypotheses isolate what the later argument has to
+supply, and because Section~\ref{sec:rc} closes hypothesis~(ii) for it. Its own label is
+\textnormal{\textsc{heuristic}}; Theorem~\ref{thm:final} is
+\textnormal{\textsc{proved}}.
 \end{theorem}
 
 \begin{proof}
@@ -1114,21 +1215,6 @@ function on that convex set with a critical point at $\Sig$, so
 $Q(H)\le Q(\Sig)=A_R^\ast$ throughout. By (ii) and Proposition~\ref{prop:convex},
 $Q(H)\ge|T|$ there, using (iii) to get the factor $2$ in $|T|\le|C_2|-2|N|$.
 \end{proof}
-
-\begin{remark}[Honest status of Theorem~\ref{thm:cond}]\label{rem:honest}
-Hypothesis (i) is \emph{numerical}: $Q(\Sig)=A_R^\ast$ to $61$ digits
-(Remark~\ref{rem:61}), $\|\delta Q\|_\infty/h=1.8\cdot10^{-8}$, and
-$\sup\tfrac12\delta^2Q/\|\eta\|_{L^2}^2\to-0.733$ for a discretised form. Hypothesis (ii) is measured on a
-grid, not proved. Hypothesis (iii) is the conditional part of
-Theorem~\ref{thm:ceiling}. So the effective label of Theorem~\ref{thm:cond} is
-HEURISTIC, and it does not assert optimality of $\Sig$: the class
-$\mathcal K'\cap\mathcal C$ is not shown to contain every competitor, and by
-Remark~\ref{rem:gap} bodies outside $\mathcal K'$ genuinely violate $Q\ge|T|$. What the
-theorem does is exhibit an explicit convex class, with nonempty interior around $\Sig$,
-on which the one-corner architecture transfers. Proving (i) and (ii) is the remaining
-work, and is finite: (i) reduces to a Hessian sign and a first-order identity in closed
-form, and (ii) to the linear inequalities \eqref{eq:C22}, \eqref{eq:C11}.
-\end{remark}
 
 \section{One curvature condition implies injectivity}\label{sec:rc}
 
@@ -1453,17 +1539,6 @@ identity therefore remains HEURISTIC, now against a closed-form target and with 
 phase-by-phase decomposition.
 \end{remark}
 
-\begin{remark}[Status of Theorem~\ref{thm:cond}]\label{rem:status}
-Hypothesis (ii) is Theorems~\ref{thm:rc} and \ref{thm:cross}, proved from (RC).
-Hypothesis (i) splits: $\delta Q(\Sig)=0$ is Theorem~\ref{thm:el}, $\delta^2Q\preceq0$ is
-Theorem~\ref{thm:concave}, and $Q(\Sig)=A_R^\ast$ is Remark~\ref{rem:area}, still
-numerical. Hypothesis (iii), the separation $M<\tfrac12$ for competitors, is untouched;
-across a family of low-frequency perturbations no competitor satisfying (RC) was found
-with $M\ge\tfrac12$, but no implication is proved. So the conditional theorem now rests
-on one $51$-digit numerical identity and one geometric hypothesis, rather than on four
-measured conditions. Optimality of $\Sig$ remains open.
-\end{remark}
-
 \section{\texorpdfstring{$\Sig$}{Sigma} satisfies (RC), and \texorpdfstring{$Q(\Sig)=A_R^\ast$}{Q = A_R}}
 \label{sec:rcsigma}
 
@@ -1646,7 +1721,10 @@ that
 \begin{enumerate}
 \item[(a)] $H(0)=H(\pi/2)=1$ \emph{(the gauge: horizontal translation, unit corridor)};
 \item[(b)] \emph{(RC)} $\sigma_K$ is absolutely continuous on $[0,\pi/2)$ and $(\pi/2,\pi]$
-with density at most $1$, the only atom being at $\theta=\pi/2$;
+with density at most $1$, the only atom being at $\theta=\pi/2$; equivalently, on $(0,\pi)$
+$0\le(H+H'')_{\mathrm{ac}}\le1$ with no atom, together with $H'(0)=\tfrac12$ and
+$H'(\pi)=-\tfrac12$, the last two being the vanishing of the junction atoms of the
+$\rho$-extension (Lemma~\ref{lem:bdry});
 \item[(c)] $c_y(t)=(H(t)-1)\sin t+(H(t+\pi/2)-1)\cos t\le\tfrac12$ for $t\in[0,\pi/2]$
 \emph{(note $\le$, not $<$: this gives $|U\cap\rho U|=0$, which is all an area bound needs)};
 \item[(d)] $\alpha_1<0$ exactly on $[0,\beta)$ and $\alpha_2>0$ exactly on
