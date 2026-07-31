@@ -1724,4 +1724,38 @@ theorem corner_D_coeff {P : Int} (h : 7*P ≤ 22) : 98 - 21*P ≥ 32 := by omega
     `550 <= 576`. -/
 theorem corner_r_coupling : (550 : Int) ≤ 576 := by omega
 
+/-! ## F30 — the arm sandwich, and the disc counterexample
+
+Under `0 <= H + H'' <= 1` the two arms satisfy, in the a.c. sense,
+
+    alpha_2 <= alpha_1' <= alpha_2 + 1        (upper needs convexity, lower needs (RC))
+    -alpha_1 - 1 <= alpha_2' <= -alpha_1
+
+so the pair rotates: the first arm strictly increases where the second is positive, and
+the second strictly decreases where the first is.  This supplies the proved Lipschitz
+constant behind the explicit-ball proposition, and the transversality of both sign
+crossings.  F30a-b record the linear algebra with `F2` for `F''`, `G2` for `G''`.
+
+F30c is the disc: `H_c = 1 - c + c (sin + cos)` has `H_c + H_c'' = 1 - c` identically,
+recorded with `S` for `sin theta + cos theta`; the arms are identically `-c`, so the
+ordered sign structure FAILS for a cap satisfying every other condition of the domain.
+The sign hypothesis is essential. -/
+
+/-- **F30a (sandwich for the first arm).**  From `F - 1 <= -F2 <= F` (the two-sided
+    curvature bound), `G' + F - 1 <= G' - F2 <= G' + F`, i.e.
+    `alpha_2 <= alpha_1' <= alpha_2 + 1` after the affine dictionary. -/
+theorem arm1_sandwich {F F2 G' : Int} (hrc : F2 + F ≤ 1) (hcx : 0 ≤ F2 + F) :
+    G' + F - 1 ≤ G' - F2 ∧ G' - F2 ≤ G' + F := by omega
+
+/-- **F30b (sandwich for the second arm).**  From `-G <= G2 <= 1 - G`,
+    `F' - G <= F' + G2 <= F' + 1 - G`, i.e. `-alpha_1 - 1 <= alpha_2' <= -alpha_1`. -/
+theorem arm2_sandwich {G G2 F' : Int} (hrc : G2 + G ≤ 1) (hcx : 0 ≤ G2 + G) :
+    F' - G ≤ F' + G2 ∧ F' + G2 ≤ F' + 1 - G := by omega
+
+/-- **F30c (the disc has constant curvature density).**  With `S` the atom for
+    `sin theta + cos theta`, whose second derivative is `-S`:
+    `(1 - c + c*S) + (-(c*S)) = 1 - c`.  The disc of radius `1 - c` at `(c,c)` satisfies
+    convexity and (RC) with margin, yet its arms are identically `-c`. -/
+theorem disc_curvature {c S : Int} : (1 - c + c*S) + (-(c*S)) = 1 - c := by omega
+
 end MovingSofa

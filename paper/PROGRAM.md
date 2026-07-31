@@ -1,3 +1,71 @@
+## 🔥 THE SIGN HYPOTHESIS IS ESSENTIAL (A DISC SAYS SO); AN EXPLICIT C^2-BALL; ONE METHOD
+
+### 🔥 Item 1 RESOLVED BY COUNTEREXAMPLE: single-crossing cannot be dropped
+
+Attempting to derive the ordered-anchored sign hypothesis from the rest of the domain
+produced first a new lemma, then a counterexample killing the attempt.
+
+  LEMMA (arm sandwich).  Under 0 <= (H+H'')_ac <= 1:
+      alpha_2 <= alpha_1' <= alpha_2 + 1        and        -alpha_1 - 1 <= alpha_2' <= -alpha_1.
+  The pair (alpha_1, alpha_2) ROTATES: arm 1 strictly increases where arm 2 is positive,
+  arm 2 strictly decreases where arm 1 is.  This is the differential form of the
+  oscillator mechanism behind (RC) => injectivity.  PROVED, two lines; Lean F30a-b.
+
+  COUNTEREXAMPLE (the disc).  H_c = 1 - c + c(sin + cos), the support data of the disc
+  of radius 1-c centred at (c,c): gauge holds, mirror holds (A = 2c), and
+  H_c + H_c'' = 1 - c identically, so convexity AND (RC) hold with margin.  Yet
+  alpha_1 = alpha_2 = -c identically: {alpha_1 < 0} = [0, pi/2), {alpha_2 > 0} = empty.
+  The ordering fails.  So the sign hypothesis of the mirror stability theorem CANNOT be
+  derived from gauge + mirror + convexity + (RC); it is essential at the level of the
+  function domain.  Whether sofa-realizability rescues it is OPEN and now precisely posed.
+
+  En route, constants satisfying the sandwich inequalities were checked BEFORE
+  integrating them to a body (I3 step 3): the disc is the integral of the constant
+  solution (u,v) = (-c,-c).
+
+### 🔴 A GRID BUG THAT NEARLY POISONED THE BALL CONSTANTS
+
+The first margin run reported alpha_1 dipping to -0.4168 on [beta+0.15, pi/2], which
+would have meant Sigma's sign pattern was wrong and five sessions of cell analysis with
+it.  It was np.arange(lo, hi+h, h) OVERRUNNING the interval: the last grid point exceeded
+pi/2, sending the evaluator past theta = pi where it returns garbage.  Cross-check
+against the project evaluator (agreement 5.6e-16) plus clipped grids: alpha_1 >= +0.122
+on that interval, pattern intact.  Rule: grids are clipped and endpoints pinned,
+always.
+
+### 🔥 Item 2: AN EXPLICIT C^2-BALL INSIDE THE DOMAIN.  r0 = 1/20.  PROVED.
+
+Every mirror-gauge eta with max(||eta||, ||eta'||, ||eta''||) <= 1/20 keeps
+H_Sigma + eta inside D, with ordered anchored signs along the whole segment:
+
+  (RC)     0.8389 (closed form) + 2 r0 = 0.1     <= 1        margin 0.0611
+  ceiling  0.38784 (closed form) + sqrt2 r0      <  1/2      margin 0.0414
+  signs    |delta alpha| <= 2 r0 = 0.1 < g = 0.1224, with six grid margins at
+           h = 5e-4 and the PROVED Lipschitz constant L <= 1.76 from the sandwich
+           (bootstrap: S <= 0.7506 + (S+1)h/2 => S <= 0.7513), and transversality
+           FREE from the sandwich: alpha_1' >= alpha_2 >= 0.5975 - 0.1 > 0 in
+           alpha_1's window, alpha_2' <= -alpha_1 <= -(0.4975) in alpha_2's.
+
+Replaces the load-bearing direction of the old HEURISTIC "D is a C^2-ball": the domain
+CONTAINS the explicit ball of radius 1/20 in the mirror class.  The outer k^-2 radius
+stays a measurement.  Grid points are double precision; margins exceed evaluation error
+by eleven orders; the Lipschitz constant is proved, not sampled.
+
+### 🟢 Item 3: ONE CERTIFICATION METHOD END TO END
+
+Sigma's cell constant 73/100 is now ALSO certified by the covering route alone:
+spectrum >= -4 (absorption) + covering [-4, 73/100] at lens (beta, pi/2-2beta, beta),
+3074 boxes.  Negative control at 74/100 refused, failing box c in [0.7310, 0.7313],
+bracketing c* = 0.7309566.  The decoupled chain and its min-max oscillation step are no
+longer load-bearing anywhere; they remain in the note as the hand-checkable route to 2/3.
+
+### Ledger
+
+Sandwich PROVED (Lean F30).  Disc counterexample PROVED (Lean F30c for the curvature
+identity).  Ball r0 = 1/20 PROVED (grid + proved Lipschitz standard).  Unified
+certificate VERIFIED-by-covering.  108 Lean theorems, zero sorry.  The open question that
+remains from this block: does sofa-realizability force the ordered sign structure?
+
 ## 🧮🎆 CONCAVITY ON EVERY ORDERED ANCHORED CELL, PROVED.  UNIFORM CONSTANT ON MIRROR.
 
 Crux (I1): CRUX-C -- the main theorem was perturbative for two reasons, (RC) and

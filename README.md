@@ -96,7 +96,11 @@ proof; **HEURISTIC** = computational evidence only.
 | 65 | **Diagonal concavity, hence concavity on every ordered anchored cell.** $D_\tau\le0$ for all $\tau\in[0,\pi/2]$: by hand for $\tau\le1/\sqrt3$ and for $\pi/2-\tau\le1/18$ (spectral splitting at the marginal corner mode $(0,\sin t)$), certified by adaptive interval covering (305 boxes) in between. Upgrades the eleven-entry measured table to a theorem with a weaker hypothesis ($E_1$ need not be an interval) | PROVED |
 | 66 | **Uniform constant on the mirror family**: $c_1(\tau)>\tfrac3{10}$ for every $\tau\in[0,\pi/4]$ (249 boxes). Negative controls refuse exactly on the measured eigencurves | PROVED |
 | 67 | **Non-perturbative stability.** Connected + mirror + (RC) + single-crossing $\alpha_1$ along the segment $\Rightarrow\lvert T\rvert\le A_R^\ast-\tfrac3{10}\lVert H-H_\Sigma\rVert^2$, with **no smallness of $H-H_\Sigma$**. The only smallness constraint left in the architecture is (RC) | PROVED |
-| 68 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
+| 68 | **The arm sandwich.** Under $0\le(H+H'')_{\mathrm{ac}}\le1$: $\alpha_2\le\alpha_1'\le\alpha_2+1$ and $-\alpha_1-1\le\alpha_2'\le-\alpha_1$ — the pair rotates. Supplies proved Lipschitz constants and both transversalities | PROVED |
+| 69 | **The sign hypothesis is essential**: the disc $1-c+c(\sin+\cos)$ (radius $1-c$ at $(c,c)$) satisfies gauge, mirror, convexity and (RC) with margin, yet $\alpha_1\equiv\alpha_2\equiv-c$ and the ordering fails identically. Whether sofa-realizability rescues it is open | PROVED |
+| 70 | **Explicit ball inside the domain**: every mirror-gauge $\eta$ with $\lVert\eta\rVert_{C^2}\le\tfrac1{20}$ keeps $H_\Sigma+\eta$ in $\mathcal D$ with ordered anchored signs along the whole segment. Replaces the load-bearing half of the old heuristic "$\mathcal D$ is a $C^2$-ball" | PROVED |
+| 71 | Σ's cell constant $\tfrac{73}{100}$ re-certified by the covering method alone (3074 boxes; control refused at $\tfrac{74}{100}$ with the failing box bracketing $c^\ast$): one certification method end to end | PROVED |
+| 72 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
 $4\tan^3\beta+3\tan\beta=1$) and $x^3+6x^2+9x-4=0$ are **not** new: they are the
@@ -195,7 +199,7 @@ signal.
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 105 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 108 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these.  ambi_sturm.py carries the decoupled

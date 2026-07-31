@@ -119,6 +119,18 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F30 — the arm sandwich and the disc counterexample (note, Lemma "arm sandwich", Remark "disc")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| `α₂ ≤ α₁' ≤ α₂+1` from the two-sided curvature bound | `arm1_sandwich` | VERIFIED |
+| `−α₁−1 ≤ α₂' ≤ −α₁` | `arm2_sandwich` | VERIFIED |
+| the disc `1−c+c(sin+cos)` has curvature density `1−c` identically | `disc_curvature` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`.  The sandwich supplies the proved Lipschitz constant of
+the explicit-ball proposition and both transversality statements.  NOT formalized: the
+a.c./atom bookkeeping and the grid evaluations.
+
 ## F29 — the anchored-cell reduction and the corner constants (note, Thm "Diagonal concavity")
 
 | Statement (note) | Lean declaration | Status |

@@ -1836,7 +1836,14 @@ at or below $\tfrac{73}{100}$.
 \end{proof}
 
 The certified $\tfrac{73}{100}$ is $99.9\%$ of $c^\ast$; the decoupled $\tfrac23$ is
-$91.2\%$. Both are lower bounds, and no step in either is floating point. Nothing in the
+$91.2\%$. Both are lower bounds, and no step in either is floating point. The covering
+route is also self-contained: with the crude spectral bound $-4$ of
+Theorem~\ref{thm:diag}(c), covering $[-4,\tfrac{73}{100}]$ at the fixed lengths
+$(\beta,\tfrac\pi2-2\beta,\beta)$ with $3074$ boxes certifies $c_1>\tfrac{73}{100}$
+directly, without the decoupled chain or the oscillation argument; the negative control
+at $\tfrac{74}{100}$ is refused with the failing box at $c\in[0.7310,0.7313]$,
+bracketing $c^\ast$. The decoupled chain remains the hand-checkable route to
+$\tfrac23$. Nothing in the
 argument stops at $\tfrac{73}{100}$: certifying a target $c$ needs the enclosures to
 separate from $0$ on every subinterval of $[\tfrac23,c]$, and those must shrink as $c$
 approaches the root, so the number of balls grows --- $60,60,800,12000$ for targets
@@ -2125,6 +2132,81 @@ $Q(H)\le A_R^\ast-\tfrac3{10}\|H-H_\Sig\|^2$. Connectedness gives $M\le\tfrac12$
 (Theorem~\ref{thm:ceiling}), and (RC) gives $V=|N|$, so
 $|T|=|C_2|-2|N|=Q(H)$.
 \end{proof}
+
+\begin{lemma}[The arm sandwich]\label{lem:sandwich}
+Suppose $0\le(H+H'')_{\mathrm{ac}}\le1$ on $(0,\pi)$, with atoms only at $\pi/2$. Then on
+$(0,\pi/2)$, in the absolutely continuous sense,
+\[
+  \alpha_2\ \le\ \alpha_1'\ \le\ \alpha_2+1,
+  \qquad
+  -\alpha_1-1\ \le\ \alpha_2'\ \le\ -\alpha_1 .
+\]
+The upper bounds use convexity ($H+H''\ge0$), the lower bounds use (RC).
+\end{lemma}
+
+\begin{proof}
+$\alpha_1'=G'-F''$ and $-F''\in[F-1,\,F]$ by the two-sided bound on $F+F''$, so
+$\alpha_1'\in[G'+F-1,\,G'+F]=[\alpha_2,\,\alpha_2+1]$. Likewise $\alpha_2'=F'+G''$ with
+$G''\in[-G,\,1-G]$ gives $\alpha_2'\in[-\alpha_1-1,\,-\alpha_1]$.
+\end{proof}
+
+The pair $(\alpha_1,\alpha_2)$ therefore rotates: where $\alpha_2>0$ the first arm
+strictly increases, and where $\alpha_1>0$ the second strictly decreases. This is the
+differential form of the oscillator mechanism behind Theorem~\ref{thm:rc}, and it makes
+the sign hypothesis of Theorem~\ref{thm:mirrorstab} checkable from the arms alone. It
+does not make it removable:
+
+\begin{remark}[The sign hypothesis is not removable]\label{rem:disc}
+For $c\in(0,1)$ the function $H_c(\theta)=1-c+c(\sin\theta+\cos\theta)$, the support data
+of the disc of radius $1-c$ centred at $(c,c)$, satisfies the gauge, the mirror condition
+\eqref{eq:mirror} with $A=2c$, and $H_c+H_c''\equiv1-c\in(0,1)$, so both convexity and
+(RC) hold with margin. Yet $\alpha_1\equiv\alpha_2\equiv-c$: the set
+$\{\alpha_1<0\}$ is all of $[0,\pi/2)$ while $\{\alpha_2>0\}$ is empty, and the ordering
+fails identically. So no argument from the gauge, mirror, convexity and (RC) alone can
+produce the ordered anchored sign structure, and the hypothesis in
+Theorem~\ref{thm:mirrorstab} is essential at the level of the function domain. Whether
+every \emph{sofa-realizable} cap datum satisfies it is open.
+\end{remark}
+
+\begin{proposition}[An explicit ball inside the domain]\label{prop:ball}
+Let $r_0=\tfrac1{20}$. Every $\eta$ with $\eta(0)=\eta(\pi/2)=0$, satisfying the mirror
+condition, and with $\max(\|\eta\|_\infty,\|\eta'\|_\infty,\|\eta''\|_\infty)\le r_0$,
+gives $H=H_\Sig+\eta$ satisfying (RC), $M(H)<\tfrac12$, and the sign hypothesis of
+Theorem~\ref{thm:mirrorstab} along the entire segment $[H_\Sig,H]$. In particular the
+stability bound applies to every connected ambidextrous sofa with such cap data.
+\end{proposition}
+
+\begin{proof}
+(RC): $\max(H_\Sig+H_\Sig'')_{\mathrm{ac}}=\tfrac34f_1\sqrt{4-2\sqrt2}\,
+\cos(\tfrac\beta2+\tfrac\pi8)=0.8389\ldots$ in closed form, and
+$\|\eta+\eta''\|_\infty\le2r_0=0.1\le0.1611$. Ceiling: $M(\Sig)=0.38784\ldots$ in closed
+form, and $|\delta c_y|\le\|\eta\|_\infty(\sin t+\cos t)\le\sqrt2\,r_0=0.0708$, so
+$M(H)\le0.4586<\tfrac12$. Signs: the perturbations obey
+$|\delta\alpha_i|\le\|\eta\|_\infty+\|\eta'\|_\infty\le2r_0=0.1$, and six margins of the
+unperturbed arms are certified on grids of spacing $h=5\cdot10^{-4}$ with the Lipschitz
+constant $L=2$ supplied by Lemma~\ref{lem:sandwich}: writing $S:=\sup(|\alpha_1|\vee
+|\alpha_2|)$, the sandwich gives $\sup|\alpha_i'|\le S+1$, and the grid maximum $0.7506$
+bootstraps to $S\le0.7506+(S+1)h/2$, hence $S\le0.7513$ and $L\le1.76\le2$. The certified
+margins are: $\alpha_1\le-g$ on $[10^{-3},\beta-d]$ and $\alpha_1\ge g$ on
+$[\beta+d,\pi/2]$; $\alpha_2\ge g$ on $[10^{-3},\pi/2-\beta-d]$ and $\alpha_2\le-g$ on
+$[\pi/2-\beta+d,\pi/2]$; and $\alpha_2\ge0.5975$, $\alpha_1\ge0.5975$ on the windows
+$[\beta-d,\beta+d]$, $[\pi/2-\beta-d,\pi/2-\beta+d]$ respectively, with $d=0.15$ and
+$g=0.1224>2r_0$. Outside the windows the perturbed arms keep their signs. Inside
+$\alpha_1$'s window, Lemma~\ref{lem:sandwich} gives
+$\alpha_1'\ge\alpha_2\ge0.5975-0.1>0$ for the perturbed data, so $\alpha_1$ crosses zero
+exactly once there; likewise $\alpha_2'\le-\alpha_1\le-(0.5975-0.1)<0$ in its window. So
+$\{\alpha_1<0\}=[0,\tau_1)$ with $\tau_1<\beta+d\le\pi/4$ and
+$\{\alpha_2>0\}=[0,\tau_2)$ with $\tau_2>\pi/2-\beta-d>\beta+d$, ordered and anchored.
+Replacing $\eta$ by $s\eta$, $s\in[0,1]$, only shrinks the perturbation, so the same
+holds along the segment.
+\end{proof}
+
+The grid evaluations use double precision; the margins exceed the evaluation error by
+eleven orders of magnitude, and the Lipschitz constant is proved, not sampled. This
+replaces, in the load-bearing direction, the numerical statement that $\mathcal D$ is a
+$C^2$-neighbourhood: the domain \emph{contains} the explicit $C^2$-ball of radius
+$\tfrac1{20}$ within the mirror class. The outer containment (that the radius along
+$\sin(2k\theta)$ shrinks like $k^{-2}$) remains a measurement.
 
 The hypotheses of Theorem~\ref{thm:mirrorstab} are non-perturbative: no smallness of
 $H-H_\Sig$ is assumed, and the class contains data as far from $\Sig$ as the mirror caps
