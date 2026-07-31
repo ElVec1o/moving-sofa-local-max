@@ -105,7 +105,10 @@ proof; **HEURISTIC** = computational evidence only.
 | 72 | **Finite-angle relaxation.** $\lvert S\rvert\le\sup\lvert\bigcap L(t_i,c_i)\cap\bigcap R(s_j,d_j)\rvert$ over all free placements, for any finite angle sets — the Kallus–Romik construction transferred to the ambidextrous problem, where it has not been applied. No hypotheses | PROVED |
 | 73 | At three angles per side the supremum is $\ge2\sqrt2-1=1.8284271$, so no bound below that is obtainable there | PROVED |
 | 74 | **Cap lemma.** A unit square with horizontal and vertical diagonals meets a width-1 horizontal strip in area $\le\sqrt2-\tfrac12$. The two $\pi/4$ hallways' perpendicular arm pairs are exactly such squares, and $2(\sqrt2-\tfrac12)=2\sqrt2-1$ — the observed optimum splits into exactly two components of $\sqrt2-\tfrac12$ each | PROVED |
-| 75 | **Three objects suffice**: a sofa lies in the incoming corridor strip, so $A_{\text{ambi}}\le\sup\lvert\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\rvert$, measured $=2\sqrt2-1$ over 220 starts in 4 parameters. Proving $\le$ gives the bound outright. Hammersley's $2\sqrt2$ is the same construction with one hallway; the second handedness replaces two parallelograms of area $\sqrt2$ by two caps of area $\sqrt2-\tfrac12$, removing exactly $1$ | CONJECTURE (the inequality) |
+| 75 | **The bound is one-dimensional.** In rotated coordinates $u=\langle p,\mu\rangle$, $v=\langle p,\nu\rangle$ both $\pi/4$ hallways are axis-aligned and their intersection is a **rectangle less two opposite quadrants**; the corridor is the diagonal band $0\le u+v\le\sqrt2$, so the area is $\tfrac12\int_0^{\sqrt2}\ell(s)\,ds$ with $\ell$ piecewise linear and explicit. Verified against polygons to $2.5\cdot10^{-11}$ | PROVED |
+| 76 | **The extremum, exactly**: at $a=a'=b=b'=\sqrt2/4$ (both corners coincident at mid-corridor height) $\ell(s)=4-4\lvert s-\tfrac{\sqrt2}2\rvert$ and the area is exactly $2\sqrt2-1$. The crude $\ell\le4$ gives Hammersley's $2\sqrt2$ inside the same formula, so the whole one-corner/ambidextrous gap is the term $4\lvert\delta\rvert$ | PROVED |
+| 77 | Pointwise domination by the extremal profile is **false** (exceeded in $3.9\%$ of $4\cdot10^5$ random pairs, by up to $2.72$), so the conjecture is genuinely integral. After the translation invariance it is a piecewise-quadratic maximisation in **three** parameters | HEURISTIC (the refutation is exact) |
+| 78 | **Three objects suffice**: a sofa lies in the incoming corridor strip, so $A_{\text{ambi}}\le\sup\lvert\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\rvert$, measured $=2\sqrt2-1$ over 220 starts in 4 parameters. Proving $\le$ gives the bound outright. Hammersley's $2\sqrt2$ is the same construction with one hallway; the second handedness replaces two parallelograms of area $\sqrt2$ by two caps of area $\sqrt2-\tfrac12$, removing exactly $1$ | CONJECTURE (the inequality) |
 | 76 | **Four constraints suffice, and the construction recovers Hammersley.** $\sup\lvert L_0\cap L_{\pi/4}\cap L_{\pi/2}\rvert=2\sqrt2$ is Hammersley's classical one-corner bound, reproduced; adding the second handedness at $\pi/4$ to the corridor pair gives $2\sqrt2-1$. Since dropping constraints enlarges a supremum, proving $\lvert L_0\cap R_0\cap L_{\pi/4}\cap R_{\pi/4}\rvert\le2\sqrt2-1$ would give $A_{\text{ambi}}\le1.8284271$ **outright** — no branch and bound. Stated as a conjecture | PROVED (the reduction); CONJECTURE (the inequality) |
 | 74 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
@@ -206,7 +209,7 @@ signal.
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 111 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 114 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these.  ambi_sturm.py carries the decoupled

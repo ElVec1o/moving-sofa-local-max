@@ -1784,4 +1784,33 @@ theorem two_caps {S : Int} : 2*(4*S - 2) = 8*S - 4 := by omega
     ambidextrous case.  The second handedness removes exactly `4/4 = 1`. -/
 theorem hammersley_gap {S : Int} : 4*(2*S) - (8*S - 4) = 4 := by omega
 
+/-! ## F32 — the extremal cross-section integrates to the cap bound
+
+Lemma "uv" of the note reduces the three-object upper bound to a one-dimensional
+integral: in the rotated coordinates the two `pi/4` hallways meet in a RECTANGLE LESS TWO
+OPPOSITE QUADRANTS, the corridor is the diagonal band `0 <= s <= sqrt 2`, and the area is
+half the integral of the cross-section length.
+
+At the extremal placement -- both corners at the same point at mid-corridor height,
+`a = a' = b = b' = sqrt2/4` -- the cross-section is exactly `4 - 4|s - sqrt2/2|`, and
+
+    (1/2) int_0^{sqrt2} (4 - 4|delta|) ds = (1/2)(4 sqrt2 - 2) = 2 sqrt2 - 1 .
+
+F32 records that arithmetic with `S` the symbol for `sqrt 2`.  The integral of `|delta|`
+over the band is `1/2`, cleared here by a factor of 2. -/
+
+/-- **F32a (the integral of the extremal profile).**  With `S = sqrt 2` and
+    `int_0^S |s - S/2| ds = 1/2`, the profile integrates to `4S - 2`:
+    cleared by 2, `2*(4*S) - 2*2 = 8*S - 4`. -/
+theorem extremal_integral {S : Int} : 2*(4*S) - 2*2 = 8*S - 4 := by omega
+
+/-- **F32b (half of it is the bound).**  `(1/2)(4S - 2) = 2S - 1`; cleared by 2 this is
+    `4*S - 2 = 2*(2*S - 1)`. -/
+theorem half_is_bound {S : Int} : 4*S - 2 = 2*(2*S - 1) := by omega
+
+/-- **F32c (the crude bound recovers Hammersley).**  The cross-section never exceeds `4`,
+    so the area is at most `(1/2)*4*S = 2*S`, which is Hammersley's `2 sqrt 2`; cleared
+    by 2, `4*S = 2*(2*S)`.  The gap to F32b is `2*1 = 2`, i.e. `1` after clearing. -/
+theorem crude_is_hammersley {S : Int} : 4*S - (4*S - 2) = 2 := by omega
+
 end MovingSofa

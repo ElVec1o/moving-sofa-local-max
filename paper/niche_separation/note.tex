@@ -1760,12 +1760,78 @@ splits into exactly two connected components, each of area $0.914213562=\sqrt2-\
 one for each perpendicular pair, with the two parallel pairs empty. The corners sit at
 heights $0.995169$ and $0.004831$, symmetric about the midline.
 
+The conjecture below reduces to a one-dimensional problem. Let $\mu=(1,1)/\sqrt2$,
+$\nu=(-1,1)/\sqrt2$ and use the orthonormal coordinates $u=\langle p,\mu\rangle$,
+$v=\langle p,\nu\rangle$; write $a=\langle c,\mu\rangle$, $a'=\langle c,\nu\rangle$,
+$b=\langle d,\mu\rangle$, $b'=\langle d,\nu\rangle$.
+
+\begin{lemma}[Rotated coordinates]\label{lem:uv}
+In these coordinates both hallways are axis-aligned and
+\[
+  L_{\pi/4}(c)\cap R_{\pi/4}(d)
+  =\bigl([b-1,a+1]\times[b'-1,a'+1]\bigr)\setminus
+   \bigl(\{u<a,\ v<a'\}\cup\{u>b,\ v>b'\}\bigr),
+\]
+a rectangle less two opposite quadrants, while $\mathcal S=\{0\le u+v\le\sqrt2\}$.
+Consequently, with $s=u+v$ and $t=u-v$,
+\begin{equation}\label{eq:xsec}
+  \bigl|\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|
+  =\tfrac12\int_0^{\sqrt2}\ell(s)\,ds ,
+\end{equation}
+where $\ell(s)$ is the length of
+$\bigl[\max(p,r)-2,\ \min(q,w)+2\bigr]\setminus\bigl((p,q)\cup(r,w)\bigr)$ with
+$p=s-2a'$, $q=2a-s$, $r=2b-s$, $w=s-2b'$. In particular $\ell$ is piecewise linear in
+$s$, and the two removed intervals are nonempty exactly for $s<a+a'$ and $s>b+b'$
+respectively.
+\end{lemma}
+
+\begin{proof}
+$L_{\pi/4}(c)=\{u\le a+1,v\le a'+1\}\setminus\{u<a,v<a'\}$ and
+$R_{\pi/4}(d)=\{u\ge b-1,v\ge b'-1\}\setminus\{u>b,v>b'\}$ directly from the definitions,
+since reflection carries $\mu,\nu$ to $-\nu,-\mu$. The cross-section of the rectangle at
+level $s$ is $[\max(p,r)-2,\min(q,w)+2]$ in $t$, the two quadrants cut out $(p,q)$ and
+$(r,w)$, and $du\,dv=\tfrac12\,ds\,dt$.
+\end{proof}
+
+Formula \eqref{eq:xsec} agrees with direct polygon computation to $2.5\cdot10^{-11}$ on
+test placements. The crude bound $\ell\le4$ recovers Hammersley: it gives
+$\tfrac12\cdot4\sqrt2=2\sqrt2$. The conjectured value is attained, and can be computed
+exactly.
+
+\begin{proposition}[The extremal configuration]\label{prop:extremal}
+At $a=a'=b=b'=\sqrt2/4$, that is with both corners at the same point at mid-corridor
+height, $\ell(s)=4-4\bigl|s-\tfrac{\sqrt2}2\bigr|$ and \eqref{eq:xsec} equals exactly
+$2\sqrt2-1$.
+\end{proposition}
+
+\begin{proof}
+Put $\delta=s-\sqrt2/2$. Then $p=w=\delta$ and $q=r=-\delta$, so the outer interval is
+$[|\delta|-2,\,2-|\delta|]$, of length $4-2|\delta|$. Exactly one of $(p,q)=(\delta,-\delta)$
+and $(r,w)=(-\delta,\delta)$ is nonempty, according to the sign of $\delta$, and it has
+length $2|\delta|$ and lies inside the outer interval because $|\delta|\le\sqrt2/2<1$.
+Hence $\ell=4-4|\delta|$ and
+$\tfrac12\int_0^{\sqrt2}\bigl(4-4|\delta|\bigr)ds=\tfrac12\bigl(4\sqrt2-4\cdot\tfrac12\bigr)
+=2\sqrt2-1$.
+\end{proof}
+
+A search of $600$ multistarts over $[-3,3]^4$ in exact piecewise-linear arithmetic returns
+$1.828427124746$, agreeing with $2\sqrt2-1$ to $2.7\cdot10^{-15}$, and no configuration
+exceeding it was found.
+
 \begin{conjecture}\label{conj:three}
 $\bigl|\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\le2\sqrt2-1$ for all $c,d$.
 \end{conjecture}
 
 By \eqref{eq:three} this would give $A_{\mathrm{ambi}}\le2\sqrt2-1=1.8284271\ldots$
-outright, with no branch and bound and no further angles. What remains is to show the two
+outright, with no branch and bound and no further angles. By Lemma~\ref{lem:uv} it is
+equivalent to a bound on the one-dimensional integral \eqref{eq:xsec}, a piecewise
+quadratic function of three essential parameters, since
+$(a,a',b,b')\mapsto(a+\varepsilon,a'-\varepsilon,b+\varepsilon,b'-\varepsilon)$ leaves the
+area unchanged. It is not a pointwise statement: the profile $4-4|s-\sqrt2/2|$ of
+Proposition~\ref{prop:extremal} does \emph{not} dominate $\ell$, and among $4\cdot10^5$
+random parameter and level pairs it is exceeded in $3.9\%$ of them, by up to $2.72$. Any
+proof must therefore use the integral, trading an excess at some levels against a deficit
+at others. What remains is to show the two
 parallel pairs cannot add: each is an intersection of two arms with the same normal, hence
 a strip, and the four pieces are linked because the two arms of one hallway share its
 corner. Lemma~\ref{lem:cap} bounds the two perpendicular pairs, which is where the value

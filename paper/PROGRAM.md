@@ -1,3 +1,62 @@
+## 🎆🎆 THE UPPER-BOUND PROBLEM IS NOW ONE-DIMENSIONAL, AND THE EXTREMUM IS EXACT
+
+### 🎆 THE REDUCTION.  Rotated coordinates turn it into a rectangle minus two quadrants.
+
+Put mu = (1,1)/sqrt2, nu = (-1,1)/sqrt2 and use u = <p,mu>, v = <p,nu>.  Reflection carries
+mu, nu to -nu, -mu, so BOTH 45-degree hallways become axis-aligned and
+
+    L45(c) n R45(d) = [b-1,a+1] x [b'-1,a'+1]  \  ( {u<a,v<a'} u {u>b,v>b'} )
+
+-- a RECTANGLE LESS TWO OPPOSITE QUADRANTS -- while the corridor becomes the diagonal band
+0 <= u+v <= sqrt2.  With s = u+v, t = u-v and du dv = (1/2) ds dt,
+
+    area = (1/2) int_0^{sqrt2} l(s) ds ,
+
+l(s) = length of [max(p,r)-2, min(q,w)+2] \ ((p,q) u (r,w)),  p = s-2a', q = 2a-s,
+r = 2b-s, w = s-2b'.  All four are linear in s, so l is PIECEWISE LINEAR, and the two
+removed intervals are nonempty exactly for s < a+a' and s > b+b'.
+
+VERIFIED against direct polygon computation to 2.5e-11 on five placements.  A 2-D polygon
+problem is now a 1-D integral with an explicit formula and no geometry library.
+
+🔴 A SIGN I GOT WRONG FIRST.  I initially read the removed quadrant as active for
+s > a+a'; it is active for s < a+a' (the lower-left quadrant sits BELOW its apex level).
+The wrong sign predicted the quadrants remove almost nothing at the optimum, hence an area
+of 3.318 against the measured 1.828.  The contradiction is what exposed it.
+
+### 🎆 THE EXTREMUM, EXACTLY, BY HAND
+
+At a = a' = b = b' = sqrt2/4 -- both corners at the SAME point at mid-corridor height
+y = 1/2 -- write delta = s - sqrt2/2.  Then p = w = delta and q = r = -delta, so the outer
+interval is [|delta|-2, 2-|delta|] of length 4-2|delta|; exactly one removed interval is
+nonempty, of length 2|delta|, and it lies inside because |delta| <= sqrt2/2 < 1.  Hence
+
+    l(s) = 4 - 4|delta| ,   area = (1/2)(4 sqrt2 - 4 * 1/2) = 2 sqrt2 - 1 .   EXACT.
+
+And the crude bound l <= 4 gives (1/2) * 4 * sqrt2 = 2 sqrt2 -- Hammersley, inside the same
+formula.  The whole gap between the one-corner and ambidextrous constants is the term
+4|delta|.
+
+600 multistarts over [-3,3]^4 in exact piecewise-linear arithmetic return 1.828427124746,
+matching 2 sqrt2 - 1 to 2.7e-15, with nothing exceeding it.
+
+### 💧 POINTWISE DOMINATION IS FALSE, so the bound is genuinely integral
+
+The obvious route -- show l(s) <= 4 - 4|s - sqrt2/2| for every placement and integrate --
+does NOT work.  Over 400000 random (parameter, level) pairs the extremal profile is
+exceeded in 3.9% of them, by up to 2.72.  Any proof must trade an excess at some levels
+against a deficit at others, i.e. use the integral.  Recorded so the route is not retried.
+
+### Where the conjecture now sits
+
+By the translation invariance (a,a',b,b') -> (a+e, a'-e, b+e, b'-e) the problem has THREE
+essential parameters, and the objective is an explicit piecewise-quadratic function of
+them.  That is a far smaller object than the 18-parameter polygon optimisation this
+started as, and it is the natural target for either a hand case-analysis or an interval
+certification.  The conjecture is NOT proved and A_ambi <= 2 sqrt2 - 1 is NOT claimed.
+
+Lean F32: extremal_integral, half_is_bound, crude_is_hammersley.  114 theorems, no sorry.
+
 ## 🎆🎆 THE CONSTANT IS EXPLAINED: 2 sqrt(2) - 1 = 2 (sqrt(2) - 1/2), AND THE TARGET IS THREE OBJECTS
 
 ### The reduction goes further than four constraints: THREE OBJECTS

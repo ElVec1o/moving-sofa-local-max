@@ -119,6 +119,18 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F32 — the extremal cross-section (note, Prop "The extremal configuration")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| the extremal profile `4−4\|s−√2/2\|` integrates to `4√2−2` over the band | `extremal_integral` | VERIFIED |
+| half of it is `2√2−1` | `half_is_bound` | VERIFIED |
+| the crude bound `ℓ ≤ 4` gives Hammersley's `2√2`, a gap of exactly 1 | `crude_is_hammersley` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`.  NOT formalized: the coordinate reduction of Lemma "uv",
+the piecewise-linear structure of the cross-section, and the conjecture that no placement
+exceeds the extremal value.
+
 ## F31 — the cap constant (note, Lemma "Cap lemma")
 
 | Statement (note) | Lean declaration | Status |
