@@ -1758,4 +1758,30 @@ theorem arm2_sandwich {G G2 F' : Int} (hrc : G2 + G ≤ 1) (hcx : 0 ≤ G2 + G) 
     convexity and (RC) with margin, yet its arms are identically `-c`. -/
 theorem disc_curvature {c S : Int} : (1 - c + c*S) + (-(c*S)) = 1 - c := by omega
 
+/-! ## F31 — the cap constant
+
+The finite-angle upper bound for the ambidextrous problem turns on one plane-geometry
+constant.  All four arms of the two `pi/4` hallways are strips of width 1 whose normals
+are `(1,1)/sqrt2` or `(-1,1)/sqrt2`; two arms from different hallways with perpendicular
+normals meet in a unit square whose diagonals are horizontal and vertical.  Such a square
+has vertical extent `sqrt2 > 1`, so the corridor strip of width 1 cuts two caps off it.
+The cap above height `h` from the centre has area `1/2 - sqrt2 h + h^2`, so the strip
+retains `1 - 2(1/2 - sqrt2/2 + 1/4) = sqrt2 - 1/2`, and twice that is `2 sqrt2 - 1`.
+
+F31 records the arithmetic with `S` the symbol for `sqrt 2`, cleared of denominators by
+a factor of 4 so that everything is integral. -/
+
+/-- **F31a (the retained area, cleared by 4).**  `4*(1 - 2*(1/2 - S/2 + 1/4)) = 4*S - 2`,
+    i.e. the strip retains `sqrt2 - 1/2` of the square. -/
+theorem cap_area {S : Int} : 4 - 2*(2 - 2*S + 1) = 4*S - 2 := by omega
+
+/-- **F31b (twice the cap is the bound).**  `2*(4*S - 2) = 8*S - 4`, i.e.
+    `2*(sqrt2 - 1/2) = 2*sqrt2 - 1` after dividing by 4. -/
+theorem two_caps {S : Int} : 2*(4*S - 2) = 8*S - 4 := by omega
+
+/-- **F31c (Hammersley's value, same normalisation).**  One `pi/4` hallway gives two
+    parallelograms of area `sqrt2` each: `4*(2*S) = 8*S`, against `8*S - 4` for the
+    ambidextrous case.  The second handedness removes exactly `4/4 = 1`. -/
+theorem hammersley_gap {S : Int} : 4*(2*S) - (8*S - 4) = 4 := by omega
+
 end MovingSofa

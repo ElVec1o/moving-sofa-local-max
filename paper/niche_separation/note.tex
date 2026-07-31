@@ -8,6 +8,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{definition}[theorem]{Definition}
 
@@ -1717,8 +1718,61 @@ An explicit placement attaining it is recorded in the accompanying computation; 
 one placement suffices.
 \end{proof}
 
-Four of the six constraints already force this value, and the surrounding structure is
-classical.
+Three objects already force this value, the surrounding structure is classical, and the
+constant has an exact geometric meaning.
+
+A moving sofa lies in the incoming straight corridor before it reaches the corner, so
+$S\subseteq\mathcal S$ for a strip $\mathcal S$ of width $1$; an ambidextrous one meets a
+$\pi/4$ hallway of each handedness. Hence
+\begin{equation}\label{eq:three}
+  |S|\ \le\ \sup_{c,d}\ \bigl|\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr| .
+\end{equation}
+With only $L_{\pi/4}$ this is Hammersley's bound: each arm of that hallway is a strip of
+width $1$ at $\pi/4$ to $\mathcal S$, meeting it in a parallelogram of area
+$1/\sin(\pi/4)=\sqrt2$, so $|S|\le2\sqrt2$. The second handedness changes the geometry,
+and the following is what the constant $2\sqrt2-1$ measures.
+
+\begin{lemma}[Cap lemma]\label{lem:cap}
+Let $T$ be a unit square whose diagonals are horizontal and vertical, and $\mathcal S$ a
+horizontal strip of width $1$. Then $|T\cap\mathcal S|\le\sqrt2-\tfrac12$, with equality
+when the strip is centred on $T$.
+\end{lemma}
+
+\begin{proof}
+$T$ has vertical extent $\sqrt2>1$, and its horizontal cross-section at height $y$ from
+the centre has length $\sqrt2-2|y|$ for $|y|\le\sqrt2/2$. The cap above height $h$ has
+area $\int_h^{\sqrt2/2}(\sqrt2-2y)\,dy=\tfrac12-\sqrt2\,h+h^2$, decreasing in $h$ on
+$[0,\sqrt2/2]$, so a strip of width $1$ removes least when centred, at $h=\tfrac12$:
+\[
+  |T\cap\mathcal S|\ \le\ 1-2\bigl(\tfrac12-\tfrac{\sqrt2}2+\tfrac14\bigr)=\sqrt2-\tfrac12 . \qedhere
+\]
+\end{proof}
+
+All four arms of the two $\pi/4$ hallways are strips of width $1$ with normal
+$(1,1)/\sqrt2$ or $(-1,1)/\sqrt2$. Two arms from different hallways with perpendicular
+normals meet in exactly such a square, so each perpendicular pair contributes at most
+$\sqrt2-\tfrac12$ by Lemma~\ref{lem:cap}, and
+\[
+  2\bigl(\sqrt2-\tfrac12\bigr)=2\sqrt2-1 .
+\]
+This is not merely numerology: the maximising configuration found for \eqref{eq:three}
+splits into exactly two connected components, each of area $0.914213562=\sqrt2-\tfrac12$,
+one for each perpendicular pair, with the two parallel pairs empty. The corners sit at
+heights $0.995169$ and $0.004831$, symmetric about the midline.
+
+\begin{conjecture}\label{conj:three}
+$\bigl|\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\le2\sqrt2-1$ for all $c,d$.
+\end{conjecture}
+
+By \eqref{eq:three} this would give $A_{\mathrm{ambi}}\le2\sqrt2-1=1.8284271\ldots$
+outright, with no branch and bound and no further angles. What remains is to show the two
+parallel pairs cannot add: each is an intersection of two arms with the same normal, hence
+a strip, and the four pieces are linked because the two arms of one hallway share its
+corner. Lemma~\ref{lem:cap} bounds the two perpendicular pairs, which is where the value
+comes from; the parallel pairs are empty at the optimum but not in general.
+
+Four of the six constraints of Proposition~\ref{prop:relax} also force this value, and the
+surrounding structure is classical.
 
 \begin{proposition}[Four constraints suffice, and they recover Hammersley]\label{prop:ham}
 Write $L_\theta$, $R_\theta$ for a left- and a right-turning hallway at angle $\theta$,

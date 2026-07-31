@@ -1,3 +1,68 @@
+## 🎆🎆 THE CONSTANT IS EXPLAINED: 2 sqrt(2) - 1 = 2 (sqrt(2) - 1/2), AND THE TARGET IS THREE OBJECTS
+
+### The reduction goes further than four constraints: THREE OBJECTS
+
+A moving sofa lies in the incoming straight corridor before it reaches the corner, so
+S is inside a STRIP of width 1 -- that is standard and needs no relaxation.  An
+ambidextrous sofa meets a pi/4 hallway of EACH handedness.  Hence
+
+    A_ambi  <=  sup over c,d of  | strip n L45(c) n R45(d) |                    (3-OBJECT)
+
+Measured, over 220 multistarts in only FOUR parameters (a thorough search, unlike the
+18-parameter case that produced the earlier failed row):
+
+    sup >= 1.828427125 = 2 sqrt(2) - 1,  to 8.9e-15.
+
+Optimal placement c = (0.753027, 0.995169), d = (0.753027, 0.004831): the two corners sit
+at the top and bottom of the strip at the same x, symmetric about the midline.
+
+### 🎆 THE CAP LEMMA: where 2 sqrt(2) - 1 actually comes from.  PROVED.
+
+All four arms of the two pi/4 hallways are strips of width 1 with normal (1,1)/sqrt2 or
+(-1,1)/sqrt2.  Two arms from DIFFERENT hallways with PERPENDICULAR normals meet in a unit
+square whose diagonals are horizontal and vertical.  That square has vertical extent
+sqrt(2) > 1, so the corridor strip cuts two caps off it.
+
+  LEMMA (cap).  A unit square with horizontal and vertical diagonals meets a horizontal
+  strip of width 1 in area at most sqrt(2) - 1/2, with equality when centred.
+
+  Proof.  Cross-section at height y from the centre has length sqrt2 - 2|y|; the cap above
+  h has area 1/2 - sqrt2 h + h^2, decreasing in h, so the strip removes least when centred
+  at h = 1/2, leaving 1 - 2(1/2 - sqrt2/2 + 1/4) = sqrt(2) - 1/2.  QED
+
+  Numerically confirmed by scanning the vertical placement: max 0.914213562.
+
+  And 2 (sqrt(2) - 1/2) = 2 sqrt(2) - 1.
+
+THIS IS NOT NUMEROLOGY.  The maximising configuration splits into EXACTLY TWO connected
+components, each of area 0.914213562 = sqrt(2) - 1/2 -- one per perpendicular arm pair,
+with the two PARALLEL pairs empty.  The observed optimum IS two caps.
+
+### The Hammersley comparison, now exact
+
+With only ONE pi/4 hallway, each of its two arms meets the strip in a parallelogram of
+area 1/sin(pi/4) = sqrt(2), giving 2 sqrt(2) -- Hammersley's classical one-corner bound,
+which the machinery independently reproduces from {L0,L45,L90}.  The second handedness
+replaces two parallelograms of area sqrt(2) by two caps of area sqrt(2) - 1/2, removing
+exactly 2 x 1/2 = 1.
+
+    one corner:     2 x sqrt(2)         = 2.828427   (Hammersley, classical)
+    ambidextrous:   2 x (sqrt(2) - 1/2) = 1.828427   (conjectured)
+
+### What remains
+
+  CONJECTURE.  | strip n L45(c) n R45(d) | <= 2 sqrt(2) - 1  for all c, d.
+
+By (3-OBJECT) this gives A_ambi <= 1.8284271 OUTRIGHT.  The cap lemma bounds the two
+perpendicular pairs and supplies the constant.  What is missing is that the two PARALLEL
+pairs cannot add: each is an intersection of two arms with the SAME normal, hence a strip,
+and the four pieces are linked because the two arms of one hallway share its corner.  At
+the optimum the parallel pairs are empty; in general they are not.
+
+That is the whole remaining gap, and it is one statement in plane geometry.
+
+Lean F31 records the arithmetic: cap_area, two_caps, hammersley_gap.  111 theorems.
+
 ## 🎆🎆 FOUR CONSTRAINTS GIVE 2sqrt2 - 1, AND THE MACHINERY RECOVERS HAMMERSLEY
 
 ### 🎆 I11 REGRESSION SUCCESS: the construction reproduces a known classical bound

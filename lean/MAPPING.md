@@ -119,6 +119,18 @@ Recorded so the VERIFIED label is not read as covering more than it does.
 Axioms `[propext, Quot.sound]`.  NOT formalized: that the boundary point with outer normal
 `μ_θ` is `H(θ)μ_θ + H'(θ)ν_θ`, and that the extreme point is unique — both are geometry.
 
+## F31 — the cap constant (note, Lemma "Cap lemma")
+
+| Statement (note) | Lean declaration | Status |
+|---|---|---|
+| the strip retains `sqrt2 - 1/2` of the rotated unit square (cleared by 4) | `cap_area` | VERIFIED |
+| twice the cap is `2 sqrt2 - 1` | `two_caps` | VERIFIED |
+| the second handedness removes exactly 1 from Hammersley's `2 sqrt2` | `hammersley_gap` | VERIFIED |
+
+Axioms `[propext, Quot.sound]`.  NOT formalized: the integration giving the cap area, the
+identification of the perpendicular arm pairs with rotated unit squares, and the
+conjecture that the two parallel pairs cannot add.
+
 ## F30 — the arm sandwich and the disc counterexample (note, Lemma "arm sandwich", Remark "disc")
 
 | Statement (note) | Lean declaration | Status |

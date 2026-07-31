@@ -104,7 +104,9 @@ proof; **HEURISTIC** = computational evidence only.
 | 71 | Σ's cell constant $\tfrac{73}{100}$ re-certified by the covering method alone (3074 boxes; control refused at $\tfrac{74}{100}$ with the failing box bracketing $c^\ast$): one certification method end to end | PROVED |
 | 72 | **Finite-angle relaxation.** $\lvert S\rvert\le\sup\lvert\bigcap L(t_i,c_i)\cap\bigcap R(s_j,d_j)\rvert$ over all free placements, for any finite angle sets — the Kallus–Romik construction transferred to the ambidextrous problem, where it has not been applied. No hypotheses | PROVED |
 | 73 | At three angles per side the supremum is $\ge2\sqrt2-1=1.8284271$, so no bound below that is obtainable there | PROVED |
-| 74 | **Four constraints suffice, and the construction recovers Hammersley.** $\sup\lvert L_0\cap L_{\pi/4}\cap L_{\pi/2}\rvert=2\sqrt2$ is Hammersley's classical one-corner bound, reproduced; adding the second handedness at $\pi/4$ to the corridor pair gives $2\sqrt2-1$. Since dropping constraints enlarges a supremum, proving $\lvert L_0\cap R_0\cap L_{\pi/4}\cap R_{\pi/4}\rvert\le2\sqrt2-1$ would give $A_{\text{ambi}}\le1.8284271$ **outright** — no branch and bound. Stated as a conjecture | PROVED (the reduction); CONJECTURE (the inequality) |
+| 74 | **Cap lemma.** A unit square with horizontal and vertical diagonals meets a width-1 horizontal strip in area $\le\sqrt2-\tfrac12$. The two $\pi/4$ hallways' perpendicular arm pairs are exactly such squares, and $2(\sqrt2-\tfrac12)=2\sqrt2-1$ — the observed optimum splits into exactly two components of $\sqrt2-\tfrac12$ each | PROVED |
+| 75 | **Three objects suffice**: a sofa lies in the incoming corridor strip, so $A_{\text{ambi}}\le\sup\lvert\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\rvert$, measured $=2\sqrt2-1$ over 220 starts in 4 parameters. Proving $\le$ gives the bound outright. Hammersley's $2\sqrt2$ is the same construction with one hallway; the second handedness replaces two parallelograms of area $\sqrt2$ by two caps of area $\sqrt2-\tfrac12$, removing exactly $1$ | CONJECTURE (the inequality) |
+| 76 | **Four constraints suffice, and the construction recovers Hammersley.** $\sup\lvert L_0\cap L_{\pi/4}\cap L_{\pi/2}\rvert=2\sqrt2$ is Hammersley's classical one-corner bound, reproduced; adding the second handedness at $\pi/4$ to the corridor pair gives $2\sqrt2-1$. Since dropping constraints enlarges a supremum, proving $\lvert L_0\cap R_0\cap L_{\pi/4}\cap R_{\pi/4}\rvert\le2\sqrt2-1$ would give $A_{\text{ambi}}\le1.8284271$ **outright** — no branch and bound. Stated as a conjecture | PROVED (the reduction); CONJECTURE (the inequality) |
 | 74 | **Optimality of $\Sigma$** | **not proved** ($\mathcal D$ is a $C^2$-neighbourhood of $\Sigma$; (RC) is sharp and Gerver's cap violates it) |
 
 **Attribution.** Result 7's ingredients $u^3+3u=2$ (equivalently
@@ -204,7 +206,7 @@ signal.
 ```
 paper/niche_separation/   THE PAPER (LaTeX + PDF)
 paper/PROGRAM.md          full research ledger, including every retraction
-lean/MovingSofa/          Lean 4 development, 108 theorems, no sorry
+lean/MovingSofa/          Lean 4 development, 111 theorems, no sorry
 lean/MAPPING.md           statement-to-declaration table, with per-axiom notes
 algorithm/rigorous/ambi_* computations for the paper; every number is regenerated
                           by one of these.  ambi_sturm.py carries the decoupled
