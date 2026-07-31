@@ -1,3 +1,62 @@
+## 🎆🎆 FOUR CONSTRAINTS GIVE 2sqrt2 - 1, AND THE MACHINERY RECOVERS HAMMERSLEY
+
+### 🎆 I11 REGRESSION SUCCESS: the construction reproduces a known classical bound
+
+Hammersley (1968) proved the ONE-CORNER moving sofa has area at most 2 sqrt(2) = 2.828427.
+Running the finite-angle machinery on a PURE one-corner subset (left-turning hallways only):
+
+    L0, L45           sup >= 4.242641      (too few constraints)
+    L0, L45, L90      sup >= 2.828427      = 2 sqrt(2)   HAMMERSLEY, recovered
+
+The framework reproduces the classical elementary bound exactly, from three hallways.  That
+is the regression check the invention rules demand before trusting new machinery on a new
+problem, and it passes.
+
+### 🎆 THE AMBIDEXTROUS ANALOGUE NEEDS ONLY FOUR CONSTRAINTS
+
+    L0, R0                     sup >= 26.0        (corridor pair alone: weak)
+    L0, R0, L45                sup >= 2.828427    = 2 sqrt(2)  (still Hammersley)
+    L0, R0, L45, R45           sup >= 1.828427    = 2 sqrt(2) - 1
+
+Adding the SECOND HANDEDNESS at 45 degrees to the corridor pair removes exactly 1.  Since
+dropping constraints only ENLARGES a supremum, the four-constraint value bounds the
+six-constraint one, so
+
+    CONJECTURE (four-constraint bound).  |L0 n R0 n L45 n R45| <= 2 sqrt(2) - 1
+    for all placements.
+
+A proof of this gives A_ambi <= 2 sqrt(2) - 1 = 1.8284271 OUTRIGHT -- no branch and bound,
+no other angles, no interval arithmetic.  That is a far more tractable target than the
+full global optimisation, and it is the shape of Hammersley's own argument, which handles
+three hallways by hand.
+
+EVIDENCE for the conjecture: two structurally DIFFERENT placements attain 2 sqrt(2) - 1
+exactly (one splitting the region into two congruent pieces of area sqrt(2) - 1/2, one
+leaving it connected); the value has a clean closed form; and the same construction returns
+Hammersley's 2 sqrt(2) on the one-corner subset.
+
+### 🔴 A ROW THAT IS NOT A BOUND, AND WHY
+
+    all six constraints        "sup >= 1.634048"
+
+1.634048 is BELOW |Sigma| = 1.644955, and Sigma is admissible, so this is a FAILED
+optimisation, not a supremum estimate.  Ten seeds in an 18-parameter Nelder-Mead is not
+enough.  Recorded because the number looks like an improvement and is not one: only rows
+where the optimiser reaches at least Sigma's own admissible configuration carry
+information, and the four-constraint rows do (they exceed 1.7668).
+
+### Where the significance now sits
+
+The route to an unconditional ambidextrous upper bound has narrowed from "branch and bound
+over an 18-parameter box in interval arithmetic" (a Rust-scale project) to "prove one
+inequality about four hallways" (a geometry problem of Hammersley's own difficulty).  That
+is the single biggest change in the significance outlook this project has had.  It is NOT
+done, and A_ambi <= 2 sqrt(2) - 1 is NOT claimed.
+
+Proposition "ham" (the four-constraint reduction and the Hammersley recovery) and
+Proposition "relax3" are in the note; the four-constraint inequality is stated as a
+labelled conjecture.
+
 ## 🎆 A GLOBAL ROUTE OPENED: THE FINITE-ANGLE RELAXATION FOR THE AMBIDEXTROUS PROBLEM
 
 Everything in this project so far is LOCAL.  This block opens the only route on the board
