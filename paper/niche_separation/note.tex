@@ -73,11 +73,11 @@ the sweep fails to be injective; in particular the construction does not recover
 sofa, whose cap violates (RC). Separately, a two-hallway relaxation gives the first
 upper bound specific to the ambidextrous problem: the area of a left- and a right-turning
 hallway at angle $\pi/4$ is bounded in closed form by two translates of one explicit
-profile integral, giving $A_{\mathrm{ambi}}\le2\sqrt2-1=1.8284271\ldots$ whenever the two
-corner offsets $\langle d-c,\mu\rangle$ and $\langle d-c,\nu\rangle$ are nonpositive, as
-they are for $\Sig$. The bound is attained, and improves on the $2.2195$ inherited from
-the one-corner theorem; with Romik's sofa it brackets the answer between $1.6449552$ and
-$1.8284271$. Optimality of $\Sig$ remains open.
+profile integral, giving $|S|\le2\sqrt2-1=1.8284271\ldots$ for every ambidextrous sofa
+whose two corner offsets $\langle d-c,\mu\rangle$ and $\langle d-c,\nu\rangle$ at angle
+$\pi/4$ are nonpositive, as they are for $\Sig$. The bound is attained, and improves on
+the $2.2195$ inherited from the one-corner theorem, which is unconditional. Optimality of
+$\Sig$ remains open.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -1941,11 +1941,13 @@ unconditional bound $A_{\mathrm{ambi}}\le2\sqrt2-1$. Rule~7: this paragraph is
 
 Since Romik's sofa is ambidextrous and satisfies the hypothesis of
 Theorem~\ref{thm:upper} --- its two corners at angle $\pi/4$ coincide, so $\dmu=\dnu=0$
---- this brackets the answer on that region:
+--- the supremum over the sofas satisfying that hypothesis is bracketed:
 \[
-  1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\ 2\sqrt2-1=1.8284271\ldots,
+  1.6449552\ldots\ =\ A_R^\ast\ \le\ \sup\{|S|:\dmu\le0,\ \dnu\le0\}\ \le\
+  2\sqrt2-1=1.8284271\ldots,
 \]
-a factor of $1.1115$. The previously available bound was $2.2195\ldots$, inherited from
+a factor of $1.1115$. Without the hypothesis the best available bound is $2.2195\ldots$,
+inherited from
 \cite{Bae24} because an ambidextrous sofa is in particular a one-corner sofa; we have found
 no bound specific to the ambidextrous problem in the literature.
 
