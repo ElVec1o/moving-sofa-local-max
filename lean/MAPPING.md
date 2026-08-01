@@ -419,3 +419,30 @@ The 28512-box ball covering is gone from the mathematics, not merely from Lean, 
 loss, the closed forms of `C` beyond the band, and the reflection are all machine-checked.
 `lemmaE_verified` has no hypotheses. The only certificate still outside Lean anywhere in
 the project is the second variation (`thm:system`).
+
+## The second variation: elementary constant (`SecondVar.lean`)
+
+| Paper | Lean declaration | Status |
+|---|---|---|
+| decoupling on E₂: `(a+b)² ≥ λb² − ra²` | `decouple_E2` | VERIFIED (exact square `(a+(1−λ)b)²/(1−λ)`) |
+| decoupling on E₁: `(x−y)² ≤ (1+1/κ)x² + (1+κ)y²` | `decouple_E1` | VERIFIED (exact square `(x+κy)²/κ`) |
+| `prop:elem` assembly to `1/12` | `secondvar_assembly`, `secondvar_combined` | VERIFIED, with the five analytic inputs as hypotheses |
+| DD/DN Poincaré, half-Poincaré, tail cut | hypotheses `hW4, hW1, habs, hcut, hsub` | to discharge — Mathlib has no 1-D Poincaré today |
+
+`prop:elem` of the note is the new mathematics here: `(1/2)δ²Q ≤ −(1/12)‖η‖²` on the cell
+with NO transfer matrices and NO ball arithmetic — Rule 3 record: all seven chain steps
+hold on 600 random C¹ test functions; the decoupled eigenvalues at `(9/20, 1/4)` are
+`(2.689, 0.388)`, strictly above the chain's `(2/11, 369/4400)`, and a claim of `0.75 > c*`
+fails against the coupled form, as it must. The sharp `73/100` stays an arb certificate;
+what the elementary constant removes is any computer from the QUALITATIVE concavity.
+
+## The geometric reduction (`Reduction.lean`)
+
+| Piece | Lean declaration | Status |
+|---|---|---|
+| the placed region in rotated coordinates | `placedRegion` | defined |
+| fibres lie in the four-piece union | `fibre_subset_four_piece` | VERIFIED (lift of `four_piece`) |
+| `S ⊆ X ⟹ vol S ≤ vol X` | `area_mono` | VERIFIED |
+| the assembly to `vol S ≤ 2√2−1` | `reduction_assembly` | VERIFIED, given the two named obligations |
+| the slicing identity (Fubini in the rotated frame) | hypothesis `hslice` | to discharge |
+| sofa ⊆ placed region (two-motions argument) | hypothesis `hplace` | to discharge — needs the moving body formalised |

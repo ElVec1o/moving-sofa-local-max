@@ -2279,6 +2279,62 @@ Remark~\ref{thm:concave}. Treating each half as a \emph{single} weighted eigenva
 problem removes both losses; not splitting at all is better still and gives the exact
 value.
 
+\begin{proposition}[An elementary constant, no computer]\label{prop:elem}
+On the cell $\mathcal C$, for every $\eta$ with $\eta(0)=\eta(\pi/2)=0$,
+\[
+  \tfrac12\,\delta^2Q[\eta]\ \le\ -\tfrac1{12}\,\|\eta\|^2_{L^2(0,\pi)} ,
+\]
+by elementary inequalities alone: no transfer matrix, no oscillation argument, and no
+ball arithmetic anywhere in the proof.
+\end{proposition}
+
+\begin{proof}
+Run the decoupling of Theorem~\ref{thm:sharp} at $\lambda=\tfrac9{20}$,
+$\kappa=\tfrac14$, so $r=\tfrac9{11}$ and $q=5$, and bound the two halves by hand,
+using only $\beta\le\tfrac3{10}$ and $\tfrac\pi2\le1.5708$.
+
+\emph{Left half.} $w_L\ge1-\kappa=\tfrac34$ and $m_L\le2+r$, and the
+Dirichlet--Dirichlet Poincar\'e inequality on $[0,\tfrac\pi2]$ gives
+$\int p'^2\ge4\int p^2$, so
+\[
+  \int w_Lp'^2-\int m_Lp^2\ \ge\ \bigl[3-2-\tfrac9{11}\bigr]\int p^2
+  \ =\ \tfrac2{11}\int p^2 .
+\]
+
+\emph{Right half.} Write $c=\tfrac\pi2-\beta$ and $s=\lambda-q\beta^2/2$. Three
+elementary steps. The heavy mass sits on $[0,\beta)$, next to the Dirichlet end, so
+$q\int_0^\beta\eta^2\le q\tfrac{\beta^2}2\int_0^\beta\eta'^2\le\tfrac9{40}
+\int_0^{c}\eta'^2$ by the half-Poincar\'e inequality
+$\eta(t)^2\le t\int_0^t\eta'^2$; this absorbs the mass into the weight surplus and
+leaves $s=\tfrac9{20}-\tfrac9{40}=\tfrac9{40}$. The surplus converts to mass through
+the cut at $c$: by the same half-Poincar\'e inequality and
+$\eta(t)^2\le2\eta(c)^2+2\beta\int_c^{\pi/2}\eta'^2$ for $t\ge c$,
+\[
+  \int_0^{\pi/2}\eta^2\ \le\ \Bigl(\tfrac{c^2}2+2\beta c\Bigr)\int_0^{c}\eta'^2
+  +2\beta^2\int_c^{\pi/2}\eta'^2\ \le\ \tfrac{11}5\int_0^{c}\eta'^2
+  +\tfrac9{50}\int_c^{\pi/2}\eta'^2 ,
+\]
+so $\int_0^{c}\eta'^2\ge\tfrac5{11}\int\eta^2-\tfrac9{110}\int_c^{\pi/2}\eta'^2$.
+With the Dirichlet--Neumann Poincar\'e inequality $\int\eta'^2\ge\int\eta^2$ on
+$[0,\tfrac\pi2]$,
+\[
+  \int w_R\eta'^2-\int m_R\eta^2\ \ge\
+  \Bigl(1-\tfrac9{40}\cdot\tfrac9{110}\Bigr)\int\eta'^2
+  -\Bigl(1-\tfrac9{40}\cdot\tfrac5{11}\Bigr)\int\eta^2
+  \ \ge\ \tfrac{369}{4400}\int\eta^2 .
+\]
+Since $\tfrac{369}{4400}>\tfrac1{12}$ and $\tfrac2{11}>\tfrac1{12}$, the two halves give
+the claim. Every constant is rational and every inequality is Cauchy--Schwarz, a
+Poincar\'e inequality on an interval, or arithmetic.
+\end{proof}
+
+The constant is $11\%$ of the sharp $c^\ast$, and that is the price of dispensing with
+the transfer matrices: Theorem~\ref{thm:sharp} reaches $\tfrac23$ and
+Theorem~\ref{thm:system} the sharp $\tfrac{73}{100}$, both through certified
+evaluations. What Proposition~\ref{prop:elem} buys is qualitative: strict concavity of
+the form on the cell, hence the local maximality statements at $\Sigma$, no longer
+depends on any computation.
+
 \begin{theorem}[Concavity, sharp order]\label{thm:sharp}
 On the cell $\mathcal C$, for every $\eta$ with $\eta(0)=\eta(\pi/2)=0$,
 \begin{equation}\label{eq:sharp}
@@ -3096,10 +3152,21 @@ Hammersley's $2\sqrt2$.
 
 \verb|lake build| is clean with no \verb|sorry| across the development, and
 \verb|#print axioms| reports nothing beyond \verb|propext|, \verb|Quot.sound| and
-\verb|Classical.choice|. What is \emph{not} formalised is the second variation and the ball-arithmetic
-certificate of Theorem~\ref{thm:system}, the only computation the two-hallway bound no
-longer needs anywhere else; the label on that remains \textsc{proved}, not
-\textsc{verified}. Lemma~\ref{lem:profineq} is verified end to end: \verb|lemmaE_verified| carries no
+\verb|Classical.choice|. The second variation is partially formalised. Both decoupling inequalities of
+Theorem~\ref{thm:sharp} are verified outright, each as an exact square over the field
+(\verb|decouple_E2|, \verb|decouple_E1|), and the assembly of
+Proposition~\ref{prop:elem} from its analytic inputs to the constant $\tfrac1{12}$ is
+verified as pure arithmetic (\verb|secondvar_assembly|); the five inputs, three
+Poincar\'e inequalities on intervals together with the absorption and cut steps, are
+named hypotheses, since Mathlib at present has no one-dimensional Poincar\'e inequality.
+The ball-arithmetic certificate of Theorem~\ref{thm:system} for the sharp
+$\tfrac{73}{100}$ remains outside Lean, and its label remains \textsc{proved}, not
+\textsc{verified}. Of the geometric reduction, the placed region is defined
+(\verb|placedRegion|), its fibres are verified to lie in the four-piece union
+(\verb|fibre_subset_four_piece|, a lift of \verb|four_piece|), and
+\verb|reduction_assembly| derives $|S|\le2\sqrt2-1$ from two named obligations: the
+slicing identity for the region's area, and the containment of the sofa in a placed
+region. Lemma~\ref{lem:profineq} is verified end to end: \verb|lemmaE_verified| carries no
 hypotheses, and \verb|profile_bound_verified| is the lemma in its original $g$-form,
 $g(m_1)+g(m_2)+2\int F\le2(2\sqrt2-1)$ for every $m_1\le m_2$. The analytic inputs are
 discharged as follows: (L1) by \verb|L1_triangle| (extend the domain, split at the
