@@ -160,6 +160,13 @@ class, with no smallness of $H-H_\Sig$ assumed, $|T|\le A_R^\ast-\tfrac3{10}\|H-
 
 \subsection*{What is not proved, and why}
 
+What the local result addresses is Romik's own first open problem \cite[\S7]{Rom18}, which
+asks for a proof that Gerver's sofa and $\Sig$ are local maxima of the area functional in
+the one-corner and ambidextrous problems respectively. Romik established the first-order
+conditions for $\Sig$; the second-order statement has not been proved, and
+Theorem~\ref{thm:final} proves it only on the domain $\mathcal D$, so that problem stays
+open. For Gerver's sofa the corresponding question is settled a fortiori by \cite{Bae24}.
+
 Optimality of $\Sig$ remains open, and the obstructions are recorded rather than smoothed
 over. $V$ is the exact flux of the advancing sweep, so $V\ge|N|$ always by Reynolds'
 transport theorem (Proposition~\ref{prop:reynolds}) and $Q$ bounds nothing where the sweep
@@ -1311,12 +1318,15 @@ $\sigma(\pi/2)=\alpha_1(\pi/2)$ makes the face-1 segment empty and the condition
 \end{proof}
 
 \begin{remark}[Verification]\label{rem:rcnum}
-For $\Sig$ the absolutely continuous part of $H+H''$ attains its maximum at
-$\theta=\beta$ and at $\theta=\pi-\beta$, where second differences at steps
-$h=4\cdot10^{-4},2\cdot10^{-4},10^{-4},5\cdot10^{-5}$ give $0.8384751$, $0.8385252$,
-$0.8385503$, $0.8385629$, with Richardson extrapolations $0.8385419$, $0.8385586$,
-$0.8385672$. The sequence supports $0.8386$ as an upper bound but not more digits than
-that, so (RC) holds for $\Sig$ with margin at least $0.16$; the atom at $\theta=\pi/2$
+For $\Sig$ the absolutely continuous part of $H+H''$ attains its maximum at $\theta=\beta$
+and at $\theta=\pi-\beta$, where it equals
+\[
+  \tfrac34f_1\sqrt{4-2\sqrt2}\,\cos\bigl(\tfrac\beta2+\tfrac\pi8\bigr)
+  \ =\ 0.8388253\ldots
+\]
+in closed form, the value used in Proposition~\ref{prop:ball}, so (RC) holds for $\Sig$
+with margin $0.1611747\ldots$; second differences approach it from below and converge too
+slowly to confirm more than four digits, so the closed form is what is quoted; the atom at $\theta=\pi/2$
 has mass $1.1670498\ldots$, the ceiling facet length. The reduction \eqref{eq:osc} was
 checked against direct evaluation of $n(t-\tau)-\alpha_2(t)\sin\tau$ at several
 $(t,\tau)$, agreeing to $2.4\cdot10^{-5}$, the finite-difference floor for $H''$.
@@ -2072,9 +2082,20 @@ supremum:
   1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\
   2\sqrt2-1=1.8284271\ldots,
 \]
-a factor of $1.1116$. The previously available bound was $2.2195\ldots$, inherited from
-\cite{Bae24} because an ambidextrous sofa is in particular a one-corner sofa; we have found
-no bound specific to the ambidextrous problem in the literature.
+a factor of $1.1116$. The previously available bound was $2.2195\ldots$: an ambidextrous
+sofa is in particular a one-corner sofa, so it inherits whatever the one-corner problem
+gives, and since \cite{Bae24} that is Gerver's area itself. Before \cite{Bae24} the
+inherited value was the $2.37$ of \cite{KR18}.
+
+Improving on the inherited bound is a question Kallus and Romik put in print. Their
+concluding section observes that any one-corner upper bound applies to the ambidextrous
+variant, calls the gap between the bounds an appealing opportunity, and asks for their
+techniques to be extended to the ambidextrous setting so as to obtain better upper bounds
+on the ambidextrous moving sofa constant \cite[\S6]{KR18}. Theorem~\ref{thm:uncond}
+answers that question, though by evaluating a small relaxation in closed form rather than
+by extending their branch and bound. As of the most recent survey-level treatment
+\cite[Problem 6.63]{AE25}, which records the lower bound $1.6449\ldots$ and states that
+whether it is sharp remains open, no upper bound specific to the problem had been given.
 
 The constant $2\sqrt2-1$ cannot be improved by adding angles to this pair: it is attained,
 by Proposition~\ref{prop:extremal}, so it is exactly the value of the two-hallway
@@ -2082,8 +2103,18 @@ relaxation. The route to a smaller constant is more constraints, not a better es
 these.
 
 
-Four of the six constraints of Proposition~\ref{prop:relax} also force this value, and the
-surrounding structure is classical.
+The construction is not new, and its lineage should be stated. Relaxing a sofa to the
+intersection of finitely many placed hallways is Hammersley's idea \cite{Ham68} and is the
+framework of Kallus and Romik \cite{KR18}; the worked example following their Proposition~4
+evaluates the one-angle case in closed form, finds the optimum at $\alpha=\pi/4$, and
+recovers exactly Hammersley's $2\sqrt2$, which those authors describe as Hammersley's proof
+rewritten in their notation. What follows is the two-hallway ambidextrous analogue of that
+example. The novelty claimed here is the resulting bound, not the method that produces it:
+we know of no closed-form evaluation of a relaxation with more than one hallway, in either
+handedness, and Romik has described the multi-hallway maximum as very hard to obtain by
+hand, which is why \cite{KR18} passes to interval-arithmetic branch and bound.
+
+Four of the six constraints of Proposition~\ref{prop:relax} also force this value.
 
 \begin{proposition}[Four constraints suffice, and they recover Hammersley]\label{prop:ham}
 Write $L_\theta$, $R_\theta$ for a left- and a right-turning hallway at angle $\theta$,
@@ -2097,7 +2128,15 @@ the first being Hammersley's classical bound for the one-corner problem.
 
 The first equality is a regression check rather than a new result: it says the construction
 reproduces the known elementary bound $2\sqrt2$ for one corner, from three left-turning
-hallways. Adding the second handedness at $\pi/4$ to the corridor pair removes exactly $1$.
+hallways.
+
+That $2\sqrt2-1$ is Hammersley's constant less exactly $1$ is structural, not a
+coincidence, and Lemma~\ref{lem:cap} says where the $1$ goes. In Hammersley's
+configuration the strip meets the $\pi/4$-rotated corridor in two unit squares set on
+their diagonals, of total area $2\sqrt2$. Adding the oppositely-handed hallway at the same
+angle cuts a quadrant from each square, and Lemma~\ref{lem:cap} evaluates what survives in
+one of them as $\sqrt2-\tfrac12$. Two of those give $2\sqrt2-1$: each square loses exactly
+$\tfrac12$.
 Since dropping constraints only enlarges the supremum, the four-constraint value already
 bounds the six-constraint one, so a proof of
 \begin{equation}\label{eq:four}
@@ -3003,6 +3042,11 @@ problem}, Adv.\ Math.\ \textbf{340} (2018), 960--982.
 2nd ed., Cambridge Univ.\ Press, 2014.
 \bibitem{Rom18} D.~Romik, \emph{Differential equations and exact solutions in the moving
 sofa problem}, Exp.\ Math.\ \textbf{27} (2018), 316--330.
+\bibitem{Ham68} J.~M.~Hammersley, \emph{On the enfeeblement of mathematical skills by
+modern mathematics and by similar soft intellectual trash in schools and universities},
+Bull.\ Inst.\ Math.\ Appl.\ \textbf{4} (1968), 66--85.
+\bibitem{AE25} B.~Romera-Paredes et al., \emph{Mathematical exploration and discovery at
+scale}, arXiv:2511.02864, 2025.
 \end{thebibliography}
 
 \end{document}

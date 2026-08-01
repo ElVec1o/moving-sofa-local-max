@@ -8,3 +8,7 @@ name = "MovingSofa"
 [[lean_exe]]
 name = "movingsofa"
 root = "Main"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"

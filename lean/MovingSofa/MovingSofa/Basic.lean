@@ -1813,129 +1813,15 @@ theorem half_is_bound {S : Int} : 4*S - 2 = 2*(2*S - 1) := by omega
     by 2, `4*S = 2*(2*S)`.  The gap to F32b is `2*1 = 2`, i.e. `1` after clearing. -/
 theorem crude_is_hammersley {S : Int} : 4*S - (4*S - 2) = 2 := by omega
 
-/-! ## F33 — the four-piece decomposition
+/-! ## F33 / F34 — superseded
 
-This is the load-bearing step of the unconditional upper bound, and the one where a
-missed case would be fatal.  In the rotated coordinates the kept set on a fibre is
-
-    I \ ( (p,q) u (r,w) ) ,
-
-`I` the outer interval and `(p,q)`, `(r,w)` the two removed open intervals.  Distributing
-the two complements gives FOUR pieces, not two:
-
-    A = (-inf, min(p,r)]   the low end, below both
-    B = [q, r]             a cross piece, nonempty only when q <= r
-    C = [w, p]             a cross piece, nonempty only when w <= p
-    D = [max(q,w), +inf)   the high end, above both
-
-The two cross pieces are exactly what the earlier sign-restricted theorem had to assume
-away.  The statement is a fact about a linear order, so `Int` is a faithful model of it:
-nothing here depends on the reals, and unlike a hypothesis such as `S*S = 2` over `Int`
-it is not vacuous.  Membership in the union of the four pieces is stated positively,
-without `min`/`max`, so the equivalence is decidable and `omega` settles it. -/
-
-/-- **F33a (the decomposition).**  A point avoids both open intervals exactly when it
-    lies in one of the four pieces.  `A` is `x <= p and x <= r`, `D` is `q <= x and
-    w <= x`; `B` and `C` are the two cross pieces. -/
-theorem four_piece (p q r w x : Int) :
-    (¬(p < x ∧ x < q) ∧ ¬(r < x ∧ x < w)) ↔
-      ((x ≤ p ∧ x ≤ r) ∨ (q ≤ x ∧ x ≤ r) ∨ (w ≤ x ∧ x ≤ p) ∨ (q ≤ x ∧ w ≤ x)) := by
-  omega
-
-/-- **F33b (the cross pieces are the only obstruction).**  If `q > r` and `w > p`, that
-    is if both corner offsets are nonpositive, the two cross pieces are empty and the
-    kept set is exactly the two ends.  This is the sign-restricted case. -/
-theorem four_piece_no_cross (p q r w x : Int) (hB : r < q) (hC : p < w) :
-    (¬(p < x ∧ x < q) ∧ ¬(r < x ∧ x < w)) ↔ ((x ≤ p ∧ x ≤ r) ∨ (q ≤ x ∧ w ≤ x)) := by
-  omega
-
-/-- **F33c (case 2: both offsets positive).**  When `q ≤ r` and `w ≤ p` the cross piece
-    `B = [q,r]` is contained in `A u D`: every point of it is `≤ p` or `≥ w`.  This is
-    the cancellation that makes the both-positive case need no new estimate. -/
-theorem cross_absorbed (p q r w x : Int) (hqr : q ≤ r) (hwp : w ≤ p)
-    (hx : q ≤ x ∧ x ≤ r) : (x ≤ p ∧ x ≤ r) ∨ (q ≤ x ∧ w ≤ x) ∨ (w ≤ x ∧ x ≤ p) := by
-  omega
-
-/-- **F33d (the ends are short).**  `A n I` has length at most `2 - |p - r|`, since `I`
-    starts at `max(p,r) - 2`.  Cleared of the absolute value: if `r ≤ p` the length is at
-    most `2 - (p - r)`. -/
-theorem low_end_short (p r : Int) (hrp : r ≤ p) :
-    r - (p - 2) = 2 - (p - r) := by omega
-
-/-- **F33e (dually for the high end).**  `I` ends at `min(q,w) + 2`, so `D n I` has
-    length at most `2 - |q - w|`. -/
-theorem high_end_short (q w : Int) : (q + 2) - w = 2 - (w - q) := by omega
-
-/-! ## F34 — the profile maximum, exactly
-
-The bound is `(1/2)[g(m1) + g(m2)]` with `g(x) = int_0^{sqrt 2} (2 - 2|s-x|)^+ ds`, and
-everything turns on `max g = g(1/sqrt 2) = 2 sqrt 2 - 1`.  On the range where the tent
-covers the whole band, `g(x) = 2 sqrt 2 - x^2 - (sqrt 2 - x)^2`, so the maximum claim is
-
-    x^2 + (sqrt 2 - x)^2  >=  1 .
-
-Doubling, this is the identity
-
-    2 x^2 + 2 (sqrt 2 - x)^2  =  2 + (2x - sqrt 2)^2 ,
-
-after which the bound is just "a square is nonnegative".  The identity lives in the ring
-`Z[sqrt 2]`, built here from scratch: an `Int` hypothesis `S * S = 2` would be VACUOUS
-(rule I6), so a faithful model is constructed instead. -/
-
-/-- `Z[sqrt 2]`: the pair `(a, b)` denotes `a + b * sqrt 2`.  Operations are given as
-    plain functions rather than typeclass instances, so that every unfolding below is
-    a single definitional step. -/
-structure Z2 where
-  a : Int
-  b : Int
-deriving DecidableEq, Repr
-
-namespace Z2
-
-def ofInt (n : Int) : Z2 := ⟨n, 0⟩
-def sqrt2 : Z2 := ⟨0, 1⟩
-def add (x y : Z2) : Z2 := ⟨x.a + y.a, x.b + y.b⟩
-def sub (x y : Z2) : Z2 := ⟨x.a - y.a, x.b - y.b⟩
-def mul (x y : Z2) : Z2 := ⟨x.a * y.a + 2 * (x.b * y.b), x.a * y.b + x.b * y.a⟩
-
-theorem ext {x y : Z2} (ha : x.a = y.a) (hb : x.b = y.b) : x = y := by
-  cases x; cases y; simp_all
-
-/-- **F34a (non-vacuity, rule I6).**  `sqrt2` really does square to `2` in this ring, so
-    the model exists and the identity below is not a statement about nothing.  An `Int`
-    hypothesis `S * S = 2` would have no witness at all. -/
-theorem sqrt2_sq : mul sqrt2 sqrt2 = ofInt 2 := by rfl
-
-/-- **F34b (the profile identity).**  `2 x^2 + 2 (sqrt2 - x)^2 = 2 + (2x - sqrt2)^2`.
-    Over the reals the right side is at least `2` because a square is nonnegative, hence
-    `x^2 + (sqrt2 - x)^2 >= 1`, hence `g(x) = 2 sqrt2 - x^2 - (sqrt2 - x)^2 <= 2 sqrt2 - 1`,
-    with equality exactly at `2x = sqrt2`.  This is the whole content of the maximum. -/
-theorem profile_identity (x : Z2) :
-    add (mul (ofInt 2) (mul x x)) (mul (ofInt 2) (mul (sub sqrt2 x) (sub sqrt2 x)))
-      = add (ofInt 2) (mul (sub (mul (ofInt 2) x) sqrt2) (sub (mul (ofInt 2) x) sqrt2)) := by
-  apply ext <;> simp [add, sub, mul, ofInt, sqrt2] <;> grind
-
-/-- **F34c (the equality case is the extremal placement).**  The square vanishes exactly
-    at `2x = sqrt2`, i.e. `x = 1/sqrt 2`, which is the configuration
-    `a = a' = b = b' = sqrt2/4` of Proposition "extremal".  In `Z[sqrt 2]` the equation
-    forces `a = 0` and `2b = 1`, which has no solution: `1/sqrt 2` is not in the ring,
-    only in its fraction field, so the maximiser is the expected non-integral point. -/
-theorem equality_case (x : Z2) (h : sub (mul (ofInt 2) x) sqrt2 = ofInt 0) :
-    x.a = 0 ∧ 2 * x.b = 1 := by
-  have ha := congrArg Z2.a h
-  have hb := congrArg Z2.b h
-  simp [mul, sub, ofInt, sqrt2] at ha hb
-  omega
-
-end Z2
-
-/-- **F34d (the value at the maximum).**  `g(1/sqrt2) = 2 sqrt2 - 1/2 - 1/2`.  Cleared of
-    denominators with `S` the symbol for `sqrt 2`: `4*S - 1 - 1 = 2*(2*S - 1)`. -/
-theorem g_at_max {S : Int} : 4*S - 1 - 1 = 2*(2*S - 1) := by omega
-
-/-- **F34e (the bound is the sum of two profile maxima, halved).**  `(1/2)[g(m1)+g(m2)]`
-    with each `g <= 2 sqrt2 - 1` gives `2 sqrt2 - 1`, not twice it. -/
-theorem two_profiles_halved {S : Int} : 2*(2*S - 1) - (2*S - 1) = 2*S - 1 := by omega
+The four-piece decomposition and the profile maximum were first recorded here over `Int`
+and in a hand-built `Z[sqrt 2]`, because this file is Mathlib-free and those were the only
+faithful models available.  With Mathlib present they are stated over the reals in
+`MovingSofa/Bound.lean`, where they are the actual mathematical statements rather than
+models of them, and the versions here are removed rather than kept in parallel: two
+spellings of one lemma is how a project ends up proving the weaker one and citing the
+stronger. -/
 
 
 end MovingSofa

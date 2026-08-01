@@ -318,24 +318,31 @@ inside the proofs above; they carry no independent mathematical content and are
 deliberately not mapped.  Every *theorem* in `Basic.lean` is either in a table above or is
 such a helper.
 
-## F33 / F34 — the unconditional upper bound
+## F33 / F34 — the unconditional upper bound (now over the reals, in `Bound.lean`)
+
+These were first written over `Int` and in a hand-built `Z[sqrt 2]`, because `Basic.lean`
+is Mathlib-free and those were the only faithful models available. The project now depends
+on Mathlib, so they are stated over the reals in `MovingSofa/Bound.lean`, where they are
+the mathematics rather than models of it; the `Int` spellings were deleted rather than kept
+alongside. Declaration names below are the real ones.
 
 | Paper | Lean declaration | Note |
 |---|---|---|
-| Lemma "four pieces" (`lem:fourpiece`) | `four_piece` | the decomposition, over a linear order; `Int` is a faithful and non-vacuous model |
+| Lemma "four pieces" (`lem:fourpiece`) | `four_piece` (ℝ) | the decomposition, over a linear order; `Int` is a faithful and non-vacuous model |
 | same, sign-restricted case | `four_piece_no_cross` | both cross pieces empty |
-| Lemma "both offsets positive" (`lem:bothpos`) | `cross_absorbed` | the containment `B ⊆ A ∪ D` that makes the case need no new estimate |
-| length of `A ∩ I` | `low_end_short` | `2 − \|p−r\|` |
-| length of `D ∩ I` | `high_end_short` | `2 − \|q−w\|` |
-| Proposition "profile" (`prop:gfun`), maximum | `Z2.profile_identity` | `2x²+2(√2−x)² = 2+(2x−√2)²` in ℤ[√2] |
-| non-vacuity of the ring (rule I6) | `Z2.sqrt2_sq` | `√2·√2 = 2`; proved by `rfl`, no axioms |
-| the maximiser | `Z2.equality_case` | forces `2x = √2` |
-| `g(1/√2) = 2√2 − 1` | `g_at_max` | cleared of denominators |
-| the two profiles halved | `two_profiles_halved` | `(1/2)[g(m₁)+g(m₂)] ≤ 2√2−1` |
+| Lemma "both offsets positive" (`lem:bothpos`) | `both_positive_absorbed` | the containment `B ⊆ A ∪ D` that makes the case need no new estimate |
+| length of `A ∩ I` | `low_end_le` | `2 − \|p−r\|` |
+| length of `D ∩ I` | `high_end_le` | `2 − \|q−w\|` |
+| Proposition "profile" (`prop:gfun`), maximum | `profile_ge_one`, `gMid_le` | `x²+(√2−x)² ≥ 1` over ℝ, via `(2x−√2)² ≥ 0` |
+| non-vacuity of the ring (rule I6) | `gMid_at_half` | the maximum is attained, so the bound is sharp |
+| the maximiser | `gMid_eq_max_iff` | the maximiser is exactly `x = √2/2`, uniquely |
+| `g(1/√2) = 2√2 − 1` | `wide_case_le`, `sqrt_two_lt_bound` | case 1 of the unconditional theorem |
+| the two profiles halved | `romik_lt_bound`, `bound_lt_gerver` | the bracket `1.6449552 < 2√2−1 < 2.2195316` |
 
-Why ℤ[√2] and not `Int` with a hypothesis `S*S = 2`: that hypothesis has no integer
-witness, so every theorem under it is vacuously true (rule I6). The ring is therefore
-constructed and its model exhibited before anything is proved in it.
+Historical note (rule I6): before Mathlib, the profile identity was carried in a
+hand-built ℤ[√2] rather than as an `Int` hypothesis `S*S = 2`, because that hypothesis has
+no integer witness and every theorem under it would be vacuously true. Over ℝ the issue
+does not arise.
 
 What is NOT formalised: the integrals, the second variation, and the ball-arithmetic
 certificates. Those need real analysis and are out of reach without Mathlib; their label
