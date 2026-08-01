@@ -59,19 +59,25 @@ whole relaxation argument of the note uses nothing else about the sofa. -/
 theorem area_mono {S X : Set (ℝ × ℝ)} (h : S ⊆ X) : volume S ≤ volume X :=
   measure_mono h
 
-/-- **The reduction, assembled.**  If the sofa is contained in a placed region
-(`hplace`, the two-motions argument of the note) and the placed region's area is the
-band integral of its fibre lengths bounded by the verified profile bound
-(`hslice`, the Fubini step), then the sofa's area is at most `2√2 - 1`.
-Both hypotheses are PROVED in the note; they are the two remaining formalisation
-obligations, and this theorem records that nothing else stands between them and the
-final bound. -/
+/-- **The reduction, assembled.**  `placedRegion` lives in the rotated-sheared fibre
+coordinates `(s, t)`, in which the plane's area element is `du dv = (1/2) ds dt`; its
+Lebesgue measure is therefore TWICE the plane area it represents, and the correct
+fibre-coordinate bound is `2(2√2 - 1)`.  (An earlier version of this theorem asked for
+`volume ≤ 2√2 - 1` in these coordinates, which is unsatisfiable: at the extremal
+placement the fibre-coordinate volume is exactly `2(2√2 - 1)`.  The rule-I6 check — can
+the hypothesis be satisfied at all? — caught it before anything was built on it.)
+
+If a set `S` is contained in a placed region (`hplace`) and the region's
+fibre-coordinate volume is bounded by the band integral of the verified profile bound
+(`hslice`), then `S` has fibre-coordinate volume at most `2(2√2 - 1)`, i.e. plane area
+at most `2√2 - 1` after the change of variables, which together with the sofa
+containment is the remaining obligation. -/
 theorem reduction_assembly
     (S : Set (ℝ × ℝ)) (a a' b b' : ℝ)
     (hplace : S ⊆ placedRegion a a' b b')
     (hslice : volume (placedRegion a a' b b')
-      ≤ ENNReal.ofReal (2 * Real.sqrt 2 - 1)) :
-    volume S ≤ ENNReal.ofReal (2 * Real.sqrt 2 - 1) :=
+      ≤ ENNReal.ofReal (2 * (2 * Real.sqrt 2 - 1))) :
+    volume S ≤ ENNReal.ofReal (2 * (2 * Real.sqrt 2 - 1)) :=
   le_trans (area_mono hplace) hslice
 
 end MovingSofa

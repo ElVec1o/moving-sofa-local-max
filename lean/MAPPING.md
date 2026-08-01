@@ -427,7 +427,11 @@ the project is the second variation (`thm:system`).
 | decoupling on E₂: `(a+b)² ≥ λb² − ra²` | `decouple_E2` | VERIFIED (exact square `(a+(1−λ)b)²/(1−λ)`) |
 | decoupling on E₁: `(x−y)² ≤ (1+1/κ)x² + (1+κ)y²` | `decouple_E1` | VERIFIED (exact square `(x+κy)²/κ`) |
 | `prop:elem` assembly to `1/12` | `secondvar_assembly`, `secondvar_combined` | VERIFIED, with the five analytic inputs as hypotheses |
-| DD/DN Poincaré, half-Poincaré, tail cut | hypotheses `hW4, hW1, habs, hcut, hsub` | to discharge — Mathlib has no 1-D Poincaré today |
+| half-Poincaré (`habs`) | `habs_verified` (`Poincare.lean`) | VERIFIED |
+| subset monotonicity (`hsub`) | `hsub_verified` | VERIFIED |
+| the tail cut (`hcut`) | `hcut_verified` | VERIFIED |
+| the engine `(f b − f a)² ≤ (b−a)∫f'²` | `sq_sub_le` | VERIFIED — G-monotonicity, no Cauchy–Schwarz |
+| DD/DN Wirtinger (`hW4`, `hW1`) | hypotheses | the ONLY remaining analytic inputs; ground-state substitution, classical |
 
 `prop:elem` of the note is the new mathematics here: `(1/2)δ²Q ≤ −(1/12)‖η‖²` on the cell
 with NO transfer matrices and NO ball arithmetic — Rule 3 record: all seven chain steps
@@ -446,3 +450,12 @@ what the elementary constant removes is any computer from the QUALITATIVE concav
 | the assembly to `vol S ≤ 2√2−1` | `reduction_assembly` | VERIFIED, given the two named obligations |
 | the slicing identity (Fubini in the rotated frame) | hypothesis `hslice` | to discharge |
 | sofa ⊆ placed region (two-motions argument) | hypothesis `hplace` | to discharge — needs the moving body formalised |
+
+## Corrections recorded
+
+`reduction_assembly` originally asked for `volume ≤ 2√2−1` in the fibre coordinates
+`(s,t)`, where the plane's area element is `½ ds dt`; the fibre-coordinate volume of the
+extremal region is exactly `2(2√2−1)`, so the hypothesis was unsatisfiable and the
+assembly vacuous. Caught by the rule-I6 check (can the hypothesis hold at all?) one
+commit after it shipped; the bound is now `2(2√2−1)` with the change of variables
+recorded in the docstring.

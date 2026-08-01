@@ -3156,9 +3156,15 @@ Hammersley's $2\sqrt2$.
 Theorem~\ref{thm:sharp} are verified outright, each as an exact square over the field
 (\verb|decouple_E2|, \verb|decouple_E1|), and the assembly of
 Proposition~\ref{prop:elem} from its analytic inputs to the constant $\tfrac1{12}$ is
-verified as pure arithmetic (\verb|secondvar_assembly|); the five inputs, three
-Poincar\'e inequalities on intervals together with the absorption and cut steps, are
-named hypotheses, since Mathlib at present has no one-dimensional Poincar\'e inequality.
+verified as pure arithmetic (\verb|secondvar_assembly|); three of the five inputs are theorems: the absorption
+inequality, the subset monotonicity and the tail cut are verified for continuously
+differentiable data (\verb|habs_verified|, \verb|hsub_verified|, \verb|hcut_verified|),
+all from one engine, $(f(b)-f(a))^2\le(b-a)\int_a^bf'^2$ (\verb|sq_sub_le|), proved by
+monotonicity of $t\mapsto(t-a)\int_a^tf'^2-(f(t)-f(a))^2$, whose derivative is
+$\int_a^t(f'(s)-f'(t))^2\,ds\ge0$; no Cauchy--Schwarz machinery is needed. The two
+Wirtinger inequalities remain the only analytic hypotheses, since Mathlib at present has
+no one-dimensional Poincar\'e inequality; their proofs by the ground-state substitution
+are classical and are the next formalisation obligation.
 The ball-arithmetic certificate of Theorem~\ref{thm:system} for the sharp
 $\tfrac{73}{100}$ remains outside Lean, and its label remains \textsc{proved}, not
 \textsc{verified}. Of the geometric reduction, the placed region is defined

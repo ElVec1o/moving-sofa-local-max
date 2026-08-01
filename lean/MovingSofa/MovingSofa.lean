@@ -9,3 +9,4 @@ import MovingSofa.Excess
 import MovingSofa.ProfileClosed
 import MovingSofa.SecondVar
 import MovingSofa.Reduction
+import MovingSofa.Poincare
