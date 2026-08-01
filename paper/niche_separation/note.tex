@@ -2024,6 +2024,31 @@ Then $g(m_1)+g(m_2)+E(m_1,m_2)\le2\bigl(2\sqrt2-1\bigr)$, with equality exactly 
 $m_1=m_2=1/\sqrt2$.
 \end{lemma}
 
+Before the four regions, the statement simplifies. Write
+$C(x)=\int_0^{\sqrt2}\min(|s-x|,1)\,ds$. The identity $\max(0,y)=y+\max(0,-y)$ gives
+$(2-2|s-x|)^+=2-2\min(|s-x|,1)$ pointwise, hence $g(x)=2\sqrt2-2C(x)$; and
+$E=2\int_0^{\sqrt2}F$ with
+$F(s)=\min\bigl((s-m_1)^+,(m_2-s)^+,\tau^\ast\bigr)$. Substituting, the inequality
+$g(m_1)+g(m_2)+E\le2(2\sqrt2-1)$ is \emph{equivalent} to
+\begin{equation}\label{eq:lemEred}
+  \int_0^{\sqrt2}\Bigl[\min(|s-m_1|,1)+\min(|s-m_2|,1)-F(s)\Bigr]ds\ \ge\ 1 .
+\end{equation}
+Neither $g$ nor $E$ appears. Since $\int_0^{\sqrt2}\min(|s-x|,1)ds\ge\tfrac12$ for every
+$x$, which is the pairing argument of the formalisation section, the two positive terms
+already contribute $1$, and \eqref{eq:lemEred} says exactly that $\int F$ does not exceed
+the excess of those two terms over $\tfrac12$ each. On the central square that excess is
+$x_1^2+x_2^2$ with $x_i=m_i-\sqrt2/2$, and $\int F\le D^2/4=(x_2-x_1)^2/4$, so region~(i)
+reduces to $(x_2-x_1)^2\le4(x_1^2+x_2^2)$, which is $(x_1+x_2)^2\ge0$ together with
+$(x_2-x_1)^2\le2(x_1^2+x_2^2)$.
+
+\begin{remark}[A tempting simplification that is false]\label{rem:lemEfalse}
+$F\le\min\bigl(\min(|s-m_1|,1),\min(|s-m_2|,1),\tau^\ast\bigr)=:M$ pointwise, so replacing
+$F$ by $M$ in \eqref{eq:lemEred} would give a symmetric statement with no one-sided parts.
+It is false: on a $241\times241$ grid of $[-1.6,3.2]^2$ the left side with $M$ has minimum
+$0.8751$, at $(m_1,m_2)=(0.520,0.880)$. The loss is at $m_1=m_2$, where $F\equiv0$ but
+$M=\min(|s-m_1|,1)$ does not vanish. The one-sided form is not a convenience.
+\end{remark}
+
 \begin{proof}
 Four regions.
 

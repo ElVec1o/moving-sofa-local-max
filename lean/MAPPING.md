@@ -380,3 +380,24 @@ note, and has been.
 Still PROVED and not VERIFIED: the second variation (`thm:system`) and the ball-arithmetic
 covering for region (iv) of `lem:profineq`. Those need certified numerics inside Lean, not
 just Mathlib.
+
+## Verified interval arithmetic (`Interval.lean`) — the layer, not yet the covering
+
+| Purpose | Lean declaration |
+|---|---|
+| interval with rational endpoints | `Iv`, `Iv.Mem` |
+| exact point, add, neg, sub | `pt_sound`, `add_sound`, `neg_sound`, `sub_sound` |
+| scaling by a nonnegative rational | `smulNonneg_sound` |
+| min, max, abs | `min_sound`, `max_sound`, `abs_sound` |
+| the decidable positivity test | `posBelow_sound` |
+| enclosure of √2 | `sqrt2I_sound`, checked against `√2² = 2` |
+
+Rational endpoints, so no rounding argument is needed anywhere; irrational constants enter
+only through provably-sound enclosures. Every operation carries a one-directional
+containment theorem, so an empty interval is harmless.
+
+**What this does NOT yet do.** It is the arithmetic layer only. Region (iv) of
+`lem:profineq` still needs (a) the reduction of the region to a finite set of boxes and
+(b) a verified evaluation of the integrand enclosure on each. Neither is written. The label
+on region (iv), and on the second variation, remains PROVED and not VERIFIED, and the note
+says so.
