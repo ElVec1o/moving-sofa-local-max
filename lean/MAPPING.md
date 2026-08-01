@@ -401,3 +401,19 @@ containment theorem, so an empty interval is harmless.
 (b) a verified evaluation of the integrand enclosure on each. Neither is written. The label
 on region (iv), and on the second variation, remains PROVED and not VERIFIED, and the note
 says so.
+
+## Lemma E without a covering (`LemmaE.lean`)
+
+| Paper | Lean declaration | Status |
+|---|---|---|
+| the assembly of `lem:profineq` | `lemmaE_of` | VERIFIED, with L1/L3/L4 as hypotheses |
+| `C ≥ 1/2`, restated | `half_le_Cfun` | VERIFIED (from `Integral.lean`) |
+| `e ≥ 0` | `efun_nonneg` | VERIFIED |
+| `(u₂−u₁)² ≤ 2(u₁²+u₂²)` | `sq_sub_le_two_mul_add_sq` | VERIFIED |
+| `D − 1 ≤ D²/4` | `trapezoid_le_triangle` | VERIFIED |
+| L1, L3, L4 | hypotheses of `lemmaE_of` | still to formalise |
+
+The 28512-box ball covering is gone from the mathematics, not merely from Lean: the case
+split is on `max(C₁,C₂) ≥ 1`, a comparison of two real numbers, and the tight case reduces
+to `(u₁+u₂)² ≥ 0`. What remains are three named analytic facts about
+`C(x) = ∫₀^√2 min(|s−x|,1) ds`, each a finite piecewise-polynomial computation.

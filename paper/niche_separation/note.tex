@@ -2050,38 +2050,44 @@ $M=\min(|s-m_1|,1)$ does not vanish. The one-sided form is not a convenience.
 \end{remark}
 
 \begin{proof}
-Four regions.
+Write $C(x)=\int_0^{\sqrt2}\min(|s-x|,1)\,ds$ and $e(x)=C(x)-\tfrac12$, which is
+nonnegative by the pairing argument. By \eqref{eq:lemEred} the claim is
+$\int_0^{\sqrt2}F\le e(m_1)+e(m_2)$. Set $D=m_2-m_1\ge0$ and $u_i=m_i-\sqrt2/2$.
 
-\emph{(i) $m_1,m_2\in[\sqrt2-1,1]$.} Here $g(m_i)=2\sqrt2-1-2x_i^2$ exactly, with
-$x_i=m_i-\tfrac1{\sqrt2}$, and $D\le2(2-\sqrt2)<2$, so $\tau^\ast=D/2$ and $E$ is at most
-the area of the unclipped profile, a triangle of base $D$ and height $D$: $E\le D^2/2$.
-Since $D^2=(x_2-x_1)^2\le2(x_1^2+x_2^2)$,
+\emph{(L1) $\int F\le D^2/4$.} $F$ is supported on $[m_1,m_2]$ and dominated by
+$\min(s-m_1,m_2-s)$, a triangle of base $D$ and height $D/2$, of area $D^2/4$; when
+$\tau^\ast=1<D/2$ the profile is instead a trapezoid of area $D-1$, and $D-1\le D^2/4$
+because $(D-2)^2\ge0$. Clipping the domain to $[0,\sqrt2]$ only decreases the integral.
+
+\emph{(L2) $\int F\le\min(C(m_1),C(m_2))$.} Pointwise $F\le\tau^\ast\le1$ and
+$F\le(s-m_1)^+\le|s-m_1|$, so $F\le\min(|s-m_1|,1)$; likewise for $m_2$.
+
+\emph{(L3) $C(x)<1$ forces $|x-\sqrt2/2|\le1$, and (L4) on that range
+$e(x)\ge(x-\sqrt2/2)^2/2$.} Both are finite piecewise-polynomial verifications: with no
+clipping the pairing identity gives $e(x)=\int_0^{\sqrt2/2}2\operatorname{dist}
+\bigl(x,[s,s+\sqrt2/2]\bigr)ds$, equal to $u^2$ for $|u|\le1-\sqrt2/2$, and clipping
+contributes the remaining two polynomial pieces.
+
+\emph{Assembly.} If $\max(C(m_1),C(m_2))\ge1$ then by (L2)
 \[
-  g(m_1)+g(m_2)+E\ \le\ 2(2\sqrt2-1)-2(x_1^2+x_2^2)+(x_1^2+x_2^2)
-  \ \le\ 2(2\sqrt2-1),
+  \int F\ \le\ \min(C_1,C_2)\ =\ C_1+C_2-\max(C_1,C_2)\ \le\ C_1+C_2-1\ =\ e_1+e_2 .
 \]
-with equality only at $x_1=x_2=0$.
-
-\emph{(ii) $m_1\le-1$.} Then $g(m_1)=0$, and the integrand of $E$ is at most
-$\min(2(m_2-s)^+,2)$, so with $y=m_2$,
+Otherwise both $C(m_i)<1$, so (L3) gives $|u_i|\le1$ and (L4) gives
+$e(m_i)\ge u_i^2/2$; then
 \[
-  g(m_1)+g(m_2)+E\ \le\ h(y):=g(y)+\int_0^{\sqrt2}\min\bigl(2(y-s)^+,2\bigr)\,ds .
+  e_1+e_2\ \ge\ \tfrac12\bigl(u_1^2+u_2^2\bigr)\ \ge\ \tfrac14(u_2-u_1)^2\ =\ \tfrac{D^2}4
+  \ \ge\ \int F
 \]
-Piecewise, from the explicit formulas for $g$: $h(y)=g(y)\le2\sqrt2-1$ for $y\le0$;
-$h=1+2y\le2\sqrt2-1$ on $[0,\sqrt2-1]$; $h=2\sqrt2-(y-\sqrt2)^2\le2\sqrt2$ on
-$[\sqrt2-1,\sqrt2]$; and $h=2\sqrt2$ for $y\ge\sqrt2$. Since $2\sqrt2<4\sqrt2-2$, done.
-
-\emph{(iii) $m_2\ge\sqrt2+1$.} The substitution $s\mapsto\sqrt2-s$ carries $E(m_1,m_2)$
-to $E(\sqrt2-m_2,\sqrt2-m_1)$ and $g$ is symmetric, so this is case (ii).
-
-\emph{(iv) The remainder $\{-1\le m_1\le m_2\le\sqrt2+1\}$ less the open square of (i).}
-Certified: an adaptive covering in ball arithmetic verifies that the enclosure of
-$2(2\sqrt2-1)-g(m_1)-g(m_2)-E$ is strictly positive on every box; $28\,512$ boxes
-suffice. The covering excludes only boxes inside
-$[0.4143,1]^2\subset(\sqrt2-1,1)^2$, a subset of region (i), so the four regions cover
-$\{m_1\le m_2\}$. As a negative control, a box containing the equality point
-$(1/\sqrt2,1/\sqrt2)$ is refused, as it must be.
+by (L1), the middle step being $(u_1+u_2)^2\ge0$. Equality throughout requires
+$u_1=u_2=0$, that is $m_1=m_2=1/\sqrt2$.
 \end{proof}
+
+The case split is on a comparison of real numbers, not on a box: no covering, and no
+interval arithmetic, appears in the proof. An earlier version certified this lemma by an
+adaptive covering of $28\,512$ boxes in ball arithmetic. Numerically the assembled
+inequality has minimum slack $6.6\cdot10^{-7}$ over $6\cdot10^4$ sampled pairs, attained
+at $m_1=m_2=\sqrt2/2$, which is the extremal placement of
+Proposition~\ref{prop:extremal}.
 
 \begin{theorem}[The unconditional bound]\label{thm:uncond}
 Every ambidextrous moving sofa satisfies
@@ -2177,8 +2183,7 @@ restatement for sofas. Two structurally different placements attain the value: o
 the region into two congruent pieces of area $\sqrt2-\tfrac12$, one leaves it connected.
 So $2\sqrt2-1$ \emph{is} the supremum at those angles, attained by
 Proposition~\ref{prop:extremal} and bounded above by Theorem~\ref{thm:uncond}, with no
-interval arithmetic in the two-hallway argument outside region (iv) of
-Lemma~\ref{lem:profineq}.
+interval arithmetic anywhere in the two-hallway argument.
 
 The construction was validated before use: intersecting along $\Sig$'s own corner path
 must give an area decreasing to $|\Sig|$, and it does, through
@@ -3091,10 +3096,14 @@ Hammersley's $2\sqrt2$.
 
 \verb|lake build| is clean with no \verb|sorry| across the development, and
 \verb|#print axioms| reports nothing beyond \verb|propext|, \verb|Quot.sound| and
-\verb|Classical.choice|. What is \emph{not} formalised is the second variation and the
-ball-arithmetic certificates of Theorem~\ref{thm:system} and of region~(iv) of
-Lemma~\ref{lem:profineq}; the label on those remains \textsc{proved}, not
-\textsc{verified}. Trigonometric quantities are carried as formal symbols with
+\verb|Classical.choice|. What is \emph{not} formalised is the second variation and the ball-arithmetic
+certificate of Theorem~\ref{thm:system}, the only computation the two-hallway bound no
+longer needs anywhere else; the label on that remains \textsc{proved}, not
+\textsc{verified}. For Lemma~\ref{lem:profineq} the Lean development contains the
+assembly \verb|lemmaE_of|, which derives the lemma from (L1), (L3) and (L4) with the case
+split machine-checked, together with the two algebraic ingredients
+\verb|sq_sub_le_two_mul_add_sq| and \verb|trapezoid_le_triangle|; the three analytic
+facts about $C$ are stated as hypotheses there and are what remains to formalise. Trigonometric quantities are carried as formal symbols with
 the sign hypotheses $\sin t\ge0$, $\cos t\ge0$, which is all
 Lemma~\ref{lem:ceiling} uses.
 

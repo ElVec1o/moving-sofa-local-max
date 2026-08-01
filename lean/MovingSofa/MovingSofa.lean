@@ -4,3 +4,4 @@ import MovingSofa.Basic
 import MovingSofa.Bound
 import MovingSofa.Integral
 import MovingSofa.Interval
+import MovingSofa.LemmaE
