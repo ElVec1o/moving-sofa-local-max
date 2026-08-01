@@ -72,12 +72,15 @@ wedge boundary, so $V\ge|N|$ by Reynolds' transport theorem and $Q$ bounds nothi
 the sweep fails to be injective; in particular the construction does not recover Gerver's
 sofa, whose cap violates (RC). Separately, a two-hallway relaxation gives the first
 upper bound specific to the ambidextrous problem: the area of a left- and a right-turning
-hallway at angle $\pi/4$ is bounded in closed form by two translates of one explicit
-profile integral, giving $|S|\le2\sqrt2-1=1.8284271\ldots$ for every ambidextrous sofa
-whose two corner offsets $\langle d-c,\mu\rangle$ and $\langle d-c,\nu\rangle$ at angle
-$\pi/4$ are nonpositive, as they are for $\Sig$. The bound is attained, and improves on
-the $2.2195$ inherited from the one-corner theorem, which is unconditional. Optimality of
-$\Sig$ remains open.
+hallway at angle $\pi/4$ is bounded by translates of one explicit profile integral, and a
+four-case analysis of the corner offsets removes every hypothesis, giving
+\[
+  A_{\mathrm{ambi}}\ \le\ 2\sqrt2-1\ =\ 1.8284271\ldots
+\]
+unconditionally. The bound is attained by an explicit placement, so it is exactly the
+value of the two-hallway relaxation; it improves on the $2.2195$ inherited from the
+one-corner theorem, and with Romik's sofa it brackets the ambidextrous supremum within a
+factor of $1.1116$. Optimality of $\Sig$ remains open.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -1927,27 +1930,144 @@ from the definition at $4\cdot10^4$ random parameter triples over scales from $0
 $160$: the minimum slack is $-1.0\cdot10^{-14}$, i.e.\ zero to rounding, so the bound is
 both correct and attained.
 
-\begin{remark}[The cross region]\label{rem:cross}
 When $\dmu>0$ or $\dnu>0$ the cross terms in \eqref{eq:closedform} are genuinely present
-and the bound exceeds $2\sqrt2-1$. This is a defect of the estimate, not of the geometry:
-sampling the true area there gives at most $1.81824$ when $\dnu>0\ge\dmu$, at most
-$1.81210$ when $\dmu>0\ge\dnu$, and at most $1.78850$ when both are positive, all strictly
-below $2\sqrt2-1$. The mirror $\rho$ acts on these coordinates by $m_i\mapsto\sqrt2-m_i$
-and $\dmu\leftrightarrow\dnu$, so the two one-sided cases are exchanged and only one need
-be treated. Closing the cross region would upgrade Theorem~\ref{thm:upper} to the
-unconditional bound $A_{\mathrm{ambi}}\le2\sqrt2-1$. Rule~7: this paragraph is
-\textsc{heuristic}.
-\end{remark}
+and the estimate exceeds $2\sqrt2-1$. The next three lemmas remove the sign hypothesis.
+Throughout, the reflection across the diagonal $u=v$ preserves the band and exchanges
+$(a,a')$ with $(a',a)$ and $(b,b')$ with $(b',b)$, hence $\dmu\leftrightarrow\dnu$ and
+$m_1\leftrightarrow m_2$; so assume without loss of generality
+$t:=\dnu=\max(\dmu,\dnu)>0$.
 
-Since Romik's sofa is ambidextrous and satisfies the hypothesis of
-Theorem~\ref{thm:upper} --- its two corners at angle $\pi/4$ coincide, so $\dmu=\dnu=0$
---- the supremum over the sofas satisfying that hypothesis is bracketed:
+\begin{lemma}[Wide offsets]\label{lem:wide}
+If $t\ge1$ then
+$\bigl|\mathcal C_2\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\le\sqrt2\,(2-t)^+\le\sqrt2$.
+\end{lemma}
+
+\begin{proof}
+$w-p=(s-2b')-(s-2a')=-2t$ identically in $s$, so
+$\ell(s)\le|I|\le4+w-p=4-2t$ for every $s$, and the band has length $\sqrt2$:
+$\tfrac12\int_0^{\sqrt2}\ell\le\tfrac12\sqrt2\,(4-2t)^+$.
+\end{proof}
+
+\begin{lemma}[Both offsets positive]\label{lem:bothpos}
+If $0<\dmu\le\dnu=t\le1$ then $\ell(s)\le(2-2|s-m_1|)^++(2-2|s-m_2|)^+$ for every $s$, so
+the area is at most $\tfrac12[g(m_1)+g(m_2)]\le2\sqrt2-1$.
+\end{lemma}
+
+\begin{proof}
+Write, as in Lemma~\ref{lem:fourpiece}, the kept set as $(A\cup B\cup C\cup D)\cap I$
+with $A=(-\infty,\min(p,r)]$, $B=[q,r]$, $C=[w,p]$, $D=[\max(q,w),\infty)$, and note
+$m_1\le m_2$ since $\dmu\le\dnu$. For $s\le m_1$ we have $p\le r$ and $w\le q$, so
+$C\subseteq A$ and $B\subseteq D$, and
+$\ell\le|A\cap I|+|D\cap I|\le(2-2(m_1-s))^++(2-2(m_2-s))^+$ exactly as in the proof of
+Theorem~\ref{thm:upper}; symmetrically for $s\ge m_2$. On the middle window $m_1<s<m_2$:
+$A=(-\infty,r]$, $D=[q,\infty)$, and since $\dmu>0$ gives $q\le r$,
 \[
-  1.6449552\ldots\ =\ A_R^\ast\ \le\ \sup\{|S|:\dmu\le0,\ \dnu\le0\}\ \le\
+  A\cap D=[q,r]=B,\qquad A\cap C\cap D=[q,r]\cap[w,p]=[q,r]=B,
+\]
+the latter because $w\le q$ and $r\le p$ on the window. In the inclusion--exclusion for
+$|A\cup C\cup D|$ the terms $-|A\cap D|$ and $+|A\cap C\cap D|$ therefore cancel, leaving
+\[
+  \ell=|A\cap I|+|D\cap I|+\bigl[\,|C\cap I|-|A\cap C\cap I|-|C\cap D\cap I|\,\bigr].
+\]
+Since $t\le1$, $C=[w,p]\subseteq[p-2,w+2]=I$, so $|C\cap I|=2t$; and
+$A\cap C=[w,r]$, $C\cap D=[q,p]$ are subsets of $C$, of lengths $2(n_2-s)$ and $2(s-n_1)$
+with $n_1=a+a'$, $n_2=b+b'$, both nonnegative on the window. The bracket equals
+$2t-2(n_2-n_1)=2t-2(\dmu+\dnu)=-2\dmu<0$, and the first two terms are the two tents.
+\end{proof}
+
+\begin{lemma}[Mixed offsets, pointwise]\label{lem:mixed}
+If $\dmu\le0<\dnu=t\le1$, write $u=-\dmu$, so $m_2-m_1=t+u$. Then for every $s$
+\[
+  \ell(s)\ \le\ (2-2|s-m_1|)^++(2-2|s-m_2|)^+
+          +\min\bigl(2(s-m_1)^+,\ 2(m_2-s)^+,\ 2\min(t,u)\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Outside the middle window the absorption of the previous proof applies verbatim (here
+$B=\emptyset$). On the window, $A\cap D=[q,r]=\emptyset$ since $\dmu<0$, and
+\[
+  \ell=|A\cap I|+|D\cap I|+c(s),\qquad
+  c(s)=|C\cap I|-|A\cap C\cap I|-|C\cap D\cap I|=2t-2(n_2-s)^+-2(s-n_1)^+ ,
+\]
+by the same computations ($C\subseteq I$ from $t\le1$; $A\cap C=[w,r]$ when $s\le n_2$
+and empty otherwise, likewise $C\cap D$). Now $n_2=m_1+t$ and $n_1=m_2-t$ give
+$c\le2t-2(n_2-s)=2(s-m_1)$ and $c\le2(m_2-s)$; and
+$(n_2-s)^++(s-n_1)^+\ge(n_2-n_1)^+=(t-u)^+$ gives $c\le2t-2(t-u)^+=2\min(t,u)$. The
+first two terms are at most the two tents, as before.
+\end{proof}
+
+Integrating Lemma~\ref{lem:mixed} over the band reduces everything to one two-variable
+inequality about the profile $g$.
+
+\begin{lemma}[The profile inequality]\label{lem:profineq}
+For $m_1\le m_2$ set $D=m_2-m_1$, $\tau^\ast=\min(1,D/2)$ and
+\[
+  E(m_1,m_2)=\int_0^{\sqrt2}\min\bigl(2(s-m_1)^+,\ 2(m_2-s)^+,\ 2\tau^\ast\bigr)\,ds .
+\]
+Then $g(m_1)+g(m_2)+E(m_1,m_2)\le2\bigl(2\sqrt2-1\bigr)$, with equality exactly at
+$m_1=m_2=1/\sqrt2$.
+\end{lemma}
+
+\begin{proof}
+Four regions.
+
+\emph{(i) $m_1,m_2\in[\sqrt2-1,1]$.} Here $g(m_i)=2\sqrt2-1-2x_i^2$ exactly, with
+$x_i=m_i-\tfrac1{\sqrt2}$, and $D\le2(2-\sqrt2)<2$, so $\tau^\ast=D/2$ and $E$ is at most
+the area of the unclipped profile, a triangle of base $D$ and height $D$: $E\le D^2/2$.
+Since $D^2=(x_2-x_1)^2\le2(x_1^2+x_2^2)$,
+\[
+  g(m_1)+g(m_2)+E\ \le\ 2(2\sqrt2-1)-2(x_1^2+x_2^2)+(x_1^2+x_2^2)
+  \ \le\ 2(2\sqrt2-1),
+\]
+with equality only at $x_1=x_2=0$.
+
+\emph{(ii) $m_1\le-1$.} Then $g(m_1)=0$, and the integrand of $E$ is at most
+$\min(2(m_2-s)^+,2)$, so with $y=m_2$,
+\[
+  g(m_1)+g(m_2)+E\ \le\ h(y):=g(y)+\int_0^{\sqrt2}\min\bigl(2(y-s)^+,2\bigr)\,ds .
+\]
+Piecewise, from the explicit formulas for $g$: $h(y)=g(y)\le2\sqrt2-1$ for $y\le0$;
+$h=1+2y\le2\sqrt2-1$ on $[0,\sqrt2-1]$; $h=2\sqrt2-(y-\sqrt2)^2\le2\sqrt2$ on
+$[\sqrt2-1,\sqrt2]$; and $h=2\sqrt2$ for $y\ge\sqrt2$. Since $2\sqrt2<4\sqrt2-2$, done.
+
+\emph{(iii) $m_2\ge\sqrt2+1$.} The substitution $s\mapsto\sqrt2-s$ carries $E(m_1,m_2)$
+to $E(\sqrt2-m_2,\sqrt2-m_1)$ and $g$ is symmetric, so this is case (ii).
+
+\emph{(iv) The remainder $\{-1\le m_1\le m_2\le\sqrt2+1\}$ less the open square of (i).}
+Certified: an adaptive covering in ball arithmetic verifies that the enclosure of
+$2(2\sqrt2-1)-g(m_1)-g(m_2)-E$ is strictly positive on every box; $28\,512$ boxes
+suffice. The covering excludes only boxes inside
+$[0.4143,1]^2\subset(\sqrt2-1,1)^2$, a subset of region (i), so the four regions cover
+$\{m_1\le m_2\}$. As a negative control, a box containing the equality point
+$(1/\sqrt2,1/\sqrt2)$ is refused, as it must be.
+\end{proof}
+
+\begin{theorem}[The unconditional bound]\label{thm:uncond}
+Every ambidextrous moving sofa satisfies
+\[
+  |S|\ \le\ 2\sqrt2-1\ =\ 1.8284271\ldots
+\]
+\end{theorem}
+
+\begin{proof}
+By \eqref{eq:three} it suffices to bound the two-hallway area for every placement. If
+$\dmu\le0$ and $\dnu\le0$ this is Theorem~\ref{thm:upper}. Otherwise, WLOG
+$t=\dnu=\max>0$. If $t\ge1$, Lemma~\ref{lem:wide} gives $\sqrt2<2\sqrt2-1$. If $t<1$ and
+$\dmu>0$, Lemma~\ref{lem:bothpos} and Proposition~\ref{prop:gfun} give $2\sqrt2-1$. If
+$t<1$ and $\dmu\le0$, integrate Lemma~\ref{lem:mixed} over the band: the tents give
+$\tfrac12[g(m_1)+g(m_2)]$ and the flat-top term gives $\tfrac12$ of an integral that is
+monotone in its height, so with $\min(t,u)\le\min(1,D/2)=\tau^\ast$ it is at most
+$\tfrac12E(m_1,m_2)$; Lemma~\ref{lem:profineq} finishes.
+\end{proof}
+
+Since Romik's sofa is ambidextrous, Theorem~\ref{thm:uncond} brackets the ambidextrous
+supremum:
+\[
+  1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\
   2\sqrt2-1=1.8284271\ldots,
 \]
-a factor of $1.1115$. Without the hypothesis the best available bound is $2.2195\ldots$,
-inherited from
+a factor of $1.1116$. The previously available bound was $2.2195\ldots$, inherited from
 \cite{Bae24} because an ambidextrous sofa is in particular a one-corner sofa; we have found
 no bound specific to the ambidextrous problem in the literature.
 
@@ -1995,22 +2115,19 @@ bounds the six-constraint one, so a proof of
   \bigl|L_0\cap R_0\cap L_{\pi/4}\cap R_{\pi/4}\bigr|\ \le\ 2\sqrt2-1
   \qquad\text{for all placements}
 \end{equation}
-would give $A_{\mathrm{ambi}}\le2\sqrt2-1$ outright, with no branch and bound and no
-appeal to the remaining angles. We record \eqref{eq:four} as a conjecture. The evidence is
-that two structurally different placements attain $2\sqrt2-1$ exactly, one splitting the
-region into two congruent pieces of area $\sqrt2-\tfrac12$ each and one leaving it
-connected, and that the same construction returns Hammersley's value on the one-corner
-subset.
-
-Whether $2\sqrt2-1$ \emph{is} the supremum at those angles is not determined here. A
-multistart local maximisation bounds a supremum from below, which is the wrong direction
-for an upper bound on $|S|$; establishing one requires a rigorous global bound, by branch
-and bound over the placement box in interval arithmetic, as in Kallus--Romik \cite{KR18}
-for the one-corner problem. That step is not carried out. We note only what it would give
-if \eqref{eq:four} holds: $1.8284\ldots$, against the
-$2.2195\ldots$ inherited from \cite{Bae24} because an ambidextrous sofa is in particular a
-one-corner sofa, and against $A_R^\ast=1.6449\ldots$. We have found no upper bound
-specific to the ambidextrous problem in the literature.
+gives $A_{\mathrm{ambi}}\le2\sqrt2-1$ outright, with no branch and bound and no appeal to
+the remaining angles. That is what Theorem~\ref{thm:upper} and
+Lemmas~\ref{lem:wide}--\ref{lem:profineq} establish: \eqref{eq:four} \emph{holds}, since
+the corridor pair $L_0\cap R_0$ is the strip whose rotated coordinates give the band, and
+the four sign cases of the offsets exhaust the placements. Theorem~\ref{thm:uncond} is its
+restatement for sofas. In an earlier version of this note \eqref{eq:four} was recorded as
+a conjecture, supported by two structurally different placements attaining $2\sqrt2-1$
+exactly --- one splitting the region into two congruent pieces of area $\sqrt2-\tfrac12$,
+one leaving it connected --- and by the Hammersley regression check; the four-piece
+decomposition then proved it. So $2\sqrt2-1$ \emph{is} the supremum at those angles:
+attained by Proposition~\ref{prop:extremal}, and an upper bound by
+Theorem~\ref{thm:uncond}, with no interval arithmetic in the two-hallway argument beyond
+region (iv) of Lemma~\ref{lem:profineq}.
 
 The construction was validated before use: intersecting along $\Sig$'s own corner path
 must give an area decreasing to $|\Sig|$, and it does, through

@@ -1,3 +1,54 @@
+## 🎆🎆 THE CROSS REGION IS CLOSED:  A_ambi <= 2 sqrt2 - 1, UNCONDITIONALLY
+
+The sign hypothesis is gone.  Four cases, WLOG t = delta_nu = max(offsets) > 0 by the
+diagonal reflection (else the already-proved theorem applies):
+
+1. WIDE (t >= 1).  w - p = -2t identically, so ell <= |I| <= 4 - 2t and
+   area <= sqrt2 (2-t)^+ <= sqrt2 < 2 sqrt2 - 1.  Two lines, by hand.
+
+2. BOTH POSITIVE (0 < d_mu <= t <= 1).  In the middle window A n D = [q,r] = B and
+   A n C n D = B too, so -|A n D| and +|A n C n D| cancel in inclusion-exclusion and the
+   leftover bracket is 2t - 2(n2-n1) = -2 d_mu < 0.  The NO-CROSS tent bound holds
+   verbatim: area <= (1/2)[g(m1)+g(m2)] <= 2 sqrt2 - 1.  The both-positive case is EASIER
+   than the mixed one.  By hand.
+
+3. MIXED (d_mu <= 0 < t <= 1, u = -d_mu).  The overlap-corrected excess on the window is
+   c(s) = 2t - 2(n2-s)^+ - 2(s-n1)^+, and three one-line estimates give
+   c <= min(2(s-m1), 2(m2-s), 2 min(t,u)) -- a flat-top tent.  Integrating:
+   area <= (1/2)[g(m1) + g(m2) + E],  E = the band integral of the flat-top tent at
+   height 2 min(1, D/2) (monotone in the height, min(t,u) <= min(1, D/2)).
+
+4. LEMMA E (the only remaining fact):  g(m1)+g(m2)+E <= 2(2 sqrt2 - 1) for all m1 <= m2,
+   equality only at m1 = m2 = 1/sqrt2.  Proof on four regions:
+   (i)   central square [sqrt2-1, 1]^2 BY HAND: g = 2sqrt2-1-2x_i^2 exactly there,
+         E <= D^2/2 unclipped, D^2 <= 2(x1^2+x2^2), total <= 2M - (x1^2+x2^2).
+   (ii)  m1 <= -1 BY HAND: total <= h(m2) with h piecewise explicit, max h = 2 sqrt2.
+   (iii) m2 >= sqrt2+1: the s -> sqrt2-s mirror of (ii).
+   (iv)  the rest: ball-arithmetic covering, 28512 boxes, every enclosure of the margin
+         strictly positive, 1.3 s.  Negative control: a box containing the equality point
+         (1/sqrt2, 1/sqrt2) is REFUSED, as it must be.
+
+RULE 3 BATTERY (ambi_cross.py check): E closed form vs direct integral 1.1e-7 max diff
+(trapezoid-rule floor); the three pointwise bounds on 40000 samples each, min slack
+>= -1.1e-15; assembled bound vs true area on 40000 cross placements, min slack -3.3e-16.
+
+TWO-HALVES DISCIPLINE (the lesson of the withdrawn 1.86, applied): estimator gated AND
+region accounted.  Estimator: ball arithmetic + the equality-point negative control.
+Region: cases 1/2/3 exhaust t > 0; WLOG covers delta_nu < delta_mu; t <= 0 is the proved
+theorem; Lemma E regions (i)-(iv) tile {m1 <= m2} with the certified region a superset of
+its share ([-1, 5/2]^2 minus a rational square strictly inside the hand square).
+
+THE RESULT:
+    1.6449552 = A_R*  <=  A_ambi  <=  2 sqrt2 - 1 = 1.8284271,   factor 1.1116,
+with the upper bound SHARP for the two-hallway relaxation (attained at
+a = a' = b = b' = sqrt2/4).  The first upper bound specific to the ambidextrous problem,
+now with no hypotheses.  eq:four, recorded as a conjecture one commit ago, is a theorem.
+
+PYTHON-FLINT GOTCHA, recorded: arb ** 2 routes through exp(2 log x) and returns NaN on a
+ball straddling 0.  Use x*x.  Cost one debugging round on the corner box [2.4998, 2.5]^2.
+
+---
+
 ## 🌊🌊 THE 1.86 BOUND IS WITHDRAWN.  IT IS REPLACED BY A CLOSED FORM: 2 sqrt2 - 1.
 
 An adversarial audit of the branch-and-bound theorem found a fatal defect, and it is real.

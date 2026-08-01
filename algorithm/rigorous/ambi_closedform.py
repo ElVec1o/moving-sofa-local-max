@@ -60,12 +60,16 @@ with equality exactly at m1 = m2 = 1/sqrt2, sig = tau = 0.  Romik's sofa has its
 pi/4 corners at the same point, so sig = tau = 0 and the hypothesis holds.  PROVED, by
 hand, with no computation anywhere in the argument.
 
-WHAT IS NOT PROVED.  When sig > 0 or tau > 0 the cross terms are really there and the
-bound exceeds 2 sqrt2 - 1.  Sampling the true area in that region gives at most 1.81824,
-1.81210 and 1.78850 in the three sign cases, all strictly below 2 sqrt2 - 1, so the defect
-is in the estimate and not in the geometry; but the region is open.  The mirror
-rho(x,y) = (x, 1-y) acts by m_i -> sqrt2 - m_i and swaps sig <-> tau, so the two one-sided
-cases are exchanged and only one of them needs treating.  Rule 0: CONJECTURE.
+THE CROSS REGION IS CLOSED (ambi_cross.py).  When an offset is positive the estimate
+above exceeds 2 sqrt2 - 1, but the area does not: a four-case analysis (wide offsets by
+the |I| <= 4-2t profile; both-positive by exact cancellation B = A n D = A n C n D in the
+inclusion-exclusion; mixed by an overlap-corrected trapezoid dominated by a flat-top tent,
+reduced to one two-variable profile inequality proved by hand on three regions and
+certified by ball covering on the fourth) removes the sign hypothesis entirely:
+
+    A_ambi  <=  2 sqrt(2) - 1     UNCONDITIONALLY.
+
+Rule 0: PROVED (hand + one 28512-box ball certificate with a negative control).
 
 WHAT THIS FILE DOES.  Rule 3 and Rule I11: it falsifies before it reports.  true_area is
 written from the definition, independently of the bound; the bound is written from the
