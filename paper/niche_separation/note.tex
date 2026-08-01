@@ -81,7 +81,7 @@ four-case analysis of the corner offsets removes every hypothesis, giving
 unconditionally. The bound is attained by an explicit placement, so it is exactly the
 value of the two-hallway relaxation; it improves on the $2.2195$ inherited from the
 one-corner theorem, and with Romik's sofa it brackets the ambidextrous supremum within a
-factor of $1.1116$. Optimality of $\Sig$ remains open.
+factor of $1.1115$. Optimality of $\Sig$ remains open.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -1268,7 +1268,7 @@ horizontal segment,
   D\ \text{a Minkowski summand of the unit disc.}
 \]
 For $\Sig$ the segment has length $1.1670498\ldots$, the corridor facet, and $D$ has
-curvature radius at most $0.8389$. What we claim is not the condition but its use: that it
+curvature radius at most $0.8388253\ldots$. What we claim is not the condition but its use: that it
 forces the niche sweep to be injective (Theorems~\ref{thm:rc}, \ref{thm:cross}).
 \end{remark}
 
@@ -1646,7 +1646,7 @@ plainly. Applying the same machinery to Gerver's rotation path:
 \begin{itemize}
 \item Gerver satisfies the one-corner injectivity condition everywhere:
 $\alpha_1>0$ and $\alpha_2>0$ on all of $[0,\pi/2]$, as expected.
-\item (RC) \emph{fails} for Gerver's cap: $\max(H+H'')_{\mathrm{ac}}=1.3960$ near
+\item (RC) \emph{fails} for Gerver's cap: $\max(H+H'')_{\mathrm{ac}}\ge1.399$ near
 $\theta=\pi$.
 \item Gerver's face-2 sweep is genuinely not injective in this decomposition:
 $33\,002$ of $158\,802$ tested pairs meet interior to both segments, with
@@ -1659,7 +1659,7 @@ first and not the second, Gerver the second and not the first. By
 Remark~\ref{rem:rcclassical} the difference has a classical reading: $\Sig$'s cap is a
 corridor facet plus a body that slides freely inside the unit disc, whereas part of
 Gerver's cap boundary is \emph{flatter than the corridor is wide}, its curvature radius
-reaching $1.3986$. The decomposition
+reaching at least $1.399$. The decomposition
 $N=W_2\sqcup W_1^{\mathrm{out}}$ is therefore not the one the one-corner argument uses,
 and the fact that it fails on the solved case is a standing caution about the framework,
 recorded rather than explained.
@@ -1686,7 +1686,7 @@ Remark~\ref{rem:gerver} is not an artefact of orientation.
 The structural reason is visible in Proposition~\ref{prop:rcsigma}. $\Sig$'s cap has
 $H+H''=0$ on $[0,\beta)$ and $(\pi-\beta,\pi]$, i.e.\ \emph{vertices}, because $\Sig$'s
 outer phases have constant contact arcs pinned at $(1,\tfrac12)$. Gerver's cap has no such
-vertices: there $H+H''$ reaches $1.3960$ near $\theta=\pi$. The degeneracy that makes
+vertices: there $H+H''$ reaches at least $1.399$ near $\theta=\pi$. The degeneracy that makes
 $\Sig$ hard for local analysis is exactly what makes (RC) hold for it.
 \end{remark}
 
@@ -2082,7 +2082,7 @@ supremum:
   1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\
   2\sqrt2-1=1.8284271\ldots,
 \]
-a factor of $1.1116$. The previously available bound was $2.2195\ldots$: an ambidextrous
+a factor of $1.1115$. The previously available bound was $2.2195\ldots$: an ambidextrous
 sofa is in particular a one-corner sofa, so it inherits whatever the one-corner problem
 gives, and since \cite{Bae24} that is Gerver's area itself. Before \cite{Bae24} the
 inherited value was the $2.37$ of \cite{KR18}.
@@ -2797,7 +2797,7 @@ stability bound applies to every connected ambidextrous sofa with such cap data.
 
 \begin{proof}
 (RC): $\max(H_\Sig+H_\Sig'')_{\mathrm{ac}}=\tfrac34f_1\sqrt{4-2\sqrt2}\,
-\cos(\tfrac\beta2+\tfrac\pi8)=0.8389\ldots$ in closed form, and
+\cos(\tfrac\beta2+\tfrac\pi8)=0.8388253\ldots$ in closed form, and
 $\|\eta+\eta''\|_\infty\le2r_0=0.1\le0.1611$. Ceiling: $M(\Sig)=0.38784\ldots$ in closed
 form, and $|\delta c_y|\le\|\eta\|_\infty(\sin t+\cos t)\le\sqrt2\,r_0=0.0708$, so
 $M(H)\le0.4586<\tfrac12$. Signs: the perturbations obey
@@ -2920,20 +2920,38 @@ towards $c^\ast=0.7309566$. Every certificate in this note is a lower bound and 
 finite-element number an upper bound, so nothing crossed and no conclusion moves; the
 target was mis-stated by $0.2\%$.
 
-\begin{proposition}[$H^1$ stability]\label{prop:h1}
-The second variation controls the derivative as well: measured against correctly assembled
-mass and stiffness matrices, the largest $c_0$ with
+\begin{proposition}[$H^1$ stability, measured]\label{prop:h1}
+The second variation controls the derivative as well. Measured against assembled mass and
+stiffness matrices, the largest $c_0$ with
 $\tfrac12\delta^2Q[\eta]\le-c_0\|\eta\|^2_{L^2(0,\pi)}-c_1\|\eta'\|^2_{L^2(0,\pi)}$ is
 \[
-  \begin{array}{r|cccccc}
-    c_1 & 0 & 0.1 & 0.3 & 0.5 & 0.7 & 1.0\\\hline
-    c_0 & 0.7323 & 0.6114 & 0.3571 & 0.0760 & -0.2560 & -1.0000
+  \begin{array}{r|cccc}
+    c_1 & 0 & 0.1 & 0.3 & 0.5\\\hline
+    m=64  & 0.7339 & 0.6132 & 0.3595 & 0.0796\\
+    m=128 & 0.7331 & 0.6123 & 0.3583 & 0.0779\\
+    m=256 & 0.7323 & 0.6114 & 0.3571 & 0.0760\\
+    m=512 & 0.7313 & 0.6103 & 0.3556 & 0.0739
   \end{array}
 \]
-at $m=256$, each converging in $m$. So $\tfrac12\delta^2Q\le-0.357\|\eta\|^2_{L^2}
--0.3\|\eta'\|^2_{L^2}$, and the frontier is close to $c_0=0.732-1.31\,c_1$, vanishing near
-$c_1=0.56$.
+These are Rayleigh--Ritz values, hence upper bounds on the true constants, and every
+column is still decreasing at $m=512$: the $c_1=0$ column is the one whose limit is known
+independently, and it is descending towards the certified $c^\ast=0.7309566\ldots$, not
+towards its own $m=256$ entry. So the table bounds the admissible constants from above and
+does \emph{not} establish any of the inequalities. Only the $c_1=0$ case is proved, by
+Theorem~\ref{thm:system}. Rule~7: the $c_1>0$ entries are \textsc{heuristic}, and the
+frontier $c_0\approx0.731-1.31\,c_1$ read off them, vanishing near $c_1=0.56$, is a
+measurement rather than a theorem.
 \end{proposition}
+
+\begin{remark}[Why the earlier statement was wrong]\label{rem:h1wrong}
+An earlier version of this proposition printed the $m=256$ row alone, asserted that the
+entries were converged, and concluded
+$\tfrac12\delta^2Q\le-0.357\|\eta\|^2-0.3\|\eta'\|^2$. The assertion was false in exactly
+the way the paragraph above this proposition already describes for $0.7323$: a
+Rayleigh--Ritz sequence that has not converged, read as if it had. The same mesh value
+appears in both places, which is how the inconsistency survived. Reproducing a printed
+number at the mesh it was computed on confirms its provenance, not its correctness.
+\end{remark}
 
 Two simplifications are worth recording. First, the $\sigma$ term has no singularity:
 since $-2\int\eta\eta'\tan t=-\int(\eta^2)'\tan t=\int\eta^2\sec^2t$ when
