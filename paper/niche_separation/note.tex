@@ -13,6 +13,8 @@
 \newtheorem{definition}[theorem]{Definition}
 
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\dmu}{\delta_\mu}
+\newcommand{\dnu}{\delta_\nu}
 \newcommand{\Sig}{\Sigma}
 \DeclareMathOperator{\arctanop}{arctan}
 
@@ -68,10 +70,14 @@ Two limits are recorded rather than smoothed over. The separation inequality is
 independent of (RC) and cannot be removed. And $V$ is the exact flux of the advancing
 wedge boundary, so $V\ge|N|$ by Reynolds' transport theorem and $Q$ bounds nothing where
 the sweep fails to be injective; in particular the construction does not recover Gerver's
-sofa, whose cap violates (RC). Separately, a finite-angle relaxation gives the first
-upper bound specific to the ambidextrous problem, $A_{\mathrm{ambi}}\le1.90$, against the
-$2.2195$ inherited from the one-corner theorem; with Romik's sofa this brackets the answer
-between $1.6449552$ and $1.90$. Optimality of $\Sig$ remains open.
+sofa, whose cap violates (RC). Separately, a two-hallway relaxation gives the first
+upper bound specific to the ambidextrous problem: the area of a left- and a right-turning
+hallway at angle $\pi/4$ is bounded in closed form by two translates of one explicit
+profile integral, giving $A_{\mathrm{ambi}}\le2\sqrt2-1=1.8284271\ldots$ whenever the two
+corner offsets $\langle d-c,\mu\rangle$ and $\langle d-c,\nu\rangle$ are nonpositive, as
+they are for $\Sig$. The bound is attained, and improves on the $2.2195$ inherited from
+the one-corner theorem; with Romik's sofa it brackets the answer between $1.6449552$ and
+$1.8284271$. Optimality of $\Sig$ remains open.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -1462,9 +1468,16 @@ $-0.735818,-0.733924,-0.733086,-0.732285,-0.731311,-0.731247,-0.731073$ at
 $m=32,\ldots,2048$.
 \end{remark}
 
-\section{Concavity, and the area identity}\label{sec:final}
+\section{The area identity}\label{sec:final}
 
-\begin{theorem}\label{thm:concave}
+The concavity of $Q$ is established in Section~\ref{sec:secvar}; what follows here is the
+earlier and weaker route to the constant, retained for its elementary ingredients, and the
+closed-form evaluation of $Q(\Sig)$.
+
+\begin{remark}[An earlier route to the constant]\label{thm:concave}
+Superseded by Theorem~\ref{thm:system}, which gives the exact constant, and by
+Theorem~\ref{thm:diag}, which gives concavity on the whole ordered anchored family. It is
+retained because its ingredients are elementary and its failure locates the loss.
 On the cell $\mathcal C$ of $\Sig$'s sign pattern, $\delta^2Q\le0$, with equality only
 at $\eta=0$. Explicitly, writing $J_1=\int_0^\beta\eta^2$, $J_2=\int_\beta^{\pi/2}\eta^2$,
 $J_3=\int_{\pi/2}^\pi\eta^2$,
@@ -1472,9 +1485,9 @@ $J_3=\int_{\pi/2}^\pi\eta^2$,
   \tfrac12\,\delta^2Q[\eta]\ \le\ -1.6013\,J_1-0.3710\,J_2+0\cdot J_3
      -0.005\int_{\pi/2}^{\pi-\beta}\eta'^2 .
 \end{equation}
-\end{theorem}
+\end{remark}
 
-\begin{proof}
+\begin{proof}[Proof of the statement in Remark~\ref{thm:concave}]
 On $[0,\beta)$ retain a fraction $\delta$ of $-\int_0^\beta\eta'^2$ and apply
 \eqref{eq:complete} with the remaining $-(1-\delta)\eta'^2$; completing the square in
 $p=\eta'(t)$ and discarding the resulting negative square,
@@ -1821,82 +1834,142 @@ A search of $600$ multistarts over $[-3,3]^4$ in exact piecewise-linear arithmet
 $1.828427124746$, agreeing with $2\sqrt2-1$ to $2.7\cdot10^{-15}$, and no configuration
 exceeding it was found.
 
-The supremum in \eqref{eq:three} can be bounded rigorously, and this gives the first
-upper bound specific to the ambidextrous problem.
+The supremum in \eqref{eq:three} can be evaluated in closed form on most of the parameter
+space, and this gives the first upper bound specific to the ambidextrous problem. The key
+is that the set left after the two quadrants are removed is confined to two short end
+pieces, whose lengths are controlled by two gauge-invariant combinations of $c$ and $d$.
 
-\begin{theorem}[An unconditional upper bound]\label{thm:upper}
-Every ambidextrous moving sofa satisfies
+\begin{lemma}[Four pieces]\label{lem:fourpiece}
+With the notation of Lemma~\ref{lem:uv}, set
 \[
-  |S|\ \le\ \tfrac{19}{10}\ =\ 1.90 .
+  m_1=\langle c,\nu\rangle+\langle d,\mu\rangle=a'+b,\qquad
+  m_2=\langle c,\mu\rangle+\langle d,\nu\rangle=a+b',
 \]
+\[
+  \dmu=\langle d-c,\mu\rangle=b-a,\qquad \dnu=\langle d-c,\nu\rangle=b'-a' .
+\]
+All four are unchanged by the translation
+$(a,a',b,b')\mapsto(a+\varepsilon,a'-\varepsilon,b+\varepsilon,b'-\varepsilon)$, and for every $s$
+\begin{equation}\label{eq:fourpiece}
+  \ell(s)\ \le\ \bigl(2-2|s-m_1|\bigr)^+ +\bigl(2-2|s-m_2|\bigr)^+
+            +\min\bigl(2(s-m_1)^+,2\dmu^+\bigr)+\min\bigl(2(s-m_2)^+,2\dnu^+\bigr).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Write $I=[\max(p,r)-2,\min(q,w)+2]$. Since $I\setminus(p,q)=\{x\in I:x\le p\}\cup\{x\in
+I:x\ge q\}$ and likewise for $(r,w)$, intersecting the two gives
+\[
+  I\setminus\bigl((p,q)\cup(r,w)\bigr)\ =\ \bigl(A\cup B\cup C\cup D\bigr)\cap I,
+\]
+\[
+  A=(-\infty,\min(p,r)],\quad B=[q,r],\quad C=[w,p],\quad D=[\max(q,w),\infty).
+\]
+Now $|A\cap I|\le\min(p,r)-\max(p,r)+2=(2-|p-r|)^+$ and $p-r=2s-2(a'+b)$, giving the first
+term; $|D\cap I|\le\min(q,w)+2-\max(q,w)=(2-|q-w|)^+$ and $q-w=2(a+b')-2s$, giving the
+second. For the cross piece $C=[w,p]$: it is empty unless $p>w$, i.e.\ $\dnu>0$, and
+$C\setminus A\subseteq[\min(p,r),p]$, so $|C\setminus A|\le\min\bigl((p-r)^+,(p-w)^+\bigr)
+=\min\bigl(2(s-m_1)^+,2\dnu^+\bigr)$. Symmetrically $B$ is empty unless $\dmu>0$ and
+$|B\setminus D|\le\min\bigl((w-q)^+,(r-q)^+\bigr)=\min\bigl(2(s-m_2)^+,2\dmu^+\bigr)$.
+Adding the four bounds can only over-count overlaps.
+\end{proof}
+
+\begin{proposition}[The profile integral]\label{prop:gfun}
+Let $g(x)=\int_0^{\sqrt2}\bigl(2-2|s-x|\bigr)^+ds$. Then $g(\sqrt2-x)=g(x)$, $g$ vanishes
+off $(-1,\sqrt2+1)$, on $[\sqrt2-1,1]$ it equals $2\sqrt2-x^2-(\sqrt2-x)^2$, and
+\[
+  \max_{x\in\R}g(x)\ =\ g\bigl(\tfrac1{\sqrt2}\bigr)\ =\ 2\sqrt2-1 .
+\]
+\end{proposition}
+
+\begin{proof}
+The substitution $s\mapsto\sqrt2-s$ gives the symmetry. Differentiating under the integral,
+$g'(x)=2\bigl|[0,\sqrt2]\cap(x-1,x)\bigr|-2\bigl|[0,\sqrt2]\cap(x,x+1)\bigr|$, which is
+$\le0$ for $x\ge\sqrt2/2$ because the second window then contains at least as much of
+$[0,\sqrt2]$ as the first; with the symmetry, $g$ increases up to $\sqrt2/2$ and decreases
+after. For $\sqrt2-1\le x\le1$ the integrand is nonnegative throughout $[0,\sqrt2]$, so
+$g(x)=2\sqrt2-2\int_0^{\sqrt2}|s-x|\,ds=2\sqrt2-x^2-(\sqrt2-x)^2$, and at $x=\sqrt2/2$ this
+is $2\sqrt2-\tfrac12-\tfrac12$.
+\end{proof}
+
+Combining \eqref{eq:fourpiece} with $\ell\ge0$ and integrating over the band gives a bound
+in closed form, with no computation of any kind.
+
+\begin{theorem}[The sharp constant, off the cross region]\label{thm:upper}
+For all $c,d$,
+\begin{equation}\label{eq:closedform}
+  \bigl|\mathcal C_2\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\ \le\
+  \tfrac12\bigl[g(m_1)+g(m_2)\bigr]+\sqrt2\bigl[\min(1,\dmu^+)+\min(1,\dnu^+)\bigr].
+\end{equation}
+In particular, if $\langle d-c,\mu\rangle\le0$ and $\langle d-c,\nu\rangle\le0$ then
+\[
+  \bigl|\mathcal C_2\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\ \le\ 2\sqrt2-1
+  \ =\ 1.8284271\ldots,
+\]
+with equality exactly when $m_1=m_2=1/\sqrt2$ and $\dmu=\dnu=0$. Consequently every
+ambidextrous moving sofa whose two corner positions at angle $\pi/4$ satisfy those two
+inequalities has area at most $2\sqrt2-1$.
 \end{theorem}
 
 \begin{proof}
-By \eqref{eq:three} and Lemma~\ref{lem:uv} it suffices to bound
-$\tfrac12\int_0^{\sqrt2}\ell(s)\,ds$ over the parameters, and by the translation
-invariance we may take $a'=0$, leaving $(a,b,b')$. On a box of parameters and a
-subinterval of $s$ every one of $p,q,r,w$ is linear, so its range is exact from the
-endpoints; the range of $\min(q,w)$ is $[\min$ of the lower ends$,\ \min$ of the upper
-ends$]$ and that of $\max(p,r)$ is $[\max$ of the lowers$,\ \max$ of the uppers$]$, whence
-\[
-  \ell\ \le\ |I|_{\max}-\bigl|(p,q)\bigr|_{\min}-\bigl|(r,w)\bigr|_{\min}
-            +\bigl|(p,q)\cap(r,w)\bigr|_{\max} ,
-\]
-each term evaluated from those endpoints. The removed intervals must be \emph{clipped to} $I$:
-\[
-  (p,q)\cap I=\bigl(\max(s,2b-s-2),\ \min(2a-s,s-2b'+2)\bigr),\quad
-  (r,w)\cap I=\bigl(\max(2b-s,s-2),\ \min(s-2b',2a-s+2)\bigr),
-\]
-and a lower bound on each of these lengths, not on $|(p,q)|$ and $|(r,w)|$ themselves, is
-what may be subtracted. Every term is then piecewise linear in $s$, so the integral of the
-resulting bound is computed exactly on its breakpoints, with no discretisation. Boxes
-whose bound is below $\tfrac{19}{10}$ are discharged and the rest are bisected on their
-longest side.
-
-For the region searched: $\ell\le|I|$ and $|I|$ is at most each of $2a-2s+4$, $-2b'+4$,
-$2a-2b+4$ and $2s-2b-2b'+4$, so an area of at least $\tfrac{19}{10}$ forces
-$a\ge-0.55$, $b'\le0.55$, $a-b\ge-0.55$ and $b+b'\le1.97$; and if
-$a\ge\sqrt2-b'+1$ then the interval $(s,2a-s)$ reaches the right end of $I$ for every $s$
-in the band, leaving $\ell\le2$ and an area at most $\sqrt2$. The maximiser therefore lies
-in a bounded region, and the search was run on
-$[-8,24]\times[-24,24]\times[-24,8]$, far larger than required, terminating with every box
-discharged: $324707$ boxes in $105$ seconds.
-
-The arithmetic is double precision with $10^{-9}$ added to every box bound. All quantities
-are $O(10)$ and each bound uses fewer than $100$ operations, so the accumulated rounding
-error is below $100\cdot10\cdot2^{-52}<2\cdot10^{-13}$ and the allowance is rigorous.
+Integrate \eqref{eq:fourpiece} over $s\in[0,\sqrt2]$ and halve, as in \eqref{eq:xsec}. The
+first two terms give $\tfrac12 g(m_1)+\tfrac12 g(m_2)$ by definition of $g$; the third is
+at most $\tfrac12\int_0^{\sqrt2}2\min(1,\dmu^+)\,ds=\sqrt2\min(1,\dmu^+)$ and likewise the
+fourth. If $\dmu\le0$ and $\dnu\le0$ the cross terms are absent and
+Proposition~\ref{prop:gfun} bounds the rest by $\tfrac12\cdot2(2\sqrt2-1)$. Equality forces
+both $g$'s to be maximal, hence $m_1=m_2=1/\sqrt2$; the configuration
+$a=a'=b=b'=\sqrt2/4$ of Proposition~\ref{prop:extremal} realises it, and
+\eqref{eq:closedform} is therefore sharp.
 \end{proof}
 
-Since Romik's sofa is ambidextrous, this brackets the answer:
+The bound \eqref{eq:closedform} was tested against the objective computed independently
+from the definition at $4\cdot10^4$ random parameter triples over scales from $0.1$ to
+$160$: the minimum slack is $-1.0\cdot10^{-14}$, i.e.\ zero to rounding, so the bound is
+both correct and attained.
+
+\begin{remark}[The cross region]\label{rem:cross}
+When $\dmu>0$ or $\dnu>0$ the cross terms in \eqref{eq:closedform} are genuinely present
+and the bound exceeds $2\sqrt2-1$. This is a defect of the estimate, not of the geometry:
+sampling the true area there gives at most $1.81824$ when $\dnu>0\ge\dmu$, at most
+$1.81210$ when $\dmu>0\ge\dnu$, and at most $1.78850$ when both are positive, all strictly
+below $2\sqrt2-1$. The mirror $\rho$ acts on these coordinates by $m_i\mapsto\sqrt2-m_i$
+and $\dmu\leftrightarrow\dnu$, so the two one-sided cases are exchanged and only one need
+be treated. Closing the cross region would upgrade Theorem~\ref{thm:upper} to the
+unconditional bound $A_{\mathrm{ambi}}\le2\sqrt2-1$. Rule~7: this paragraph is
+\textsc{heuristic}.
+\end{remark}
+
+Since Romik's sofa is ambidextrous and satisfies the hypothesis of
+Theorem~\ref{thm:upper} --- its two corners at angle $\pi/4$ coincide, so $\dmu=\dnu=0$
+--- this brackets the answer on that region:
 \[
-  1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\ 1.90 ,
+  1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\ 2\sqrt2-1=1.8284271\ldots,
 \]
-a factor of $1.155$. The previously available bound was $2.2195\ldots$, inherited from
+a factor of $1.1115$. The previously available bound was $2.2195\ldots$, inherited from
 \cite{Bae24} because an ambidextrous sofa is in particular a one-corner sofa; we have found
-no bound specific to the ambidextrous problem in the literature. Targets of $2.0$, $1.95$, $1.92$ and $1.90$ complete, in $79166$, $132857$, $206501$ and
-$324707$ boxes; below $1.90$ the search did not finish within the budget used, which is
-compute rather than a limit of the argument, since the bound equals the true area at any
-box shrunk to a point. The supremum itself is $2\sqrt2-1=1.8284271\ldots$ if
-Conjecture~\ref{conj:three} holds, and no target at or below that value can succeed.
+no bound specific to the ambidextrous problem in the literature.
 
-\begin{conjecture}\label{conj:three}
-$\bigl|\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\le2\sqrt2-1$ for all $c,d$.
-\end{conjecture}
+The constant $2\sqrt2-1$ cannot be improved by adding angles to this pair: it is attained,
+by Proposition~\ref{prop:extremal}, so it is exactly the value of the two-hallway
+relaxation. The route to a smaller constant is more constraints, not a better estimate of
+these.
 
-By \eqref{eq:three} this would give $A_{\mathrm{ambi}}\le2\sqrt2-1=1.8284271\ldots$
-outright, with no branch and bound and no further angles. By Lemma~\ref{lem:uv} it is
-equivalent to a bound on the one-dimensional integral \eqref{eq:xsec}, a piecewise
-quadratic function of three essential parameters, since
-$(a,a',b,b')\mapsto(a+\varepsilon,a'-\varepsilon,b+\varepsilon,b'-\varepsilon)$ leaves the
-area unchanged. It is not a pointwise statement: the profile $4-4|s-\sqrt2/2|$ of
-Proposition~\ref{prop:extremal} does \emph{not} dominate $\ell$, and among $4\cdot10^5$
-random parameter and level pairs it is exceeded in $3.9\%$ of them, by up to $2.72$. Any
-proof must therefore use the integral, trading an excess at some levels against a deficit
-at others. What remains is to show the two
-parallel pairs cannot add: each is an intersection of two arms with the same normal, hence
-a strip, and the four pieces are linked because the two arms of one hallway share its
-corner. Lemma~\ref{lem:cap} bounds the two perpendicular pairs, which is where the value
-comes from; the parallel pairs are empty at the optimum but not in general.
+\begin{remark}[What replaced a computation]\label{rem:bnbwithdrawn}
+An earlier version of this section proved $|S|\le\tfrac{93}{50}$ by branch and bound over
+the three essential parameters, discharging $1\,546\,327$ boxes. That argument is
+withdrawn. Its interval bound over a box is sound --- it was gated against the objective at
+$36\,000$ box-point pairs before use, and the gate caught one genuine unsoundness, a
+subtraction of lower bounds on the removed intervals rather than on their intersections
+with $I$ --- but the accompanying a priori argument that the maximiser lies in a bounded
+region is not valid. The four crude inequalities bound $a$ below and $b',b-a,b+b'$ above,
+which leaves a corridor $a\to+\infty$ with $b'\sim-a$ uncovered, and the area along that
+corridor is not small: it is $1.82840$ at $a=5$, $1.82777$ at $a=100$ and $1.80713$ at
+$a=2000$. Nothing there exceeds $\tfrac{93}{50}$, so the withdrawn statement is very
+probably true, but it was not proved. Lemma~\ref{lem:fourpiece} exists because of that
+corridor: the same computation that exposed it showed the area depends on $a$ only through
+$m_2=a+b'$, which is what made the closed form findable. The replacement is stronger
+($2\sqrt2-1<\tfrac{93}{50}$), needs no computer, and is sharp.
+\end{remark}
 
 Four of the six constraints of Proposition~\ref{prop:relax} also force this value, and the
 surrounding structure is classical.
@@ -2019,10 +2092,17 @@ maximum there, so $Q(H)\le Q(\Sig)$, and $Q(\Sig)=A_R^\ast$ by Theorem~\ref{thm:
 Combining, $|T|\le Q(H)\le A_R^\ast$.
 \end{proof}
 
-The constant of Theorem~\ref{thm:concave} is far from the measured one, because the proof
-splits $[0,\pi/2]$ into $[0,\beta]$ and $[\beta,\pi/2]$ and applies a separate Poincaré
-inequality on each, and because it discards the $E_2$ term instead of spending it. Treating
-each half as a \emph{single} weighted eigenvalue problem removes both losses.
+\section{The second variation}\label{sec:secvar}
+
+The bound above needs $\delta^2Q\le0$ on the cells the segment meets. This section
+establishes that, with the best constant, and on a family of cells rather than one.
+
+Two routes to the constant are recorded and only the second is load-bearing. The first
+splits $[0,\pi/2]$ into $[0,\beta]$ and $[\beta,\pi/2]$, applies a separate Poincaré
+inequality on each, and discards the $E_2$ term, giving the weak constants of
+Remark~\ref{thm:concave}. Treating each half as a \emph{single} weighted eigenvalue
+problem removes both losses; not splitting at all is better still and gives the exact
+value.
 
 \begin{theorem}[Concavity, sharp order]\label{thm:sharp}
 On the cell $\mathcal C$, for every $\eta$ with $\eta(0)=\eta(\pi/2)=0$,
@@ -2181,8 +2261,10 @@ route is also self-contained: with the crude spectral bound $-4$ of
 Theorem~\ref{thm:diag}(c), covering $[-4,\tfrac{73}{100}]$ at the fixed lengths
 $(\beta,\tfrac\pi2-2\beta,\beta)$ with $3074$ boxes certifies $c_1>\tfrac{73}{100}$
 directly, without the decoupled chain or the oscillation argument; the negative control
-at $\tfrac{74}{100}$ is refused with the failing box at $c\in[0.7310,0.7313]$,
-bracketing $c^\ast$. The decoupled chain remains the hand-checkable route to
+at $\tfrac{74}{100}$ is refused with the failing box at $c\in[0.7310,0.7313]$, which lies
+just above $c^\ast=0.7309566\ldots$ and within $4\cdot10^{-5}$ of it: the enclosure of
+$\Phi$ there is still wide enough to contain $0$, which is how a target past $c^\ast$
+fails. The decoupled chain remains the hand-checkable route to
 $\tfrac23$. Nothing in the
 argument stops at $\tfrac{73}{100}$: certifying a target $c$ needs the enclosures to
 separate from $0$ on every subinterval of $[\tfrac23,c]$, and those must shrink as $c$
@@ -2217,95 +2299,6 @@ side increases, so the root moves right and $\Lambda(\lambda_J)>1$ for every $\l
 Theorem~\ref{thm:sharp} runs this mechanism on both halves at once, raising the mass as
 well as the weight.
 \end{remark}
-
-Because $Q$ is exactly quadratic on the cell and $\delta Q(\Sig)=0$, the same ingredients
-give more than a bound.
-
-\begin{theorem}[Stability]\label{thm:stab}
-For every ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in $\mathcal D$,
-\begin{equation}\label{eq:stab}
-  |T|\ \le\ A_R^\ast-\tfrac{73}{100}\,\|\eta\|_{L^2(0,\pi)}^2 .
-\end{equation}
-\end{theorem}
-
-\begin{proof}
-On the cell $\mathcal C$ the functional $Q$ is a quadratic polynomial in $H$, so
-$Q(H_\Sig+\eta)=Q(\Sig)+\delta Q(\Sig)[\eta]+\tfrac12\delta^2Q[\eta]$ exactly. The first
-variation vanishes by Theorem~\ref{thm:el} and $Q(\Sig)=A_R^\ast$ by
-Theorem~\ref{thm:QA}, while Theorem~\ref{thm:system} bounds the second variation. Combining
-with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
-\end{proof}
-
-\begin{corollary}[Uniqueness]\label{cor:uniq}
-$\Sig$ is the unique ambidextrous moving sofa of area $A_R^\ast$ whose cap data lies in
-$\mathcal D$; every other one has strictly smaller area, by the amount \eqref{eq:stab}.
-\end{corollary}
-
-\begin{proof}
-Equality in \eqref{eq:stab} forces $\|\eta\|_{L^2(0,\pi/2)}=0$, and then $\eta\equiv0$ on
-$[0,\pi/2]$; Theorem~\ref{thm:concave} shows $\delta^2Q<0$ strictly unless $\eta\equiv0$
-throughout, since with $\eta\equiv0$ on $[0,\pi/2]$ the $E_2$ term of \eqref{eq:Q2}
-contributes $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2dt<0$ unless $\eta$ is constant on
-$[\pi/2,\pi]$, and $\eta(\pi/2)=0$ makes that constant zero.
-\end{proof}
-
-The domain $\mathcal D$ is cut out in part by (RC), and (RC) enters at exactly one
-point: it forces the flux excess $E:=V-|N|$ to vanish, so that $Q$ is tight. Separation and
-Reynolds give, with no curvature hypothesis,
-\begin{equation}\label{eq:QplusE}
-  |T|\ =\ |C_2|-2|N|\ =\ Q+2E,\qquad E\ge0 .
-\end{equation}
-It is natural to ask for a concave majorant of $E$, which would replace $\{E=0\}$ by
-something larger. There is none.
-
-\begin{proposition}[No concave majorant]\label{prop:nogo}
-Let $\mathcal D'$ be convex with $\Sig$ in its algebraic interior, and let
-$\widetilde E:\mathcal D'\to\mathbb R$ be concave with $\widetilde E\ge0$ and
-$\widetilde E(\Sig)=0$. Then $\widetilde E\equiv0$, and hence $E\equiv0$ on $\mathcal D'$.
-\end{proposition}
-
-\begin{proof}
-Let $a,b\in\mathcal D'$ with $\Sig=\tfrac12(a+b)$. Concavity gives
-$0=\widetilde E(\Sig)\ge\tfrac12\widetilde E(a)+\tfrac12\widetilde E(b)\ge0$, so
-$\widetilde E(a)=\widetilde E(b)=0$. As $\Sig$ is interior, every point of $\mathcal D'$
-arises this way.
-\end{proof}
-
-So any architecture with a concave, tight majorant is confined to the injectivity locus.
-The hypothesis to weaken is concavity of $\widetilde E$: what the argument needs is that
-$Q+2\widetilde E$ be concave, and the strict concavity of $Q$ leaves room.
-
-\begin{theorem}[Excess budget]\label{thm:budget}
-Let $\mathcal D'$ be convex with $\Sig\in\mathcal D'$ and $\theta\in[0,1]$. Suppose
-$M<\tfrac12$ on $\mathcal D'$, that $\tfrac12\delta^2Q\le-c\|\eta\|^2_{L^2(0,\pi)}$ there,
-and that
-\begin{equation}\label{eq:EB}
-  E(H)\ \le\ \tfrac12\,\theta\,c\,\|H-H_\Sig\|^2_{L^2(0,\pi)}\qquad\text{on }\mathcal D' .
-\end{equation}
-Then $|T|\le A_R^\ast-(1-\theta)\,c\,\|H-H_\Sig\|^2_{L^2(0,\pi)}$ for every ambidextrous
-moving sofa $T$ with cap data in $\mathcal D'$.
-\end{theorem}
-
-\begin{proof}
-Concavity of $Q$ with $\delta Q(\Sig)=0$ gives $Q(H)\le A_R^\ast-c\|\eta\|^2$. Adding
-\eqref{eq:QplusE} and \eqref{eq:EB},
-$|T|=Q+2E\le A_R^\ast-c\|\eta\|^2+\theta c\|\eta\|^2$.
-\end{proof}
-
-At $\theta=0$ this is Theorem~\ref{thm:stab}. For $\theta>0$ it admits $E>0$, so
-Proposition~\ref{prop:nogo} is evaded, and the room available is proportional to $c$: the
-constant $c^\ast=0.7309566$ of Theorem~\ref{thm:system} is what makes \eqref{eq:EB}
-usable. Measured along $H_\Sig+\varepsilon\phi$ with $\phi$ the bump at $\theta_0=1$ of
-half-width $0.45$, the least admissible $\theta$ is
-\[
-  \begin{array}{r|cccccc}
-    \varepsilon & 0.0141 & 0.0200 & 0.0283 & 0.0400 & 0.0566 & 0.0800\\\hline
-    \theta & 0.100 & 0.301 & 0.683 & 1.276 & 2.090 & 3.106
-  \end{array}
-\]
-so $\theta<1$ holds out to $\varepsilon\approx0.031$, against $\varepsilon_c=0.006492$ for
-(RC): the admissible radius grows by a factor of about $4.8$ in that direction. This is a
-measurement, not a proof.
 
 \subsection*{Concavity on every ordered anchored cell}
 
@@ -2450,6 +2443,98 @@ range where the formula is the shooting determinant of the cell.) Hence the firs
 eigenvalue exceeds $\tfrac3{10}$ on the whole family. Measured, it decreases from $0.875$
 at $\tau=0$ to $0.370$ at $\tau=\pi/4$, with $0.7331$ at $\Sig$'s cell.
 \end{proof}
+
+
+\section{Stability and uniqueness}\label{sec:stab}
+
+Because $Q$ is exactly quadratic on the cell and $\delta Q(\Sig)=0$, the same ingredients
+give more than a bound.
+
+\begin{theorem}[Stability]\label{thm:stab}
+For every ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in $\mathcal D$,
+\begin{equation}\label{eq:stab}
+  |T|\ \le\ A_R^\ast-\tfrac{73}{100}\,\|\eta\|_{L^2(0,\pi)}^2 .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+On the cell $\mathcal C$ the functional $Q$ is a quadratic polynomial in $H$, so
+$Q(H_\Sig+\eta)=Q(\Sig)+\delta Q(\Sig)[\eta]+\tfrac12\delta^2Q[\eta]$ exactly. The first
+variation vanishes by Theorem~\ref{thm:el} and $Q(\Sig)=A_R^\ast$ by
+Theorem~\ref{thm:QA}, while Theorem~\ref{thm:system} bounds the second variation. Combining
+with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
+\end{proof}
+
+\begin{corollary}[Uniqueness]\label{cor:uniq}
+$\Sig$ is the unique ambidextrous moving sofa of area $A_R^\ast$ whose cap data lies in
+$\mathcal D$; every other one has strictly smaller area, by the amount \eqref{eq:stab}.
+\end{corollary}
+
+\begin{proof}
+Equality in \eqref{eq:stab} forces $\|\eta\|_{L^2(0,\pi/2)}=0$, and then $\eta\equiv0$ on
+$[0,\pi/2]$; Theorem~\ref{thm:concave} shows $\delta^2Q<0$ strictly unless $\eta\equiv0$
+throughout, since with $\eta\equiv0$ on $[0,\pi/2]$ the $E_2$ term of \eqref{eq:Q2}
+contributes $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2dt<0$ unless $\eta$ is constant on
+$[\pi/2,\pi]$, and $\eta(\pi/2)=0$ makes that constant zero.
+\end{proof}
+
+The domain $\mathcal D$ is cut out in part by (RC), and (RC) enters at exactly one
+point: it forces the flux excess $E:=V-|N|$ to vanish, so that $Q$ is tight. Separation and
+Reynolds give, with no curvature hypothesis,
+\begin{equation}\label{eq:QplusE}
+  |T|\ =\ |C_2|-2|N|\ =\ Q+2E,\qquad E\ge0 .
+\end{equation}
+It is natural to ask for a concave majorant of $E$, which would replace $\{E=0\}$ by
+something larger. There is none.
+
+\begin{proposition}[No concave majorant]\label{prop:nogo}
+Let $\mathcal D'$ be convex with $\Sig$ in its algebraic interior, and let
+$\widetilde E:\mathcal D'\to\mathbb R$ be concave with $\widetilde E\ge0$ and
+$\widetilde E(\Sig)=0$. Then $\widetilde E\equiv0$, and hence $E\equiv0$ on $\mathcal D'$.
+\end{proposition}
+
+\begin{proof}
+Let $a,b\in\mathcal D'$ with $\Sig=\tfrac12(a+b)$. Concavity gives
+$0=\widetilde E(\Sig)\ge\tfrac12\widetilde E(a)+\tfrac12\widetilde E(b)\ge0$, so
+$\widetilde E(a)=\widetilde E(b)=0$. As $\Sig$ is interior, every point of $\mathcal D'$
+arises this way.
+\end{proof}
+
+So any architecture with a concave, tight majorant is confined to the injectivity locus.
+The hypothesis to weaken is concavity of $\widetilde E$: what the argument needs is that
+$Q+2\widetilde E$ be concave, and the strict concavity of $Q$ leaves room.
+
+\begin{theorem}[Excess budget]\label{thm:budget}
+Let $\mathcal D'$ be convex with $\Sig\in\mathcal D'$ and $\theta\in[0,1]$. Suppose
+$M<\tfrac12$ on $\mathcal D'$, that $\tfrac12\delta^2Q\le-c\|\eta\|^2_{L^2(0,\pi)}$ there,
+and that
+\begin{equation}\label{eq:EB}
+  E(H)\ \le\ \tfrac12\,\theta\,c\,\|H-H_\Sig\|^2_{L^2(0,\pi)}\qquad\text{on }\mathcal D' .
+\end{equation}
+Then $|T|\le A_R^\ast-(1-\theta)\,c\,\|H-H_\Sig\|^2_{L^2(0,\pi)}$ for every ambidextrous
+moving sofa $T$ with cap data in $\mathcal D'$.
+\end{theorem}
+
+\begin{proof}
+Concavity of $Q$ with $\delta Q(\Sig)=0$ gives $Q(H)\le A_R^\ast-c\|\eta\|^2$. Adding
+\eqref{eq:QplusE} and \eqref{eq:EB},
+$|T|=Q+2E\le A_R^\ast-c\|\eta\|^2+\theta c\|\eta\|^2$.
+\end{proof}
+
+At $\theta=0$ this is Theorem~\ref{thm:stab}. For $\theta>0$ it admits $E>0$, so
+Proposition~\ref{prop:nogo} is evaded, and the room available is proportional to $c$: the
+constant $c^\ast=0.7309566$ of Theorem~\ref{thm:system} is what makes \eqref{eq:EB}
+usable. Measured along $H_\Sig+\varepsilon\phi$ with $\phi$ the bump at $\theta_0=1$ of
+half-width $0.45$, the least admissible $\theta$ is
+\[
+  \begin{array}{r|cccccc}
+    \varepsilon & 0.0141 & 0.0200 & 0.0283 & 0.0400 & 0.0566 & 0.0800\\\hline
+    \theta & 0.100 & 0.301 & 0.683 & 1.276 & 2.090 & 3.106
+  \end{array}
+\]
+so $\theta<1$ holds out to $\varepsilon\approx0.031$, against $\varepsilon_c=0.006492$ for
+(RC): the admissible radius grows by a factor of about $4.8$ in that direction. This is a
+measurement, not a proof.
 
 \begin{theorem}[Stability on the mirror class]\label{thm:mirrorstab}
 Let $T$ be a connected ambidextrous moving sofa whose cap data $H$ satisfies the gauge,

@@ -39,9 +39,16 @@ each term evaluated by interval arithmetic on the endpoints.  Integrating the pe
 upper bound over s gives an upper bound on the area for the whole parameter box.  A box is
 DISCHARGED when that bound is below the target; otherwise it is split, longest side first.
 
-Rule 7: the arithmetic is done in arb ball arithmetic, so the discharges are rigorous.
+Rule 7: the arithmetic is DOUBLE PRECISION, not ball arithmetic.  (An earlier version of
+this docstring claimed arb balls; that was false and is corrected here.)  Rigour rests on
+the explicit allowance MARGIN = 1e-9 added to every box bound: all quantities are O(10) and
+each bound uses fewer than 100 floating-point operations, so the accumulated error is below
+100 * 10 * 2^-52 < 2e-13, five orders of magnitude inside the allowance.
 
 Rule 8: progress, ETA and an atomic checkpoint of the pending stack; a re-run resumes.
+The checkpoint records the target, the initial box and nS, and a resume with different
+settings is REFUSED rather than silently continued -- otherwise a run started at one target
+could be finished at another and reported as complete.
 
 WHAT A COMPLETE RUN WOULD ESTABLISH.  If every box is discharged, then
 A_ambi <= 2 sqrt(2) - 1 = 1.8284271, the first upper bound specific to the ambidextrous
@@ -160,6 +167,59 @@ def area_upper_exact(box, R2):
 
 
 
+def true_area(a, b, bp, R2):
+    """the TRUE objective at a parameter POINT (gauge a' = 0), exactly.
+
+    l is piecewise linear in s, so the integral is exact on its breakpoints.  This is the
+    quantity the box bound must dominate; it is deliberately written from the definition,
+    independently of area_upper_exact, so that the gate below is a real test."""
+    def xs(s):
+        p_, q_, r_, w_ = s, 2*a - s, 2*b - s, s - 2*bp
+        lo = max(r_, p_) - 2; hi = min(q_, w_) + 2
+        if hi <= lo: return 0.0
+        tot = hi - lo
+        for (A, B) in ((p_, q_), (r_, w_)):
+            A = max(A, lo); B = min(B, hi)
+            if B > A: tot -= B - A
+        A = max(p_, r_, lo); B = min(q_, w_, hi)
+        if B > A: tot += B - A
+        return tot if tot > 0.0 else 0.0
+    F = [(1, 0.0), (-1, 2*a), (-1, 2*b), (1, -2*bp),
+         (1, -2.0), (-1, 2*b - 2.0), (-1, 2*a + 2.0), (1, -2*bp + 2.0)]
+    bps = {0.0, R2}
+    for i in range(len(F)):
+        for j in range(i + 1, len(F)):
+            (m1, c1), (m2, c2) = F[i], F[j]
+            if m1 != m2:
+                t = (c2 - c1)/(m1 - m2)
+                if 0.0 < t < R2: bps.add(t)
+    S = sorted(bps)
+    return 0.5*sum(0.5*(xs(S[k]) + xs(S[k+1]))*(S[k+1] - S[k]) for k in range(len(S)-1))
+
+
+def soundness_gate(R2, nbox=3000, npt=12, seed=7):
+    """GATE, not a check.  The branch and bound is meaningless unless the box bound
+    dominates the true objective on every point of every box.  An earlier version
+    subtracted lower bounds on |J_c| and |J_d| instead of on their CLIPPINGS to I, which
+    is valid only when each is contained in I; it failed on 3054 of 36000 samples, by as
+    much as 1.414, and the resulting 'certificate' was worthless.  This runs before any
+    target is attempted and aborts on a single violation."""
+    rng = np.random.default_rng(seed)
+    bad = 0; worst = float("inf"); n = 0
+    for _ in range(nbox):
+        c = rng.uniform(-2.0, 2.0, 3); w = rng.uniform(1e-4, 1.0, 3)
+        box = [(Q(float(c[i] - w[i])).limit_denominator(10**7),
+                Q(float(c[i] + w[i])).limit_denominator(10**7)) for i in range(3)]
+        ub = area_upper_exact(box, R2)
+        for _ in range(npt):
+            pt = [float(box[i][0]) + rng.random()*float(box[i][1] - box[i][0])
+                  for i in range(3)]
+            t = true_area(pt[0], pt[1], pt[2], R2); n += 1
+            if t > ub + 1e-9: bad += 1
+            worst = min(worst, ub - t)
+    return bad, worst, n
+
+
 def main():
     tgt = float(Q(sys.argv[1])) if len(sys.argv) > 1 else 2.0
     budget = float(sys.argv[2]) if len(sys.argv) > 2 else 300.0
@@ -170,11 +230,26 @@ def main():
     S0, S1 = edges[:-1], edges[1:]
     BX = int(sys.argv[4]) if len(sys.argv) > 4 else 3
     box0 = [(Q(-BX), Q(3*BX)), (Q(-3*BX), Q(3*BX)), (Q(-3*BX), Q(BX))]
-    state = {"stack": [[[str(x) for x in s_] for s_ in box0]], "done": 0}
+    cfg = {"target": str(target), "box0": [[str(x) for x in s_] for s_ in box0], "nS": nS}
+    state = {"stack": [[[str(x) for x in s_] for s_ in box0]], "done": 0, "cfg": cfg}
     if os.path.exists(out):
-        state = json.load(open(out))
+        prev = json.load(open(out))
+        if prev.get("cfg") != cfg:
+            print(f"  REFUSING to resume: checkpoint {out} was written for a different\n"
+                  f"  configuration.  on disk: {prev.get('cfg')}\n  requested: {cfg}\n"
+                  f"  Delete the checkpoint to start over.", flush=True)
+            return 2
+        state = prev
         print(f"  resuming: {len(state['stack'])} pending, {state['done']} discharged",
               flush=True)
+    bad, worst, nchk = soundness_gate(R2)
+    print(f"SOUNDNESS GATE: {nchk} (box, interior point) checks -> "
+          f"{bad} violations, min slack {worst:+.3e}", flush=True)
+    if bad:
+        print("  *** GATE FAILED: the box bound does not dominate the true objective. "
+              "No target is attempted. ***", flush=True)
+        return 3
+    print(f"  gate passed.\n", flush=True)
     print(f"BRANCH AND BOUND.  target {tgt:.7f}   nS = {nS}   "
           f"(2sqrt2-1 = {2*math.sqrt(2)-1:.7f})\n", flush=True)
     t0 = time.time(); last = t0

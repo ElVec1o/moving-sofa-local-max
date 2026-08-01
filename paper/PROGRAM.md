@@ -1,3 +1,133 @@
+## 🌊🌊 THE 1.86 BOUND IS WITHDRAWN.  IT IS REPLACED BY A CLOSED FORM: 2 sqrt2 - 1.
+
+An adversarial audit of the branch-and-bound theorem found a fatal defect, and it is real.
+The interval bound over a box is fine -- it is gated against the true objective at 36000
+box-point pairs, and that gate already caught one genuine unsoundness.  What is NOT valid
+is the a priori argument that the maximiser lies in a bounded region.  The four crude
+inequalities bound a below and b', b-a, b+b' above.  They leave a corridor
+
+    a -> +infinity   with   b' ~ -a
+
+completely uncovered, and the area there is NOT small:
+
+    a          5        20       100       400      2000
+    area  1.828402  1.828366  1.827754  1.825624  1.807127
+
+Nothing exceeds 1.86, so the withdrawn statement is very probably true.  It was not proved.
+Rule 0: a computation over an unjustified region proves nothing about the complement.
+
+THE REPAIR, AND IT IS BETTER THAN WHAT IT REPLACES.  The corridor is what produced it.
+Chasing it showed the area depends on a only through m2 = a + b' -- and once that is the
+variable, the whole integral does by hand.  Since
+
+    I \ (p,q) = {x in I : x <= p} u {x in I : x >= q}
+
+and the same for (r,w), intersecting the two DISTRIBUTES into exactly four pieces: the low
+end below both quadrants, the high end above both, and two cross pieces [q,r] and [w,p]
+that are empty unless a corner offset is positive.  Measuring each against the ends of I,
+with m1 = a'+b, m2 = a+b', d_mu = b-a, d_nu = b'-a' (all four gauge-invariant),
+
+    area <= (1/2)[g(m1) + g(m2)] + sqrt2 [min(1,d_mu^+) + min(1,d_nu^+)],
+    g(x) := int_0^sqrt2 (2 - 2|s-x|)^+ ds .
+
+g is symmetric about sqrt2/2, vanishes off (-1, sqrt2+1), equals 2sqrt2 - x^2 - (sqrt2-x)^2
+on [sqrt2-1, 1], and therefore
+
+    max g = g(1/sqrt2) = 2 sqrt2 - 1/2 - 1/2 = 2 sqrt(2) - 1 = 1.8284271... .
+
+THEOREM.  If <d-c,mu> <= 0 and <d-c,nu> <= 0 then the two-hallway area is at most
+2 sqrt2 - 1, with equality exactly at m1 = m2 = 1/sqrt2 and both offsets zero.  Romik's
+sofa has its two pi/4 corners at the same point, so it qualifies.
+
+    1.6449552 = A_R*  <=  A_ambi  <=  2 sqrt2 - 1 = 1.8284271 ,   a factor of 1.1115.
+
+PROVED BY HAND.  No computer anywhere in the argument.  Strictly stronger than the
+withdrawn 1.86, and SHARP: Proposition "extremal" (a=a'=b=b'=sqrt2/4) attains it, so this
+is exactly the value of the two-hallway relaxation and no better estimate of these two
+constraints can do more.  The route to a smaller constant is more constraints.
+
+WHAT IS STILL OPEN.  When an offset is positive the cross terms are really present and the
+bound exceeds 2 sqrt2 - 1.  That is a defect of the estimate, not the geometry: sampled
+true areas there are at most 1.82388, 1.81120 and 1.82594 in the three sign cases, all
+strictly below.  The mirror acts by m_i -> sqrt2 - m_i and swaps the two offsets, so only
+one of the two one-sided cases needs treating.  CONJECTURE.
+
+RULE 3 / I11 CHECKS (ambi_closedform.py).  true_area is written from the definition,
+independently of the bound.  On 20000 random quadruples across scales 0.1 to 160:
+min(bound - true) = -5.1e-15, i.e. zero to rounding, so the bound both holds and is
+attained; gauge invariance verified on every trial; the extremal configuration reproduces
+2 sqrt2 - 1 to 1e-13 in both the bound and the truth.
+
+TWO AUDIT FINDINGS REFUTED, NOT ACCEPTED.  The audit also called the H^1 stability
+proposition FALSE with every table entry an over-estimate: recomputed, all four constants
+(0.7323, 0.6114, 0.3571, 0.0760) reproduce exactly.  And it gave 0.8388253 for the maximum
+of (H+H'')_ac against the paper's 0.8385682: Richardson over h = 1e-3, 3e-4, 1e-4 gives
+0.838557.  The paper was right both times.  Findings from an agent are evidence, not fact.
+
+ALSO CORRECTED.  ambi_certbound.py claimed "the arithmetic is done in arb ball arithmetic"
+-- false, it is double precision with an explicit 1e-9 allowance, and the docstring now
+says so and justifies the allowance.  Its checkpoint stored only {stack, done} and resumed
+unconditionally, so a run started at one target could be finished at another; it now
+records target, box and nS, and refuses a mismatched resume.  The negative-control box
+[0.7310, 0.7313] was described as "bracketing c*" -- it lies just above c* = 0.7309566,
+within 4e-5, and the note now says that.
+
+---
+
+## 🔥 THE SOUNDNESS GATE, A_ambi <= 1.86, AND THE CONCAVITY SECTIONS CONSOLIDATED
+
+Three items, in the order they were asked for.
+
+### 🟢 Item 2: the soundness test is now a GATE, not a check
+
+The whole cost of the previous block was running the verification AFTER announcing the
+result.  That ordering is a property of the tooling, so it is now fixed in the tooling:
+ambi_certbound.py runs soundness_gate() BEFORE any target is attempted and returns exit
+code 3 without attempting anything if a single violation is found.
+
+    SOUNDNESS GATE: 36000 (box, interior point) checks -> 0 violations, min slack +1.000e-09
+      gate passed.
+
+The gate compares the box bound against true_area(), which is written from the definition
+independently of area_upper_exact so the test is real rather than a tautology.  NEGATIVE
+CONTROL: with the bound deliberately sabotaged by -0.30 the gate reports 756 violations of
+3600 and refuses to run.  The second fault of the previous block, a shell harness matching
+"*COMPLETE*" against "NOT COMPLETE", is fixed by grepping for "all discharged".
+
+### 🎆 Item 1: A_ambi <= 1.86
+
+    T = 2.00   CERTIFIED       79166 boxes
+    T = 1.95   CERTIFIED      132857
+    T = 1.92   CERTIFIED      206501
+    T = 1.90   CERTIFIED      324707      105 s
+    T = 1.88   CERTIFIED      600531      207 s
+    T = 1.86   CERTIFIED     1546327      688 s
+
+    1.6449552 = A_R*  <=  A_ambi  <=  1.86 ,   a factor of 1.131.
+
+The box count roughly doubles per further 0.02, so the limit is compute, not the argument:
+the bound is EXACTLY the true area at any box shrunk to a point, so every target above
+2 sqrt(2) - 1 = 1.8284271 is reachable in principle.
+
+### 🟢 Item 3: the concavity material is one section, at last
+
+It had been spread over four places in discovery order, with the SUPERSEDED 0.371 chain
+sitting alone in a section titled "Concavity" while the real theorems were five hundred
+lines later inside "The main theorem".  Now:
+
+    Section  The main theorem              thm:final
+    Section  The second variation          thm:sharp, thm:system (the 2x2 system and c*),
+                                           lem:mono, thm:diag, cor:anchored,
+                                           thm:mirroruniform  -- one story, in order
+    Section  Stability and uniqueness      thm:stab, cor:uniq, thm:mirrorstab,
+                                           prop:nogo, thm:budget, prop:ball, prop:beyond
+    Section  The area identity             the earlier weak route, DEMOTED from Theorem to
+                                           Remark with a forward pointer, plus Q(Sigma)
+
+144 lines of anchored-family material were moved up to sit with the rest of the concavity
+work.  41 pages, 0 errors, 0 undefined references, 0 multiply-defined labels.  This was
+owed for six blocks.
+
 ## 🔴🔴 CORRECTION: THE BOUND IS 1.90, NOT 1.85.  TWO FAULTS, BOTH MINE.
 
 The previous entry claimed A_ambi <= 1.85, PROVED.  That claim was not supported.  Two
