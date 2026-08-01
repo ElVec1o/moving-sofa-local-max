@@ -411,9 +411,11 @@ says so.
 | `e ≥ 0` | `efun_nonneg` | VERIFIED |
 | `(u₂−u₁)² ≤ 2(u₁²+u₂²)` | `sq_sub_le_two_mul_add_sq` | VERIFIED |
 | `D − 1 ≤ D²/4` | `trapezoid_le_triangle` | VERIFIED |
-| L1, L3, L4 | hypotheses of `lemmaE_of` | still to formalise |
+| L1, L3, L4 | `L1_triangle`/`L1_F`, `L3_full`, `L4_full` | VERIFIED (`ProfileClosed.lean`) |
+| **Lemma E, no hypotheses** | `lemmaE_verified`, `profile_bound_verified` | **VERIFIED** |
 
-The 28512-box ball covering is gone from the mathematics, not merely from Lean: the case
-split is on `max(C₁,C₂) ≥ 1`, a comparison of two real numbers, and the tight case reduces
-to `(u₁+u₂)² ≥ 0`. What remains are three named analytic facts about
-`C(x) = ∫₀^√2 min(|s−x|,1) ds`, each a finite piecewise-polynomial computation.
+The 28512-box ball covering is gone from the mathematics, not merely from Lean, and as of
+`ProfileClosed.lean` nothing remains: the ramp integrals, the zone analysis of the clipping
+loss, the closed forms of `C` beyond the band, and the reflection are all machine-checked.
+`lemmaE_verified` has no hypotheses. The only certificate still outside Lean anywhere in
+the project is the second variation (`thm:system`).

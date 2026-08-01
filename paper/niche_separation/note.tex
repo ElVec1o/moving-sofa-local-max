@@ -3099,11 +3099,17 @@ Hammersley's $2\sqrt2$.
 \verb|Classical.choice|. What is \emph{not} formalised is the second variation and the ball-arithmetic
 certificate of Theorem~\ref{thm:system}, the only computation the two-hallway bound no
 longer needs anywhere else; the label on that remains \textsc{proved}, not
-\textsc{verified}. For Lemma~\ref{lem:profineq} the Lean development contains the
-assembly \verb|lemmaE_of|, which derives the lemma from (L1), (L3) and (L4) with the case
-split machine-checked, together with the two algebraic ingredients
-\verb|sq_sub_le_two_mul_add_sq| and \verb|trapezoid_le_triangle|; the three analytic
-facts about $C$ are stated as hypotheses there and are what remains to formalise. Trigonometric quantities are carried as formal symbols with
+\textsc{verified}. Lemma~\ref{lem:profineq} is verified end to end: \verb|lemmaE_verified| carries no
+hypotheses, and \verb|profile_bound_verified| is the lemma in its original $g$-form,
+$g(m_1)+g(m_2)+2\int F\le2(2\sqrt2-1)$ for every $m_1\le m_2$. The analytic inputs are
+discharged as follows: (L1) by \verb|L1_triangle| (extend the domain, split at the
+midpoint, two ramp integrals); (L2) by pointwise domination; (L3) and (L4) by
+\verb|L3_full| and \verb|L4_full|, which rest on the splitting $C=A-K$ of
+\verb|Excess.lean|, the four ramp integrals \verb|ramp_up_in| through
+\verb|ramp_down_le|, the zone analysis \verb|Kloss_le|, the closed forms
+\verb|Cfun_right| and \verb|Cfun_far| beyond the band, and the reflection
+\verb|Cfun_symm|, which delivers the left side for free. No covering, no interval
+arithmetic and no numerics of any kind appear in the verified chain. Trigonometric quantities are carried as formal symbols with
 the sign hypotheses $\sin t\ge0$, $\cos t\ge0$, which is all
 Lemma~\ref{lem:ceiling} uses.
 

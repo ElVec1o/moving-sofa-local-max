@@ -6,3 +6,4 @@ import MovingSofa.Integral
 import MovingSofa.Interval
 import MovingSofa.LemmaE
 import MovingSofa.Excess
+import MovingSofa.ProfileClosed
