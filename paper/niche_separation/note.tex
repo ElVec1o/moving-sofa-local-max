@@ -3185,12 +3185,17 @@ continuously differentiable data with the boundary conditions and $\beta\le\tfra
 the decoupled forms dominate $\tfrac1{12}$ of the mass, machine-checked end to end.
 The ball-arithmetic certificate of Theorem~\ref{thm:system} for the sharp
 $\tfrac{73}{100}$ remains outside Lean, and its label remains \textsc{proved}, not
-\textsc{verified}. Of the geometric reduction, the placed region is defined
-(\verb|placedRegion|), its fibres are verified to lie in the four-piece union
-(\verb|fibre_subset_four_piece|, a lift of \verb|four_piece|), and
-\verb|reduction_assembly| derives $|S|\le2\sqrt2-1$ from two named obligations: the
-slicing identity for the region's area, and the containment of the sofa in a placed
-region. Lemma~\ref{lem:profineq} is verified end to end: \verb|lemmaE_verified| carries no
+\textsc{verified}. The geometric reduction is verified except for one step. The
+placed region is defined (\verb|placedRegion|) and shown measurable; its fibres lie in
+the four-piece union (\verb|fibre_subset_four_piece|); and, in the sign-restricted case
+that $\Sig$ satisfies, the slicing identity is \emph{proved}: Fubini restricts the fibre
+integral to the band because the region is empty outside it
+(\verb|placedRegion_volume_eq|), each fibre is bounded by the two tents
+(\verb|fibre_volume_le|), and the verified profile bound evaluates the result
+(\verb|placedRegion_volume_le|). The single remaining obligation of the whole
+upper-bound chain is the containment of the sofa in a placed region, which is the
+two-motions argument of Proposition~\ref{prop:relax} and needs the moving body itself
+formalised. Lemma~\ref{lem:profineq} is verified end to end: \verb|lemmaE_verified| carries no
 hypotheses, and \verb|profile_bound_verified| is the lemma in its original $g$-form,
 $g(m_1)+g(m_2)+2\int F\le2(2\sqrt2-1)$ for every $m_1\le m_2$. The analytic inputs are
 discharged as follows: (L1) by \verb|L1_triangle| (extend the domain, split at the

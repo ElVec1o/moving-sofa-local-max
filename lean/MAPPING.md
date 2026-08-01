@@ -453,7 +453,12 @@ what the elementary constant removes is any computer from the QUALITATIVE concav
 | fibres lie in the four-piece union | `fibre_subset_four_piece` | VERIFIED (lift of `four_piece`) |
 | `S ⊆ X ⟹ vol S ≤ vol X` | `area_mono` | VERIFIED |
 | the assembly to `vol S ≤ 2√2−1` | `reduction_assembly` | VERIFIED, given the two named obligations |
-| the slicing identity (Fubini in the rotated frame) | hypothesis `hslice` | to discharge |
+| measurability of the region | `placedRegion_measurable` | VERIFIED |
+| Fubini restricted to the band | `placedRegion_volume_eq` | VERIFIED |
+| fibre ⊆ the two ends (sign-restricted) | `fibre_subset_ends` | VERIFIED |
+| fibre measure ≤ two tents | `fibre_volume_le` | VERIFIED |
+| lintegral ↔ Bochner bridge | `lintegral_tent_le` | VERIFIED |
+| **the slicing identity** | `placedRegion_volume_le` | **VERIFIED** (sign-restricted case) |
 | sofa ⊆ placed region (two-motions argument) | hypothesis `hplace` | to discharge — needs the moving body formalised |
 
 ## Corrections recorded
