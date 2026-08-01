@@ -359,3 +359,24 @@ Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities g
 through with `simp [Int.add_mul, Int.mul_add, Int.mul_comm]` followed by `omega`;
 degree-4 identities (such as the 2×2 Sylvester identity) do not, which is why F8
 formalizes the logic of a certificate rather than the algebra that produces one.
+
+## The profile integral (`Integral.lean`) — VERIFIED
+
+| Paper | Lean declaration | Note |
+|---|---|---|
+| `prop:gfun`, the bound | `integral_tent_le` | `∫₀^√2 (2−2\|s−x\|)⁺ ds ≤ 2√2−1` for every `x` |
+| `prop:extremal`, attainment | `integral_tent_at_mid` | equality at `x = √2/2`, so the constant is the supremum |
+| the reduction | `half_le_integral_cap` | `∫₀^√2 min(\|s−x\|,1) ds ≥ 1/2` — the whole content |
+| the truncation identity | `tent_eq`, `tent_eq_cap` | `(2−2\|s−x\|)⁺ = 2 − 2·min(\|s−x\|,1)` |
+| the pairing | `cap_pair` | `min(\|s−x\|,1) + min(\|s+√2/2−x\|,1) ≥ √2/2` |
+| subadditivity | `min_add_le` | `min(a+b,1) ≤ min(a,1)+min(b,1)` |
+
+The Lean proof is shorter than the note's, and deliberately so. The note computes `g` in
+closed form on four ranges of `x`; Lean avoids all four by using `max 0 y = y + max 0 (−y)`
+to turn the truncation into a correction term, after which the statement is a single
+pairing inequality with no case analysis anywhere. This is worth carrying back into the
+note, and has been.
+
+Still PROVED and not VERIFIED: the second variation (`thm:system`) and the ball-arithmetic
+covering for region (iv) of `lem:profineq`. Those need certified numerics inside Lean, not
+just Mathlib.

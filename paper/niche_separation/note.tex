@@ -3041,11 +3041,34 @@ $\Z$ has no witness and would make the statement vacuous, so \verb|Z2| carries t
 structure and \verb|sqrt2_sq| exhibits the model, after which \verb|profile_identity| is
 the identity and \verb|equality_case| locates the maximiser at $2x=\sqrt2$.
 
-\verb|lake build| is clean with no \verb|sorry| across $146$ declarations, and
+The profile integral itself is now verified, not merely its middle-range formula. The step
+is \verb|integral_tent_le|: for every $x$,
+$\int_0^{\sqrt2}(2-2|s-x|)^+ds\le2\sqrt2-1$, with \verb|integral_tent_at_mid| giving
+equality at $x=\sqrt2/2$, so the pair says $2\sqrt2-1$ is the supremum. The Lean proof is
+shorter than the case analysis of Proposition~\ref{prop:gfun} because it avoids it: the
+identity $\max(0,y)=y+\max(0,-y)$ turns the truncation into a correction term,
+\[
+  (2-2|s-x|)^+=2-2|s-x|+2(|s-x|-1)^+ ,
+\]
+valid with no hypothesis on $s$, and since $|y|-(|y|-1)^+=\min(|y|,1)$ the bound becomes
+\[
+  \int_0^{\sqrt2}\min\bigl(|s-x|,1\bigr)ds\ \ge\ \tfrac12
+  \qquad\text{for every }x\in\R ,
+\]
+which is \verb|half_le_integral_cap|. That has a one-line proof: split the band at its
+midpoint and pair $s$ with $s+\sqrt2/2$. The triangle inequality gives
+$|s-x|+|s+\sqrt2/2-x|\ge\sqrt2/2$, and $\min(a,1)+\min(b,1)\ge\min(a+b,1)$ with
+$\sqrt2/2<1$ turns that into
+$\min(|s-x|,1)+\min(|s+\sqrt2/2-x|,1)\ge\sqrt2/2$; integrating over $[0,\sqrt2/2]$ gives
+$(\sqrt2/2)^2=\tfrac12$. Equality throughout at $x=\sqrt2/2$. The $-1$ in $2\sqrt2-1$ is
+exactly twice this $\tfrac12$, which is the same $-1$ that separates the constant from
+Hammersley's $2\sqrt2$.
+
+\verb|lake build| is clean with no \verb|sorry| across the development, and
 \verb|#print axioms| reports nothing beyond \verb|propext|, \verb|Quot.sound| and
-\verb|Classical.choice|. What is \emph{not} formalised is the analysis: the integrals,
-the second variation, and the ball-arithmetic certificates are outside the reach of a
-Mathlib-free development, and the label on those remains \textsc{proved}, not
+\verb|Classical.choice|. What is \emph{not} formalised is the second variation and the
+ball-arithmetic certificates of Theorem~\ref{thm:system} and of region~(iv) of
+Lemma~\ref{lem:profineq}; the label on those remains \textsc{proved}, not
 \textsc{verified}. Trigonometric quantities are carried as formal symbols with
 the sign hypotheses $\sin t\ge0$, $\cos t\ge0$, which is all
 Lemma~\ref{lem:ceiling} uses.
