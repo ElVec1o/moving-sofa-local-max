@@ -188,4 +188,72 @@ theorem placedRegion_volume_le (a a' b b' : ℝ)
         congr 1
         ring
 
+/-! ## The general case: the two cross pieces
+
+Without the sign restriction the fibre also meets `B = [q, r]` and `C = [w, p]`.  Each is
+an interval whose length is the corresponding offset, and each is confined to `I`, so its
+contribution is at most `min` of the offset and `2`.  The bound below is the set-level
+form of the cross terms of the note's closed form. -/
+
+/-- **The fibre, in general**, lies in the two ends together with the two cross pieces. -/
+theorem fibre_subset_four (a a' b b' s : ℝ) :
+    (Prod.mk s ⁻¹' placedRegion a a' b b')
+      ⊆ (Set.Icc (max (s - 2*a') (2*b - s) - 2) (min (s - 2*a') (2*b - s))
+          ∪ Set.Icc (max (2*a - s) (s - 2*b')) (min (2*a - s) (s - 2*b') + 2))
+        ∪ (Set.Icc (2*a - s) (2*b - s) ∪ Set.Icc (s - 2*b') (s - 2*a')) := by
+  intro t ht
+  have h := fibre_subset_four_piece a a' b b' s t ht
+  obtain ⟨_, _, hlo, hhi, _, _⟩ := ht
+  rcases h with ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩
+  · exact Or.inl (Or.inl ⟨hlo, le_min h1 h2⟩)
+  · exact Or.inr (Or.inl ⟨h1, h2⟩)
+  · exact Or.inr (Or.inr ⟨h1, h2⟩)
+  · exact Or.inl (Or.inr ⟨max_le h1 h2, hhi⟩)
+
+/-- **The general fibre bound.**  Two tents plus the two cross lengths, the latter being
+`2δ_μ` and `2δ_ν` in the notation of the note, `2b - 2a` and `2b' - 2a'`,
+each clipped at `0` by `Real.volume_Icc` when the piece is empty. -/
+theorem fibre_volume_le_general (a a' b b' s : ℝ) :
+    volume (Prod.mk s ⁻¹' placedRegion a a' b b')
+      ≤ (ENNReal.ofReal (tent (a' + b) s) + ENNReal.ofReal (tent (a + b') s))
+        + (ENNReal.ofReal (2*b - 2*a) + ENNReal.ofReal (2*b' - 2*a')) := by
+  refine le_trans (measure_mono (fibre_subset_four a a' b b' s)) ?_
+  refine le_trans (measure_union_le _ _) (add_le_add ?_ ?_)
+  · -- the two ends: identical to the sign-restricted proof
+    refine le_trans (measure_union_le _ _) (add_le_add ?_ ?_)
+    · rw [Real.volume_Icc]
+      apply ENNReal.ofReal_le_ofReal
+      unfold tent
+      rcases le_total (s - 2*a') (2*b - s) with hle | hle
+      · rw [min_eq_left hle, max_eq_right hle]
+        apply le_max_of_le_right
+        have hab : |s - (a' + b)| = ((2*b - s) - (s - 2*a'))/2 := by
+          rw [abs_of_nonpos (by linarith)]; ring
+        rw [hab]; linarith
+      · rw [min_eq_right hle, max_eq_left hle]
+        apply le_max_of_le_right
+        have hab : |s - (a' + b)| = ((s - 2*a') - (2*b - s))/2 := by
+          rw [abs_of_nonneg (by linarith)]; ring
+        rw [hab]; linarith
+    · rw [Real.volume_Icc]
+      apply ENNReal.ofReal_le_ofReal
+      unfold tent
+      rcases le_total (2*a - s) (s - 2*b') with hle | hle
+      · rw [min_eq_left hle, max_eq_right hle]
+        apply le_max_of_le_right
+        have hab : |s - (a + b')| = ((s - 2*b') - (2*a - s))/2 := by
+          rw [abs_of_nonneg (by linarith)]; ring
+        rw [hab]; linarith
+      · rw [min_eq_right hle, max_eq_left hle]
+        apply le_max_of_le_right
+        have hab : |s - (a + b')| = ((2*a - s) - (s - 2*b'))/2 := by
+          rw [abs_of_nonpos (by linarith)]; ring
+        rw [hab]; linarith
+  · -- the two cross pieces: each an interval of the stated length
+    refine le_trans (measure_union_le _ _) (add_le_add ?_ ?_)
+    · rw [Real.volume_Icc]
+      apply ENNReal.ofReal_le_ofReal; linarith
+    · rw [Real.volume_Icc]
+      apply ENNReal.ofReal_le_ofReal; linarith
+
 end MovingSofa

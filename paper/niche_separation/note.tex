@@ -2328,6 +2328,36 @@ the claim. Every constant is rational and every inequality is Cauchy--Schwarz, a
 Poincar\'e inequality on an interval, or arithmetic.
 \end{proof}
 
+\begin{remark}[A rational certificate for the decoupled half]\label{rem:barrier}
+The gap between $\tfrac1{12}$ and the decoupled truth is closed almost entirely by a
+certificate that is still exact arithmetic. In Prüfer form the half-problem
+$-(w\eta')'-m\eta=c\eta$ becomes $\theta'=\cos^2\theta/w+(m+c)\sin^2\theta$ with
+$\theta(0)=0$, and $c_1>c$ exactly when $\theta$ stays below $\pi/2$; a piecewise-linear
+$B$ with $B(0)=0$ and $B'\ge$ the right side dominates $\theta$, so a barrier reaching
+less than $\pi/2$ is a proof and every check is an inequality between rationals. The
+identity
+\[
+  \frac{\cos^2\theta}{w}+(m+c)\sin^2\theta
+  \ =\ \frac1w+\Bigl(m+c-\frac1w\Bigr)\sin^2\theta
+\]
+is what makes it work: the coefficient is positive on every piece, so an upper bound on
+$\sin^2\theta$ gives one on the whole, which is exactly what an upper barrier supplies.
+Bounding $\cos^2\le1$ instead is fatal, since the slope then never decays and the barrier
+crosses $\pi/2$ prematurely. With $\sin$ bounded above by $x-x^3/6+x^5/120$, every
+constant rounded in the safe direction, and slopes rounded upward to denominator $10^7$,
+$1200$ segments give
+\[
+  c_1\ >\ \tfrac{37}{100}
+\]
+for the right half at $(\lambda,\kappa)=(\tfrac9{20},\tfrac14)$, against the measured
+$0.3885$: the certificate captures $95\%$ of what is available, and $4.4$ times the
+$\tfrac1{12}$ of Proposition~\ref{prop:elem}. The same run at $c=\tfrac12$, above the
+eigenvalue, crosses $\pi/2$ as it must. What is not done is the left half and the
+re-assembly, so Proposition~\ref{prop:elem} is not superseded; the certificate is
+recorded because it is exact, elementary, and mechanically checkable
+(\verb|ambi_barrier.py|).
+\end{remark}
+
 The constant is $11\%$ of the sharp $c^\ast$, and that is the price of dispensing with
 the transfer matrices: Theorem~\ref{thm:sharp} reaches $\tfrac23$ and
 Theorem~\ref{thm:system} the sharp $\tfrac{73}{100}$, both through certified

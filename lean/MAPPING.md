@@ -459,6 +459,8 @@ what the elementary constant removes is any computer from the QUALITATIVE concav
 | fibre measure ≤ two tents | `fibre_volume_le` | VERIFIED |
 | lintegral ↔ Bochner bridge | `lintegral_tent_le` | VERIFIED |
 | **the slicing identity** | `placedRegion_volume_le` | **VERIFIED** (sign-restricted case) |
+| the general fibre decomposition | `fibre_subset_four` | VERIFIED (all four pieces) |
+| the general fibre bound | `fibre_volume_le_general` | VERIFIED — two tents + two cross lengths |
 | sofa ⊆ placed region (two-motions argument) | hypothesis `hplace` | to discharge — needs the moving body formalised |
 
 ## Corrections recorded
