@@ -431,7 +431,12 @@ the project is the second variation (`thm:system`).
 | subset monotonicity (`hsub`) | `hsub_verified` | VERIFIED |
 | the tail cut (`hcut`) | `hcut_verified` | VERIFIED |
 | the engine `(f b − f a)² ≤ (b−a)∫f'²` | `sq_sub_le` | VERIFIED — G-monotonicity, no Cauchy–Schwarz |
-| DD/DN Wirtinger (`hW4`, `hW1`) | hypotheses | the ONLY remaining analytic inputs; ground-state substitution, classical |
+| DD/DN Wirtinger | `wirtinger_DD`, `wirtinger_DN` (`Wirtinger.lean`) | VERIFIED — shifted Riccati `v = k·cot(kt+c)`, no singularity anywhere |
+| the master block | `riccati_block` | VERIFIED — regular FTC, no limits |
+| the pointwise square | `pointwise_riccati` | VERIFIED — `(a·s − k·co·b)² ≥ 0` |
+| `tan c ≤ 2c` | `tan_ratio_le` | VERIFIED via `sin c ≤ c`, `cos c ≥ 7/8` |
+| assembly with shift losses | `secondvar_assembly'` | VERIFIED — `1/1200` (DD), `1/2500` (DN) fit in the `1/1886` slack |
+| **the capstone, no hypotheses** | `elementary_constant_verified` | **VERIFIED** |
 
 `prop:elem` of the note is the new mathematics here: `(1/2)δ²Q ≤ −(1/12)‖η‖²` on the cell
 with NO transfer matrices and NO ball arithmetic — Rule 3 record: all seven chain steps

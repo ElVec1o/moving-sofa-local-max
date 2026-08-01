@@ -10,3 +10,4 @@ import MovingSofa.ProfileClosed
 import MovingSofa.SecondVar
 import MovingSofa.Reduction
 import MovingSofa.Poincare
+import MovingSofa.Wirtinger

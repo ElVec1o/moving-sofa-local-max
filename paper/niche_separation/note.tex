@@ -3161,10 +3161,28 @@ inequality, the subset monotonicity and the tail cut are verified for continuous
 differentiable data (\verb|habs_verified|, \verb|hsub_verified|, \verb|hcut_verified|),
 all from one engine, $(f(b)-f(a))^2\le(b-a)\int_a^bf'^2$ (\verb|sq_sub_le|), proved by
 monotonicity of $t\mapsto(t-a)\int_a^tf'^2-(f(t)-f(a))^2$, whose derivative is
-$\int_a^t(f'(s)-f'(t))^2\,ds\ge0$; no Cauchy--Schwarz machinery is needed. The two
-Wirtinger inequalities remain the only analytic hypotheses, since Mathlib at present has
-no one-dimensional Poincar\'e inequality; their proofs by the ground-state substitution
-are classical and are the next formalisation obligation.
+$\int_a^t(f'(s)-f'(t))^2\,ds\ge0$; no Cauchy--Schwarz machinery is needed. The two Wirtinger
+inequalities are also verified, and by a route worth recording: the classical
+ground-state substitution divides by $\sin$, which vanishes at the Dirichlet end, and the
+resulting integration by parts has a removable singularity that is expensive to
+formalise. Shifting the Riccati supersolution avoids it entirely. The function
+$v=k\cot(kt+c)$ with $c>0$ is regular on all of $[0,T]$ when $kT+c<\pi$ and satisfies
+$v'+v^2+k^2=0$ exactly, so the pointwise square $(f'\sin-k f\cos)^2\ge0$ and the ordinary
+fundamental theorem of calculus give
+\[
+  k^2\int_0^Tf^2\ \le\ \int_0^Tf'^2-v(T)f(T)^2+v(0)f(0)^2 ,
+\]
+with no limits taken anywhere (\verb|riccati_block|). At the Dirichlet end $f(0)=0$
+absorbs the $v(0)$ term however large $\cot c$ is, and the loss $k\tan(c)\,f(T)^2$ at the
+other end is controlled by the verified engine $f(T)^2\le T\int f'^2$. The result is
+$\int f^2\le(1+\pi c)\int f'^2$ for the Dirichlet--Neumann problem and
+$4\int f^2\le(1+2\pi c)\int f'^2$ for the Dirichlet--Dirichlet one
+(\verb|wirtinger_DN|, \verb|wirtinger_DD|, the latter glued from two shifted blocks by
+reflection), for every $c>0$; the elementary chain has slack $1/1886$, and $c=1/8000$
+fits inside it (\verb|secondvar_assembly'|). The capstone
+\verb|elementary_constant_verified| carries \emph{no analytic hypothesis}: for
+continuously differentiable data with the boundary conditions and $\beta\le\tfrac3{10}$,
+the decoupled forms dominate $\tfrac1{12}$ of the mass, machine-checked end to end.
 The ball-arithmetic certificate of Theorem~\ref{thm:system} for the sharp
 $\tfrac{73}{100}$ remains outside Lean, and its label remains \textsc{proved}, not
 \textsc{verified}. Of the geometric reduction, the placed region is defined
