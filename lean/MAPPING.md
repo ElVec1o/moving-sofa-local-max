@@ -318,7 +318,35 @@ inside the proofs above; they carry no independent mathematical content and are
 deliberately not mapped.  Every *theorem* in `Basic.lean` is either in a table above or is
 such a helper.
 
+## F33 / F34 — the unconditional upper bound
+
+| Paper | Lean declaration | Note |
+|---|---|---|
+| Lemma "four pieces" (`lem:fourpiece`) | `four_piece` | the decomposition, over a linear order; `Int` is a faithful and non-vacuous model |
+| same, sign-restricted case | `four_piece_no_cross` | both cross pieces empty |
+| Lemma "both offsets positive" (`lem:bothpos`) | `cross_absorbed` | the containment `B ⊆ A ∪ D` that makes the case need no new estimate |
+| length of `A ∩ I` | `low_end_short` | `2 − \|p−r\|` |
+| length of `D ∩ I` | `high_end_short` | `2 − \|q−w\|` |
+| Proposition "profile" (`prop:gfun`), maximum | `Z2.profile_identity` | `2x²+2(√2−x)² = 2+(2x−√2)²` in ℤ[√2] |
+| non-vacuity of the ring (rule I6) | `Z2.sqrt2_sq` | `√2·√2 = 2`; proved by `rfl`, no axioms |
+| the maximiser | `Z2.equality_case` | forces `2x = √2` |
+| `g(1/√2) = 2√2 − 1` | `g_at_max` | cleared of denominators |
+| the two profiles halved | `two_profiles_halved` | `(1/2)[g(m₁)+g(m₂)] ≤ 2√2−1` |
+
+Why ℤ[√2] and not `Int` with a hypothesis `S*S = 2`: that hypothesis has no integer
+witness, so every theorem under it is vacuously true (rule I6). The ring is therefore
+constructed and its model exhibited before anything is proved in it.
+
+What is NOT formalised: the integrals, the second variation, and the ball-arithmetic
+certificates. Those need real analysis and are out of reach without Mathlib; their label
+stays PROVED, never VERIFIED.
+
 ## Tooling note
+
+Core Lean 4.30 (no Mathlib) has no `ring` and no `positivity`, but it does have `grind`,
+which closes the degree-2 `Z[sqrt 2]` component identities that `simp`+`omega` cannot.
+Unfolding must go through the raw operations (`add`, `mul`, `sub`) rather than typeclass
+instances: routing through `HMul.hMul`/`Mul.mul` makes `simp` loop on `mul.eq_1`.
 
 Core Lean (no Mathlib) has no `ring` and no `positivity`.  Degree-2 identities go
 through with `simp [Int.add_mul, Int.mul_add, Int.mul_comm]` followed by `omega`;

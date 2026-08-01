@@ -13,6 +13,7 @@
 \newtheorem{definition}[theorem]{Definition}
 
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
 \newcommand{\dmu}{\delta_\mu}
 \newcommand{\dnu}{\delta_\nu}
 \newcommand{\Sig}{\Sigma}
@@ -1310,8 +1311,12 @@ $\sigma(\pi/2)=\alpha_1(\pi/2)$ makes the face-1 segment empty and the condition
 \end{proof}
 
 \begin{remark}[Verification]\label{rem:rcnum}
-For $\Sig$ the absolutely continuous part of $H+H''$ has maximum $0.8385682\ldots$, at
-$\theta=\pi-\beta$, so (RC) holds with margin $0.1614\ldots$; the atom at $\theta=\pi/2$
+For $\Sig$ the absolutely continuous part of $H+H''$ attains its maximum at
+$\theta=\beta$ and at $\theta=\pi-\beta$, where second differences at steps
+$h=4\cdot10^{-4},2\cdot10^{-4},10^{-4},5\cdot10^{-5}$ give $0.8384751$, $0.8385252$,
+$0.8385503$, $0.8385629$, with Richardson extrapolations $0.8385419$, $0.8385586$,
+$0.8385672$. The sequence supports $0.8386$ as an upper bound but not more digits than
+that, so (RC) holds for $\Sig$ with margin at least $0.16$; the atom at $\theta=\pi/2$
 has mass $1.1670498\ldots$, the ceiling facet length. The reduction \eqref{eq:osc} was
 checked against direct evaluation of $n(t-\tau)-\alpha_2(t)\sin\tau$ at several
 $(t,\tau)$, agreeing to $2.4\cdot10^{-5}$, the finite-difference floor for $H''$.
@@ -2964,20 +2969,29 @@ $4v''=-(v+(1,1))$ for the bracket of \eqref{eq:x6}
 (\verb|Trig.sol6_bracket|, proved by \verb|rfl| and depending on no axioms), as is
 the frame-speed computation behind Theorem~\ref{thm:a1beta}
 (\verb|Trig.sol1_speed_mu|) and the covering criterion of
-Theorem~\ref{thm:ceiling} (\verb|strip_covers_iff|). \verb|lake build| is clean with no \verb|sorry|,
-and \verb|#print axioms| reports nothing beyond \verb|propext| and
-\verb|Quot.sound|. Trigonometric quantities are carried as formal symbols with
+Theorem~\ref{thm:ceiling} (\verb|strip_covers_iff|).
+
+Two steps of the unconditional bound are formalised, chosen as the ones where a slip
+would be fatal and where no analysis is needed to state them. The four-piece
+decomposition of Lemma~\ref{lem:fourpiece} is a fact about a linear order, so $\Z$ is a
+faithful model: \verb|four_piece| states that a point avoids both removed open intervals
+exactly when it lies in one of the four pieces, \verb|four_piece_no_cross| specialises to
+the case where both cross pieces are empty, and \verb|cross_absorbed| is the containment
+that makes Lemma~\ref{lem:bothpos} need no new estimate. The maximum of the profile
+integral reduces to $2x^2+2(\sqrt2-x)^2=2+(2x-\sqrt2)^2$, an identity in
+$\Z[\sqrt2]$, which is built explicitly rather than posited: a hypothesis $S^2=2$ over
+$\Z$ has no witness and would make the statement vacuous, so \verb|Z2| carries the ring
+structure and \verb|sqrt2_sq| exhibits the model, after which \verb|profile_identity| is
+the identity and \verb|equality_case| locates the maximiser at $2x=\sqrt2$.
+
+\verb|lake build| is clean with no \verb|sorry| across $146$ declarations, and
+\verb|#print axioms| reports nothing beyond \verb|propext|, \verb|Quot.sound| and
+\verb|Classical.choice|. What is \emph{not} formalised is the analysis: the integrals,
+the second variation, and the ball-arithmetic certificates are outside the reach of a
+Mathlib-free development, and the label on those remains \textsc{proved}, not
+\textsc{verified}. Trigonometric quantities are carried as formal symbols with
 the sign hypotheses $\sin t\ge0$, $\cos t\ge0$, which is all
 Lemma~\ref{lem:ceiling} uses.
-
-\begin{thebibliography}{9}
-\bibitem{Baek} J.~Baek, \emph{Optimality of Gerver's sofa},
-  arXiv:2411.19826, 2024.
-\bibitem{Gerver} J.~L.~Gerver, \emph{On moving a sofa around a corner},
-  Geom.\ Dedicata \textbf{42} (1992), 267--283.
-\bibitem{Romik} D.~Romik, \emph{Differential equations and exact solutions in the
-  moving sofa problem}, Exp.\ Math.\ \textbf{27} (2018), 316--330.
-\end{thebibliography}
 
 \begin{thebibliography}{9}
 \bibitem{Bae24} J.~Baek, \emph{Optimality of Gerver's sofa}, arXiv:2411.19826, 2024.
