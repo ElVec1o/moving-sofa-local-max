@@ -107,6 +107,59 @@ def area_upper_np(box, S0, S1):
     return 0.5*float(np.dot(v, S1 - S0)) + MARGIN
 
 
+def area_upper_exact(box, R2):
+    """EXACT upper bound on (1/2) int l(s) ds for the whole parameter box.
+
+    l = |I| - |J_c n I| - |J_d n I| + |J_c n J_d n I|, so an UPPER bound needs an upper
+    bound on |I| and on the doubly-removed part, and LOWER bounds on the two removed
+    parts.  The removed parts must be CLIPPED TO I: an earlier version subtracted a lower
+    bound on |J_c| itself, which is not a lower bound on |J_c n I| unless J_c is contained
+    in I, and that containment fails on many boxes.  It made the bound unsound on 3054 of
+    36000 sampled (box, interior point) pairs, by as much as 1.414.
+
+    With J_c = (p,q), J_d = (r,w), I = [max(p,r)-2, min(q,w)+2]:
+        J_c n I = ( max(s, 2b-s-2),  min(2a-s, s-2b'+2) )
+        J_d n I = ( max(2b-s, s-2),  min(s-2b', 2a-s+2) )
+    and the box-extreme choices below give a lower bound on each length.  Every term is
+    piecewise linear in s, so the integral is computed exactly on the breakpoints."""
+    (a0, a1), (b0, b1), (p0, p1) = box
+    a0, a1, b0, b1, p0, p1 = map(float, (a0, a1, b0, b1, p0, p1))
+
+    def E(s):
+        qmin_hi = min(2*a1 - s, s - 2*p0)          # upper end of min(q,w)
+        pmax_lo = max(s, 2*b0 - s)                 # lower end of max(p,r)
+        base = qmin_hi - pmax_lo
+        I_up = base + 4.0
+        remc = max(0.0, min(2*a0 - s, s - 2*p1 + 2.0) - max(s, 2*b1 - s - 2.0))
+        remd = max(0.0, min(s - 2*p1, 2*a0 - s + 2.0) - max(2*b1 - s, s - 2.0))
+        return I_up - remc - remd + max(0.0, base)
+
+    up = [2*a1, -2*p0, 0.0, 2*b0, 2*a0, -2*p1 + 2.0, 2*b1 - 2.0,
+          -2*p1, 2*a0 + 2.0, 2*b1, -2.0]
+    slope = [-1, 1, 1, -1, -1, 1, -1, 1, -1, -1, 1]
+    bps = {0.0, R2}
+    for i in range(len(up)):
+        for j in range(i + 1, len(up)):
+            if slope[i] != slope[j]:
+                t = (up[j] - up[i])/(slope[i] - slope[j])
+                if 0.0 < t < R2: bps.add(t)
+    S = sorted(bps)
+    tot = 0.0
+    for i in range(len(S) - 1):
+        s0, s1 = S[i], S[i+1]
+        e0, e1 = E(s0), E(s1)
+        if e0 <= 0.0 and e1 <= 0.0:
+            continue
+        if e0 >= 0.0 and e1 >= 0.0:
+            tot += 0.5*(e0 + e1)*(s1 - s0)
+        else:
+            sc = s0 + (s1 - s0)*e0/(e0 - e1)
+            if e0 > 0.0: tot += 0.5*e0*(sc - s0)
+            else:        tot += 0.5*e1*(s1 - sc)
+    return 0.5*tot + MARGIN
+
+
+
 def main():
     tgt = float(Q(sys.argv[1])) if len(sys.argv) > 1 else 2.0
     budget = float(sys.argv[2]) if len(sys.argv) > 2 else 300.0
@@ -124,7 +177,8 @@ def main():
               flush=True)
     print(f"BRANCH AND BOUND.  target {tgt:.7f}   nS = {nS}   "
           f"(2sqrt2-1 = {2*math.sqrt(2)-1:.7f})\n", flush=True)
-    t0 = time.time(); last = t0; MINW = Q(1, 4096)
+    t0 = time.time(); last = t0
+    MINW = Q(1, int(sys.argv[5])) if len(sys.argv) > 5 else Q(1, 4096)
     while state["stack"]:
         if time.time() - t0 > budget:
             json.dump(state, open(out + ".tmp", "w")); os.replace(out + ".tmp", out)
@@ -133,7 +187,7 @@ def main():
             return 2
         raw = state["stack"].pop()
         box = [(Q(x[0]), Q(x[1])) for x in raw]
-        if area_upper_np(box, S0, S1) < tgt:
+        if area_upper_exact(box, R2) < tgt:
             state["done"] += 1
         else:
             widths = [b - a for a, b in box]
@@ -141,7 +195,7 @@ def main():
             if widths[k] < MINW:
                 json.dump(state, open(out + ".tmp", "w")); os.replace(out + ".tmp", out)
                 print(f"  *** STALLED at {[(float(a),float(b)) for a,b in box]}, "
-                      f"bound {area_upper_np(box,S0,S1):.6f} ***", flush=True)
+                      f"bound {area_upper_exact(box,R2):.6f} ***", flush=True)
                 return 1
             m = (box[k][0] + box[k][1])/2
             for lohi in ((box[k][0], m), (m, box[k][1])):

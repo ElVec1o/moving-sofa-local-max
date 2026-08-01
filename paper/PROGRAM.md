@@ -1,3 +1,62 @@
+## 🔴🔴 CORRECTION: THE BOUND IS 1.90, NOT 1.85.  TWO FAULTS, BOTH MINE.
+
+The previous entry claimed A_ambi <= 1.85, PROVED.  That claim was not supported.  Two
+independent faults, found by running the checks that should have been run before it was
+committed.
+
+### 🔴 FAULT 1: the box bound was UNSOUND
+
+l = |I| - |J_c n I| - |J_d n I| + |J_c n J_d n I|.  An upper bound on l needs LOWER bounds
+on the two removed parts, and I used lower bounds on |J_c| and |J_d| themselves.  Those
+are lower bounds on the CLIPPED lengths only if J_c, J_d are contained in I, which I
+assumed "generically".  It fails on many boxes.
+
+Direct test against the true objective -- 3000 random boxes, 12 interior parameter points
+each -- gave 3054 VIOLATIONS out of 36000, the bound falling below the true area by as
+much as 1.414.  The correct clipping is
+
+    (p,q) n I = ( max(s, 2b-s-2),  min(2a-s, s-2b'+2) )
+    (r,w) n I = ( max(2b-s, s-2),  min(s-2b', 2a-s+2) )
+
+With that fixed the same 36000 checks give ZERO violations and a minimum slack of exactly
++1e-9, the rounding margin; and at the optimum the bound equals the true value to 1e-9.
+
+### 🔴 FAULT 2: a shell harness that read "NOT COMPLETE" as success
+
+The target ladder was parsed with  case "$r" in *COMPLETE*) verdict=CERTIFIED ;;  and the
+failure message is "BUDGET REACHED. ... NOT COMPLETE."  Every run that merely ran out of
+budget was recorded as certified.  The rows that carried an explicit box count were real
+completions; the rows that did not -- including 1.85 -- were not.  A_ambi <= 1.85 was
+never certified even with the unsound bound.
+
+### THE ACTUAL RESULT, with the sound bound and correct parsing
+
+    T = 2.00   CERTIFIED     79166 boxes
+    T = 1.95   CERTIFIED    132857 boxes
+    T = 1.92   CERTIFIED    206501 boxes
+    T = 1.90   CERTIFIED    324707 boxes,  105 s
+    T = 1.88   not complete within budget
+    T = 1.87   not complete within budget
+    T = 1.86   not complete within budget
+
+    A_ambi <= 1.90 .        PROVED (computer-assisted)
+
+    1.6449552 = A_R*  <=  A_ambi  <=  1.90 ,   a factor of 1.155.
+
+Still the first upper bound specific to the ambidextrous problem; the trivial one
+inherited from Baek is 2.2195.  Below 1.90 the search is compute-bound, not blocked: the
+bound equals the true area at any box shrunk to a point, so every target above
+2 sqrt(2) - 1 = 1.8284271 is reachable in principle.
+
+### What the two faults have in common
+
+Both were in the scaffolding, not the mathematics, and both would have been caught by the
+check I ran only afterwards: comparing the bound against the true objective on sampled
+points, and reading the completion message rather than pattern-matching it.  The
+soundness test is now part of the record and should be run before any future target is
+believed.  I16 was applied to the SPEED of the result and not to the PLUMBING that
+reported it, which is where the error was.
+
 ## 🎆🎆🎆 A_ambi <= 1.85.  THE FIRST UPPER BOUND SPECIFIC TO THE AMBIDEXTROUS PROBLEM.
 
     1.6449552 = A_R*  <=  A_ambi  <=  1.85

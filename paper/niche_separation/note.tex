@@ -69,9 +69,9 @@ independent of (RC) and cannot be removed. And $V$ is the exact flux of the adva
 wedge boundary, so $V\ge|N|$ by Reynolds' transport theorem and $Q$ bounds nothing where
 the sweep fails to be injective; in particular the construction does not recover Gerver's
 sofa, whose cap violates (RC). Separately, a finite-angle relaxation gives the first
-upper bound specific to the ambidextrous problem, $A_{\mathrm{ambi}}\le1.85$, against the
+upper bound specific to the ambidextrous problem, $A_{\mathrm{ambi}}\le1.90$, against the
 $2.2195$ inherited from the one-corner theorem; with Romik's sofa this brackets the answer
-between $1.6449552$ and $1.85$. Optimality of $\Sig$ remains open.
+between $1.6449552$ and $1.90$. Optimality of $\Sig$ remains open.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -1827,7 +1827,7 @@ upper bound specific to the ambidextrous problem.
 \begin{theorem}[An unconditional upper bound]\label{thm:upper}
 Every ambidextrous moving sofa satisfies
 \[
-  |S|\ \le\ \tfrac{37}{20}\ =\ 1.85 .
+  |S|\ \le\ \tfrac{19}{10}\ =\ 1.90 .
 \]
 \end{theorem}
 
@@ -1842,19 +1842,25 @@ ends$]$ and that of $\max(p,r)$ is $[\max$ of the lowers$,\ \max$ of the uppers$
   \ell\ \le\ |I|_{\max}-\bigl|(p,q)\bigr|_{\min}-\bigl|(r,w)\bigr|_{\min}
             +\bigl|(p,q)\cap(r,w)\bigr|_{\max} ,
 \]
-each term evaluated from those endpoints. Integrating this bound over a partition of
-$[0,\sqrt2]$ into $256$ pieces gives an upper bound for the whole parameter box. Boxes
-whose bound is below $\tfrac{37}{20}$ are discharged and the rest are bisected on their
+each term evaluated from those endpoints. The removed intervals must be \emph{clipped to} $I$:
+\[
+  (p,q)\cap I=\bigl(\max(s,2b-s-2),\ \min(2a-s,s-2b'+2)\bigr),\quad
+  (r,w)\cap I=\bigl(\max(2b-s,s-2),\ \min(s-2b',2a-s+2)\bigr),
+\]
+and a lower bound on each of these lengths, not on $|(p,q)|$ and $|(r,w)|$ themselves, is
+what may be subtracted. Every term is then piecewise linear in $s$, so the integral of the
+resulting bound is computed exactly on its breakpoints, with no discretisation. Boxes
+whose bound is below $\tfrac{19}{10}$ are discharged and the rest are bisected on their
 longest side.
 
 For the region searched: $\ell\le|I|$ and $|I|$ is at most each of $2a-2s+4$, $-2b'+4$,
-$2a-2b+4$ and $2s-2b-2b'+4$, so an area of at least $\tfrac{37}{20}$ forces
-$a\ge-0.62$, $b'\le0.62$, $a-b\ge-0.62$ and $b+b'\le2.03$; and if
+$2a-2b+4$ and $2s-2b-2b'+4$, so an area of at least $\tfrac{19}{10}$ forces
+$a\ge-0.55$, $b'\le0.55$, $a-b\ge-0.55$ and $b+b'\le1.97$; and if
 $a\ge\sqrt2-b'+1$ then the interval $(s,2a-s)$ reaches the right end of $I$ for every $s$
 in the band, leaving $\ell\le2$ and an area at most $\sqrt2$. The maximiser therefore lies
 in a bounded region, and the search was run on
 $[-8,24]\times[-24,24]\times[-24,8]$, far larger than required, terminating with every box
-discharged.
+discharged: $324707$ boxes in $105$ seconds.
 
 The arithmetic is double precision with $10^{-9}$ added to every box bound. All quantities
 are $O(10)$ and each bound uses fewer than $100$ operations, so the accumulated rounding
@@ -1863,14 +1869,15 @@ error is below $100\cdot10\cdot2^{-52}<2\cdot10^{-13}$ and the allowance is rigo
 
 Since Romik's sofa is ambidextrous, this brackets the answer:
 \[
-  1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\ 1.85 ,
+  1.6449552\ldots\ =\ A_R^\ast\ \le\ A_{\mathrm{ambi}}\ \le\ 1.90 ,
 \]
-a factor of $1.125$. The previously available bound was $2.2195\ldots$, inherited from
+a factor of $1.155$. The previously available bound was $2.2195\ldots$, inherited from
 \cite{Bae24} because an ambidextrous sofa is in particular a one-corner sofa; we have found
-no bound specific to the ambidextrous problem in the literature. The method stalls below
-$1.84$ at the resolution used, which is the discretisation of $s$ rather than a limit of
-the argument: the supremum itself is $2\sqrt2-1=1.8284271\ldots$ if
-Conjecture~\ref{conj:three} holds, and targets below that must fail, as they do.
+no bound specific to the ambidextrous problem in the literature. Targets of $2.0$, $1.95$, $1.92$ and $1.90$ complete, in $79166$, $132857$, $206501$ and
+$324707$ boxes; below $1.90$ the search did not finish within the budget used, which is
+compute rather than a limit of the argument, since the bound equals the true area at any
+box shrunk to a point. The supremum itself is $2\sqrt2-1=1.8284271\ldots$ if
+Conjecture~\ref{conj:three} holds, and no target at or below that value can succeed.
 
 \begin{conjecture}\label{conj:three}
 $\bigl|\mathcal S\cap L_{\pi/4}(c)\cap R_{\pi/4}(d)\bigr|\le2\sqrt2-1$ for all $c,d$.
