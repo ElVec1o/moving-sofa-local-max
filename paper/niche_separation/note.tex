@@ -3480,6 +3480,44 @@ is \textsc{heuristic}, a rasterised measurement over $55$ caps, and it is not a 
 no disconnected competitor beats $A_R^\ast$.
 \end{remark}
 
+\begin{proposition}[The ordered class is convex]\label{prop:convex}
+In the cap data $(r,a)$, the set of admissible caps with $\alpha_2(0)\ge\sqrt3-1$ is
+convex.
+\end{proposition}
+
+\begin{proof}
+By Proposition~\ref{prop:corner}, $\alpha_2(0)=\int_0^{\pi/2}r\sin-1+a$, which is affine
+in $(r,a)$. The admissible constraints are $0\le r\le1$ on the absolutely continuous part,
+convex; the two moment conditions, affine; and $a\ge0$, convex. So the admissible set is
+convex and the ordered class is its intersection with a half-space.
+\end{proof}
+
+\begin{theorem}[Optimality on the ordered class]\label{thm:ordopt}
+Let $T$ be a connected ambidextrous moving sofa whose cap satisfies (RC), the forced
+boundary data, and $\alpha_2(0)\ge\sqrt3-1$. Then $|T|\le A_R^\ast$.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:ordopt}'s hypothesis and Corollary~\ref{cor:floor} with the argument
+after Lemma~\ref{lem:imw}, the cap is ordered; by Proposition~\ref{prop:anchor} it is
+anchored. The segment from $H_\Sig$ to $H$ lies in the ordered class by
+Proposition~\ref{prop:convex}, and $\Sig$ itself lies in it since
+$\alpha_2(0)=2a_1-1>\sqrt3-1$. Every cap on the segment is therefore ordered and anchored,
+so $\delta^2Q\le0$ along it by Theorem~\ref{thm:diag}, and $Q$ is concave there. With
+$\delta Q(\Sig)=0$ and $Q(\Sig)=A_R^\ast$, concavity gives $Q(H)\le A_R^\ast$. Finally
+$M<\tfrac12$ for a connected sofa by Theorem~\ref{thm:ceiling}, so the niches are disjoint
+and $|T|\le Q(H)$.
+\end{proof}
+
+This is the global statement restricted to the ordered class, and every ingredient is
+already established: convexity here, orderedness and anchoring from
+Corollary~\ref{cor:floor} and Proposition~\ref{prop:anchor}, concavity from
+Theorem~\ref{thm:diag}, the critical point and the value at $\Sig$ from the
+Euler--Lagrange computation, and disjointness from connectedness. What it does not cover is
+$\alpha_2(0)<\sqrt3-1$, where Corollary~\ref{cor:floor} produces unordered caps and neither
+Lemma~\ref{lem:mono} nor Theorem~\ref{thm:diag} applies. That complement is the whole of
+what separates this from optimality of $\Sig$.
+
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
 $Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
 $[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
