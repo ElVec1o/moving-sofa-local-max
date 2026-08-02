@@ -3550,6 +3550,37 @@ Together with the linear damping of Remark~\ref{rem:endcap} on the marginal mode
 the two pieces are exactly what a coercivity proof needs, and neither requires more
 arithmetic precision.
 
+\begin{proposition}[The marginal mode, exactly]\label{prop:marginal}
+On the marginal mode $p=0$, $q=a\sin t$, with $\sigma=\pi/2-\tau$,
+\[
+  D_\tau[(0,a\sin t)]
+   = a^2\!\!\int_0^\tau\!(\sin^2-\cos^2)
+   = -\tfrac{a^2}2\sin2\tau = -\tfrac{a^2}2\sin2\sigma .
+\]
+\end{proposition}
+
+\begin{proof}
+The unrestricted part $\int_0^{\pi/2}(q^2-q'^2)$ vanishes for $q=\sin t$, and the two
+restricted terms combine to $a^2\int_0^\tau(\sin^2-\cos^2)=-a^2\int_0^\tau\cos2t
+=-\tfrac{a^2}2\sin2\tau$; finally $\sin2\tau=\sin(\pi-2\sigma)=\sin2\sigma$.
+\end{proof}
+
+This is the damping term case (b) of Theorem~\ref{thm:diag} uses, now derived rather than
+quoted, and it confirms the linear rate of Remark~\ref{rem:endcap} in closed form. The
+pointwise identity $\sin^2-\cos^2=-\cos2t$ and the endpoint reduction
+$\sin2\tau=\sin2\sigma$ are formalised; the elementary evaluation of $\int_0^\tau\cos2t$
+is not.
+
+Assembly. Splitting $\eta=a(0,\sin t)+\eta_\perp$ in the $H^1$ inner product,
+Proposition~\ref{prop:marginal} controls the first summand exactly and
+Proposition~\ref{prop:garding} controls the second by $-\tfrac35\|\eta_\perp\|^2_{H^1}$.
+What is not yet controlled is the cross term: the top eigenvalue on the full space is
+measured at about half the marginal mode's own quotient $-\sin2\sigma/\pi$ --- the ratios
+are $0.503$, $0.523$, $0.541$, $0.670$ at $\sigma=0.10,0.05,0.025,0.010$ --- so the
+maximiser mixes the two pieces rather than sitting on either. Closing that coupling is
+what case (b) does by spectral splitting, and it is the one step between these two
+propositions and a coercivity theorem with explicit constants.
+
 \begin{remark}[The end-cap degeneracy is linear]\label{rem:endcap}
 The diagonal family $D_\tau$ degenerates as $\tau\to\pi/2$: at $\tau=\pi/2$ the mode
 $(0,\sin t)$ has $D$-value $0$, which is what forces the separate treatment in case (b) of

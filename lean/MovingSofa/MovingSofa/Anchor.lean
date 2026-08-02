@@ -477,6 +477,23 @@ values that makes it so. -/
 theorem cross_vanishes {p0 pT q0 qT : ℝ} (h0 : p0 = 0) (hT : pT = 0) :
     pT * qT - p0 * q0 = 0 := by rw [h0, hT]; ring
 
+/-- **The marginal mode, pointwise.**  On `p = 0`, `q = a sin t` the integrand of the two
+restricted terms of `D_τ` is `a²(sin² - cos²) = -a² cos 2t`, whose integral over `[0,τ]` is
+`-a²/2 · sin 2τ`.  This is the damping case (b) of `thm:diag` uses.
+
+The pointwise identity and the endpoint reduction are formalised here; evaluating
+`∫₀^τ cos 2t = sin(2τ)/2` is elementary and is done in the note, not in Lean. -/
+theorem marginal_integrand (t : ℝ) :
+    Real.sin t ^ 2 - Real.cos t ^ 2 = -Real.cos (2 * t) := by
+  have := Real.sin_sq_add_cos_sq t
+  rw [Real.cos_two_mul]; linarith
+
+/-- With `τ = π/2 - σ` the damping reads `sin 2τ = sin 2σ`, so it vanishes linearly at the
+end cap — the rate `rem:endcap` measures. -/
+theorem damping_at_endcap (σ : ℝ) : Real.sin (2 * (Real.pi/2 - σ)) = Real.sin (2 * σ) := by
+  have : 2 * (Real.pi/2 - σ) = Real.pi - 2 * σ := by ring
+  rw [this, Real.sin_pi_sub]
+
 section Enclosures
 open Real
 
