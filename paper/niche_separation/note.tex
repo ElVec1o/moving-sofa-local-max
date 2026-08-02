@@ -3754,12 +3754,24 @@ arithmetic these agree with quadrature to its own accuracy, $10^{-12}$, while ca
 radii of order $10^{-58}$. So ingredient three reduces to a ball-matrix solve on certified
 entries, with no quadrature anywhere.
 
-The fourth ingredient resists the crude estimate. Bounding
-$|M_{kj}|\lesssim\tfrac1\pi(\tfrac1{|k-j|}+\tfrac1{k+j})$ and applying Cauchy--Schwarz over
-$j\le N$ gives $\sum_{k>2N}|(Mz)_k|^2\lesssim 9\|z\|^2/2\pi^2$, which does not decay in $N$
-at all and exceeds the measured value $9\cdot10^{-5}$ by four orders. The loss is the
-Cauchy--Schwarz over $j$, which ignores the oscillation that makes the true sum small; a
-usable bound must keep it.
+The fourth ingredient yields to the same treatment as the second, once it is written the
+right way. Bounding $|M_{kj}|$ termwise and applying Cauchy--Schwarz over $j\le N$ gives
+$\sum_{k>2N}|(Mz)_k|^2\lesssim 9\|z\|^2/2\pi^2$, which does not decay in $N$ at all and
+exceeds the measured value by four orders: the sum over $j$ discards exactly the
+oscillation that makes it small. But $(Mz)_k=-D_\tau(\text{mode}_k,w)$ with
+$w=\sum_{j\le N}z_j\,\text{mode}_j$ a \emph{fixed} function, so $(Mz)_k$ is one integral of
+a fixed function against an oscillating one, the same shape as $b_k$. Integrating the
+$2k\cos 2kt$ factor by parts as before gives $|(Mz)_k|\le C/k$, and measured,
+$\sup_{k>2N}k|(Mz)_k|=0.154$, so
+\[
+  \sum_{k>M}|(Mz)_k|^2\ \le\ \frac{0.0238}{M} ,
+\]
+the same $1/M$ law as the $b$-tail with a constant $89$ times smaller. Using
+$\|r\|^2\le2\|b_{>N}\|^2+2\|(Mz)_{>N}\|^2$ and both analytic tails at $N=60$,
+\[
+  K\ \le\ 0.1910\ <\ \tfrac12\sin2\beta=0.2737 ,
+\]
+a margin of $30$ percent with every tail bounded rather than measured.
 
 So the certificate has four ingredients, of which two are proved outright:
 $\lambda_{\min}(M)\ge\tfrac35$ by Proposition~\ref{prop:garding}, the $b$-tail bound by
