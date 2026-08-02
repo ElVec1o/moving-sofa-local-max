@@ -461,7 +461,7 @@ what the elementary constant removes is any computer from the QUALITATIVE concav
 | **the slicing identity** | `placedRegion_volume_le` | **VERIFIED** (sign-restricted case) |
 | the general fibre decomposition | `fibre_subset_four` | VERIFIED (all four pieces) |
 | the general fibre bound | `fibre_volume_le_general` | VERIFIED — two tents + two cross lengths |
-| sofa ⊆ placed region (two-motions argument) | hypothesis `hplace` | to discharge — needs the moving body formalised |
+| sofa ⊆ placed region | `sofa_subset_pair`, `toFibre_mem_placedRegion`, `sofa_toFibre_subset` (`Containment.lean`) | **VERIFIED** given the hallway half-plane definitions |
 
 ## Corrections recorded
 
@@ -481,9 +481,30 @@ recorded in the docstring.
 | `sin²θ ≤ sin²B` for `0 ≤ θ ≤ B ≤ π/2` | `sin_sq_le_of_le` | VERIFIED |
 | coefficient positive on each piece, both halves | `coef_pos_right`, `coef_pos_left` | VERIFIED |
 | barrier below `π/2` ⟹ phase below `π/2` | `barrier_conclusion` | VERIFIED |
-| **the ODE comparison principle** | hypothesis of `barrier_conclusion` | Mathlib has no Sturm–Liouville or Prüfer theory; classical, not machine-checked |
+| **the comparison principle** | `prufer_comparison`, `barrier_certifies` (`Comparison.lean`) | **VERIFIED** — it is the fencing lemma, not ODE theory |
 
 The identity is the whole game and is where the certificate went wrong twice: bounding
 `cos² ≤ 1` makes the slope never decay, and the barrier then crosses `π/2` at `t = 1.304`
 while the true phase reaches only `1.504` at `π/2`. The 1200-segment rational recursion
 lives in `ambi_barrier.py`; nothing in it can be wrong that these lemmas do not constrain.
+
+## What the comparison principle turned out to be
+
+`Barrier.lean` left the comparison as a hypothesis on the grounds that Mathlib has no
+Sturm–Liouville or Prüfer development. That was true of `Analysis/ODE` and the wrong
+conclusion: the comparison is the *fencing* lemma of the mean value theory,
+`image_le_of_deriv_right_lt_deriv_boundary'`, whose hypothesis
+`∀ x, f x = B x → f' x < B' x` is checked **only where the two functions touch**. At a
+touching point `θ x = B x`, so `G(x, θ x) = G(x, B x)`, and a strict barrier closes it —
+no Lipschitz constant, no Grönwall, no first-crossing argument. The barrier produced by
+`ambi_barrier.py` is strict by construction (every slope is rounded up), so strictness is
+free.
+
+## The modelling step
+
+`Containment.lean` *defines* the hallways by their half-plane descriptions in the rotated
+frame rather than deriving them from a definition of rotation. That is faithful to the
+note, whose `lem:uv` proves the equivalence, but it means the identification is recorded
+in Lean rather than re-derived there. It is the one place in the upper-bound chain where
+Lean is taking the note's word for something, and it is a modelling choice, not an
+estimate.

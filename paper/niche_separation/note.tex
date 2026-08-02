@@ -2360,10 +2360,14 @@ because the assembly takes $\min(c_L,c_R)$ and the right half binds. Hence
 on the cell, by exact rational arithmetic: $4.44$ times the $\tfrac1{12}$ of
 Proposition~\ref{prop:elem} and $50.6\%$ of the sharp $c^\ast$. Both negative controls
 behave: the right half at $c=\tfrac12>0.3885$ crosses $\pi/2$, and the left at $c=3>2.689$
-crosses $\pi$ (\verb|ambi_barrier.py|). The comparison principle that turns a barrier into
-a bound on the phase is classical and is the one step not machine-checked; the monotone
-bound it is applied to is (\verb|prufer_rhs_eq|, \verb|prufer_rhs_le|,
-\verb|sin_sq_le_of_le|, \verb|coef_pos_right|, \verb|coef_pos_left|).
+crosses $\pi$ (\verb|ambi_barrier.py|). Both the monotone bound and the comparison
+principle that turns a barrier into a bound on the phase are machine-checked
+(\verb|prufer_rhs_eq|, \verb|prufer_rhs_le|, \verb|sin_sq_le_of_le|,
+\verb|coef_pos_right|, \verb|coef_pos_left|, \verb|prufer_comparison|,
+\verb|barrier_certifies|). The comparison is not an ODE-theoretic fact requiring a
+Lipschitz constant or a Grönwall bound: it is the fencing lemma of the mean value theory,
+whose hypothesis is checked only where the two functions touch, and at a touching point
+the barrier's own strictness gives the conclusion.
 \end{remark}
 
 The constant is $11\%$ of the sharp $c^\ast$, and that is the price of dispensing with
@@ -3223,17 +3227,22 @@ continuously differentiable data with the boundary conditions and $\beta\le\tfra
 the decoupled forms dominate $\tfrac1{12}$ of the mass, machine-checked end to end.
 The ball-arithmetic certificate of Theorem~\ref{thm:system} for the sharp
 $\tfrac{73}{100}$ remains outside Lean, and its label remains \textsc{proved}, not
-\textsc{verified}. The geometric reduction is verified except for one step. The
+\textsc{verified}. The geometric reduction is verified, including the containment. The
 placed region is defined (\verb|placedRegion|) and shown measurable; its fibres lie in
 the four-piece union (\verb|fibre_subset_four_piece|); and, in the sign-restricted case
 that $\Sig$ satisfies, the slicing identity is \emph{proved}: Fubini restricts the fibre
 integral to the band because the region is empty outside it
 (\verb|placedRegion_volume_eq|), each fibre is bounded by the two tents
 (\verb|fibre_volume_le|), and the verified profile bound evaluates the result
-(\verb|placedRegion_volume_le|). The single remaining obligation of the whole
-upper-bound chain is the containment of the sofa in a placed region, which is the
-two-motions argument of Proposition~\ref{prop:relax} and needs the moving body itself
-formalised. Lemma~\ref{lem:profineq} is verified end to end: \verb|lemmaE_verified| carries no
+(\verb|placedRegion_volume_le|). The containment is supplied by \verb|Containment.lean|:
+\verb|AmbiSofa| records a sofa together with the two hallway placements it occupies at
+angle $\pi/4$, which is what "lies in the hallway at every instant" means, so
+\verb|sofa_subset_pair| is definitional; and \verb|toFibre_mem_placedRegion| carries the
+intersection into \verb|placedRegion| by affine arithmetic, which is the content of
+Lemma~\ref{lem:uv}. The hallways are \emph{defined} there by their half-plane
+descriptions in the rotated frame rather than derived from a definition of rotation, so
+that identification is recorded rather than re-derived; it is the one modelling step of
+the chain, and it is not an estimate. Lemma~\ref{lem:profineq} is verified end to end: \verb|lemmaE_verified| carries no
 hypotheses, and \verb|profile_bound_verified| is the lemma in its original $g$-form,
 $g(m_1)+g(m_2)+2\int F\le2(2\sqrt2-1)$ for every $m_1\le m_2$. The analytic inputs are
 discharged as follows: (L1) by \verb|L1_triangle| (extend the domain, split at the

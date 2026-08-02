@@ -13,3 +13,5 @@ import MovingSofa.Poincare
 import MovingSofa.Wirtinger
 import MovingSofa.Slicing
 import MovingSofa.Barrier
+import MovingSofa.Comparison
+import MovingSofa.Containment
