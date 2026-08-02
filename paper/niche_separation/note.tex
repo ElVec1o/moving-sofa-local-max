@@ -3569,12 +3569,21 @@ absolutely continuous radius and the atom are never conflated:
     \delta^2Q\le0 & & & \text{fails} & & \text{holds} & \text{holds} & \text{holds}
   \end{array}
 \]
-against a rasterisation error bar of $0.0015$. Concavity fails only where the area has
-comfortable margin, and the margin is thin only where concavity holds. So the complement of
-Theorem~\ref{thm:ordopt} splits at some $c_0$ between $0.60$ and $0.70$: below $c_0$ a crude
-area bound suffices, above it the concavity argument of Theorem~\ref{thm:ordopt} applies
-unchanged. Neither half needs a mechanism that is both new and sharp. Rule~7: the split
-point and both columns are \textsc{heuristic}.
+against a rasterisation error bar of $0.0015$. If both rows stand, concavity fails only
+where the area has comfortable margin and the margin is thin only where concavity holds, so
+the complement of Theorem~\ref{thm:ordopt} would split at some $c_0$ between $0.60$ and
+$0.70$: a crude area bound below it, the existing concavity argument above.
+
+That reading is withdrawn pending a rebuild. An attempt to locate $c_0$ failed to reproduce
+the second row at all: reconstructing the second variation on realised cells from the
+conventions of Proposition~\ref{prop:garding} gives $\lambda_{\max}=+1.32$ at $c=0.60$ where
+the row records $+0.1701$, and the alternative sign convention gives $+1.08$; neither
+reproduces any of the four recorded values, and neither changes sign inside $[0.60,0.70]$.
+The recorded values come from a computation that was never shipped as a script, so they
+cannot be re-derived, exactly the defect that kept the coercivity certificate's last
+constant open for five rounds. Rule~0: the area row is \textsc{heuristic} and reproducible;
+the concavity row is \textsc{unverified} until the realised-cell second variation is
+shipped, and with it the refutation of concavity that row was used to support.
 \end{remark}
 
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
