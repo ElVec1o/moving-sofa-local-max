@@ -638,4 +638,69 @@ theorem sqrt3_half_le : Real.sqrt 3 / 2 ≤ 8660255 / 10 ^ 7 := by
 
 end Enclosures
 
+section BTail
+
+/-!
+### The `b`-tail numerator is a boundary term
+
+In the `H¹` coercivity certificate the `p`-mode coefficients are
+
+    b_k = (1/‖p_k‖_{H¹}) ∫_τ^{π/2} [cos t · sin 2kt + 2k · sin t · cos 2kt] dt
+
+and the note bounded the numerator by integrating the second summand by parts and keeping
+`|numerator| ≤ 2 + 2σ`.  That discards a cancellation: the integrand is *exactly*
+`d/dt [sin t · sin 2kt]`, so the integral is a boundary term and nothing else.  Since
+`sin (kπ) = 0`, the value is `-sin τ · sin 2kτ`, of modulus at most `sin τ = cos σ`.
+
+At `σ = β` the tail constant drops from `(2+2σ)²/π = 2.1177` to `cos²σ/π = 0.2923`, a
+factor `7.2438`, and the certificate's margin rises from `0.0143` to `0.0549`.  This is the
+fourth time in this problem that a quantity was small because of cancellation and an
+estimate that split it in two lost an order.
+-/
+
+/-- The integrand is an exact derivative, so the integral collapses to the endpoints. -/
+theorem btail_numerator (k : ℕ) (a b : ℝ) :
+    (∫ t in a..b, (Real.cos t * Real.sin (2*k*t) + 2*k * (Real.sin t * Real.cos (2*k*t))))
+      = Real.sin b * Real.sin (2*k*b) - Real.sin a * Real.sin (2*k*a) := by
+  have hd : ∀ t ∈ Set.uIcc a b,
+      HasDerivAt (fun t : ℝ => Real.sin t * Real.sin (2*k*t))
+        (Real.cos t * Real.sin (2*k*t) + 2*k * (Real.sin t * Real.cos (2*k*t))) t := by
+    intro t _
+    have hin : HasDerivAt (fun t : ℝ => 2*(k:ℝ)*t) (2*k) t := by
+      simpa using (hasDerivAt_id t).const_mul (2*(k:ℝ))
+    have h2 : HasDerivAt (fun t : ℝ => Real.sin (2*k*t)) (Real.cos (2*k*t) * (2*k)) t :=
+      (Real.hasDerivAt_sin (2*k*t)).comp t hin
+    have h := (Real.hasDerivAt_sin t).mul h2
+    have he : Real.cos t * Real.sin (2*k*t) + 2*k * (Real.sin t * Real.cos (2*k*t))
+        = Real.cos t * Real.sin (2*k*t) + Real.sin t * (Real.cos (2*k*t) * (2*k)) := by ring
+    rw [he]
+    exact h
+  exact intervalIntegral.integral_eq_sub_of_hasDerivAt hd
+    (Continuous.intervalIntegrable (by fun_prop) a b)
+
+/-- At the right endpoint `π/2` the boundary term vanishes, because `sin (kπ) = 0`. -/
+theorem btail_numerator_at_half_pi (k : ℕ) (a : ℝ) :
+    (∫ t in a..(Real.pi/2),
+        (Real.cos t * Real.sin (2*k*t) + 2*k * (Real.sin t * Real.cos (2*k*t))))
+      = -(Real.sin a * Real.sin (2*k*a)) := by
+  rw [btail_numerator, show 2*(k:ℝ)*(Real.pi/2) = k * Real.pi by ring, Real.sin_nat_mul_pi]
+  ring
+
+/-- Hence the numerator is bounded by `sin τ`, uniformly in `k`. -/
+theorem btail_numerator_abs_le (k : ℕ) {a : ℝ} (ha : 0 ≤ Real.sin a) :
+    |∫ t in a..(Real.pi/2),
+        (Real.cos t * Real.sin (2*k*t) + 2*k * (Real.sin t * Real.cos (2*k*t)))|
+      ≤ Real.sin a := by
+  rw [btail_numerator_at_half_pi, abs_neg, abs_mul, abs_of_nonneg ha]
+  calc Real.sin a * |Real.sin (2*k*a)| ≤ Real.sin a * 1 :=
+        mul_le_mul_of_nonneg_left (Real.abs_sin_le_one _) ha
+    _ = Real.sin a := mul_one _
+
+/-- The gain over the note's constant exceeds a factor `7` at `σ = β`.  Stated on rational
+enclosures `σ ≥ 0.289` and `cos σ ≤ 0.959`, both of which `β = 0.2896538…` satisfies. -/
+theorem btail_gain {σ c : ℝ} (hσ : 289/1000 ≤ σ) (hc0 : 0 ≤ c) (hc : c ≤ 959/1000) :
+    7 * c^2 ≤ (2 + 2*σ)^2 := by nlinarith
+
+end BTail
+
 end MovingSofa

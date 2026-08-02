@@ -3825,20 +3825,32 @@ consistent with the $O(1/N)$ decay the normalisation predicts. The residual tail
 \[
   b_k=\frac{1}{\|p_k\|_{H^1}}\int_\tau^{\pi/2}\bigl[\cos t\,\sin 2kt+2k\sin t\,\cos 2kt\bigr]dt ,
 \]
-and integrating the second term by parts turns it into
-$[\sin t\sin 2kt]_\tau^{\pi/2}-\int\cos t\sin 2kt$, so the whole numerator is at most
-$2+2\sigma$ in absolute value while $\|p_k\|_{H^1}\ge k\sqrt\pi$. Hence
-$|b_k|\le(2+2\sigma)/(k\sqrt\pi)$ and
+and the integrand is an exact derivative:
 \[
-  \sum_{k>N}b_k^2\ \le\ \frac{(2+2\sigma)^2}{\pi N}=\frac{2.1177}{N}\quad\text{at }\sigma=\beta .
+  \frac{d}{dt}\bigl[\sin t\,\sin 2kt\bigr]=\cos t\,\sin 2kt+2k\,\sin t\,\cos 2kt .
 \]
-This dominates the measured tail at every $N$ tested, by a factor of $16$ to $26$, so it is
-a valid rigorous replacement. At $N=120$ it contributes $0.0176$, and $0.0176/\tfrac35$
-added to $z^{\mathsf T}Mz=0.1326$ gives
+Integrating the second term by parts produces $-\int\cos t\sin 2kt$, which cancels the
+first term identically, so the numerator is a boundary term and nothing else:
 \[
-  K\ \le\ 0.1620\ <\ \tfrac12\sin2\beta=0.2737 ,
+  \int_\tau^{\pi/2}\!\bigl[\cos t\,\sin 2kt+2k\sin t\,\cos 2kt\bigr]dt
+   =\bigl[\sin t\,\sin 2kt\bigr]_\tau^{\pi/2}=-\sin\tau\,\sin 2k\tau ,
 \]
-a margin of $41$ percent. The remaining ingredient is an analytic bound on
+since $\sin k\pi=0$. Hence $|{\rm numerator}|\le\sin\tau=\cos\sigma$, not $2+2\sigma$, and
+with $\|p_k\|_{H^1}^2=\pi/4+k^2\pi\ge k^2\pi$,
+\[
+  \sum_{k>N}b_k^2\ \le\ \frac{\cos^2\sigma}{\pi N}=\frac{0.2923}{N}\quad\text{at }\sigma=\beta ,
+\]
+a factor $7.2438$ below the $(2+2\sigma)^2/\pi=2.1177$ obtained by bounding the two
+summands separately. The identity is formalised as \texttt{btail\_numerator} and the bound
+as \texttt{btail\_numerator\_abs\_le}. This is the fourth estimate in this problem to lose
+an order by splitting a quantity that was small through cancellation.
+It dominates the true tail by a factor of $2.00$ uniformly in $N$ --- the residual factor
+is the mean of $\sin^2 2k\tau$ --- so it is both valid and nearly sharp. At $N=120$ it
+contributes $0.0024$, and $0.0024/\tfrac35$ added to $z^{\mathsf T}Mz=0.1326$ gives
+\[
+  K\ \le\ 0.1367\ <\ \tfrac12\sin2\beta=0.2737 ,
+\]
+a margin of $50$ percent. The remaining ingredient is an analytic bound on
 $\|(Mz)_{>N}\|$, which the same integration by parts supplies since $M$'s off-diagonal
 entries come only from the layer, $D_{\pi/2}$ being diagonal; measured, that term is
 $9\cdot10^{-5}$ at $N=120$, two hundred times smaller than the $b$-tail it accompanies.
@@ -3901,9 +3913,15 @@ $(Mz)_k=-\tfrac1{n_k}\bigl[\int\sin 2kt\,F+2k\int\cos 2kt\,G\bigr]$ with
 $F=2w_p-\chi w_p-\chi w_q'$ and $G=-2w_p'+\chi w_p'-\chi w_q$, and integrating the second
 by parts --- $G$ jumps at $\tau$, so the boundary terms include that jump ---
 \[
-  C\ \le\ \frac{\|F\|_{L^1}+|G(0)|+|G(\pi/2)|+\bigl|[G]_\tau\bigr|+\|G'\|_{L^1}}{\sqrt\pi} ,
+  C\ \le\ \frac{\|F-G'\|_{L^1}+|G(0)|+|G(\pi/2)|+\bigl|[G]_\tau\bigr|}{\sqrt\pi} ,
 \]
-every term computable from the witness $z$. Evaluated it converges upward in $K$ through
+every term computable from the witness $z$. Writing $\|F\|_{L^1}+\|G'\|_{L^1}$ here in
+place of $\|F-G'\|_{L^1}$ repeats the error just corrected in the $b$-tail, and by the same
+mechanism: on each piece, where $\chi$ is constant,
+\[
+  F-G'=(2-\chi)\bigl(w_p+w_p''\bigr) ,
+\]
+the two $\chi w_q'$ terms cancelling identically, so $w_q$ leaves the estimate altogether. Evaluated it converges upward in $K$ through
 $1.608$, $1.779$, $1.810$, $1.862$, $1.875$ at $K=20,35,50,70,90$, with increments falling
 to $0.013$; taking $C\le1.90$ and $K=150$ the certificate closes with the proved constant:
 \[
@@ -3911,12 +3929,21 @@ to $0.013$; taking $C\le1.90$ and $K=150$ the certificate closes with the proved
 \]
 where $z^{\mathsf T}Mz=0.132114949$, $\|r_N\|^2=8.4\cdot10^{-32}$, the $b$-tail contributes
 $0.028236$ and the $(Mz)$-tail $0.048133$, margin $0.0143$, the comparison again between
-balls.
+balls. Replacing $2.1177$ by the exact $0.2923$ drops the $b$-tail contribution to
+$0.003898$ and gives
+\[
+  K\ \le\ 0.2188337\ <\ \tfrac12\sin2\beta=0.273722337 ,
+\]
+margin $0.0549$, a gain of $3.83$.
 
 Rule~0: $\lambda_{\min}(M)\ge\tfrac35$, the $b$-tail bound and the $(Mz)$-tail formula are
 all \textsc{proved}, and the arithmetic is certified. The sole remaining input at a lower
 label is the numerical value of $C$, an $L^1$ norm evaluated by floating-point quadrature
 rather than interval quadrature; its convergence is monotone and $1.90$ is taken above it.
+With the exact $b$-tail the certificate closes for any $C\le2.4658$, so the enclosure has
+$31$ percent of headroom over the measured limit rather than $10$; and the identity
+$F-G'=(2-\chi)(w_p+w_p'')$ removes $w_q$ from it. The residual gap is a quadrature, not an
+estimate.
 
 Truncation is otherwise bounded from two directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
 $K_\infty$; their increments decay geometrically, $5.6,2.8,2.4,1.5,0.9$ in units of
