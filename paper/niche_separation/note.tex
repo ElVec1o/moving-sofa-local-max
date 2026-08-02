@@ -3581,13 +3581,38 @@ $B_{\pi/2}(e,\eta_\perp)=0$, so the whole cross term is the difference
 \]
 supported on an interval of length $\sigma$ and hence $O(\sqrt\sigma)$.
 
-The two decoupled programs of that relaxation do have closed forms, but the derivation is
-a three-regime case analysis rather than a substitution, and it is not carried out here.
-Which regime applies depends on whether $\int_T^{\pi/2}\cos=1-\sin T$ exceeds $\tfrac12$:
-below $T=\pi/6$ the constraint can be met entirely outside $[0,T]$, above it a mass
-$\sin T-\tfrac12$ is forced inside, and a third regime appears when the sign change of the
-multiplier ratio falls inside $[0,T]$. A two-regime version disagrees with the program it
-is meant to replace at twelve of twenty-eight sample points, so it is withheld.
+Both programs of that relaxation have closed forms. For the $v$-program the multiplier
+ratio $\sin(T-s)/\sin s+\lambda$ decreases on $(0,T]$, so the filled set is $[0,b]$ with
+$b=\min(T,\pi/3)$ and
+\[
+  V_{\max}(T,\lambda)=\bigl[\cos(T-b)-\cos T\bigr]+\lambda\bigl[1-\cos b\bigr] .
+\]
+For the $u$-program the ratio $\cos(T-s)/\cos s-\lambda$ \emph{increases} on $[0,T]$, so
+the filled subset of $[0,T]$ is again an initial segment $[0,a]$ --- that is what makes a
+single formula possible --- and
+\[
+  U_{\min}(T,\lambda)=\sin T-\sin(T-a)-\lambda\sin a ,
+\]
+with $a$ determined by three regimes. Writing $a_0$ for the zero of the ratio,
+\[
+  a=\begin{cases}
+    \pi/6, & \sin a_0\ge\tfrac12,\\
+    a_0, & \sin a_0<\tfrac12\le\sin a_0+1-\sin T,\\
+    \arcsin\bigl(\sin T-\tfrac12\bigr), & \text{otherwise,}
+  \end{cases}
+\]
+the three cases being: the mass runs out inside the negative-ratio part; the zero-cost
+region $(T,\pi/2]$ finishes it; or the constraint forces a return into $[a_0,T]$. Checked
+against the programs they replace at $77$ pairs $(T,\lambda)$, the largest discrepancy is
+$9.4\cdot10^{-4}$, at the discretisation level of the comparison.
+
+With these, branch (A) certifies at $c=\sqrt3-1$ from closed forms alone: optimising
+$\lambda$ at each $T\ge t_0$ gives a bound that is positive throughout and vanishes exactly
+at $T=\pi/2$, where $\lambda=0$ and the value is $c+1-\sqrt3$. Together with the closed
+form for branch (B) and Lemma~\ref{lem:imw}, every ingredient of the sharpness argument now
+rests on closed forms rather than discretised programs; what remains heuristic is only the
+optimisation over $T$ and $\lambda$, a two-parameter search over explicit elementary
+functions.
 
 The naive absorption fails, and it is worth recording why. Writing $A,Y$ for the $H^1$
 norms of the two summands, the three bounds give
