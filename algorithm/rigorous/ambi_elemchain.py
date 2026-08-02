@@ -115,6 +115,10 @@ def main():
     print(f"\nADVERSARIAL TEST: FEM ground state of the coupled form (n=120):")
     lam0, v0, gn = ground_state(120)
     print(f"  first eigenvalue of the coupled form = {lam0:.4f}  (c* = 0.7309566)")
+    print(f"  DIRECTION: this is a finite-difference eigenvalue, so it approaches c* from")
+    print(f"  below and is a LOWER bound on it up to discretisation.  The chain needs a")
+    print(f"  lower bound on c*, so that is the useful direction; the certified value is")
+    print(f"  c* = 0.7309566 from the arb computation, not this one.")
     print(f"  claim 1/12 = {1/12:.4f} <= {lam0:.4f}: {'consistent' if 1/12 <= lam0 else 'INCONSISTENT'}")
     print(f"\nNEGATIVE CONTROL at 0.75 > c*: the GROUND STATE must refuse it")
     refuse = 0.75 > lam0 + 1e-6
