@@ -3742,6 +3742,25 @@ $\|(Mz)_{>N}\|$, which the same integration by parts supplies since $M$'s off-di
 entries come only from the layer, $D_{\pi/2}$ being diagonal; measured, that term is
 $9\cdot10^{-5}$ at $N=120$, two hundred times smaller than the $b$-tail it accompanies.
 
+The entries themselves are exact. Every entry of $M$ and $b$ is a combination of
+\[
+  \int_0^T\!\sin at\,\sin bt,\qquad \int_0^T\!\cos at\,\cos bt,\qquad
+  \int_0^T\!\sin at\,\cos bt
+\]
+at integer frequencies over $[0,\pi/2]$ and $[0,\tau]$, each elementary: for $a\ne b$ the
+first is $\tfrac12[\tfrac{\sin(a-b)T}{a-b}-\tfrac{\sin(a+b)T}{a+b}]$ and similarly for the
+others, with the diagonal cases $\tfrac T2\mp\tfrac{\sin2aT}{4a}$. Implemented in ball
+arithmetic these agree with quadrature to its own accuracy, $10^{-12}$, while carrying
+radii of order $10^{-58}$. So ingredient three reduces to a ball-matrix solve on certified
+entries, with no quadrature anywhere.
+
+The fourth ingredient resists the crude estimate. Bounding
+$|M_{kj}|\lesssim\tfrac1\pi(\tfrac1{|k-j|}+\tfrac1{k+j})$ and applying Cauchy--Schwarz over
+$j\le N$ gives $\sum_{k>2N}|(Mz)_k|^2\lesssim 9\|z\|^2/2\pi^2$, which does not decay in $N$
+at all and exceeds the measured value $9\cdot10^{-5}$ by four orders. The loss is the
+Cauchy--Schwarz over $j$, which ignores the oscillation that makes the true sum small; a
+usable bound must keep it.
+
 So the certificate has four ingredients, of which two are proved outright:
 $\lambda_{\min}(M)\ge\tfrac35$ by Proposition~\ref{prop:garding}, the $b$-tail bound by
 parts, the $N$-block value $z^{\mathsf T}Mz$ by interval arithmetic on elementary
