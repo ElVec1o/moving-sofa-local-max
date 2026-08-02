@@ -193,4 +193,35 @@ theorem ordered_of_race
   · exact halive u ⟨hu.1, h⟩
   · exact absurd hneg (not_lt.mpr (le_trans hreach (hmono u ⟨h, hu.2⟩)))
 
+/-- **The collapse behind condition (i).**  The worst-case lower bound on `α₂` on
+`[π/6, T]` is `c cos s + (1/2) sin s - (cos(s - π/6) - cos s) - sin s`, and expanding
+`cos(s - π/6) = (√3/2) cos s + (1/2) sin s` turns it into `(c + 1 - √3/2) cos s - sin s`.
+So positivity there is exactly `tan s < c + 1 - √3/2`, an elementary condition. -/
+theorem alpha2_bound_collapse (c s : ℝ) :
+    c * Real.cos s + (1/2) * Real.sin s - (Real.cos (s - Real.pi/6) - Real.cos s)
+      - Real.sin s
+    = (c + 1 - Real.sqrt 3 / 2) * Real.cos s - Real.sin s := by
+  rw [Real.cos_sub, Real.cos_pi_div_six, Real.sin_pi_div_six]
+  ring
+
+/-- **Positivity of that bound is a tangent condition.**  The collapsed bound is positive
+exactly when `sin s < K cos s`.  This is the form the rational certificate checks: it is a
+comparison of two products, with no division, so no reciprocal has to be bounded.  (On
+`[0, π/2)` where `cos s > 0` it is literally `tan s < K`, but positivity of `cos` is not
+needed for the equivalence itself.) -/
+theorem alpha2_pos_iff {K s : ℝ} :
+    0 < K * Real.cos s - Real.sin s ↔ Real.sin s < K * Real.cos s := by
+  constructor <;> intro h <;> linarith
+
+/-- **The cancellation behind condition (ii).**  The worst-case lower bound on `α₁` at `T`
+is `-(1/2)cos T + c sin T + (sin T - sin(T - σ)) - (1 - cos T)` with
+`sin(T - σ) = sin T * w - cos T * (sin T - 1/2)` where `w = √(1 - (sin T - 1/2)²)`.  The
+`(1/2) cos T` terms cancel identically, leaving a single bracket. -/
+theorem alpha1_bound_collapse (c T w : ℝ) :
+    -(1/2) * Real.cos T + c * Real.sin T
+      + (Real.sin T - (Real.sin T * w - Real.cos T * (Real.sin T - 1/2)))
+      - (1 - Real.cos T)
+    = Real.sin T * ((c + 1) + Real.cos T - w) - 1 := by
+  ring
+
 end MovingSofa

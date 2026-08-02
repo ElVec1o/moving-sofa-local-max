@@ -1039,23 +1039,64 @@ $\alpha_1(T)\ge0$, both in the worst case, gives a sufficient threshold
 \]
 against $\alpha_2(0)=0.7506$ at $\Sig$.
 
-The reduction to the linear programs is a proof; the value $0.7484$ is not. It comes from a
-discretised LP, and $\Sig$ clears it by $0.0017$. Refining the grid from $10^3$ to
-$1.6\cdot10^4$ points moves the threshold by at most $0.0006$ and never changes the sign of
-the margin, so the conclusion is stable under refinement, but $0.0017$ is too thin to
-assert on floating point. Rule~7: $c_{\mathrm{LP}}\approx0.7484$ is \textsc{heuristic}, the
-reduction is \textsc{proved}, and Corollary~\ref{cor:race2} at $0.899266$ is the largest
-threshold this note certifies. Making the $\Sig$ margin rigorous needs the LP solved in
-exact or interval arithmetic, exactly as the barrier certificate
-needed rational arithmetic; it is a well-defined computation and
-it is not carried out here.
+The reduction to the linear programs is a proof, and so, it turns out, is the value. The
+four programs have \emph{closed-form} solutions, because the moment constraints pin the
+bang-bang switch points independently of $t$: maximising $\int_0^t u\sin(t-s)ds$ puts
+$u=1$ on $[0,\sigma)$ with $\sin\sigma=\tfrac12$, so $\sigma=\pi/6$ always, and
+$U_2(t)=\cos(t-\pi/6)-\cos t$ for $t\ge\pi/6$; the two $v$-programs switch at $\pi/3$
+(from $1-\cos\sigma=\tfrac12$) and the remaining $u$-program at $\arcsin(\sin t-\tfrac12)$.
+Substituting, and using $\cos(s-\pi/6)=\tfrac{\sqrt3}2\cos s+\tfrac12\sin s$, the two
+requirements collapse to elementary inequalities.
 
-What is proved, then, is that ordering is decided by a race, that it is governed by
-$\alpha_2(0)$ alone once $\alpha_2(0)\ge0.899266$, and that the sharp threshold lies in
-$[0.6215,\,0.899266]$ with the linear programs placing it near $0.7484$. $\Sig$ wins its
-own race comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$ against $\alpha_2$ at
-$t=\pi/2-\beta=1.2811$. What is not proved is that every admissible cap with $\alpha_2(0)$
-as large as $\Sig$'s is ordered.
+\begin{theorem}[Ordering certificate]\label{thm:ordercert}
+Let $H$ satisfy (RC) with the forced boundary data, and let $c=\alpha_2(0)$. Suppose there
+is $T\in(\pi/6,\pi/3)$ with
+\[
+  \text{(i)}\ \ \tan T<c+1-\tfrac{\sqrt3}2 ,\qquad
+  \text{(ii)}\ \ \sin T\Bigl[(c+1)+\cos T-\sqrt{1-(\sin T-\tfrac12)^2}\,\Bigr]\ \ge\ 1 ,
+\]
+and $(c+1)\tfrac{\sqrt3}2\ge\tfrac54$. Then the sign sets are ordered, hence by
+Proposition~\ref{prop:anchor} anchored. Both conditions are increasing in $c$, so they
+certify every larger $c$ as well.
+\end{theorem}
+
+\begin{proof}
+Condition (i) is exactly positivity of the worst-case bound
+$\alpha_2\ge(c+1-\tfrac{\sqrt3}2)\cos s-\sin s$ on $[\pi/6,T]$; the third hypothesis is its
+positivity on $[0,\pi/6]$, where the bound is $(c+1)\cos s-\tfrac12\sin s-1$, decreasing,
+with minimum at $\pi/6$. Condition (ii) is the worst-case bound on $\alpha_1$ at $T$, after
+the $\tfrac12\cos T$ terms cancel. So $\alpha_2>0$ on $[0,T)$ and $\alpha_1(T)\ge0$, and
+Proposition~\ref{prop:race} applies.
+\end{proof}
+
+\begin{corollary}[$\Sig$ is certified]\label{cor:sigmacert}
+Every admissible cap with $\alpha_2(0)\ge2a_1-1=0.750574724825464\ldots$ is ordered and
+anchored. $\Sig$ attains the bound exactly, since $\alpha_2(0)=G'(0)=2a_1-1$.
+\end{corollary}
+
+\begin{proof}
+Take $T=723/1000$. Bounding $\sin$ and $\cos$ by alternating Taylor truncations ending on
+a term of the safe sign, $\sqrt{\,\cdot\,}$ from above by $\sqrt z\le(z+q^2)/2q$ at
+$q=98685/100000$, and $a_1$ from below by $0.8752873624127$, the three hypotheses of
+Theorem~\ref{thm:ordercert} hold with slacks $1.6\cdot10^{-3}$, $2.7\cdot10^{-1}$ and
+$1.4\cdot10^{-3}$. Every comparison is between rational numbers.
+\end{proof}
+
+This is what the sign-structure question was for. On the class
+$\alpha_2(0)\ge2a_1-1$ the concavity of Theorem~\ref{thm:diag} applies with no
+sign-pattern hypothesis at all, because the sign pattern is now \emph{derived}: ordered by
+Corollary~\ref{cor:sigmacert}, anchored by Proposition~\ref{prop:anchor}. The largest
+admissible witness is $T=\arctan(2a_1-\tfrac{\sqrt3}2)=0.7242$, and the certificate is not
+tight: the linear programs place the sharp threshold near $0.7484$, below $\Sig$'s
+$0.7506$, and adversarial search puts it at or above $0.6215$. Rule~0: 
+Corollary~\ref{cor:sigmacert} is \textsc{proved} in exact arithmetic; the sharp threshold
+itself is \textsc{heuristic} and is not needed.
+
+$\Sig$ itself wins its race comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$
+against $\alpha_2$ at $t=\pi/2-\beta=1.2811$; the certificate above is far more
+conservative than that, and still covers it. What remains open is the behaviour below
+$2a_1-1$: caps with small $\alpha_2(0)$ can be unordered, adversarial search exhibits them
+down to $0.6215$, and for those the reduction of Lemma~\ref{lem:mono} does not apply.
 
 \begin{proposition}[Ordering forces a corner]\label{prop:corner}
 Let $H$ satisfy (RC), with absolutely continuous part $r=(H+H'')_{ac}\le1$ and an atom of
