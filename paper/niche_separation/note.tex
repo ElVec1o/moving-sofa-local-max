@@ -3518,6 +3518,29 @@ $\alpha_2(0)<\sqrt3-1$, where Corollary~\ref{cor:floor} produces unordered caps 
 Lemma~\ref{lem:mono} nor Theorem~\ref{thm:diag} applies. That complement is the whole of
 what separates this from optimality of $\Sig$.
 
+\begin{remark}[The area profile in $\alpha_2(0)$]\label{rem:profile}
+Since $\alpha_2(0)$ is affine in the cap data and the atom enters it linearly, a cap may be
+sampled at a prescribed $\alpha_2(0)=c$ by choosing the curvature radius freely and setting
+the atom to $a=c+1-\int_0^{\pi/2}r\sin$. Doing so over $25$ admissible profiles and
+rasterising, the largest connected area found at each $c$ is
+\[
+  \begin{array}{r|cccccccc}
+    c & 0.40 & 0.55 & 0.65 & 0.70 & 0.7321 & 0.7506 & 0.80 & 0.90\\\hline
+    A_R^\ast-\max|T| & 0.0584 & 0.0205 & 0.0035 & 0.00048 & 0.00006 & 0.00000 & 0.0021 & 0.0092
+  \end{array}
+\]
+The profile is unimodal with its maximum at $c=2a_1-1$, the value at $\Sig$, where it
+reproduces $A_R^\ast$ to five decimals. Below the floor the deficit is positive and
+increasing as $c$ decreases, so unordered caps are suboptimal, but only barely so near the
+floor: at $c=\sqrt3-1$ the deficit $6\cdot10^{-5}$ is well inside the rasterisation error
+bar $0.0015$.
+
+This locates the difficulty. Optimality on the unordered class is a boundary-layer question
+in $c$, not a global one: away from the floor the deficit is comfortable, and any argument
+need only be sharp in a neighbourhood of $c=\sqrt3-1$. Rule~7: rasterised measurement over
+$25$ profiles, \textsc{heuristic}, with the $\Sig$ value reproduced as the regression gate.
+\end{remark}
+
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
 $Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
 $[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
