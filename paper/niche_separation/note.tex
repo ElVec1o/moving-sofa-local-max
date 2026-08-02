@@ -1089,7 +1089,7 @@ $\operatorname{Re}W(\pi/2)=\tfrac12$; and at any zero $\tau\in[0,\pi/2)$ of $\al
 \[
   \alpha_1(\tau)=\frac{\operatorname{Re}W(\tau)}{\cos\tau} .
 \]
-Consequently the cap is ordered if and only if $\tau\ge t_0$, where $\tau$ is the first
+Consequently $\tau\ge t_0$ is \emph{necessary} for orderedness, where $\tau$ is the first
 zero of $\alpha_2$ and $t_0$ is the unique zero of $\operatorname{Re}W$.
 \end{proposition}
 
@@ -1103,14 +1103,25 @@ $\operatorname{Im}W\cos\tau=\operatorname{Re}W\sin\tau$, whence
 $\alpha_1(\tau)=\operatorname{Re}W\cos\tau+\operatorname{Im}W\sin\tau
 =\operatorname{Re}W\bigl(\cos\tau+\tfrac{\sin^2\tau}{\cos\tau}\bigr)
 =\operatorname{Re}W(\tau)/\cos\tau$. Since $\operatorname{Re}W$ runs monotonically from
-$-\tfrac12$ to $\tfrac12$ its zero $t_0$ is unique, and the sign of $\alpha_1$ at the first
-zero of $\alpha_2$ is the sign of $\tau-t_0$.
+$-\tfrac12$ to $\tfrac12$ its zero $t_0$ is unique, so the sign of $\alpha_1$ at the first
+zero of $\alpha_2$ is the sign of $\tau-t_0$, and orderedness forces it to be nonnegative.
 \end{proof}
 
-This is the sharpest form of the criterion available: the two-arm race collapses to a
-comparison of two times, both determined by the control, and $\operatorname{Re}W$ is
-monotone so $t_0$ is well defined without any case analysis. It is also where a proof that
-$\sqrt3-1$ is sharp should start, since it removes $\alpha_1$ from the problem entirely.
+The condition is necessary and \emph{not} sufficient, which is worth stating plainly
+because the converse is tempting. Orderedness needs $\alpha_1\ge0$ on the whole of
+$\{\alpha_2\le0\}$, not merely at its first point, and $\alpha_1$ can descend after $\tau$:
+$\alpha_1'=\alpha_2+1-r$ is negative whenever $\alpha_2<-\,(1-r)$, which is available once
+$\alpha_2$ has gone negative. The floor witness at $c=0.7315$ is exactly such a case, with
+$\tau=0.7134\ge t_0=0.4240$ and yet $\alpha_1(\pi/2)=-0.00055<0$ against
+$\alpha_2(\pi/2)=-\tfrac12$: it passes the test at $\tau$ and fails at the endpoint.
+
+What the proposition does give is a clean necessary condition in one variable, and a
+diagnosis of where the difficulty sits. Maximising
+$\int_0^t(v\cos-u\sin)$ over admissible controls subject to $t\le t_0$ --- itself the
+linear constraint $\int_0^t(u\cos+v\sin)\le\tfrac12$ --- gives $0.6854$, so for
+$c\ge0.6854$ the necessary condition holds automatically and carries no information. Since
+$0.6854<\sqrt3-1$, the whole difficulty of the band lies in the behaviour of $\alpha_1$
+\emph{after} $\tau$, not before it.
 
 \begin{corollary}[A hard floor for the threshold]\label{cor:floor}
 No condition of the form ``$\alpha_2(0)\ge c$ implies ordered'' can hold with

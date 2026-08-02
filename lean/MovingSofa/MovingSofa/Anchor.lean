@@ -324,8 +324,12 @@ theorem floor_alpha1_value (c : ℝ) :
 /-- **The race in one variable.**  With `W = e^{it} Z`, at a zero of `α₂ = Im Z` we have
 `Im W cos τ = Re W sin τ`, and then `α₁ = Re Z` collapses to `Re W / cos τ`.
 
-This is the algebraic heart of `prop:onevar`: it removes `α₁` from the problem, leaving
-only the monotone `Re W` and the first zero of `α₂`. -/
+This is the algebraic heart of `prop:onevar`.  It gives a NECESSARY condition only:
+`Re W` is monotone, so `α₁(τ) ≥ 0` at the first zero of `α₂` says `τ ≥ t₀`, and
+orderedness forces that.  The converse fails — orderedness needs `α₁ ≥ 0` on all of
+`{α₂ ≤ 0}`, not just at its first point, and `α₁' = α₂ + 1 - r` goes negative once
+`α₂ < -(1 - r)`.  The floor witness at `c = 0.7315` has `τ = 0.7134 ≥ t₀ = 0.4240` and is
+still unordered, failing at `π/2`. -/
 theorem alpha1_at_alpha2_zero {ReW ImW τ : ℝ}
     (hzero : ImW * Real.cos τ - ReW * Real.sin τ = 0) :
     (ReW * Real.cos τ + ImW * Real.sin τ) * Real.cos τ = ReW :=
