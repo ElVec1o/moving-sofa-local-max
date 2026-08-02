@@ -993,11 +993,39 @@ $\alpha_1(t)\ge-\tfrac12+\alpha_2(0)t-\tfrac12t^2$. At $t=\min(\alpha_2(0),\pi/2
 right side is at least $\tfrac12(\alpha_2(0)^2-1)\ge0$.
 \end{proof}
 
-At $\Sig$, $\alpha_2(0)=0.7506<1$, so Corollary~\ref{cor:race} does not cover $\Sig$: the
-condition is sufficient, not sharp, and the sharp threshold is at most $0.7506$. What the
-corollary does give is a checkable criterion on the cap data alone, with no reference to
-the sign sets, and $\Sig$ wins its race comfortably, $\alpha_1$ reaching $0$ at
-$t=\beta=0.2897$ against $\alpha_2$ at $t=\pi/2-\beta=1.2811$.
+The constant $1$ is not sharp, and the reason is that Corollary~\ref{cor:race} throws away
+the only constraint $r$ carries. Since $\cos$ decreases on $[0,\pi/2]$,
+\[
+  \cos t\int_0^t r \;\le\; \int_0^t r\cos \;\le\; \int_0^{\pi/2} r\cos=\tfrac12 ,
+  \qquad\text{so}\qquad \int_0^t r\;\le\;\min\Bigl(t,\ \frac1{2\cos t}\Bigr) .
+\]
+Feeding this into $\alpha_1'=\alpha_2+1-r$ in place of $r\le1$ gives
+\[
+  \alpha_1(t)\;\ge\;-\tfrac12+\alpha_2(0)\,t-\tfrac12t^2+t-\min\Bigl(t,\frac1{2\cos t}\Bigr) ,
+\]
+and requiring the right side to be nonnegative for some $t\le\alpha_2(0)$ lowers the
+sufficient threshold to $0.899266$, attained at $t^*=0.8967$, where the constraint binds
+($1/(2\cos t^*)=0.8010<t^*$).
+
+\begin{corollary}[Sharpened]\label{cor:race2}
+If $\alpha_2(0)\ge0.899266$ the cap is ordered.
+\end{corollary}
+
+At $\Sig$, $\alpha_2(0)=0.7506$, so even the sharpened threshold does not cover $\Sig$,
+and this is stated rather than glossed. Two independent adversarial searches over
+admissible controls --- unrestricted noise, one- and two-sided bang-bang, Fourier profiles,
+then a multi-switch bang-bang family refined by local search --- find admissible caps
+defeating $\alpha_2(0)$ up to $0.6215$ and no further, the second search improving on the
+first by $0.0005$ in $3700$ additional evaluations. So the sharp threshold lies in
+$[0.6215,\,0.899266]$, the lower end is probably the truth, and $\Sig$ at $0.7506$ would
+then be covered with room. Rule~7: the interval is proved at the upper end only; $0.6215$
+is a measurement and the sharp value is not known.
+
+What is proved, then, is that ordering is decided by a race whose outcome is governed by
+$\alpha_2(0)$ alone once $\alpha_2(0)\ge0.899266$, and that $\Sig$ wins its own race
+comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$ against $\alpha_2$ at
+$t=\pi/2-\beta=1.2811$. What is not proved is that every admissible cap with
+$\alpha_2(0)$ as large as $\Sig$'s is ordered.
 
 \begin{proposition}[Ordering forces a corner]\label{prop:corner}
 Let $H$ satisfy (RC), with absolutely continuous part $r=(H+H'')_{ac}\le1$ and an atom of

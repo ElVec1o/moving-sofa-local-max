@@ -159,4 +159,21 @@ nonnegative exactly when `c ≥ 1`.  So `α₂(0) ≥ 1` forces `α₁` to reach
 theorem race_closes {c : ℝ} (hc : 1 ≤ c) : 0 ≤ -(1/2) + c * c - c ^ 2 / 2 := by
   nlinarith
 
+/-- **The constraint `cor:race` threw away.**  `cos` decreases on `[0, π/2]`, so a
+nonnegative `r` with a prescribed `cos`-moment cannot have too much plain mass early:
+`cos t * ∫₀^t r ≤ ∫₀^t r cos`.  Combined with `∫₀^t r cos ≤ 1/2` this bounds `∫₀^t r` by
+`1/(2 cos t)`, which is what lowers the sufficient threshold from `1` to `0.899266`. -/
+theorem cos_weighted_mass_bound {r : ℝ → ℝ} {t : ℝ}
+    (ht : t ∈ Icc (0 : ℝ) (Real.pi / 2))
+    (hint : IntervalIntegrable r MeasureTheory.volume 0 t)
+    (hr : ∀ s ∈ Icc (0 : ℝ) t, 0 ≤ r s) :
+    Real.cos t * ∫ s in (0 : ℝ)..t, r s ≤ ∫ s in (0 : ℝ)..t, r s * Real.cos s := by
+  rw [← intervalIntegral.integral_const_mul]
+  apply intervalIntegral.integral_mono_on ht.1 (hint.const_mul _)
+    (hint.mul_continuousOn (Real.continuous_cos.continuousOn))
+  intro s hs
+  have hmono : Real.cos t ≤ Real.cos s :=
+    Real.cos_le_cos_of_nonneg_of_le_pi hs.1 (le_trans ht.2 (by linarith [Real.pi_pos])) hs.2
+  nlinarith [hr s hs]
+
 end MovingSofa
