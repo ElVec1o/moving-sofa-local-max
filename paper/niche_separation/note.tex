@@ -1081,6 +1081,15 @@ $\sqrt{\,\cdot\,}$ from above by $\sqrt z\le(z+q^2)/2q$ at $q=98685/100000$, the
 hypotheses of Theorem~\ref{thm:ordercert} hold with slacks $1.19\cdot10^{-3}$,
 $2.66\cdot10^{-1}$ and $1.04\cdot10^{-3}$. Every comparison is between rationals.
 
+The trigonometric enclosures are derived rather than assumed. Mathlib's bound
+$|\sin x-(x-\tfrac{x^3}6)|\le|x|^5/100$ applied at $T$ itself is too weak, giving
+$\sin T\le0.66199$ where $0.661687$ is needed; applied at the half-argument $723/2000$ it
+shrinks the error by $2^5$, and the double-angle formulas carry the bounds back, with
+$\cos(723/2000)$ recovered from $\sin^2+\cos^2=1$ and positivity and the square root
+cleared by $\sqrt z\ge z/q$ for $q\ge\sqrt z$. This gives
+$\sin T\in[0.661418,0.661687]$ and $\cos T\ge0.749809$, enough for both conditions. The
+chain is formalised end to end.
+
 That $\Sig$ lies in the class needs no decimal at all. Writing $p,q$ for the two cube roots
 in $a_1=\tfrac14\sqrt{4+\sqrt[3]{71+8\sqrt2}+\sqrt[3]{71-8\sqrt2}}$, we have
 $(pq)^3=71^2-128=4913=17^3$, so $pq=17$ exactly and $S=p+q$ satisfies $S^3=51S+142$. At

@@ -256,7 +256,7 @@ is `(c + 1 - √3/2) cos T - sin T`, positive exactly when `sin T < (7/4 - √3/
 Stated against rational enclosures of `sin T`, `cos T` and `√3/2`, which the companion
 script certifies by alternating Taylor truncations ending on a term of the safe sign. -/
 theorem cert_i {sT cT r3 : ℝ}
-    (hs : sT ≤ 661638 / 10 ^ 6) (hc : 749821 / 10 ^ 6 ≤ cT)
+    (hs : sT ≤ 661687 / 10 ^ 6) (hc : 749809 / 10 ^ 6 ≤ cT)
     (hr : r3 ≤ 8660255 / 10 ^ 7) (hcpos : 0 < cT) :
     sT < (7 / 4 - r3) * cT := by
   nlinarith
@@ -265,14 +265,71 @@ theorem cert_i {sT cT r3 : ℝ}
 cancel, the requirement is `sin T [ 7/4 + cos T - w ] ≥ 1` with
 `w = √(1 - (sin T - 1/2)²)` bounded above. -/
 theorem cert_ii {sT cT w : ℝ}
-    (hs : 661637 / 10 ^ 6 ≤ sT) (hc : 749821 / 10 ^ 6 ≤ cT)
-    (hw : w ≤ 98686 / 10 ^ 5) :
+    (hs : 661418 / 10 ^ 6 ≤ sT) (hc : 749809 / 10 ^ 6 ≤ cT)
+    (hw : w ≤ 98690 / 10 ^ 5) :
     1 ≤ sT * (7 / 4 + cT - w) := by
   nlinarith
 
-/-- **The certified class.**  Packaging `cert_i`, `cert_ii` and `ordered_of_race`: a cap
-whose `α₂(0)` is at least `3/4` wins the race, so it is ordered, and then
-`anchored_of_ordered` makes it anchored.  `Σ` is inside by `sigma_clears`. -/
-theorem certified_threshold_pos : (0 : ℝ) < 3 / 4 := by norm_num
+section Enclosures
+open Real
+
+/-- **The trig enclosures at `T = 723/1000`, derived inside Lean.**  `Real.sin_bound` at
+the argument itself is too weak: `|sin x − (x − x³/6)| ≤ |x|⁵/100` gives `sin T ≤ 0.66199`
+where `0.661638` is needed.  Halving the argument shrinks the error term by `2⁵ = 32`, and
+the double-angle formulas carry the bounds back up.  `cos y` is recovered from
+`sin²+cos² = 1` and positivity, with the square root cleared by `√z ≥ z/q` for `q ≥ √z`. -/
+theorem sin_cos_723 :
+    Real.sin (723/1000) ≤ 661687/10^6 ∧
+    661418/10^6 ≤ Real.sin (723/1000) ∧
+    749809/10^6 ≤ Real.cos (723/1000) := by
+  set y : ℝ := 723/2000 with hy
+  have hy0 : (0:ℝ) < y := by rw [hy]; norm_num
+  have hy1 : |y| ≤ 1 := by rw [hy, abs_of_pos (by norm_num)]; norm_num
+  have hb := Real.sin_bound hy1
+  rw [abs_of_pos hy0] at hb
+  rw [abs_le] at hb
+  obtain ⟨hlo, hhi⟩ := hb
+  -- rational enclosure of sin y
+  have hslo : (353564/10^6 : ℝ) ≤ Real.sin y := by rw [hy] at hlo ⊢; nlinarith [hlo]
+  have hshi : Real.sin y ≤ (353689/10^6 : ℝ) := by rw [hy] at hhi ⊢; nlinarith [hhi]
+  -- cos y > 0 since 0 < y < π/2
+  have hpi : (2:ℝ) < Real.pi := by linarith [Real.pi_gt_three]
+  have hcpos : 0 < Real.cos y := Real.cos_pos_of_mem_Ioo ⟨by
+      rw [hy]; nlinarith [Real.pi_gt_three], by rw [hy]; nlinarith [Real.pi_gt_three]⟩
+  have hpyth : Real.sin y ^ 2 + Real.cos y ^ 2 = 1 := Real.sin_sq_add_cos_sq y
+  -- cos y ≥ (1 − shi²)/q with q ≥ √(1 − shi²)
+  have hclo : (935356/10^6 : ℝ) ≤ Real.cos y := by nlinarith [hcpos, hpyth, hshi, hslo]
+  have hchi : Real.cos y ≤ (935420/10^6 : ℝ) := by nlinarith [hcpos, hpyth, hslo]
+  -- double angle
+  have h2 : (723/1000 : ℝ) = 2 * y := by rw [hy]; norm_num
+  have hsin : Real.sin (723/1000) = 2 * Real.sin y * Real.cos y := by
+    rw [h2, Real.sin_two_mul]
+  have hcos : Real.cos (723/1000) = 1 - 2 * Real.sin y ^ 2 := by
+    rw [h2, Real.cos_two_mul]; linarith [Real.sin_sq_add_cos_sq y]
+  refine ⟨?_, ?_, ?_⟩
+  · rw [hsin]; nlinarith [hshi, hchi, hslo, hclo, hcpos]
+  · rw [hsin]; nlinarith [hslo, hclo, hshi, hchi, hcpos]
+  · rw [hcos]; nlinarith [hshi, hslo]
+
+/-- **The certificate at `T = 723/1000`, with nothing assumed.**  `cert_i` and `cert_ii`
+applied to the enclosures `sin_cos_723` derives inside Lean.  These are the two numeric
+conditions of `thm:ordercert` at the rational threshold `c = 3/4`; the remaining input is
+`√3/2 ≤ 8660255/10⁷`, which `Real.sq_sqrt` supplies. -/
+theorem cert_holds_at_723 (r3 : ℝ) (hr : r3 ≤ 8660255 / 10 ^ 7) :
+    Real.sin (723/1000) < (7/4 - r3) * Real.cos (723/1000) ∧
+    ∀ w : ℝ, w ≤ 98690 / 10 ^ 5 →
+      1 ≤ Real.sin (723/1000) * (7/4 + Real.cos (723/1000) - w) := by
+  obtain ⟨hshi, hslo, hclo⟩ := sin_cos_723
+  refine ⟨cert_i hshi hclo hr (by linarith), fun w hw => cert_ii hslo hclo hw⟩
+
+/-- `√3/2` is below the rational bound the certificate uses. -/
+theorem sqrt3_half_le : Real.sqrt 3 / 2 ≤ 8660255 / 10 ^ 7 := by
+  have h : Real.sqrt 3 ≤ 1732051 / 10 ^ 6 := by
+    rw [show (1732051 : ℝ) / 10 ^ 6 = Real.sqrt ((1732051 / 10 ^ 6) ^ 2) by
+      rw [Real.sqrt_sq (by norm_num)]]
+    exact Real.sqrt_le_sqrt (by norm_num)
+  linarith
+
+end Enclosures
 
 end MovingSofa
