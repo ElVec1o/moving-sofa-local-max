@@ -2349,18 +2349,23 @@ $1200$ segments give
 \[
   c_1\ >\ \tfrac{37}{100}
 \]
-for the right half at $(\lambda,\kappa)=(\tfrac9{20},\tfrac14)$, against the measured
-$0.3885$. The left half is Dirichlet--Dirichlet, so the target is $\pi$ and the same run
-certifies $c_L>\tfrac12$; the Taylor bound on $\sin$ degrades badly for arguments near
-$\pi$, so that is far short of the true $2.689$, and it does not need to be otherwise,
-because the assembly takes $\min(c_L,c_R)$ and the right half binds. Hence
+for the right half. The left half is Dirichlet--Dirichlet, so the phase runs to $\pi$,
+and there the method has a genuine weakness: once an upper barrier passes $\pi/2$ it knows
+only $\sin^2\le1$, because an upper bound on $\theta$ is a \emph{lower} bound on $\sin$
+beyond the maximum. At the note's $(\lambda,\kappa)=(\tfrac9{20},\tfrac14)$ that made the
+left half, not the right, the limit. Raising $\kappa$ shrinks the left weight until the
+left half is slack; scanning both halves, $(\lambda,\kappa)=(\tfrac{11}{20},\tfrac15)$
+gives
 \[
-  \tfrac12\,\delta^2Q[\eta]\ \le\ -\tfrac{37}{100}\,\|\eta\|^2_{L^2(0,\pi)}
+  \tfrac12\,\delta^2Q[\eta]\ \le\ -\tfrac9{20}\,\|\eta\|^2_{L^2(0,\pi)}
 \]
-on the cell, by exact rational arithmetic: $4.44$ times the $\tfrac1{12}$ of
-Proposition~\ref{prop:elem} and $50.6\%$ of the sharp $c^\ast$. Both negative controls
-behave: the right half at $c=\tfrac12>0.3885$ crosses $\pi/2$, and the left at $c=3>2.689$
-crosses $\pi$ (\verb|ambi_barrier.py|). Both the monotone bound and the comparison
+on the cell, by exact rational arithmetic: $5.4$ times the $\tfrac1{12}$ of
+Proposition~\ref{prop:elem} and $61.6\%$ of the sharp $c^\ast$. The true decoupled values
+there are $c_R=0.4748$ and $c_L=2.4414$, so the certificate captures $95\%$ of what is
+available and the right half binds. Both negative controls behave: the right half at
+$c=1$ crosses $\pi/2$ and the left at $c=3$ crosses $\pi$ (\verb|ambi_barrier.py|). A
+two-sided barrier, tracking a lower phase as well as an upper one, would remove the
+$\pi/2$ limitation outright. Both the monotone bound and the comparison
 principle that turns a barrier into a bound on the phase are machine-checked
 (\verb|prufer_rhs_eq|, \verb|prufer_rhs_le|, \verb|sin_sq_le_of_le|,
 \verb|coef_pos_right|, \verb|coef_pos_left|, \verb|prufer_comparison|,

@@ -500,11 +500,14 @@ no Lipschitz constant, no Grönwall, no first-crossing argument. The barrier pro
 `ambi_barrier.py` is strict by construction (every slope is rounded up), so strictness is
 free.
 
-## The modelling step
+## The modelling step, removed (`Rotation.lean`)
 
-`Containment.lean` *defines* the hallways by their half-plane descriptions in the rotated
-frame rather than deriving them from a definition of rotation. That is faithful to the
-note, whose `lem:uv` proves the equivalence, but it means the identification is recorded
-in Lean rather than re-derived there. It is the one place in the upper-bound chain where
-Lean is taking the note's word for something, and it is a modelling choice, not an
-estimate.
+`Containment.lean` defined the hallways by their half-plane descriptions; `Rotation.lean`
+now *derives* them. The frame `μ = (1,1)/√2`, `ν = (-1,1)/√2` is checked orthonormal
+(`mu_dot_mu`, `nu_dot_nu`, `mu_dot_nu`); the hallway is defined intrinsically as the
+L-shaped region of unit width with corner at `c`; and `hallwayL_eq`, `hallwayR_eq` prove
+the half-plane descriptions in rotated coordinates. The sentence the note's `lem:uv` rests
+on for the mirror image — "reflection carries `μ, ν` to `-ν, -μ`" — is `reflect_dot_mu`
+and `reflect_dot_nu`. Non-vacuity: the corner itself lies in the intrinsic hallway.
+
+**The upper-bound chain now has no step where Lean takes the note's word.**

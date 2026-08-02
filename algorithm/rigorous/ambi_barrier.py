@@ -37,19 +37,29 @@ domain length is needed and from below where the target is, beta from above, w f
 truncation x - x^3/6 + x^5/120, which is an upper bound for x >= 0 because the series
 alternates and the truncation ends on a positive term.
 
-RESULT.  At c = 37/100 with 1200 segments the barrier reaches 1.55834 < pi/2, so
+RESULT.  Scanning (lambda, kappa) and requiring BOTH halves to certify, the best is
+(11/20, 1/5) with
 
-    c_1(right half) > 37/100     for the decoupled problem at (lambda, kappa) = (9/20, 1/4),
+    min(c_L, c_R) > 9/20 ,
 
-against the true 0.3885: the certificate captures 95% of the available constant, and 4.4
-times the 1/12 that the elementary chain gives.  Rule 0: this is a PROOF of the stated
+5.4 times the 1/12 the elementary chain gives and 62% of the sharp c* = 0.7309566.  The
+true decoupled values there are c_R = 0.4748 and c_L = 2.4414, so the certificate captures
+95% of what is available and the RIGHT half binds.
+
+Why those parameters and not the note's (9/20, 1/4): for the Dirichlet-Dirichlet left half
+the phase runs to pi, and once an upper barrier passes pi/2 it knows only sin^2 <= 1,
+because an upper bound on theta is a LOWER bound on sin there.  The left barrier is
+therefore lossy, and at (9/20, 1/4) it -- not the right half -- was the limit.  Raising
+kappa shrinks the left weight and makes the left half slack, after which the right half
+binds and the certificate improves from 37/100 to 9/20.  A two-sided barrier would remove
+the limitation outright and is the obvious next step; it is not built.  Rule 0: this is a PROOF of the stated
 inequality for the DECOUPLED half, in exact arithmetic, but it is not yet formalised in
 Lean and it does not by itself upgrade prop:elem, which also needs the left half and the
 re-assembly.  HEURISTIC until those are done; the arithmetic here is exact.
 
-NEGATIVE CONTROL (rule I12).  The same barrier must FAIL above the true eigenvalue.  It is
-run at c = 1/2 > 0.3885 and must cross pi/2; if it does not, the certificate is unsound and
-the script exits non-zero.
+NEGATIVE CONTROL (rule I12).  Each barrier must FAIL above the corresponding true
+eigenvalue: the right half at c = 1 and the left at c = 3.  If either is accepted the
+certificate is unsound and the script exits non-zero.
 
 Usage: python3 ambi_barrier.py [nseg]
 """
@@ -61,8 +71,13 @@ from fractions import Fraction as F
 PI2_HI = F(15707964, 10000000)   # > pi/2 : used for the domain length
 PI2_LO = F(15707963, 10000000)   # < pi/2 : used for the target
 BETA_HI = F(2896539, 10000000)   # > beta
-LAM = F(9, 20)
-QBAR = F(5)                       # 1 + 1/kappa with kappa = 1/4
+# The decoupling parameters.  (9/20, 1/4) is the note's choice for prop:elem; a scan
+# over both halves finds (11/20, 1/5) certifies more, because the LEFT half is the
+# binding one for the barrier (see below) and a larger kappa shrinks its weight.
+LAM = F(11, 20)
+KAPPA = F(1, 5)
+QBAR = 1 + 1/KAPPA
+RCOEF = LAM/(1 - LAM)
 
 
 def ceil_rat(x: F, D: int) -> F:
@@ -76,8 +91,6 @@ def sin_hi(x: F) -> F:
 
 
 PI_LO = F(31415926, 10000000)     # < pi : the Dirichlet-Dirichlet target
-KAPPA = F(1, 4)
-RCOEF = F(9, 11)                  # r = lambda/(1-lambda)
 
 
 def w_lo_R(t: F) -> F:
@@ -137,7 +150,7 @@ def main() -> int:
     print(f"CERTIFICATES ({nseg} segments, exact rationals, denominators capped 1e7)\n")
     print(f"  {'c':>10} {'B(T)':>10}   status")
     best = None
-    for num, den in ((3, 10), (1, 3), (7, 20), (37, 100)):
+    for num, den in ((37, 100), (2, 5), (9, 20), (1, 2)):
         c = F(num, den)
         B, st = barrier(c, nseg)
         if B is not None:
@@ -145,21 +158,24 @@ def main() -> int:
         print(f"  {num:4d}/{den:<5d} {float(B) if B else float('nan'):10.5f}   "
               f"{'PROVES c_1 > ' + f'{num}/{den}' if B else st}")
     print(f"\n  best certified lower bound: c_1 > {best}  ({float(best):.4f})")
-    print(f"  true value (float Prufer, cross-checked against FEM): 0.3885")
+    print(f"  true value at these parameters (float Prufer): c_R = 0.4748, c_L = 2.4414")
     print(f"  the elementary chain of prop:elem gives 1/12 = 0.0833 on this half")
 
     print(f"\nLEFT HALF (Dirichlet-Dirichlet, target pi):")
     bestL = None
-    for num, den in ((1, 2), (3, 4)):
+    for num, den in ((37, 100), (2, 5), (9, 20), (1, 2)):
         c = F(num, den)
         B, st = barrier(c, nseg, half="L")
         if B is not None:
             bestL = c
         print(f"  {num:4d}/{den:<5d} {float(B) if B else float('nan'):10.5f}   "
               f"{'PROVES c_L > ' + f'{num}/{den}' if B else st}")
-    print(f"  the sin upper bound degrades badly near pi, so this certifies far less")
-    print(f"  than the true 2.689.  It does not need to: the assembly takes")
-    print(f"  min(c_L, c_R), and the right half binds.")
+    print(f"  At these parameters the left half is slack (true c_L = 2.44) and the RIGHT")
+    print(f"  half binds, in the certificate and in truth alike.  The sin upper bound")
+    print(f"  still degrades near pi -- past pi/2 an upper barrier knows only sin^2 <= 1,")
+    print(f"  since an upper bound on theta gives a LOWER bound on sin there -- which is")
+    print(f"  why a larger kappa, shrinking the left weight, was needed to make the left")
+    print(f"  half slack.  A two-sided barrier would remove the limitation entirely.")
 
     if bestL is not None and best is not None:
         m = min(bestL, best)
@@ -168,8 +184,8 @@ def main() -> int:
         print(f"  and {100*float(m)/0.7309566:.1f}% of the sharp c* = 0.7309566.")
 
     print(f"\nNEGATIVE CONTROLS (rule I12): each must FAIL.")
-    B1, st1 = barrier(F(1, 2), nseg, half="R")
-    print(f"  right half at c = 1/2 > 0.3885: {st1}")
+    B1, st1 = barrier(F(1), nseg, half="R")
+    print(f"  right half at c = 1: {st1}")
     B2, st2 = barrier(F(3), nseg, half="L")
     print(f"  left half  at c = 3   > 2.689 : {st2}")
     ok = B1 is None and B2 is None

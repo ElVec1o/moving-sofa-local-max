@@ -15,3 +15,4 @@ import MovingSofa.Slicing
 import MovingSofa.Barrier
 import MovingSofa.Comparison
 import MovingSofa.Containment
+import MovingSofa.Rotation
