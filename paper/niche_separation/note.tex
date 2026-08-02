@@ -3880,7 +3880,9 @@ $\sup_{k>2N}k|(Mz)_k|=0.154$, so
   \sum_{k>M}|(Mz)_k|^2\ \le\ \frac{0.0238}{M} ,
 \]
 the same $1/M$ law as the $b$-tail with a constant $89$ times smaller. Using
-$\|r\|^2\le2\|b_{>N}\|^2+2\|(Mz)_{>N}\|^2$ and both analytic tails at $N=60$,
+$\|r\|^2\le\bigl(\|b_{>N}\|+\|(Mz)_{>N}\|\bigr)^2$ --- not $2\|b_{>N}\|^2+2\|(Mz)_{>N}\|^2$,
+which is the same term-splitting loss again and costs $13$ percent here, the two tails
+differing by a factor of five --- and both analytic tails at $N=60$,
 \[
   K\ \le\ 0.1910\ <\ \tfrac12\sin2\beta=0.2737 ,
 \]
@@ -3965,9 +3967,9 @@ allowance of $10^{-9}$. At $K=150$,
 against the $2.4658$ the exact $b$-tail admits: a factor of two in hand. The bound also
 dominates the measured $\sup_{k}k|(Mz)_k|=0.5407$, as it must. Hence
 \[
-  K\ \le\ 0.172225892\ <\ \tfrac12\sin2\beta=0.273722337 ,
+  K\ \le\ 0.166947978\ <\ \tfrac12\sin2\beta=0.273722337 ,
 \]
-margin $0.101496$, against the $0.0143$ of the first assembly: seven times the room, and no
+margin $0.106774$, against the $0.0143$ of the first assembly: seven times the room, and no
 input below \textsc{proved}. Rule~7 is satisfied because $z$ is a witness --- the identity
 $b^{\mathsf T}M^{-1}b=z^{\mathsf T}Mz+2z^{\mathsf T}r+r^{\mathsf T}M^{-1}r$ holds for every
 $z$, so a floating-point solve costs nothing but sharpness.

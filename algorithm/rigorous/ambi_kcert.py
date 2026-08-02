@@ -233,7 +233,11 @@ def main() -> int:
     print(f"                               |J| = {absJ:.6f}   ->   C <= {Cup:.6f}\n")
     closed = 0
     for C in (1.90, 2.4658, Cup):
-        bound = zMz + 2 * zr + (rn + 2 * btail + 2 * C ** 2 / K) / LAM_MIN
+        # ||r||^2 <= (||b_{>N}|| + ||(Mz)_{>N}||)^2, not 2||b||^2 + 2||Mz||^2: the two
+        # tails differ by a factor 5 here, and the polarised form is smaller whenever
+        # they differ at all.  Audit item, same family as the b-tail cancellation.
+        tails = (np.sqrt(btail) + np.sqrt(C ** 2 / K)) ** 2
+        bound = zMz + 2 * zr + (rn + tails) / LAM_MIN
         ok = bound < target
         closed += ok
         tag = "  <- enclosed" if abs(C - Cup) < 1e-12 else ""
