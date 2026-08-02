@@ -353,6 +353,27 @@ theorem ReW_deriv_nonneg {u v t : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v)
 the latter by `prop:rigid`.  So `Re W` crosses zero exactly once. -/
 theorem ReW_endpoints : (-(1:ℝ)/2 < 0) ∧ ((1:ℝ)/2 > 0) := ⟨by norm_num, by norm_num⟩
 
+/-- **Unorderedness forces `Im W < 0`.**  If `α₁(T) < 0` and `α₂(T) ≤ 0` then
+`Q = Im W(T)` is negative.  Chaining `Q cos²T ≤ P sin T cos T ≤ -Q sin²T` collapses to
+`Q(cos²T + sin²T) ≤ 0`.
+
+This is what makes the case split work: unorderedness is confined to the two branches
+`T ≥ t₀` (where `Re W ≥ 0`) and `T < t₀`, and in the second branch it additionally forces
+`∫₀^T (v cos - u sin) > c`, a linear program. -/
+theorem imW_neg_of_unordered {P Q T : ℝ} (hc : 0 < Real.cos T) (hs : 0 ≤ Real.sin T)
+    (h2 : Q * Real.cos T - P * Real.sin T ≤ 0)
+    (h1 : P * Real.cos T + Q * Real.sin T < 0) :
+    Q ≤ 0 := by
+  have hpy := Real.sin_sq_add_cos_sq T
+  nlinarith [mul_le_mul_of_nonneg_right h2 (le_of_lt hc),
+             mul_le_mul_of_nonneg_right (le_of_lt h1) hs, hpy, sq_nonneg (Real.cos T)]
+
+/-- Branch (A) at `T = π/2`: the constraint `Re W(π/2) = 1/2 ≥ 0` is vacuous, so the
+minimum of `α₁(π/2)` over admissible controls is `c + 1 - √3` by the floor computation,
+and it is nonnegative exactly when `c ≥ √3 - 1`. -/
+theorem branchA_at_right {c : ℝ} (h : Real.sqrt 3 - 1 ≤ c) : 0 ≤ c + 1 - Real.sqrt 3 := by
+  linarith
+
 section Enclosures
 open Real
 

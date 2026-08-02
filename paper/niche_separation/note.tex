@@ -1152,6 +1152,44 @@ $[0.6215,\,0.899266]$, whose lower end was a search and whose upper end was an i
 chain; both ends are now exact, and the lower end is a proof rather than a measurement.
 $\Sig$ sits at $2a_1-1=0.7506$, above the whole bracket.
 
+\begin{lemma}[Unorderedness forces $\operatorname{Im}W<0$]\label{lem:imw}
+If $\alpha_1(T)<0$ and $\alpha_2(T)\le0$ for some $T\in(0,\pi/2)$, then
+$\operatorname{Im}W(T)<0$.
+\end{lemma}
+
+\begin{proof}
+Write $P=\operatorname{Re}W(T)$, $Q=\operatorname{Im}W(T)$. From $\alpha_2\le0$,
+$Q\cos T\le P\sin T$; multiplying by $\cos T>0$ gives $Q\cos^2T\le P\sin T\cos T$. From
+$\alpha_1<0$, $P\cos T<-Q\sin T$; multiplying by $\sin T\ge0$ gives
+$P\sin T\cos T\le-Q\sin^2T$. Chaining, $Q\cos^2T\le-Q\sin^2T$, so $Q\le0$, and the middle
+inequality is strict unless $\sin T=0$.
+\end{proof}
+
+So unorderedness splits on the sign of $P=\operatorname{Re}W(T)$, which by
+Proposition~\ref{prop:onevar} is the sign of $T-t_0$:
+\begin{itemize}
+\item[(A)] $T\ge t_0$ and $\alpha_1(T)<0$;
+\item[(B)] $T<t_0$ and $\alpha_2(T)\le0$, which by Lemma~\ref{lem:imw} needs
+$\int_0^T(v\cos-u\sin)>c$ subject to $\int_0^T(u\cos+v\sin)\le\tfrac12$.
+\end{itemize}
+Branch (B) is bounded by $0.6854$, computed as a linear program, so it is empty for every
+$c\ge0.6854$ and in particular throughout the band. Branch (A) is a linear program in a
+single control, minimising $\alpha_1(T)$ subject to $\operatorname{Re}W(T)\ge0$; over
+$T\in[t_0,\pi/2]$ its value is smallest at $T=\pi/2$, where the constraint is vacuous
+($\operatorname{Re}W(\pi/2)=\tfrac12$) and the minimum is exactly $c+1-\sqrt3$ by the
+computation of Corollary~\ref{cor:floor}. At $c=\sqrt3-1$ the minimum over the whole range
+is $-8.5\cdot10^{-8}$, attained at $T=\pi/2$; the value moves with slope exactly $1$ in
+$c$, as it must if $T=\pi/2$ is the binding case.
+
+Taken together this says $\sqrt3-1$ is \emph{sharp}: above it every admissible cap is
+ordered, below it Corollary~\ref{cor:floor} exhibits one that is not. Rule~0: the case
+split and branch (A) at $T=\pi/2$ are \textsc{proved}; that $T=\pi/2$ minimises branch (A),
+and the constant $0.6854$ bounding branch (B), are \textsc{heuristic}, being values of
+discretised linear programs. The sharpness statement therefore carries the weaker label
+until those two are certified in exact arithmetic, which is a well-defined task and not
+carried out here. Corollary~\ref{cor:sigmacert}, at the rational threshold $\tfrac34$,
+remains what the note certifies.
+
 \begin{corollary}[The certified class]\label{cor:sigmacert}
 Every admissible cap with $\alpha_2(0)\ge\tfrac34$ is ordered and anchored, and $\Sig$ is
 one of them.
