@@ -2,11 +2,17 @@
 
 WHAT IS CERTIFIED.  Any cap satisfying (RC) and the forced boundary data with
 
-    alpha_2(0)  >=  2 a_1 - 1  =  0.750574724825464...
+    alpha_2(0)  >=  3/4
 
-is ORDERED, hence by prop:anchor also ANCHORED.  Sigma has alpha_2(0) = G'(0) = 2a_1 - 1
-exactly, so Sigma is covered, and with it every admissible cap whose alpha_2(0) is at least
-Sigma's.  On that class the concavity of thm:diag applies without any sign-pattern
+is ORDERED, hence by prop:anchor also ANCHORED.  Sigma is covered, and the reason is exact
+integer arithmetic rather than a decimal comparison: alpha_2(0) = G'(0) = 2 a_1 - 1, and
+
+    a_1 = sqrt(4 + cbrt(71 + 8 sqrt2) + cbrt(71 - 8 sqrt2)) / 4 ,
+
+so writing p, q for the two cube roots, (pq)^3 = 71^2 - 128 = 4913 = 17^3, hence pq = 17
+EXACTLY and S = p + q satisfies S^3 = 51 S + 142.  At S = 33/4 that cubic evaluates to
+-79/64 < 0, and it is increasing for S >= 8, so the root has S > 33/4.  Therefore
+4 + S > 49/4, a_1 > 7/8, and alpha_2(0) = 2a_1 - 1 > 3/4.  No decimal enters this step.  On that class the concavity of thm:diag applies without any sign-pattern
 hypothesis, because the sign pattern is now derived.
 
 WHY IT IS EXACT.  Every step is a comparison of rational numbers.  No floating point enters
@@ -76,10 +82,20 @@ def certify(c_lo: F, T: F = T_CERT, q: F = F(98685, 100000)) -> tuple[bool, bool
     return s1 > 0, s1b > 0, s2 >= 0, s1, s2
 
 
+def sigma_clears_three_quarters() -> bool:
+    """a_1 > 7/8 by integer arithmetic: the cubic S^3 - 51S - 142 is negative at 33/4."""
+    S = F(33, 4)
+    return S**3 - 51*S - 142 < 0          # so the root exceeds 33/4, giving a_1 > 7/8
+
+
 def main() -> int:
     print(__doc__.split("Usage")[0])
-    c = 2 * A1_LO - 1
-    print(f"  Sigma: alpha_2(0) = G'(0) = 2 a_1 - 1 > {float(c):.15f}")
+    c = F(3, 4)
+    v = F(33,4)**3 - 51*F(33,4) - 142
+    print(f"  threshold c = 3/4")
+    print(f"  Sigma clears it: (33/4)^3 - 51(33/4) - 142 = {v} < 0, so S > 33/4,")
+    print(f"    a_1 > 7/8, alpha_2(0) = 2a_1 - 1 > 3/4   "
+          f"[{'OK' if sigma_clears_three_quarters() else 'FAILS'}]")
     print(f"  witness T = {T_CERT} = {float(T_CERT)}\n")
     a, b, d, s1, s2 = certify(c)
     print(f"  (i)   tan T < c + 1 - sqrt3/2      slack {float(s1):+.9f}   "
@@ -89,13 +105,14 @@ def main() -> int:
     print(f"  (ii)  alpha_1 bound at T           slack {float(s2):+.9f}   "
           f"{'HOLDS' if d else 'FAILS'}")
     ok = a and b and d
+    ok = ok and sigma_clears_three_quarters()
     print(f"\n  -> {'CERTIFIED' if ok else 'NOT CERTIFIED'}: every cap with (RC), the forced")
-    print(f"     boundary data and alpha_2(0) >= 2a_1 - 1 is ORDERED, hence ANCHORED.")
-    print(f"     Sigma attains the bound exactly, so Sigma is covered.")
+    print(f"     boundary data and alpha_2(0) >= 3/4 is ORDERED, hence ANCHORED,")
+    print(f"     and Sigma clears 3/4 because a_1 > 7/8.")
 
     print(f"\n  NEGATIVE CONTROLS (rule I12): below the LP threshold 0.7484 these must FAIL.")
     bad = False
-    for cv in (F(70, 100), F(60, 100)):
+    for cv in (F(74, 100), F(70, 100), F(60, 100)):
         aa, bb, dd, _, _ = certify(cv)
         acc = aa and bb and dd
         print(f"    c = {float(cv):.2f}: {'*** ACCEPTED, CERTIFICATE UNSOUND ***' if acc else 'rejected'}")

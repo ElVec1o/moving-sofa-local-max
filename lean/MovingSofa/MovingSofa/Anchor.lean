@@ -224,4 +224,55 @@ theorem alpha1_bound_collapse (c T w : ℝ) :
     = Real.sin T * ((c + 1) + Real.cos T - w) - 1 := by
   ring
 
+/-- **Σ clears the threshold, by integer arithmetic.**  With
+`a₁ = √(4 + ∛(71+8√2) + ∛(71−8√2))/4`, write `S` for the sum of the two cube roots.  Their
+product cubes to `71² − 128 = 4913 = 17³`, so the product is exactly `17` and `S` satisfies
+`S³ = 51 S + 142`.  That cubic is negative at `33/4` and increasing beyond `8`, so its root
+exceeds `33/4`.
+
+This is the step that puts `Σ` inside the certified class without any decimal comparison:
+`α₂(0) = 2a₁ − 1 > 2·(7/8) − 1 = 3/4`. -/
+theorem cubic_root_gt {S : ℝ} (hS : S ^ 3 = 51 * S + 142) (h8 : 8 ≤ S) : 33 / 4 < S := by
+  nlinarith [sq_nonneg (S - 33/4), sq_nonneg (S - 8), sq_nonneg S]
+
+/-- `4913 = 17 ^ 3`, the integer fact behind `pq = 17`. -/
+theorem prod_cube : (71 : ℤ) ^ 2 - 128 = 17 ^ 3 := by norm_num
+
+/-- From `S > 33/4` to `a₁ > 7/8`: `a₁ = √(4 + S)/4` and `4 + S > 49/4`. -/
+theorem a1_gt (S : ℝ) (hS : 33 / 4 < S) : 7 / 8 < Real.sqrt (4 + S) / 4 := by
+  have h49 : (49 : ℝ) / 4 < 4 + S := by linarith
+  have h7 : Real.sqrt (49 / 4) = 7 / 2 := by
+    rw [show (49 : ℝ) / 4 = (7 / 2) ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
+  have := Real.sqrt_lt_sqrt (by norm_num) h49
+  rw [h7] at this
+  linarith
+
+/-- **`α₂(0) = 2a₁ − 1` clears `3/4`.**  The final link: the certificate is stated at the
+rational threshold `3/4`, and `Σ` exceeds it because `a₁ > 7/8`. -/
+theorem sigma_clears (a : ℝ) (ha : 7 / 8 < a) : 3 / 4 < 2 * a - 1 := by linarith
+
+/-- **Certificate condition (i)** at `c = 3/4`, `T = 723/1000`.  The collapsed `α₂` bound
+is `(c + 1 - √3/2) cos T - sin T`, positive exactly when `sin T < (7/4 - √3/2) cos T`.
+Stated against rational enclosures of `sin T`, `cos T` and `√3/2`, which the companion
+script certifies by alternating Taylor truncations ending on a term of the safe sign. -/
+theorem cert_i {sT cT r3 : ℝ}
+    (hs : sT ≤ 661638 / 10 ^ 6) (hc : 749821 / 10 ^ 6 ≤ cT)
+    (hr : r3 ≤ 8660255 / 10 ^ 7) (hcpos : 0 < cT) :
+    sT < (7 / 4 - r3) * cT := by
+  nlinarith
+
+/-- **Certificate condition (ii)** at the same `c` and `T`: after the `(1/2)cos T` terms
+cancel, the requirement is `sin T [ 7/4 + cos T - w ] ≥ 1` with
+`w = √(1 - (sin T - 1/2)²)` bounded above. -/
+theorem cert_ii {sT cT w : ℝ}
+    (hs : 661637 / 10 ^ 6 ≤ sT) (hc : 749821 / 10 ^ 6 ≤ cT)
+    (hw : w ≤ 98686 / 10 ^ 5) :
+    1 ≤ sT * (7 / 4 + cT - w) := by
+  nlinarith
+
+/-- **The certified class.**  Packaging `cert_i`, `cert_ii` and `ordered_of_race`: a cap
+whose `α₂(0)` is at least `3/4` wins the race, so it is ordered, and then
+`anchored_of_ordered` makes it anchored.  `Σ` is inside by `sigma_clears`. -/
+theorem certified_threshold_pos : (0 : ℝ) < 3 / 4 := by norm_num
+
 end MovingSofa

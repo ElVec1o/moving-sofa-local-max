@@ -1069,34 +1069,45 @@ the $\tfrac12\cos T$ terms cancel. So $\alpha_2>0$ on $[0,T)$ and $\alpha_1(T)\g
 Proposition~\ref{prop:race} applies.
 \end{proof}
 
-\begin{corollary}[$\Sig$ is certified]\label{cor:sigmacert}
-Every admissible cap with $\alpha_2(0)\ge2a_1-1=0.750574724825464\ldots$ is ordered and
-anchored. $\Sig$ attains the bound exactly, since $\alpha_2(0)=G'(0)=2a_1-1$.
+\begin{corollary}[The certified class]\label{cor:sigmacert}
+Every admissible cap with $\alpha_2(0)\ge\tfrac34$ is ordered and anchored, and $\Sig$ is
+one of them.
 \end{corollary}
 
 \begin{proof}
-Take $T=723/1000$. Bounding $\sin$ and $\cos$ by alternating Taylor truncations ending on
-a term of the safe sign, $\sqrt{\,\cdot\,}$ from above by $\sqrt z\le(z+q^2)/2q$ at
-$q=98685/100000$, and $a_1$ from below by $0.8752873624127$, the three hypotheses of
-Theorem~\ref{thm:ordercert} hold with slacks $1.6\cdot10^{-3}$, $2.7\cdot10^{-1}$ and
-$1.4\cdot10^{-3}$. Every comparison is between rational numbers.
+For the threshold, take $c=\tfrac34$ and $T=723/1000$. Bounding $\sin$ and $\cos$ by
+alternating Taylor truncations ending on a term of the safe sign, and
+$\sqrt{\,\cdot\,}$ from above by $\sqrt z\le(z+q^2)/2q$ at $q=98685/100000$, the three
+hypotheses of Theorem~\ref{thm:ordercert} hold with slacks $1.19\cdot10^{-3}$,
+$2.66\cdot10^{-1}$ and $1.04\cdot10^{-3}$. Every comparison is between rationals.
+
+That $\Sig$ lies in the class needs no decimal at all. Writing $p,q$ for the two cube roots
+in $a_1=\tfrac14\sqrt{4+\sqrt[3]{71+8\sqrt2}+\sqrt[3]{71-8\sqrt2}}$, we have
+$(pq)^3=71^2-128=4913=17^3$, so $pq=17$ exactly and $S=p+q$ satisfies $S^3=51S+142$. At
+$S=\tfrac{33}4$ the cubic equals $-\tfrac{79}{64}<0$, and it increases for $S\ge8$, so its
+root satisfies $S>\tfrac{33}4$. Hence $4+S>\tfrac{49}4$, $a_1>\tfrac78$, and
+$\alpha_2(0)=2a_1-1>\tfrac34$.
 \end{proof}
 
 This is what the sign-structure question was for. On the class
-$\alpha_2(0)\ge2a_1-1$ the concavity of Theorem~\ref{thm:diag} applies with no
+$\alpha_2(0)\ge\tfrac34$ the concavity of Theorem~\ref{thm:diag} applies with no
 sign-pattern hypothesis at all, because the sign pattern is now \emph{derived}: ordered by
 Corollary~\ref{cor:sigmacert}, anchored by Proposition~\ref{prop:anchor}. The largest
 admissible witness is $T=\arctan(2a_1-\tfrac{\sqrt3}2)=0.7242$, and the certificate is not
-tight: the linear programs place the sharp threshold near $0.7484$, below $\Sig$'s
-$0.7506$, and adversarial search puts it at or above $0.6215$. Rule~0: 
+tight: the decoupled linear programs place their threshold at $0.748424$, and the certificate
+reaches $\tfrac34$, just below it. Coupling the two programs --- one control must serve
+both arms, whereas the bound above lets each arm pick its own worst case --- lowers the
+threshold to $0.7222$, and adversarial search puts the sharp value at or above $0.6215$. Rule~0: 
 Corollary~\ref{cor:sigmacert} is \textsc{proved} in exact arithmetic; the sharp threshold
 itself is \textsc{heuristic} and is not needed.
 
 $\Sig$ itself wins its race comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$
 against $\alpha_2$ at $t=\pi/2-\beta=1.2811$; the certificate above is far more
-conservative than that, and still covers it. What remains open is the behaviour below
-$2a_1-1$: caps with small $\alpha_2(0)$ can be unordered, adversarial search exhibits them
-down to $0.6215$, and for those the reduction of Lemma~\ref{lem:mono} does not apply.
+conservative than that, and still covers it. What remains open is the behaviour below $\tfrac34$: caps with small $\alpha_2(0)$ can be
+unordered, adversarial search exhibits them down to $0.6215$, and for those the reduction
+of Lemma~\ref{lem:mono} does not apply. The gap between the certified $\tfrac34$ and the
+coupled-LP $0.7222$ is bookkeeping rather than mathematics, and closing it needs the
+coupled dual in exact arithmetic; below $0.6215$ the question is genuinely open.
 
 \begin{proposition}[Ordering forces a corner]\label{prop:corner}
 Let $H$ satisfy (RC), with absolutely continuous part $r=(H+H'')_{ac}\le1$ and an atom of
