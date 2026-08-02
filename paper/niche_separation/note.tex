@@ -3641,7 +3641,50 @@ the margin shrinks monotonically in the basis size, $0.00201$, $0.00165$, $0.001
 $0.00135$, $0.00123$ at $K=25,35,45,60,80$, with no sign of the drift decaying. Since a
 supremum over a subspace is a lower bound for the true supremum, the computed values rise
 towards the truth and the margin can only shrink further. The layer bound therefore does
-\emph{not} establish the assembly at $\Sig$, and is not claimed to.
+\emph{not} establish the assembly at $\Sig$.
+
+The loss is entirely in the Cauchy--Schwarz step, and it is avoidable, because
+$B_\tau(e,\cdot)$ is a \emph{linear} functional. For a linear functional the extremal
+ratio has a closed form and needs no inequality at all:
+\[
+  \sup_{\eta_\perp}\frac{B_\tau(e,\eta_\perp)^2}{|D_\tau[\eta_\perp]|}
+   = b^{\mathsf T}(-A)^{-1}b ,
+\]
+$b$ the coefficient vector of $B_\tau(e,\cdot)$ and $A$ the matrix of $D_\tau$ on the
+reduced space. Evaluated, the Sylvester condition
+$\sup B^2/|D|<|D_\tau[e]|=\tfrac12\sin2\sigma$ holds at every $\sigma$ from $0.02$ to
+$0.80$, with margin between $51$ and $61$ percent of the target throughout; at
+$\sigma=\beta$ the value is $0.1320$ against $0.2737$. The margin exceeds the residual
+basis drift by a factor of about $700$, the drift itself decaying geometrically
+($5.6,2.8,2.4,1.5,0.9$ in units of $10^{-4}$ at $K=45,60,80,100,120$).
+
+\begin{proposition}[Coercivity at $\Sig$, with an explicit constant]\label{prop:coerc}
+Write $\eta=ae+\eta_\perp$ with $e=(0,\sin t)$. For $\theta\in(0,1)$ with
+$K/\theta<|D_\tau[e]|$, where $K=\sup B^2/|D|$,
+\[
+  D_\tau[\eta]\ \le\ -a^2\Bigl(|D_\tau[e]|-\tfrac K\theta\Bigr)-(1-\theta)\,|D_\tau[\eta_\perp]| .
+\]
+With $\|ae\|^2_{H^1}=a^2\pi/2$, Proposition~\ref{prop:garding}, and the $H^1$-orthogonality
+of the splitting, this gives $D_\tau[\eta]\le-c\|\eta\|^2_{H^1}$ with
+$c=\min\bigl\{\tfrac2\pi(|D_\tau[e]|-\tfrac K\theta),\ \tfrac35(1-\theta)\bigr\}$.
+\end{proposition}
+
+At $\sigma=\beta$, optimising $\theta$ gives $\theta=0.8704$ and
+\[
+  \delta^2Q[\eta]\ \le\ -0.0777\,\|\eta\|^2_{H^1}\qquad\text{at }\Sig .
+\]
+This is an \emph{upper} bound on the top eigenvalue, which is the direction coercivity
+needs, and it is consistent with the finite-basis value $-0.0850$ computed earlier: that
+one is a lower bound, so $-0.0850\le\lambda_{\max}\le-0.0777$ and the two bracket the truth
+from opposite sides.
+
+Rule~0: $|D_\tau[e]|=\tfrac12\sin2\sigma$ and the tail constant $\tfrac35$ are
+\textsc{proved}, as is the absorption step; $K=0.1320$ is \textsc{heuristic}, being the
+value of a finite-basis computation, though of a quantity involving no inequality and with
+a margin three orders above the drift. The constant $0.0777$ therefore carries
+\textsc{heuristic}, and certifying $K$ is the single remaining step. This replaces the
+measured table of Proposition~\ref{prop:h1}, whose entries bound the constants from the
+wrong side and establish nothing.
 
 It is the argument that is lossy,
 not the conclusion: the direction maximising the cross term has $D$-quotient about
