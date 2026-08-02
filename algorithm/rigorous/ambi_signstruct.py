@@ -85,6 +85,51 @@ def build_H(r: np.ndarray, H0: float, x: np.ndarray,
     return H, Hp
 
 
+def admissible_profile(prof: np.ndarray, x: np.ndarray, hi: float) -> np.ndarray | None:
+    """Bend the radius profile onto the two forced boundary conditions.
+
+    THIS IS CODIMENSION 2 AND WAS THE WHOLE PROBLEM.  The cap is symmetric under the
+    REFLECTION rho(x, y) = (x, 1 - y) -- not a rotation; the note's leftmost point is
+    rho-FIXED, which a rotation could not do -- so H(theta) = sin theta + H(-theta).
+    Differentiating at 0 and pi forces H'(0) = 1/2 and H'(pi) = -1/2.  Integrating
+    H'' + H = r from H'(0) = 1/2,
+
+        H'(pi) = -1/2 - int_0^pi r cos ,       H(pi/2) = 1/2 + int_0^(pi/2) r cos ,
+
+    and H(pi/2) = 1 is forced too (it is what makes alpha_1(0) = -1/2).  So
+
+        (A)  int_0^(pi/2) r(s) cos s ds =  1/2 ,
+        (B)  int_(pi/2)^pi r(s) cos s ds = -1/2 .
+
+    Neither involves H(0): the H(0) terms cancel identically out of BOTH arms, so H(0) is
+    not a parameter of this problem at all.  Sigma satisfies (A) and (B) to the printed
+    precision; r == 1/2 satisfies both exactly, so the constraint set has interior inside
+    the (RC) box.
+
+    Adding lam * cos separately on each half before clamping to [0, hi] moves each moment
+    monotonically and independently, so two bisections land on both constraints exactly
+    while keeping r in [0, hi] -- (RC) still holds by construction, not by rejection."""
+    dx = x[1] - x[0]
+    c = np.cos(x)
+    L, R = x < np.pi / 2, x >= np.pi / 2
+    out = prof.copy()
+    for mask, target in ((L, 0.5), (R, -0.5)):
+        def moment(lam: float) -> float:
+            r = np.clip(prof + lam * c, 0.0, hi)
+            return float(np.trapezoid((r * c)[mask], dx=dx))
+        lo, up = -40.0, 40.0
+        if moment(lo) > target or moment(up) < target:
+            return None                  # unreachable from this profile inside the box
+        for _ in range(90):
+            mid = (lo + up) / 2
+            if moment(mid) < target:
+                lo = mid
+            else:
+                up = mid
+        out[mask] = np.clip(prof + (lo + up) / 2 * c, 0.0, hi)[mask]
+    return out
+
+
 def classify(H: np.ndarray, Hp: np.ndarray) -> tuple[bool, bool, bool]:
     """(ordered, anchored, substantive) for the arms on [0, pi/2].
 
@@ -122,7 +167,12 @@ def sample(n: int, rc: bool, seed: int) -> dict[str, int]:
         prof = sum(rng.uniform(-1, 1) * np.sin(rng.integers(1, 7) * x + rng.uniform(0, 2 * np.pi))
                    for _ in range(k))
         r = hi * (0.5 + 0.5 * np.tanh(prof / max(1e-9, np.abs(prof).max()) * 1.5))
-        H, Hp = build_H(r, rng.uniform(0.2, 1.8), x, atom=rng.uniform(0.0, 2.0))
+        r = admissible_profile(r, x, hi)
+        if r is None:
+            tally["vacuous"] += 1
+            continue
+        # H(0) cancels out of both arms, so its value is irrelevant; Sigma has H(0) = 1
+        H, Hp = build_H(r, 1.0, x, atom=rng.uniform(0.0, 2.0))
         o, a, sub = classify(H, Hp)
         if not sub:
             tally["vacuous"] += 1

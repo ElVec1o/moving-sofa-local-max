@@ -86,4 +86,32 @@ theorem a1_strictMono_on_E2
   rw [(hderiv u hu).deriv]
   exact lt_of_lt_of_le (hE2 u hu) (hsand u hu)
 
+/-- **Ordering forces a corner.**  The moment bound behind `prop:corner`: under (RC) the
+absolutely continuous part of `H + H''` is at most `1`, so its `sin`-moment over
+`[0, π/2]` is at most `∫ sin = 1`.  Since `α₂(0) = ∫₀^{π/2} r sin - 1 + a` and ordering
+forces `α₂(0) > 0` (because `α₁(0) = -1/2 < 0` always puts `0` in `E₁`), the atom mass `a`
+at `π/2` must be strictly positive unless `r = 1` almost everywhere. -/
+theorem moment_le_one {r : ℝ → ℝ} (hint : IntervalIntegrable r MeasureTheory.volume 0 (Real.pi / 2))
+    (hr : ∀ s ∈ Icc (0 : ℝ) (Real.pi / 2), r s ≤ 1) :
+    ∫ s in (0 : ℝ)..(Real.pi / 2), r s * Real.sin s ≤ 1 := by
+  have hpi : (0 : ℝ) ≤ Real.pi / 2 := by positivity
+  have hsin : ∫ s in (0 : ℝ)..(Real.pi / 2), Real.sin s = 1 := by
+    rw [integral_sin]; simp
+  calc ∫ s in (0 : ℝ)..(Real.pi / 2), r s * Real.sin s
+      ≤ ∫ s in (0 : ℝ)..(Real.pi / 2), Real.sin s := by
+        apply intervalIntegral.integral_mono_on hpi (hint.mul_continuousOn
+          (Real.continuous_sin.continuousOn)) (Real.continuous_sin.intervalIntegrable _ _)
+        intro s hs
+        have h0 : 0 ≤ Real.sin s := Real.sin_nonneg_of_nonneg_of_le_pi hs.1
+          (le_trans hs.2 (by linarith [Real.pi_pos]))
+        nlinarith [hr s hs, h0]
+    _ = 1 := hsin
+
+/-- **The corner bound.**  Packaging `moment_le_one` with the sign hypothesis: if
+`α₂(0) = m - 1 + a > 0` and `m ≤ 1`, then the atom mass `a` is strictly positive.  This is
+what makes `anchored_of_ordered` non-vacuous -- without an atom no cap is ordered at all,
+and the anchoring theorem would be a statement about the empty set. -/
+theorem atom_pos_of_ordered {m a : ℝ} (hm : m ≤ 1) (hpos : 0 < m - 1 + a) : 0 < a := by
+  linarith
+
 end MovingSofa

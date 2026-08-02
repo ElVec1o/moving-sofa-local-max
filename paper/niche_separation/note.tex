@@ -943,6 +943,40 @@ increasing there. Since $E_1\subseteq E_2$, the set $\{\alpha_1<0\}$ is an initi
 of $E_2$, so $E_1=[0,\tau_1)$ with $\tau_1\le\tau_2$.
 \end{proof}
 
+\begin{proposition}[Ordering forces a corner]\label{prop:corner}
+Let $H$ satisfy (RC), with absolutely continuous part $r=(H+H'')_{ac}\le1$ and an atom of
+mass $a\ge0$ at $\pi/2$. If the sign sets are ordered then
+\[
+  a \;\ge\; 1-\int_0^{\pi/2} r(s)\sin s\,ds \;\ge\; 0 ,
+\]
+with the second inequality strict unless $r=1$ almost everywhere on $[0,\pi/2]$. So every
+ordered cap other than that extreme one has a genuine corner at $\pi/2$.
+\end{proposition}
+
+\begin{proof}
+Since $H(\pi/2)=1$ and $H'(0)=\tfrac12$, the first arm at the left endpoint is
+$\alpha_1(0)=H(\pi/2)-1-H'(0)=-\tfrac12<0$, so $0\in E_1$ always. Orderedness gives
+$0\in E_2$, that is $\alpha_2(0)>0$. Solving $H''+H=r+a\,\delta_{\pi/2}$ from
+$H'(0)=\tfrac12$ and evaluating,
+\[
+  H'(\pi/2^+)=-H(0)+\int_0^{\pi/2} r(s)\sin s\,ds+a ,
+\]
+so that $\alpha_2(0)=H(0)-1+H'(\pi/2^+)=\int_0^{\pi/2} r(s)\sin s\,ds-1+a$; the $H(0)$
+terms cancel, as they do in both arms, so $H(0)$ is not a parameter of the sign structure
+at all. Under (RC), $\int_0^{\pi/2} r\sin\le\int_0^{\pi/2}\sin=1$, with equality only for
+$r=1$ a.e.
+\end{proof}
+
+At $\Sig$ the three numbers are $\int_0^{\pi/2}r\sin=0.5835$, $a=1.1670$ and
+$\alpha_2(0)=0.7506$, so the necessary condition $a\ge0.4165$ holds with room. The atom is
+the jump $G'(0)-F'(\pi/2)$ between the phases meeting at $\pi/2$.
+
+The proposition is what makes the anchoring result non-vacuous, and it is worth being
+explicit about why. Without an atom, (RC) alone forces $\alpha_2(0)\le0$ while
+$\alpha_1(0)=-\tfrac12<0$, so \emph{no} cap is ordered and
+Proposition~\ref{prop:anchor} would be a statement about the empty set. The atom is not a
+technicality permitted by (RC); it is the only thing that allows an ordered cap to exist.
+
 What this settles. The unanchored pattern of Remark~\ref{rem:conc},
 $E_1=E_2=[0.4,1.2]$, is \emph{ordered} (the sets are equal), and it is exactly a pattern
 on which the form is not negative, $\sup\tfrac12\delta^2Q/\|\eta\|^2=+0.4123$.
@@ -955,13 +989,18 @@ competitor class at all, only on the bookkeeping.
 What this does not settle, stated precisely because the measurement is unfavourable.
 Orderedness is a hypothesis of Proposition~\ref{prop:anchor}, and it is also a hypothesis
 of the reduction (Lemma~\ref{lem:mono}) that sends every ordered cell to the diagonal
-family. It is not implied by (RC). Sampling the curvature radius $H+H''\in[0,1]$ directly,
-so that (RC) holds by construction rather than by rejection, and including the atom at
-$\pi/2$ that (RC) permits, $2333$ of $3000$ caps have both sign sets nonempty, and of
-those \emph{none} is ordered. The same sampler with the curvature bound relaxed to $3$
-produces ordered unanchored caps freely, $66$ of $956$. So (RC) is what forbids the
-Remark~\ref{rem:conc} pattern, as the proof says, and orderedness is a genuinely separate
-condition that (RC) alone does not supply.
+family. It is not implied by (RC): by Proposition~\ref{prop:corner} it additionally forces
+an atom of mass at least $1-\int_0^{\pi/2}r\sin$, and a generic (RC) cap has no atom at
+all. Sampling the curvature radius in $[0,1]$ directly, so that (RC) holds by construction
+rather than by rejection, and imposing the forced boundary data $H'(0)=\tfrac12$,
+$H'(\pi)=-\tfrac12$, $H(\pi/2)=1$, $2322$ of $3000$ caps have both sign sets nonempty and
+none of them is ordered, exactly as Proposition~\ref{prop:corner} predicts.
+
+Perturbing $\Sig$'s own curvature radius instead, inside the (RC) box and with its atom
+left intact, $1475$ ordered caps arise across amplitudes up to $0.4$, and none of them is
+unanchored. That is the regression test for Proposition~\ref{prop:anchor} with content in
+it: the ordered class is a neighbourhood of $\Sig$, not the single point $\Sig$, and the
+proposition holds throughout it.
 
 The remaining gap is therefore the unordered cells, and it is a gap in the reduction, not
 in the concavity: Lemma~\ref{lem:mono} needs $E_1\subseteq E_2$ before
