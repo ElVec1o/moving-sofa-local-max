@@ -2364,8 +2364,18 @@ Proposition~\ref{prop:elem} and $61.6\%$ of the sharp $c^\ast$. The true decoupl
 there are $c_R=0.4748$ and $c_L=2.4414$, so the certificate captures $95\%$ of what is
 available and the right half binds. Both negative controls behave: the right half at
 $c=1$ crosses $\pi/2$ and the left at $c=3$ crosses $\pi$ (\verb|ambi_barrier.py|). A
-two-sided barrier, tracking a lower phase as well as an upper one, would remove the
-$\pi/2$ limitation outright. Both the monotone bound and the comparison
+two-sided barrier, tracking a lower phase as well as an upper one, does \emph{not} remove
+the limitation, and the reason is worth recording. It does recover information past
+$\pi/2$: with a bracket $[L,B]$ the bound $\sin^2\le1$ is replaced by
+$\max(\sin^2L,\sin^2B)$, which the trace shows falling back to $0.55$ and then $0.26$ once
+the bracket clears the maximum. But beyond $\pi/2$ the upper barrier's slope must be
+driven by $\sin^2 L$, the value at the \emph{lower} endpoint, because $\sin$ decreases
+there; the lagging endpoint therefore sets the pace and the bracket widens. At
+$(\tfrac9{20},\tfrac14)$ the left half still fails at $c=1$, the barrier reaching $\pi$ at
+$t=1.5624$ against $T=1.5708$, and refining the mesh to $20\,000$ segments does not close
+that gap, so the loss is structural rather than a discretisation artefact. At
+$(\tfrac7{10},\tfrac25)$ it fails at every $c$ tested. Reaching $\tfrac23$ by a barrier
+would need a genuinely different device, not a finer one. Both the monotone bound and the comparison
 principle that turns a barrier into a bound on the phase are machine-checked
 (\verb|prufer_rhs_eq|, \verb|prufer_rhs_le|, \verb|sin_sq_le_of_le|,
 \verb|coef_pos_right|, \verb|coef_pos_left|, \verb|prufer_comparison|,
