@@ -921,6 +921,56 @@ $-1$ from the $\sigma$ term on $[0,\pi/2]$, $+1$ from the $E_1$ term on $[0,\bet
 and $-1$ from the $E_2$ term at $\theta=t+\pi/2\in[\pi/2,\pi-\beta)$.
 \end{proof}
 
+\begin{proposition}[Admissibility forces the anchored structure]\label{prop:anchor}
+Let $H$ satisfy (RC), and suppose the sign sets are ordered, $E_1\subseteq E_2$. Suppose
+further that $\alpha_1$ and $\alpha_2$ do not vanish simultaneously. Then both sets are
+anchored: $E_2=[0,\tau_2)$ and $E_1=[0,\tau_1)$ with $\tau_1\le\tau_2$.
+\end{proposition}
+
+\begin{proof}
+On the complement of $E_2$ we have $\alpha_2\le0$, and orderedness gives
+$\alpha_1\ge0$ there. Lemma~\ref{lem:sandwich} then yields
+$\alpha_2'\le-\alpha_1\le0$, so $\alpha_2$ is non-increasing wherever it is
+nonpositive. Suppose $\alpha_2(s)\le0<\alpha_2(t)$ for some $s<t$. By continuity there is
+$u\in[s,t)$ with $\alpha_2(u)=0$ and $\alpha_2>0$ on $(u,t]$. From $\alpha_2(u)=0$ and
+orderedness, $\alpha_1(u)\ge0$, so $\alpha_2'(u)\le-\alpha_1(u)\le0$; from
+$\alpha_2>0$ on $(u,t]$ the right derivative at $u$ is $\ge0$. Hence
+$\alpha_2'(u)=0$ and $\alpha_1(u)=0$, so both arms vanish at $u$, contrary to hypothesis.
+Therefore $\{\alpha_2>0\}$ is downward closed, that is $E_2=[0,\tau_2)$.
+
+On $E_2$ we have $\alpha_2>0$, so $\alpha_1'\ge\alpha_2>0$ and $\alpha_1$ is strictly
+increasing there. Since $E_1\subseteq E_2$, the set $\{\alpha_1<0\}$ is an initial segment
+of $E_2$, so $E_1=[0,\tau_1)$ with $\tau_1\le\tau_2$.
+\end{proof}
+
+What this settles. The unanchored pattern of Remark~\ref{rem:conc},
+$E_1=E_2=[0.4,1.2]$, is \emph{ordered} (the sets are equal), and it is exactly a pattern
+on which the form is not negative, $\sup\tfrac12\delta^2Q/\|\eta\|^2=+0.4123$.
+Proposition~\ref{prop:anchor} says no cap satisfying (RC) realises an ordered unanchored
+pattern. So that counterexample is not a counterexample to anything about competitors: it
+is a sign pattern the admissibility condition already forbids. Within the ordered class,
+the restriction to anchored cells in Theorem~\ref{thm:final} is not a restriction on the
+competitor class at all, only on the bookkeeping.
+
+What this does not settle, stated precisely because the measurement is unfavourable.
+Orderedness is a hypothesis of Proposition~\ref{prop:anchor}, and it is also a hypothesis
+of the reduction (Lemma~\ref{lem:mono}) that sends every ordered cell to the diagonal
+family. It is not implied by (RC). Sampling the curvature radius $H+H''\in[0,1]$ directly,
+so that (RC) holds by construction rather than by rejection, and including the atom at
+$\pi/2$ that (RC) permits, $2333$ of $3000$ caps have both sign sets nonempty, and of
+those \emph{none} is ordered. The same sampler with the curvature bound relaxed to $3$
+produces ordered unanchored caps freely, $66$ of $956$. So (RC) is what forbids the
+Remark~\ref{rem:conc} pattern, as the proof says, and orderedness is a genuinely separate
+condition that (RC) alone does not supply.
+
+The remaining gap is therefore the unordered cells, and it is a gap in the reduction, not
+in the concavity: Lemma~\ref{lem:mono} needs $E_1\subseteq E_2$ before
+Theorem~\ref{thm:diag} can be applied at all. Closing it needs sofa-admissibility itself,
+not the curvature condition extracted from it, and that is open. Rule~0: the sampling
+paragraphs are \textsc{heuristic}; Proposition~\ref{prop:anchor} is \textsc{proved} and
+formalised; ``admissible $\Rightarrow$ ordered'' is \textsc{conjecture} with no proof and
+no supporting measurement at the width tested.
+
 \begin{remark}[Measurements, and exactly what they do and do not give]\label{rem:conc}
 In a hat basis with $\eta(0)=\eta(\pi/2)=0$:
 

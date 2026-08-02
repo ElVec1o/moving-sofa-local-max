@@ -16,3 +16,4 @@ import MovingSofa.Barrier
 import MovingSofa.Comparison
 import MovingSofa.Containment
 import MovingSofa.Rotation
+import MovingSofa.Anchor
