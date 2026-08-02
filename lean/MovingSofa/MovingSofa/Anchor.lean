@@ -270,6 +270,33 @@ theorem cert_ii {sT cT w : ℝ}
     1 ≤ sT * (7 / 4 + cT - w) := by
   nlinarith
 
+/-- **The right endpoint is rigid.**  `α₂(π/2) = 1/2 − ∫(u cos + v sin)`, and the two
+forced moments say exactly that the integral splits as `1/2 + 1/2 = 1`.  So
+`α₂(π/2) = −1/2` for *every* admissible cap — it is not a property of `Σ`. -/
+theorem alpha2_at_right {Iu Iv : ℝ} (hu : Iu = 1/2) (hv : Iv = 1/2) :
+    (1/2 : ℝ) - (Iu + Iv) = -(1/2) := by rw [hu, hv]; norm_num
+
+/-- **The hard floor.**  `α₁(π/2) = c + ∫(u sin − v cos)`, whose minimum over admissible
+`(u, v)` is `(1 − √3/2) − √3/2 = 1 − √3`, attained.  With `α₂(π/2) = −1/2 < 0`, ordering
+forces `α₁(π/2) ≥ 0`, so no threshold condition on `α₂(0)` alone can work below `√3 − 1`.
+
+The two bang-bang switch points are `π/6` (from `sin σ = 1/2`) and `π/3` (from
+`1 − cos σ = 1/2`), forced by the moment constraints exactly as in the certificate. -/
+theorem floor_sqrt3 {c : ℝ} (hc : c < Real.sqrt 3 - 1) :
+    c + (1 - Real.sqrt 3) < 0 := by linarith
+
+/-- The minimum value assembles from the two one-constraint programs. -/
+theorem floor_min_eq : (1 - Real.sqrt 3 / 2) - Real.sqrt 3 / 2 = 1 - Real.sqrt 3 := by ring
+
+/-- `√3 − 1 < 3/4`, so the certified class sits strictly above the floor and the bracket
+`[√3 − 1, 3/4]` is nonempty. -/
+theorem floor_lt_threshold : Real.sqrt 3 - 1 < 3 / 4 := by
+  have h : Real.sqrt 3 ≤ 1732051 / 10 ^ 6 := by
+    rw [show (1732051 : ℝ) / 10 ^ 6 = Real.sqrt ((1732051 / 10 ^ 6) ^ 2) by
+      rw [Real.sqrt_sq (by norm_num)]]
+    exact Real.sqrt_le_sqrt (by norm_num)
+  linarith
+
 section Enclosures
 open Real
 

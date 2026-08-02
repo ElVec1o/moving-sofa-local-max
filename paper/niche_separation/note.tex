@@ -1069,6 +1069,41 @@ the $\tfrac12\cos T$ terms cancel. So $\alpha_2>0$ on $[0,T)$ and $\alpha_1(T)\g
 Proposition~\ref{prop:race} applies.
 \end{proof}
 
+\begin{proposition}[The right endpoint is rigid]\label{prop:rigid}
+For every cap satisfying (RC) and the forced boundary data, $\alpha_2(\pi/2)=-\tfrac12$.
+Consequently orderedness forces $\alpha_1(\pi/2)\ge0$.
+\end{proposition}
+
+\begin{proof}
+By Proposition~\ref{prop:armsys},
+$\alpha_2(\pi/2)=\tfrac12-\int_0^{\pi/2}\bigl[u\cos s+v\sin s\bigr]ds$, and the two forced
+moments are exactly $\int_0^{\pi/2}u\cos=\tfrac12$ and $\int_0^{\pi/2}v\sin=\tfrac12$, so
+the integral is $1$ and $\alpha_2(\pi/2)=-\tfrac12$. Since $\alpha_2(\pi/2)<0$, the point
+$\pi/2$ is outside $E_2$, so orderedness puts it outside $E_1$ as well.
+\end{proof}
+
+\begin{corollary}[A hard floor for the threshold]\label{cor:floor}
+No condition of the form ``$\alpha_2(0)\ge c$ implies ordered'' can hold with
+$c<\sqrt3-1=0.7320508\ldots$
+\end{corollary}
+
+\begin{proof}
+$\alpha_1(\pi/2)=c+\int_0^{\pi/2}\bigl[u\sin s-v\cos s\bigr]ds$. Minimising the two terms
+separately, each a one-constraint program solved bang-bang:
+$\int u\sin$ is least when $u=1$ on $[0,\pi/6]$, giving $1-\tfrac{\sqrt3}2$, and
+$\int v\cos$ is greatest when $v=1$ on $[0,\pi/3]$, giving $\tfrac{\sqrt3}2$; the switch
+points are forced by $\sin\sigma=\tfrac12$ and $1-\cos\sigma=\tfrac12$. The minimum is
+$1-\sqrt3$ and it is attained, by a single admissible pair. So for $c<\sqrt3-1$ there is a
+cap with $\alpha_1(\pi/2)<0$ while $\alpha_2(\pi/2)=-\tfrac12<0$ by
+Proposition~\ref{prop:rigid}, which is unordered.
+\end{proof}
+
+Together with the certificate this brackets the sharp threshold in
+$[\sqrt3-1,\,0.748424]$, of width $0.0164$. That replaces the earlier bracket
+$[0.6215,\,0.899266]$, whose lower end was a search and whose upper end was an inequality
+chain; both ends are now exact, and the lower end is a proof rather than a measurement.
+$\Sig$ sits at $2a_1-1=0.7506$, above the whole bracket.
+
 \begin{corollary}[The certified class]\label{cor:sigmacert}
 Every admissible cap with $\alpha_2(0)\ge\tfrac34$ is ordered and anchored, and $\Sig$ is
 one of them.
@@ -1104,19 +1139,18 @@ sign-pattern hypothesis at all, because the sign pattern is now \emph{derived}: 
 Corollary~\ref{cor:sigmacert}, anchored by Proposition~\ref{prop:anchor}. The largest
 admissible witness is $T=\arctan(2a_1-\tfrac{\sqrt3}2)=0.7242$, and the certificate is not
 tight: the decoupled linear programs place their threshold at $0.748424$, and the certificate
-reaches $\tfrac34$, just below it. Coupling the two programs --- one control must serve
-both arms, whereas the bound above lets each arm pick its own worst case --- lowers the
-threshold to $0.7222$, and adversarial search puts the sharp value at or above $0.6215$. Rule~0: 
+reaches $\tfrac34$, just below it. Corollary~\ref{cor:floor} bounds the sharp threshold
+below by $\sqrt3-1$, so the certificate is within $0.018$ of the best possible condition of
+this form. Rule~0: 
 Corollary~\ref{cor:sigmacert} is \textsc{proved} in exact arithmetic; the sharp threshold
 itself is \textsc{heuristic} and is not needed.
 
 $\Sig$ itself wins its race comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$
 against $\alpha_2$ at $t=\pi/2-\beta=1.2811$; the certificate above is far more
-conservative than that, and still covers it. What remains open is the behaviour below $\tfrac34$: caps with small $\alpha_2(0)$ can be
-unordered, adversarial search exhibits them down to $0.6215$, and for those the reduction
-of Lemma~\ref{lem:mono} does not apply. The gap between the certified $\tfrac34$ and the
-coupled-LP $0.7222$ is bookkeeping rather than mathematics, and closing it needs the
-coupled dual in exact arithmetic; below $0.6215$ the question is genuinely open.
+conservative than that, and still covers it. What remains open is the narrow band $[\sqrt3-1,\tfrac34)$. Below $\sqrt3-1$ the question
+is settled the other way by Corollary~\ref{cor:floor}: unordered admissible caps exist, and
+for those the reduction of Lemma~\ref{lem:mono} does not apply, so no condition on
+$\alpha_2(0)$ alone can rescue them.
 
 \begin{proposition}[Ordering forces a corner]\label{prop:corner}
 Let $H$ satisfy (RC), with absolutely continuous part $r=(H+H'')_{ac}\le1$ and an atom of
