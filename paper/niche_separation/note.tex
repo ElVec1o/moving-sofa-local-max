@@ -3541,6 +3541,29 @@ need only be sharp in a neighbourhood of $c=\sqrt3-1$. Rule~7: rasterised measur
 $25$ profiles, \textsc{heuristic}, with the $\Sig$ value reproduced as the regression gate.
 \end{remark}
 
+\begin{remark}[Concavity fails on a realized cell]\label{rem:concfail}
+It would settle the complement of Theorem~\ref{thm:ordopt} if $\delta^2Q\le0$ held on every
+cell an admissible cap realises, since the admissible set is convex and $\Sig$ is a critical
+point. It does not. Taking the witness of Corollary~\ref{cor:floor} in curvature-radius
+form, $r=0$ on $[0,\pi/6)$, $1$ on $[\pi/6,\pi/2)$, $0$ on $[\pi/2,5\pi/6)$ and $1$ after,
+with the atom fixed by $\alpha_2(0)=c$, the top eigenvalue of the second variation on the
+cell it realises is
+\[
+  \begin{array}{r|ccccc}
+    c & 0.60 & 0.68 & 0.72 & 0.73 & 0.73195\\\hline
+    \lambda_{\max} & +0.1701 & -0.2520 & -0.4607 & -0.5065 & -0.5120\\
+    \text{ordered} & \text{no} & \text{no} & \text{no} & \text{no} & \text{yes}
+  \end{array}
+\]
+The sign change in orderedness between $0.73$ and $0.73195$ locates the floor
+$\sqrt3-1=0.7320508$ independently. At $c=0.60$ the form is positive, so concavity on the
+whole admissible set is \textsc{false} and that route to the complement is closed.
+
+Where concavity fails the area is not close to optimal: Remark~\ref{rem:profile} gives a
+deficit of $0.0205$ at $c=0.55$ and $0.0584$ at $c=0.40$, against a rasterisation error bar
+of $0.0015$. So the complement plausibly holds, but by a mechanism other than concavity.
+\end{remark}
+
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
 $Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
 $[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
@@ -3690,8 +3713,12 @@ endpoint; the grid handles the interior and the exact computation the boundary.
 
 The threshold is moreover \emph{attained}. At $c=\sqrt3-1$ the floor witness has
 $\alpha_1(\pi/2)=0$, which is not negative, so $\pi/2\notin E_1$ and the cap is ordered.
-Combining with Corollary~\ref{cor:floor}, which produces an unordered cap for every
-$c<\sqrt3-1$: a cap is ordered if and only if $\alpha_2(0)\ge\sqrt3-1$, equality included.
+Combining with Corollary~\ref{cor:floor}: every admissible cap with
+$\alpha_2(0)\ge\sqrt3-1$ is ordered, equality included, and the threshold is sharp, since
+below it Corollary~\ref{cor:floor} produces an unordered cap. The converse is false as a
+statement about individual caps: for $c<\sqrt3-1$ some admissible caps are unordered and
+others are not. Perturbations of $\Sig$ at $\alpha_2(0)=0.30$, for instance, are still
+ordered.
 
 Together with the closed form for branch (B) and Lemma~\ref{lem:imw}, the sharpness
 argument rests on closed forms throughout, certified on a grid for every $c\ge0.735$ and
