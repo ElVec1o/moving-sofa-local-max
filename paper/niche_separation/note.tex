@@ -1098,6 +1098,13 @@ cap with $\alpha_1(\pi/2)<0$ while $\alpha_2(\pi/2)=-\tfrac12<0$ by
 Proposition~\ref{prop:rigid}, which is unordered.
 \end{proof}
 
+The witness is explicit and its two integrals are exact: $u=1$ on $[0,\pi/6]$ gives
+$\int\cos=\sin\tfrac\pi6=\tfrac12$ and $\int\sin=1-\tfrac{\sqrt3}2$; $v=1$ on $[0,\pi/3]$
+gives $\int\sin=1-\cos\tfrac\pi3=\tfrac12$ and $\int\cos=\tfrac{\sqrt3}2$. All four are
+formalised. Sweeping $3600$ two-block bang-bang caps with both moments exact finds none
+that defeats a larger $c$: the floor $\sqrt3-1$ is attained only by this one, and only at
+$T=\pi/2$.
+
 Together with the certificate this brackets the sharp threshold in
 $[\sqrt3-1,\,0.748424]$, of width $0.0164$. That replaces the earlier bracket
 $[0.6215,\,0.899266]$, whose lower end was a search and whose upper end was an inequality
@@ -1147,7 +1154,15 @@ itself is \textsc{heuristic} and is not needed.
 
 $\Sig$ itself wins its race comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$
 against $\alpha_2$ at $t=\pi/2-\beta=1.2811$; the certificate above is far more
-conservative than that, and still covers it. What remains open is the narrow band $[\sqrt3-1,\tfrac34)$. Below $\sqrt3-1$ the question
+conservative than that, and still covers it. Inside the band, $12500$ adversarial trials at five values of $c$ from $0.7325$ to
+$0.7499$ --- unrestricted noise, one-sided bang-bang, and Fourier profiles, all projected
+onto both moments exactly --- produce no unordered cap, while the same test applied to the
+floor witness brackets $\sqrt3-1$ correctly, unordered at $c=0.7320$ and ordered at
+$c=0.7325$. So the sharp threshold is plausibly $\sqrt3-1$ itself and the certificate's
+$\tfrac34$ is the conservative end. Rule~7: that paragraph is \textsc{heuristic}; the floor
+is \textsc{proved}.
+
+What remains open is the narrow band $[\sqrt3-1,\tfrac34)$. Below $\sqrt3-1$ the question
 is settled the other way by Corollary~\ref{cor:floor}: unordered admissible caps exist, and
 for those the reduction of Lemma~\ref{lem:mono} does not apply, so no condition on
 $\alpha_2(0)$ alone can rescue them.

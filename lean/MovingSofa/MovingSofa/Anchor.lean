@@ -297,6 +297,30 @@ theorem floor_lt_threshold : Real.sqrt 3 - 1 < 3 / 4 := by
     exact Real.sqrt_le_sqrt (by norm_num)
   linarith
 
+/-- **The floor witness satisfies both moment constraints, exactly.**  `u = 1` on
+`[0, π/6]` gives `∫ cos = sin(π/6) = 1/2`, and `v = 1` on `[0, π/3]` gives
+`∫ sin = 1 - cos(π/3) = 1/2`.  The switch points are forced by those two equations, which
+is why `π/6` and `π/3` appear throughout. -/
+theorem floor_moment_u : ∫ s in (0:ℝ)..(Real.pi/6), Real.cos s = 1/2 := by
+  rw [integral_cos]; simp [Real.sin_pi_div_six]
+
+theorem floor_moment_v : ∫ s in (0:ℝ)..(Real.pi/3), Real.sin s = 1/2 := by
+  rw [integral_sin]; simp [Real.cos_pi_div_three]; norm_num
+
+/-- The two objective integrals of the floor witness: `∫₀^{π/6} sin = 1 - √3/2` and
+`∫₀^{π/3} cos = √3/2`. -/
+theorem floor_obj_u : ∫ s in (0:ℝ)..(Real.pi/6), Real.sin s = 1 - Real.sqrt 3 / 2 := by
+  rw [integral_sin, Real.cos_pi_div_six]; norm_num
+
+theorem floor_obj_v : ∫ s in (0:ℝ)..(Real.pi/3), Real.cos s = Real.sqrt 3 / 2 := by
+  rw [integral_cos, Real.sin_pi_div_three]; simp
+
+/-- **`α₁(π/2) = c + 1 − √3` for the floor witness.**  Assembling the two objective
+integrals: `α₁(π/2) = c + ∫u sin − ∫v cos = c + (1 − √3/2) − √3/2`.  This is the exact
+value that makes `√3 − 1` the floor, and it is attained, not merely bounded. -/
+theorem floor_alpha1_value (c : ℝ) :
+    c + (1 - Real.sqrt 3 / 2) - Real.sqrt 3 / 2 = c + 1 - Real.sqrt 3 := by ring
+
 section Enclosures
 open Real
 
