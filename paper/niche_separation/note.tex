@@ -3574,12 +3574,32 @@ is not.
 Assembly. Splitting $\eta=a(0,\sin t)+\eta_\perp$ in the $H^1$ inner product,
 Proposition~\ref{prop:marginal} controls the first summand exactly and
 Proposition~\ref{prop:garding} controls the second by $-\tfrac35\|\eta_\perp\|^2_{H^1}$.
-What is not yet controlled is the cross term: the top eigenvalue on the full space is
-measured at about half the marginal mode's own quotient $-\sin2\sigma/\pi$ --- the ratios
-are $0.503$, $0.523$, $0.541$, $0.670$ at $\sigma=0.10,0.05,0.025,0.010$ --- so the
-maximiser mixes the two pieces rather than sitting on either. Closing that coupling is
-what case (b) does by spectral splitting, and it is the one step between these two
-propositions and a coercivity theorem with explicit constants.
+What is not yet controlled is the cross term. Since $D_{\pi/2}$ is diagonal in the basis,
+$B_{\pi/2}(e,\eta_\perp)=0$, so the whole cross term is the difference
+\[
+  B_\tau(e,\eta_\perp)=\int_\tau^{\pi/2}\Bigl[\cos t\,(p+q')-\sin t\,(q-p')\Bigr] ,
+\]
+supported on an interval of length $\sigma$ and hence $O(\sqrt\sigma)$.
+
+The naive absorption fails, and it is worth recording why. Writing $A,Y$ for the $H^1$
+norms of the two summands, the three bounds give
+$D_\tau\le-\tfrac{\sin2\sigma}{\pi}A^2+2C\sqrt\sigma\,AY-\tfrac35Y^2$, which is negative
+definite exactly when $C<\sqrt{6/5\pi}=0.6180$. Measured, $C$ is about $0.93$ across
+$\sigma\in[0.01,0.4]$, so the argument does not close. It is the argument that is lossy,
+not the conclusion: the direction maximising the cross term has $D$-quotient about
+$-1.85$, three times the global worst case $-\tfrac35$, so bounding the two terms by their
+separate worst cases counts a direction that realises neither. The sharp condition is
+\[
+  \sup_{\eta_\perp}\ \frac{B_\tau(e,\eta_\perp)^2}{|D_\tau[\eta_\perp]|}\ \le\
+  \frac{\sin2\sigma}{\pi} ,
+\]
+and it is an \emph{analytic} bound on that joint quantity, not a sharper constant in either
+factor separately, that would finish the assembly. Consistent with this, the measured
+top eigenvalue on the full space is about half the marginal mode's own quotient --- ratios
+$0.503$, $0.523$, $0.541$, $0.670$ at $\sigma=0.10,0.05,0.025,0.010$ --- so the true
+maximiser mixes the two pieces. Closing the coupling is what case (b) does by spectral
+splitting, and it remains the one step between these propositions and a coercivity theorem
+with explicit constants.
 
 \begin{remark}[The end-cap degeneracy is linear]\label{rem:endcap}
 The diagonal family $D_\tau$ degenerates as $\tau\to\pi/2$: at $\tau=\pi/2$ the mode
