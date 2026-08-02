@@ -1082,6 +1082,36 @@ the integral is $1$ and $\alpha_2(\pi/2)=-\tfrac12$. Since $\alpha_2(\pi/2)<0$, 
 $\pi/2$ is outside $E_2$, so orderedness puts it outside $E_1$ as well.
 \end{proof}
 
+\begin{proposition}[The race in one variable]\label{prop:onevar}
+Write $W(t)=e^{it}Z(t)$ with $Z=\alpha_1+i\alpha_2$. Then $\operatorname{Re}W$ is
+non-decreasing, with $\operatorname{Re}W(0)=-\tfrac12$ and
+$\operatorname{Re}W(\pi/2)=\tfrac12$; and at any zero $\tau\in[0,\pi/2)$ of $\alpha_2$,
+\[
+  \alpha_1(\tau)=\frac{\operatorname{Re}W(\tau)}{\cos\tau} .
+\]
+Consequently the cap is ordered if and only if $\tau\ge t_0$, where $\tau$ is the first
+zero of $\alpha_2$ and $t_0$ is the unique zero of $\operatorname{Re}W$.
+\end{proposition}
+
+\begin{proof}
+$W'=e^{it}(u-iv)$ with $u,v\in[0,1]$, so
+$\operatorname{Re}W'=u\cos t+v\sin t\ge0$ on $[0,\pi/2]$. At $t=0$,
+$W(0)=Z(0)$ and $\operatorname{Re}Z(0)=\alpha_1(0)=-\tfrac12$; at $t=\pi/2$,
+$Z=-iW$, so $\operatorname{Re}W(\pi/2)=-\alpha_2(\pi/2)=\tfrac12$ by
+Proposition~\ref{prop:rigid}. At a zero of $\alpha_2=\operatorname{Im}Z$ we have
+$\operatorname{Im}W\cos\tau=\operatorname{Re}W\sin\tau$, whence
+$\alpha_1(\tau)=\operatorname{Re}W\cos\tau+\operatorname{Im}W\sin\tau
+=\operatorname{Re}W\bigl(\cos\tau+\tfrac{\sin^2\tau}{\cos\tau}\bigr)
+=\operatorname{Re}W(\tau)/\cos\tau$. Since $\operatorname{Re}W$ runs monotonically from
+$-\tfrac12$ to $\tfrac12$ its zero $t_0$ is unique, and the sign of $\alpha_1$ at the first
+zero of $\alpha_2$ is the sign of $\tau-t_0$.
+\end{proof}
+
+This is the sharpest form of the criterion available: the two-arm race collapses to a
+comparison of two times, both determined by the control, and $\operatorname{Re}W$ is
+monotone so $t_0$ is well defined without any case analysis. It is also where a proof that
+$\sqrt3-1$ is sharp should start, since it removes $\alpha_1$ from the problem entirely.
+
 \begin{corollary}[A hard floor for the threshold]\label{cor:floor}
 No condition of the form ``$\alpha_2(0)\ge c$ implies ordered'' can hold with
 $c<\sqrt3-1=0.7320508\ldots$

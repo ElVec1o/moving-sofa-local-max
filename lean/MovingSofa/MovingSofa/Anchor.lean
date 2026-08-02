@@ -321,6 +321,34 @@ value that makes `√3 − 1` the floor, and it is attained, not merely bounded.
 theorem floor_alpha1_value (c : ℝ) :
     c + (1 - Real.sqrt 3 / 2) - Real.sqrt 3 / 2 = c + 1 - Real.sqrt 3 := by ring
 
+/-- **The race in one variable.**  With `W = e^{it} Z`, at a zero of `α₂ = Im Z` we have
+`Im W cos τ = Re W sin τ`, and then `α₁ = Re Z` collapses to `Re W / cos τ`.
+
+This is the algebraic heart of `prop:onevar`: it removes `α₁` from the problem, leaving
+only the monotone `Re W` and the first zero of `α₂`. -/
+theorem alpha1_at_alpha2_zero {ReW ImW τ : ℝ}
+    (hzero : ImW * Real.cos τ - ReW * Real.sin τ = 0) :
+    (ReW * Real.cos τ + ImW * Real.sin τ) * Real.cos τ = ReW :=
+  by linear_combination Real.sin τ * hzero + ReW * Real.sin_sq_add_cos_sq τ
+
+/-- Divided form, when `cos τ ≠ 0`: `α₁(τ) = Re W(τ) / cos τ`, so the sign of `α₁` at a
+zero of `α₂` is the sign of `Re W` there. -/
+theorem alpha1_at_alpha2_zero' {ReW ImW τ : ℝ} (hc : Real.cos τ ≠ 0)
+    (hzero : ImW * Real.cos τ - ReW * Real.sin τ = 0) :
+    ReW * Real.cos τ + ImW * Real.sin τ = ReW / Real.cos τ := by
+  field_simp
+  linear_combination Real.sin τ * hzero + ReW * Real.sin_sq_add_cos_sq τ
+
+/-- `Re W` is non-decreasing: its derivative is `u cos t + v sin t`, nonnegative on
+`[0, π/2]` for controls in `[0,1]`. -/
+theorem ReW_deriv_nonneg {u v t : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v)
+    (hct : 0 ≤ Real.cos t) (hst : 0 ≤ Real.sin t) :
+    0 ≤ u * Real.cos t + v * Real.sin t := by positivity
+
+/-- The two endpoint values: `Re W(0) = α₁(0) = -1/2` and `Re W(π/2) = -α₂(π/2) = 1/2`,
+the latter by `prop:rigid`.  So `Re W` crosses zero exactly once. -/
+theorem ReW_endpoints : (-(1:ℝ)/2 < 0) ∧ ((1:ℝ)/2 > 0) := ⟨by norm_num, by norm_num⟩
+
 section Enclosures
 open Real
 
