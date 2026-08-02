@@ -1021,11 +1021,41 @@ $[0.6215,\,0.899266]$, the lower end is probably the truth, and $\Sig$ at $0.750
 then be covered with room. Rule~7: the interval is proved at the upper end only; $0.6215$
 is a measurement and the sharp value is not known.
 
-What is proved, then, is that ordering is decided by a race whose outcome is governed by
-$\alpha_2(0)$ alone once $\alpha_2(0)\ge0.899266$, and that $\Sig$ wins its own race
-comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$ against $\alpha_2$ at
-$t=\pi/2-\beta=1.2811$. What is not proved is that every admissible cap with
-$\alpha_2(0)$ as large as $\Sig$'s is ordered.
+The threshold can be pushed further, and the route is to stop bounding and start solving.
+Writing $Z=\alpha_1+i\alpha_2$, Proposition~\ref{prop:armsys} is
+$Z'+iZ=(1-r(t))-i(1-r(t+\tfrac\pi2))$, so with $u=1-r(t)$ and $v=1-r(t+\tfrac\pi2)$, both
+in $[0,1]$,
+\[
+  \alpha_1(t)=-\tfrac12\cos t+c\sin t+\int_0^t\!\bigl[u\cos(t-s)-v\sin(t-s)\bigr]ds ,\quad
+  \alpha_2(t)= c\cos t+\tfrac12\sin t-\int_0^t\!\bigl[u\sin(t-s)+v\cos(t-s)\bigr]ds ,
+\]
+exactly, where $c=\alpha_2(0)$; and the two constraints become
+$\int_0^{\pi/2}u\cos=\tfrac12$ and $\int_0^{\pi/2}v\sin=\tfrac12$. Each of the four
+integrals is then extremised by a linear program in $u$ or in $v$ separately, solved by
+bang-bang against a single multiplier. Requiring $\alpha_2>0$ up to some $T$ and
+$\alpha_1(T)\ge0$, both in the worst case, gives a sufficient threshold
+\[
+  c \;\ge\; c_{\mathrm{LP}} , \qquad c_{\mathrm{LP}}\approx0.7484 ,
+\]
+against $\alpha_2(0)=0.7506$ at $\Sig$.
+
+The reduction to the linear programs is a proof; the value $0.7484$ is not. It comes from a
+discretised LP, and $\Sig$ clears it by $0.0017$. Refining the grid from $10^3$ to
+$1.6\cdot10^4$ points moves the threshold by at most $0.0006$ and never changes the sign of
+the margin, so the conclusion is stable under refinement, but $0.0017$ is too thin to
+assert on floating point. Rule~7: $c_{\mathrm{LP}}\approx0.7484$ is \textsc{heuristic}, the
+reduction is \textsc{proved}, and Corollary~\ref{cor:race2} at $0.899266$ is the largest
+threshold this note certifies. Making the $\Sig$ margin rigorous needs the LP solved in
+exact or interval arithmetic, exactly as the barrier certificate
+needed rational arithmetic; it is a well-defined computation and
+it is not carried out here.
+
+What is proved, then, is that ordering is decided by a race, that it is governed by
+$\alpha_2(0)$ alone once $\alpha_2(0)\ge0.899266$, and that the sharp threshold lies in
+$[0.6215,\,0.899266]$ with the linear programs placing it near $0.7484$. $\Sig$ wins its
+own race comfortably, $\alpha_1$ reaching $0$ at $t=\beta=0.2897$ against $\alpha_2$ at
+$t=\pi/2-\beta=1.2811$. What is not proved is that every admissible cap with $\alpha_2(0)$
+as large as $\Sig$'s is ordered.
 
 \begin{proposition}[Ordering forces a corner]\label{prop:corner}
 Let $H$ satisfy (RC), with absolutely continuous part $r=(H+H'')_{ac}\le1$ and an atom of

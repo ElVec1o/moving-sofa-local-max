@@ -176,4 +176,21 @@ theorem cos_weighted_mass_bound {r : ℝ → ℝ} {t : ℝ}
     Real.cos_le_cos_of_nonneg_of_le_pi hs.1 (le_trans ht.2 (by linarith [Real.pi_pos])) hs.2
   nlinarith [hr s hs]
 
+/-- **The race criterion, usable direction.**  If `α₂ > 0` throughout `[0, T)` and `α₁`
+has reached `0` by `T`, the cap is ordered: before `T` every point of `E₁` lies in `E₂`
+because `E₂` is everything; from `T` on, `α₁ ≥ 0` so `E₁` is empty there.
+
+`hmono` is supplied by the arm system: `α₁' = α₂ + 1 - r ≥ α₂ > 0` while `α₂ > 0`, so
+`α₁` is increasing on `[0, T]` and stays nonnegative once it arrives. -/
+theorem ordered_of_race
+    (a1 a2 : ℝ → ℝ) {T S : ℝ}
+    (halive : ∀ u ∈ Ico (0 : ℝ) T, 0 < a2 u)
+    (hreach : 0 ≤ a1 T)
+    (hmono : ∀ u ∈ Icc T S, a1 T ≤ a1 u) :
+    ∀ u ∈ Icc (0 : ℝ) S, a1 u < 0 → 0 < a2 u := by
+  intro u hu hneg
+  rcases lt_or_ge u T with h | h
+  · exact halive u ⟨hu.1, h⟩
+  · exact absurd hneg (not_lt.mpr (le_trans hreach (hmono u ⟨h, hu.2⟩)))
+
 end MovingSofa
