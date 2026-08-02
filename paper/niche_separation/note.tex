@@ -3700,8 +3700,31 @@ needs, and it is consistent with the finite-basis value $-0.0850$ computed earli
 one is a lower bound, so $-0.0850\le\lambda_{\max}\le-0.0777$ and the two bracket the truth
 from opposite sides.
 
-Truncation is the only thing between $K$ and a certificate, and it is bounded from two
-directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
+$K$ admits an upper bound by a validated solve, which is the direction a certificate needs.
+For any $z$, writing $r=b-Mz$ with $M=-A$,
+\[
+  b^{\mathsf T}M^{-1}b = z^{\mathsf T}Mz+2z^{\mathsf T}r+r^{\mathsf T}M^{-1}r
+   \ \le\ z^{\mathsf T}Mz+2z^{\mathsf T}r+\frac{\|r\|^2}{\lambda_{\min}(M)} ,
+\]
+an identity, not an estimate, in the first step. The one input needed is a lower bound on
+$\lambda_{\min}(M)$, and Proposition~\ref{prop:garding} supplies it: in the
+$H^1$-orthonormal basis $M\succeq\tfrac35 I$. In that basis the coefficients of $b$ decay
+like $1/k$, so $b\in\ell^2$ and the truncation tail is summable.
+
+Taking $z$ supported on the first $N$ modes and measuring the residual in a basis of $2N$:
+\[
+  \begin{array}{r|cccc}
+    N & 30 & 45 & 60 & 80\\\hline
+    \text{upper bound} & 0.132739 & 0.132675 & 0.132656 & 0.132644
+  \end{array}
+\]
+decreasing and settling near $0.1326$, against the target $\tfrac12\sin2\beta=0.2737$: a
+factor of two. The residual $\|r\|^2$ falls as $1.2,0.85,0.67,0.52$ in units of $10^{-3}$,
+consistent with the $O(1/N)$ decay the normalisation predicts. What remains for a
+certificate is a rigorous bound on the residual beyond $2N$, which is one explicit
+summable tail.
+
+Truncation is otherwise bounded from two directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
 $K_\infty$; their increments decay geometrically, $5.6,2.8,2.4,1.5,0.9$ in units of
 $10^{-4}$ at $N=45,60,80,100,120$, giving $K_\infty\approx0.1322$. Independently, the
 diagonal contribution of the modes beyond the truncation is $\sum b_k^2/|A_{kk}|$ with
@@ -3813,7 +3836,11 @@ and $1$, and the $q$ side then leaves a positive residue for every splitting par
 negativity of $D_\tau$ comes from cancellation between the arms, not from the symbol.
 \end{remark}
 
-\begin{proposition}[$H^1$ stability, measured]\label{prop:h1}
+The following is retained only for the record; it is superseded by
+Proposition~\ref{prop:coerc}, and Remark~\ref{rem:direction} explains why its entries
+bound the constants from the side that establishes nothing.
+
+\begin{proposition}[$H^1$ stability, measured, superseded]\label{prop:h1}
 The second variation controls the derivative as well. Measured against assembled mass and
 stiffness matrices, the largest $c_0$ with
 $\tfrac12\delta^2Q[\eta]\le-c_0\|\eta\|^2_{L^2(0,\pi)}-c_1\|\eta'\|^2_{L^2(0,\pi)}$ is
