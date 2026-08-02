@@ -943,6 +943,62 @@ increasing there. Since $E_1\subseteq E_2$, the set $\{\alpha_1<0\}$ is an initi
 of $E_2$, so $E_1=[0,\tau_1)$ with $\tau_1\le\tau_2$.
 \end{proof}
 
+\begin{proposition}[The arm system, exactly]\label{prop:armsys}
+Let $H$ satisfy (RC) with absolutely continuous part $r=(H+H'')_{ac}$ and an atom of mass
+$a$ at $\pi/2$. Then on $(0,\pi/2)$,
+\[
+  \alpha_1'=\alpha_2+1-r(t) ,\qquad
+  \alpha_2'=-\alpha_1-1+r(t+\tfrac\pi2) ,
+\]
+with $\alpha_1(0)=-\tfrac12$ and $\alpha_2(0)=\int_0^{\pi/2}r\sin-1+a$.
+\end{proposition}
+
+\begin{proof}
+Write $S(x)=\int_0^x r(s)\sin(x-s)ds$ and $C(x)=\int_0^x r(s)\cos(x-s)ds$, so that
+$S'=C$ and $C'=-S+r$. Solving $H''+H=r+a\delta_{\pi/2}$ and substituting,
+$\alpha_1(t)=S(t+\tfrac\pi2)+a\sin t-1-C(t)$ and
+$\alpha_2(t)=S(t)-1+C(t+\tfrac\pi2)+a\cos t$; the $H(0)$ terms cancel from both.
+Differentiating and using $S'=C$, $C'=-S+r$ gives the two identities.
+\end{proof}
+
+This is Lemma~\ref{lem:sandwich} with the remainders identified: (RC) says exactly
+$0\le r\le1$, so $\alpha_2\le\alpha_1'\le\alpha_2+1$ and
+$-\alpha_1-1\le\alpha_2'\le-\alpha_1$ follow at once, and both are sharp, the extremes
+being attained at $r\equiv1$ and $r\equiv0$. The system is linear with a $[0,1]$-valued
+coefficient, so the whole sign-structure question is a reachability problem for a planar
+control system, which is what makes the next statement possible.
+
+\begin{proposition}[Orderedness is a race]\label{prop:race}
+Under (RC) the sign sets are ordered if and only if $\alpha_2(0)>0$ and $\alpha_1$ reaches
+$0$ no later than $\alpha_2$ does.
+\end{proposition}
+
+\begin{proof}
+$\alpha_1(0)=-\tfrac12<0$, so $0\in E_1$ always and orderedness forces $0\in E_2$, that is
+$\alpha_2(0)>0$. While $\alpha_2>0$, Proposition~\ref{prop:armsys} and $r\le1$ give
+$\alpha_1'\ge\alpha_2>0$, so $\alpha_1$ increases strictly. If it reaches $0$ first then
+$\alpha_1\ge0$ from then on until $\alpha_2$ vanishes, and Proposition~\ref{prop:anchor}
+keeps $\alpha_2\le0$ thereafter, so $E_1$ never leaves $E_2$. If instead $\alpha_2$
+reaches $0$ first, at that point $\alpha_1<0$ and $\alpha_2\le0$, so ordering fails there.
+\end{proof}
+
+\begin{corollary}[A sufficient condition]\label{cor:race}
+If $\alpha_2(0)\ge1$, equivalently $a\ge2-\int_0^{\pi/2}r\sin$, the cap is ordered.
+\end{corollary}
+
+\begin{proof}
+While $\alpha_1\le0$ and $\alpha_2>0$ we have $\alpha_2'=-\alpha_1-1+r\ge-1$, so
+$\alpha_2(t)\ge\alpha_2(0)-t$, and then $\alpha_1'\ge\alpha_2\ge\alpha_2(0)-t$ gives
+$\alpha_1(t)\ge-\tfrac12+\alpha_2(0)t-\tfrac12t^2$. At $t=\min(\alpha_2(0),\pi/2)$ the
+right side is at least $\tfrac12(\alpha_2(0)^2-1)\ge0$.
+\end{proof}
+
+At $\Sig$, $\alpha_2(0)=0.7506<1$, so Corollary~\ref{cor:race} does not cover $\Sig$: the
+condition is sufficient, not sharp, and the sharp threshold is at most $0.7506$. What the
+corollary does give is a checkable criterion on the cap data alone, with no reference to
+the sign sets, and $\Sig$ wins its race comfortably, $\alpha_1$ reaching $0$ at
+$t=\beta=0.2897$ against $\alpha_2$ at $t=\pi/2-\beta=1.2811$.
+
 \begin{proposition}[Ordering forces a corner]\label{prop:corner}
 Let $H$ satisfy (RC), with absolutely continuous part $r=(H+H'')_{ac}\le1$ and an atom of
 mass $a\ge0$ at $\pi/2$. If the sign sets are ordered then

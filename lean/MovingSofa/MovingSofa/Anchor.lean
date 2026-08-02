@@ -114,4 +114,49 @@ and the anchoring theorem would be a statement about the empty set. -/
 theorem atom_pos_of_ordered {m a : ℝ} (hm : m ≤ 1) (hpos : 0 < m - 1 + a) : 0 < a := by
   linarith
 
+/-- **The race, quantitatively.**  While `α₁ ≤ 0` and `α₂ > 0` the exact arm system gives
+`α₂' ≥ -1`, hence `α₂ ≥ c - t`, and then `α₁' ≥ α₂` forces `α₁` up along the parabola
+`-1/2 + c t - t²/2`.  This is that comparison, proved by the standard route: the
+difference has nonnegative derivative, so it is monotone and stays at its initial value.
+
+`c` is `α₂(0)`.  Combined with `race_closes` below, `c ≥ 1` makes the cap ordered. -/
+theorem alpha1_parabola_lower
+    (a1 a1' a2 : ℝ → ℝ) {T c : ℝ} (hT : 0 ≤ T)
+    (hcont : ContinuousOn a1 (Icc 0 T))
+    (hderiv : ∀ u ∈ interior (Icc 0 T), HasDerivAt a1 (a1' u) u)
+    (hsand : ∀ u ∈ interior (Icc 0 T), a2 u ≤ a1' u)
+    (hlow : ∀ u ∈ interior (Icc 0 T), c - u ≤ a2 u)
+    (h0 : a1 0 = -(1/2)) :
+    ∀ t ∈ Icc (0 : ℝ) T, -(1/2) + c * t - t ^ 2 / 2 ≤ a1 t := by
+  set g : ℝ → ℝ := fun t => a1 t - (-(1/2) + c * t - t ^ 2 / 2) with hg
+  have hgc : ContinuousOn g (Icc 0 T) :=
+    hcont.sub (by fun_prop)
+  have hgd : ∀ u ∈ interior (Icc 0 T), HasDerivAt g (a1' u - (c - u)) u := by
+    intro u hu
+    have hc : HasDerivAt (fun t : ℝ => c * t) c u := by
+      simpa using (hasDerivAt_id u).const_mul c
+    have h1 : HasDerivAt (fun t : ℝ => -(1/2 : ℝ) + c * t) c u := hc.const_add _
+    have h2 : HasDerivAt (fun t : ℝ => t ^ 2 / 2) u u := by
+      simpa using (hasDerivAt_pow 2 u).div_const 2
+    exact (hderiv u hu).sub (h1.sub h2)
+  have hmono : MonotoneOn g (Icc 0 T) := by
+    apply monotoneOn_of_deriv_nonneg (convex_Icc 0 T) hgc
+      (fun u hu => (hgd u hu).differentiableAt.differentiableWithinAt)
+    intro u hu
+    rw [(hgd u hu).deriv]
+    have := hsand u hu
+    have := hlow u hu
+    linarith
+  intro t ht
+  have hle := hmono (left_mem_Icc.mpr hT) ht ht.1
+  simp only [hg, h0] at hle
+  norm_num at hle
+  linarith
+
+/-- **The race closes.**  At `t = c` the parabola has climbed to `(c² - 1)/2`, which is
+nonnegative exactly when `c ≥ 1`.  So `α₂(0) ≥ 1` forces `α₁` to reach `0`, and by
+`prop:race` the cap is ordered. -/
+theorem race_closes {c : ℝ} (hc : 1 ≤ c) : 0 ≤ -(1/2) + c * c - c ^ 2 / 2 := by
+  nlinarith
+
 end MovingSofa
