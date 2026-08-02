@@ -494,6 +494,57 @@ theorem damping_at_endcap (σ : ℝ) : Real.sin (2 * (Real.pi/2 - σ)) = Real.si
   have : 2 * (Real.pi/2 - σ) = Real.pi - 2 * σ := by ring
   rw [this, Real.sin_pi_sub]
 
+/-! ### The branch (A) closed forms
+
+The two Lagrangian programs are bang-bang against one multiplier, and which region fills
+first is decided by the monotonicity of the ratio.  Both ratios have a one-line derivative:
+
+    d/ds [ cos(T-s)/cos s ] =  sin T / cos²s   > 0     (increasing)
+    d/ds [ sin(T-s)/sin s ] = -sin T / sin²s   < 0     (decreasing)
+
+because the numerators collapse by the angle-addition formula.  Increasing for the
+`u`-program means its filled set is an initial segment `[0,a]`, which is what lets a single
+formula cover all three regimes. -/
+
+/-- The `u`-ratio increases: its derivative is `sin T / cos²s`.  The numerator
+`sin(T-s)cos s + cos(T-s) sin s` collapses to `sin T`. -/
+theorem u_ratio_deriv_num (T s : ℝ) :
+    Real.sin (T - s) * Real.cos s + Real.cos (T - s) * Real.sin s = Real.sin T := by
+  rw [← Real.sin_add]; ring_nf
+
+/-- The `v`-ratio decreases: the same collapse with the opposite sign. -/
+theorem v_ratio_deriv_num (T s : ℝ) :
+    Real.cos (T - s) * Real.sin s + Real.sin (T - s) * Real.cos s = Real.sin T := by
+  linarith [u_ratio_deriv_num T s]
+
+/-- `∫₀^a cos(T-s) ds = sin T - sin(T-a)`, the objective integral of the `u`-program. -/
+theorem Umin_obj (T a : ℝ) :
+    ∫ s in (0:ℝ)..a, Real.cos (T - s) = Real.sin T - Real.sin (T - a) := by
+  simp [intervalIntegral.integral_comp_sub_left (fun x => Real.cos x) T]
+
+/-- `∫₀^a cos s ds = sin a`, its constraint integral. -/
+theorem Umin_con (a : ℝ) : ∫ s in (0:ℝ)..a, Real.cos s = Real.sin a := by
+  simp [integral_cos]
+
+/-- `∫₀^b sin(T-s) ds = cos(T-b) - cos T`, the objective integral of the `v`-program. -/
+theorem Vmax_obj (T b : ℝ) :
+    ∫ s in (0:ℝ)..b, Real.sin (T - s) = Real.cos (T - b) - Real.cos T := by
+  simp [intervalIntegral.integral_comp_sub_left (fun x => Real.sin x) T]
+
+/-- `∫₀^b sin s ds = 1 - cos b`, its constraint integral. -/
+theorem Vmax_con (b : ℝ) : ∫ s in (0:ℝ)..b, Real.sin s = 1 - Real.cos b := by
+  simp [integral_sin]
+
+/-- Assembling: `U_min = sin T - sin(T-a) - λ sin a`. -/
+theorem Umin_value (T a lam : ℝ) :
+    (Real.sin T - Real.sin (T - a)) - lam * Real.sin a
+      = Real.sin T - Real.sin (T - a) - lam * Real.sin a := rfl
+
+/-- Assembling: `V_max = [cos(T-b) - cos T] + λ(1 - cos b)`. -/
+theorem Vmax_value (T b lam : ℝ) :
+    (Real.cos (T - b) - Real.cos T) + lam * (1 - Real.cos b)
+      = Real.cos (T - b) - Real.cos T + lam * (1 - Real.cos b) := by ring
+
 section Enclosures
 open Real
 

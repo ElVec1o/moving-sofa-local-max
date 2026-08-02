@@ -3606,13 +3606,27 @@ region $(T,\pi/2]$ finishes it; or the constraint forces a return into $[a_0,T]$
 against the programs they replace at $77$ pairs $(T,\lambda)$, the largest discrepancy is
 $9.4\cdot10^{-4}$, at the discretisation level of the comparison.
 
-With these, branch (A) certifies at $c=\sqrt3-1$ from closed forms alone: optimising
-$\lambda$ at each $T\ge t_0$ gives a bound that is positive throughout and vanishes exactly
-at $T=\pi/2$, where $\lambda=0$ and the value is $c+1-\sqrt3$. Together with the closed
-form for branch (B) and Lemma~\ref{lem:imw}, every ingredient of the sharpness argument now
-rests on closed forms rather than discretised programs; what remains heuristic is only the
-optimisation over $T$ and $\lambda$, a two-parameter search over explicit elementary
-functions.
+With these, branch (A) certifies from closed forms alone: optimising $\lambda$ at each
+$T\ge t_0$ gives a bound that is positive throughout and vanishes exactly at $T=\pi/2$,
+where $\lambda=0$ and the value is $c+1-\sqrt3$.
+
+The optimisation over $(T,\lambda)$ can be discharged on a grid, because both closed forms
+are elementary and Lipschitz in $T$ at fixed $\lambda$. Fixing $\lambda=\tfrac45$ on
+$[t_0,0.80]$ and $\lambda=0$ on $[0.80,\pi/2]$, and subtracting the guard $\mathrm{Lip}\cdot h$
+at every node, the bound is certified positive at
+\[
+  c=\tfrac34\ (h=0.002),\qquad c=0.74\ (h=0.001),\qquad c=0.735\ (h=0.0005),
+\]
+with worst certified values $7.1\cdot10^{-3}$, $2.6\cdot10^{-3}$ and $3.5\cdot10^{-4}$. So
+branch (A) is certified at the threshold $\tfrac34$ of
+Corollary~\ref{cor:sigmacert}, and the certification degrades gracefully towards
+$\sqrt3-1$. At the sharp value itself no grid-with-guard can succeed, since the bound
+\emph{vanishes} at $T=\pi/2$ there; that is a property of the sharp constant, where the
+floor witness attains equality, not of the method.
+
+Together with the closed form for branch (B) and Lemma~\ref{lem:imw}, the sharpness
+argument rests on closed forms throughout, certified on a grid for every $c\ge0.735$ and
+exact at the endpoint.
 
 The naive absorption fails, and it is worth recording why. Writing $A,Y$ for the $H^1$
 norms of the two summands, the three bounds give
