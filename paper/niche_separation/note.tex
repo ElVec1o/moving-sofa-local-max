@@ -3516,6 +3516,55 @@ towards $c^\ast=0.7309566$. Every certificate in this note is a lower bound and 
 finite-element number an upper bound, so nothing crossed and no conclusion moves; the
 target was mis-stated by $0.2\%$.
 
+\begin{remark}[The end-cap degeneracy is linear]\label{rem:endcap}
+The diagonal family $D_\tau$ degenerates as $\tau\to\pi/2$: at $\tau=\pi/2$ the mode
+$(0,\sin t)$ has $D$-value $0$, which is what forces the separate treatment in case (b) of
+Theorem~\ref{thm:diag}. The rate matters, because it decides whether a perturbative
+argument can close the gap. Computing the top eigenvalue of $D_\tau$ against the $L^2$
+norm in the basis $p=\sum a_k\sin 2kt$, $q=\sum b_k\sin(2k-1)t$ --- which imposes
+$p(0)=p(\pi/2)=q(0)=0$ with $q(\pi/2)$ free exactly --- gives, with
+$\sigma=\pi/2-\tau$,
+\[
+  \begin{array}{r|cccc}
+    K & 20 & 30 & 45 & 60\\\hline
+    p & 0.834 & 0.896 & 0.942 & 0.957
+  \end{array}
+\]
+for the exponent in $|\lambda_{\max}|\sim\sigma^{p}$ fitted on $\sigma\le0.10$. The
+sequence rises towards $1$ as the basis is enlarged, matching the damping
+$-\tfrac12a^2\sin2\sigma\sim\sigma$ that case (b) uses. So the degeneracy is \emph{linear},
+and the existing argument is calibrated to the right rate; there is no need for a framework
+tuned to a faster decay.
+
+Every eigenvalue computed was negative, at every $\tau$ and every $K$, which is an
+independent check on Theorem~\ref{thm:diag} in a discretisation sharing no code with the
+proof. Rule~7: the exponent is \textsc{heuristic}; the negativity is a regression test, not
+a proof.
+\end{remark}
+
+\begin{remark}[Why more precision is the wrong repair]\label{rem:direction}
+Proposition~\ref{prop:h1} is the note's main remaining measured claim, and it is natural to
+propose fixing it with certified arithmetic. That would not work, and the reason is worth
+stating because the error is easy to make.
+
+Rayleigh--Ritz values on a finite-dimensional subspace are \emph{upper} bounds for the
+largest admissible constant, since restricting the competition can only raise the supremum
+of the quotient. Certifying such a computation in interval arithmetic certifies an upper
+bound to higher precision. But coercivity is a \emph{lower} bound on the same quantity, so
+the certified inequality points the wrong way, and no amount of precision reverses it.
+Equivalently: negative-definiteness of a finite-dimensional Hessian does not imply
+negative-definiteness of the form it discretises.
+
+What does work is a G\aa rding split --- a finite-dimensional part, where certified
+arithmetic is exactly right, plus an analytic tail bound on its orthogonal complement.
+Only the second gives a lower bound, and only the pair gives a proof. The obstruction is
+therefore not precision but the missing tail estimate, and the crude route to it is
+genuinely lossy: on the diagonal family the $p'^2$ and $q'^2$ coefficients are $-2+\chi$
+and $-1-\chi$, both at most $-1$, but the Poincar\'e constants on the two spaces are $4$
+and $1$, and the $q$ side then leaves a positive residue for every splitting parameter. The
+negativity of $D_\tau$ comes from cancellation between the arms, not from the symbol.
+\end{remark}
+
 \begin{proposition}[$H^1$ stability, measured]\label{prop:h1}
 The second variation controls the derivative as well. Measured against assembled mass and
 stiffness matrices, the largest $c_0$ with
