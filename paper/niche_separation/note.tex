@@ -3618,7 +3618,32 @@ The naive absorption fails, and it is worth recording why. Writing $A,Y$ for the
 norms of the two summands, the three bounds give
 $D_\tau\le-\tfrac{\sin2\sigma}{\pi}A^2+2C\sqrt\sigma\,AY-\tfrac35Y^2$, which is negative
 definite exactly when $C<\sqrt{6/5\pi}=0.6180$. Measured, $C$ is about $0.93$ across
-$\sigma\in[0.01,0.4]$, so the argument does not close. It is the argument that is lossy,
+$\sigma\in[0.01,0.4]$, so the argument does not close. The cross term is a boundary-layer integral, and that is the right way to see it.
+Substituting $x=\pi/2-t$ on $(\tau,\pi/2]$, where $\cos t=\sin x$ and $\sin t=\cos x$,
+\[
+  B_\tau(e,\eta_\perp)=\int_0^\sigma\bigl[\sin x\,(p+q')-\cos x\,(q-p')\bigr]dx ,
+\]
+so to leading order $B\approx-\sigma\bigl[q(\pi/2)-p'(\pi/2)\bigr]$: a point evaluation of
+$p'$, which no $H^1$ bound controls. That is the two-norm obstruction in this problem,
+stated exactly. What saves it is that concentration near the endpoint is itself penalised
+by $D_\tau$, whose $p'^2$ coefficient is at most $-1$. Cauchy--Schwarz on the layer alone
+gives
+\[
+  |B_\tau(e,\eta_\perp)|\ \le\ \|\cos\|_{L^2(0,\sigma)}\|q-p'\|_{L^2(0,\sigma)}
+   +\|\sin\|_{L^2(0,\sigma)}\|p+q'\|_{L^2(0,\sigma)} ,
+\]
+with $\|\cos\|^2=\tfrac\sigma2+\tfrac{\sin2\sigma}4$ and
+$\|\sin\|^2=\tfrac\sigma2-\tfrac{\sin2\sigma}4$, every quantity localised to the layer.
+The Sylvester condition then reads $\sup B^2/|D_\tau|\le\sin2\sigma/\pi$. Measured, this
+holds with margins of $19$ to $45$ percent of the target for $\sigma\le0.10$, and fails for
+$\sigma\ge0.4$. At $\Sig$'s own $\sigma=\beta$ it holds by $0.0012$, under one percent, and
+the margin shrinks monotonically in the basis size, $0.00201$, $0.00165$, $0.00147$,
+$0.00135$, $0.00123$ at $K=25,35,45,60,80$, with no sign of the drift decaying. Since a
+supremum over a subspace is a lower bound for the true supremum, the computed values rise
+towards the truth and the margin can only shrink further. The layer bound therefore does
+\emph{not} establish the assembly at $\Sig$, and is not claimed to.
+
+It is the argument that is lossy,
 not the conclusion: the direction maximising the cross term has $D$-quotient about
 $-1.85$, three times the global worst case $-\tfrac35$, so bounding the two terms by their
 separate worst cases counts a direction that realises neither. The sharp condition is
