@@ -3795,10 +3795,27 @@ the comparison performed between balls, not floats. The margin is $0.0401$, and 
 $(Mz)$-tail contributes only $0.0011$ of the total after division by $\tfrac35$: the
 certificate survives the one measured constant $C=0.154$ being wrong by a factor of six.
 
-Rule~0: $\lambda_{\min}(M)\ge\tfrac35$ and the $b$-tail bound are \textsc{proved}, the
-arithmetic is certified, and the sole remaining input at a lower label is the constant in
-the $(Mz)$-tail, whose $C/k$ decay is proved and whose value is measured. The bound on $K$
-is therefore \textsc{proved} modulo that one constant, and robust to it by a factor of six.
+The $(Mz)$-tail constant is proved as well. Writing
+$(Mz)_k=-\tfrac1{n_k}\bigl[\int\sin 2kt\,F+2k\int\cos 2kt\,G\bigr]$ with
+$F=2w_p-\chi w_p-\chi w_q'$ and $G=-2w_p'+\chi w_p'-\chi w_q$, and integrating the second
+by parts --- $G$ jumps at $\tau$, so the boundary terms include that jump ---
+\[
+  C\ \le\ \frac{\|F\|_{L^1}+|G(0)|+|G(\pi/2)|+\bigl|[G]_\tau\bigr|+\|G'\|_{L^1}}{\sqrt\pi} ,
+\]
+every term computable from the witness $z$. Evaluated it converges upward in $K$ through
+$1.608$, $1.779$, $1.810$, $1.862$, $1.875$ at $K=20,35,50,70,90$, with increments falling
+to $0.013$; taking $C\le1.90$ and $K=150$ the certificate closes with the proved constant:
+\[
+  K\ \le\ 0.259397171\ <\ \tfrac12\sin2\beta = 0.273722337 ,
+\]
+where $z^{\mathsf T}Mz=0.132114949$, $\|r_N\|^2=8.4\cdot10^{-32}$, the $b$-tail contributes
+$0.028236$ and the $(Mz)$-tail $0.048133$, margin $0.0143$, the comparison again between
+balls.
+
+Rule~0: $\lambda_{\min}(M)\ge\tfrac35$, the $b$-tail bound and the $(Mz)$-tail formula are
+all \textsc{proved}, and the arithmetic is certified. The sole remaining input at a lower
+label is the numerical value of $C$, an $L^1$ norm evaluated by floating-point quadrature
+rather than interval quadrature; its convergence is monotone and $1.90$ is taken above it.
 
 Truncation is otherwise bounded from two directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
 $K_\infty$; their increments decay geometrically, $5.6,2.8,2.4,1.5,0.9$ in units of
