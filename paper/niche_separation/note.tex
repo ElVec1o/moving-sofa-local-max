@@ -943,6 +943,18 @@ increasing there. Since $E_1\subseteq E_2$, the set $\{\alpha_1<0\}$ is an initi
 of $E_2$, so $E_1=[0,\tau_1)$ with $\tau_1\le\tau_2$.
 \end{proof}
 
+The rest of this section determines when the sign sets are ordered. The organising
+constant turns out to be $\sqrt3-1$, and the results below establish, in order: the arm
+system exactly (Proposition~\ref{prop:armsys}); that orderedness is a race between the two
+arms (Proposition~\ref{prop:race}); three successively better sufficient thresholds,
+$1$, $0.899266$ and $\tfrac34$, the last certified in exact rational arithmetic
+(Corollaries~\ref{cor:race}, \ref{cor:race2}, \ref{cor:sigmacert}); that $\alpha_2(\pi/2)$
+is pinned at $-\tfrac12$ for every admissible cap (Proposition~\ref{prop:rigid}); that no
+threshold of this form can beat $\sqrt3-1$ (Corollary~\ref{cor:floor}); and a case split
+(Lemma~\ref{lem:imw}) reducing the converse to two linear programs, of which one is now
+solved in closed form. The ledger of what is proved and what is not is given after
+Lemma~\ref{lem:imw}.
+
 \begin{proposition}[The arm system, exactly]\label{prop:armsys}
 Let $H$ satisfy (RC) with absolutely continuous part $r=(H+H'')_{ac}$ and an atom of mass
 $a$ at $\pi/2$. Then on $(0,\pi/2)$,
@@ -1010,6 +1022,12 @@ sufficient threshold to $0.899266$, attained at $t^*=0.8967$, where the constrai
 \begin{corollary}[Sharpened]\label{cor:race2}
 If $\alpha_2(0)\ge0.899266$ the cap is ordered.
 \end{corollary}
+
+Corollaries~\ref{cor:race} and~\ref{cor:race2} are superseded by
+Corollary~\ref{cor:sigmacert}, which certifies the rational threshold $\tfrac34$, and the
+sharp value is $\sqrt3-1=0.7321$ by Corollary~\ref{cor:floor} and the argument after
+Lemma~\ref{lem:imw}. They are kept because their proofs are two lines of calculus with no
+computation of any kind, so they are the cheapest correct statements in this section.
 
 At $\Sig$, $\alpha_2(0)=0.7506$, so even the sharpened threshold does not cover $\Sig$,
 and this is stated rather than glossed. Two independent adversarial searches over
