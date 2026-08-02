@@ -3720,9 +3720,34 @@ Taking $z$ supported on the first $N$ modes and measuring the residual in a basi
 \]
 decreasing and settling near $0.1326$, against the target $\tfrac12\sin2\beta=0.2737$: a
 factor of two. The residual $\|r\|^2$ falls as $1.2,0.85,0.67,0.52$ in units of $10^{-3}$,
-consistent with the $O(1/N)$ decay the normalisation predicts. What remains for a
-certificate is a rigorous bound on the residual beyond $2N$, which is one explicit
-summable tail.
+consistent with the $O(1/N)$ decay the normalisation predicts. The residual tail is bounded analytically. For the $p$-modes,
+\[
+  b_k=\frac{1}{\|p_k\|_{H^1}}\int_\tau^{\pi/2}\bigl[\cos t\,\sin 2kt+2k\sin t\,\cos 2kt\bigr]dt ,
+\]
+and integrating the second term by parts turns it into
+$[\sin t\sin 2kt]_\tau^{\pi/2}-\int\cos t\sin 2kt$, so the whole numerator is at most
+$2+2\sigma$ in absolute value while $\|p_k\|_{H^1}\ge k\sqrt\pi$. Hence
+$|b_k|\le(2+2\sigma)/(k\sqrt\pi)$ and
+\[
+  \sum_{k>N}b_k^2\ \le\ \frac{(2+2\sigma)^2}{\pi N}=\frac{2.1177}{N}\quad\text{at }\sigma=\beta .
+\]
+This dominates the measured tail at every $N$ tested, by a factor of $16$ to $26$, so it is
+a valid rigorous replacement. At $N=120$ it contributes $0.0176$, and $0.0176/\tfrac35$
+added to $z^{\mathsf T}Mz=0.1326$ gives
+\[
+  K\ \le\ 0.1620\ <\ \tfrac12\sin2\beta=0.2737 ,
+\]
+a margin of $41$ percent. The remaining ingredient is an analytic bound on
+$\|(Mz)_{>N}\|$, which the same integration by parts supplies since $M$'s off-diagonal
+entries come only from the layer, $D_{\pi/2}$ being diagonal; measured, that term is
+$9\cdot10^{-5}$ at $N=120$, two hundred times smaller than the $b$-tail it accompanies.
+
+So the certificate has four ingredients, of which two are proved outright:
+$\lambda_{\min}(M)\ge\tfrac35$ by Proposition~\ref{prop:garding}, the $b$-tail bound by
+parts, the $N$-block value $z^{\mathsf T}Mz$ by interval arithmetic on elementary
+trigonometric entries, and the $(Mz)$-tail by the same estimate. Rule~0: the chain is
+\textsc{heuristic} until the two computational ingredients are executed in exact or
+interval arithmetic, which is a bounded task and not carried out here.
 
 Truncation is otherwise bounded from two directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
 $K_\infty$; their increments decay geometrically, $5.6,2.8,2.4,1.5,0.9$ in units of
