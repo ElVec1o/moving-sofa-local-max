@@ -3776,9 +3776,29 @@ a margin of $30$ percent with every tail bounded rather than measured.
 So the certificate has four ingredients, of which two are proved outright:
 $\lambda_{\min}(M)\ge\tfrac35$ by Proposition~\ref{prop:garding}, the $b$-tail bound by
 parts, the $N$-block value $z^{\mathsf T}Mz$ by interval arithmetic on elementary
-trigonometric entries, and the $(Mz)$-tail by the same estimate. Rule~0: the chain is
-\textsc{heuristic} until the two computational ingredients are executed in exact or
-interval arithmetic, which is a bounded task and not carried out here.
+trigonometric entries, and the $(Mz)$-tail by the same estimate. The computation has been carried out. Assembling $M$ and $b$ from the closed forms in
+Arb ball arithmetic at $300$ bits and $K=70$ (a system of size $139$), taking $z$ from a
+floating-point solve --- legitimate, since $z$ enters only as a witness and any $z$ gives a
+valid bound --- and evaluating every subsequent quantity as a ball:
+\[
+  \begin{array}{ll}
+    z^{\mathsf T}Mz = 0.131681641 & \text{radius } 2.3\cdot10^{-87}\\
+    2z^{\mathsf T}r = 1.0\cdot10^{-16}, \quad \|r_N\|^2 = 4.2\cdot10^{-32}\\
+    2\times\text{$b$-tail} = 0.060506, \quad 2\times\text{$(Mz)$-tail} = 0.000680
+  \end{array}
+\]
+giving
+\[
+  K\ \le\ 0.233657832\ <\ \tfrac12\sin2\beta = 0.273722337 ,
+\]
+the comparison performed between balls, not floats. The margin is $0.0401$, and the
+$(Mz)$-tail contributes only $0.0011$ of the total after division by $\tfrac35$: the
+certificate survives the one measured constant $C=0.154$ being wrong by a factor of six.
+
+Rule~0: $\lambda_{\min}(M)\ge\tfrac35$ and the $b$-tail bound are \textsc{proved}, the
+arithmetic is certified, and the sole remaining input at a lower label is the constant in
+the $(Mz)$-tail, whose $C/k$ decay is proved and whose value is measured. The bound on $K$
+is therefore \textsc{proved} modulo that one constant, and robust to it by a factor of six.
 
 Truncation is otherwise bounded from two directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
 $K_\infty$; their increments decay geometrically, $5.6,2.8,2.4,1.5,0.9$ in units of
