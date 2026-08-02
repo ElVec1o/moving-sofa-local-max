@@ -3627,6 +3627,36 @@ proof. Rule~7: the exponent is \textsc{heuristic}; the negativity is a regressio
 a proof.
 \end{remark}
 
+\begin{remark}[Two ways to fake a coercivity constant]\label{rem:fake}
+The $2\times2$ reduction of the previous paragraph invites two errors, and both were made
+here before being caught. They are recorded because each looks like a verification.
+
+First, the Sylvester test is not independent of what it tests. For
+$\bigl(\begin{smallmatrix}-M&c\\ c&-c_T\end{smallmatrix}\bigr)$ the top eigenvalue is
+$-\tfrac{M+c_T}2+\sqrt{(\tfrac{M-c_T}2)^2+c^2}$ and the determinant is $Mc_T-c^2$, so
+\emph{top $<0$, det $>0$ and $c^2<Mc_T$ are one condition, not three}. Measuring the top
+eigenvalue, inverting the eigenvalue formula for $c^2$, and then checking $c^2<Mc_T$
+therefore returns the sign of its own input: it reports success precisely when the measured
+top was already negative, and cannot corroborate anything. The honest route is to bound
+$c$ \emph{independently}, which is what the previous paragraph does, and which fails.
+
+Second, computing the top eigenvalue in a finite basis gives a bound in the useless
+direction. The supremum of a Rayleigh quotient over a subspace is at most the supremum over
+the whole space, so a finite-basis value is a \emph{lower} bound for $\lambda_{\max}$, while
+coercivity is an upper bound on it. The symptom is visible in the convergence: at
+$\sigma=\beta$ the computed value runs $-0.0859$, $-0.0854$, $-0.0852$, $-0.0850$ for
+$K=25,40,60,80$, rising towards its limit from below. Quoting $-0.0850$ as a coercivity
+constant would repeat, in a new place, exactly the error Remark~\ref{rem:direction}
+identifies in Proposition~\ref{prop:h1}.
+
+What survives is the observation that made the attempt worth making: $\Sig$'s own cell has
+$E_1=[0,\beta)$ and $E_2=[0,\pi/2-\beta)$, so by Lemma~\ref{lem:mono} it is dominated by the
+diagonal member at $\sigma=\beta=0.2897$, not at $\sigma\to0$. The degeneracy of
+Proposition~\ref{prop:marginal} is therefore \emph{not} active at $\Sig$: an explicit
+positive constant exists there, and the obstruction to producing it is the cross-term bound
+of the previous paragraph, not the end-cap degeneracy.
+\end{remark}
+
 \begin{remark}[Why more precision is the wrong repair]\label{rem:direction}
 Proposition~\ref{prop:h1} is the note's main remaining measured claim, and it is natural to
 propose fixing it with certified arithmetic. That would not work, and the reason is worth
