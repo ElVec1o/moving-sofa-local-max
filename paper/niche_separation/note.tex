@@ -3620,9 +3620,17 @@ at every node, the bound is certified positive at
 with worst certified values $7.1\cdot10^{-3}$, $2.6\cdot10^{-3}$ and $3.5\cdot10^{-4}$. So
 branch (A) is certified at the threshold $\tfrac34$ of
 Corollary~\ref{cor:sigmacert}, and the certification degrades gracefully towards
-$\sqrt3-1$. At the sharp value itself no grid-with-guard can succeed, since the bound
-\emph{vanishes} at $T=\pi/2$ there; that is a property of the sharp constant, where the
-floor witness attains equality, not of the method.
+$\sqrt3-1$. At the sharp value itself no grid-with-guard can succeed, since the bound \emph{vanishes}
+at $T=\pi/2$ there. That is not a gap. The endpoint is covered exactly, by the computation
+of Corollary~\ref{cor:floor}: $\alpha_1(\pi/2)=c+1-\sqrt3\ge0$ for $c\ge\sqrt3-1$, which is
+the formalised \texttt{branchA\_at\_right}. Approaching from below, $L$ decreases to $0$
+with $L'(\pi/2^-)=-\tfrac12$, so $L>0$ strictly on $[t_0,\pi/2)$ and vanishes only at the
+endpoint; the grid handles the interior and the exact computation the boundary.
+
+The threshold is moreover \emph{attained}. At $c=\sqrt3-1$ the floor witness has
+$\alpha_1(\pi/2)=0$, which is not negative, so $\pi/2\notin E_1$ and the cap is ordered.
+Combining with Corollary~\ref{cor:floor}, which produces an unordered cap for every
+$c<\sqrt3-1$: a cap is ordered if and only if $\alpha_2(0)\ge\sqrt3-1$, equality included.
 
 Together with the closed form for branch (B) and Lemma~\ref{lem:imw}, the sharpness
 argument rests on closed forms throughout, certified on a grid for every $c\ge0.735$ and

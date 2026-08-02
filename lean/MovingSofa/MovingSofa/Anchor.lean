@@ -545,6 +545,37 @@ theorem Vmax_value (T b lam : ℝ) :
     (Real.cos (T - b) - Real.cos T) + lam * (1 - Real.cos b)
       = Real.cos (T - b) - Real.cos T + lam * (1 - Real.cos b) := by ring
 
+/-- **The absorption step of `prop:coerc`.**  Given the Sylvester bound `B² ≤ K·Dp` on the
+cross term, Young's inequality with weight `θ` splits the mixed term:
+
+    2aB ≤ a²K/θ + θ·Dp ,
+
+because `(a²K + θ²Dp)² ≥ 4a²Kθ²Dp ≥ (2θaB)²`, the first step being `(a²K - θ²Dp)² ≥ 0`.
+Substituting turns `-a²Mₑ + 2aB - Dp` into `-a²(Mₑ - K/θ) - (1-θ)Dp`, both coefficients
+negative once `K/θ < Mₑ` and `θ < 1`. -/
+theorem young_absorb {a B Dp K θ : ℝ} (hDp : 0 ≤ Dp) (hK : 0 ≤ K) (hθ : 0 ≤ θ)
+    (hB : B ^ 2 ≤ K * Dp) :
+    2 * θ * a * B ≤ a ^ 2 * K + θ ^ 2 * Dp := by
+  have hsq : (2 * θ * a * B) ^ 2 ≤ 4 * (a ^ 2 * K) * (θ ^ 2 * Dp) := by
+    have h : θ ^ 2 * a ^ 2 * B ^ 2 ≤ θ ^ 2 * a ^ 2 * (K * Dp) := by
+      have := mul_nonneg (sq_nonneg θ) (sq_nonneg a)
+      nlinarith [hB, this]
+    nlinarith [h]
+  have hnn : 0 ≤ a ^ 2 * K + θ ^ 2 * Dp := by positivity
+  nlinarith [hsq, hnn, sq_nonneg (a ^ 2 * K - θ ^ 2 * Dp)]
+
+/-- **The coercivity assembly.**  With `Mₑ = |D[e]|`, the marginal and tail bounds combine
+into a single negative-definite estimate. -/
+theorem coerc_assemble {a B Dp Me R θ : ℝ}
+    (hy : 2 * a * B ≤ a ^ 2 * R + θ * Dp) :
+    -(a ^ 2 * Me) + 2 * a * B - Dp ≤ -(a ^ 2 * (Me - R)) - (1 - θ) * Dp := by
+  nlinarith [hy]
+
+/-- Both coefficients are negative exactly when `K/θ < Mₑ` and `θ < 1`, which is the
+condition `prop:coerc` optimises over. -/
+theorem coerc_coeffs_neg {Me K θ : ℝ} (h1 : K / θ < Me) (h2 : θ < 1) :
+    0 < Me - K / θ ∧ 0 < 1 - θ := ⟨by linarith, by linarith⟩
+
 section Enclosures
 open Real
 
