@@ -75,18 +75,41 @@ def sin_hi(x: F) -> F:
     return x - x**3 / 6 + x**5 / 120
 
 
-def w_lo(t: F) -> F:
-    """LOWER bound for the weight, so 1/w_lo is an UPPER bound for 1/w."""
+PI_LO = F(31415926, 10000000)     # < pi : the Dirichlet-Dirichlet target
+KAPPA = F(1, 4)
+RCOEF = F(9, 11)                  # r = lambda/(1-lambda)
+
+
+def w_lo_R(t: F) -> F:
+    """RIGHT half: LOWER bound for the weight, so 1/w_lo is an UPPER bound for 1/w."""
     return F(1) if t >= PI2_LO - BETA_HI else 1 + LAM
 
 
-def m_hi(t: F) -> F:
-    """UPPER bound for the mass coefficient."""
+def m_hi_R(t: F) -> F:
+    """RIGHT half: UPPER bound for the mass coefficient."""
     return 1 + QBAR if t < BETA_HI else F(1)
 
 
-def barrier(c: F, nseg: int, D: int = 10**7):
-    """Returns (B_T, status).  B_T is None when the barrier crosses pi/2."""
+def w_lo_L(t: F) -> F:
+    """LEFT half: w = 1 - kappa on [0, beta), 2 after."""
+    return F(1) - KAPPA if t < BETA_HI else F(2)
+
+
+def m_hi_L(t: F) -> F:
+    """LEFT half: m = 2 + r on [0, pi/2 - beta), 2 after."""
+    return 2 + RCOEF if t < PI2_HI - F(2896538, 10000000) else F(2)
+
+
+def barrier(c: F, nseg: int, D: int = 10**7, half: str = "R"):
+    """Returns (B_T, status).  B_T is None when the barrier crosses its target.
+
+    half = "R": Dirichlet-Neumann, target pi/2.   half = "L": Dirichlet-Dirichlet,
+    target pi.  Note the sin upper bound degrades badly for large argument, so the
+    left half certifies far less than its true eigenvalue -- which does not matter,
+    because the assembly needs min(c_L, c_R) and the right half is the binding one."""
+    w_lo, m_hi = (w_lo_R, m_hi_R) if half == "R" else (w_lo_L, m_hi_L)
+    target = PI2_LO if half == "R" else PI_LO
+    cap = PI2_HI if half == "R" else PI_LO
     B = F(0)
     step = ceil_rat(PI2_HI / nseg, D)
     for i in range(nseg):
@@ -95,15 +118,16 @@ def barrier(c: F, nseg: int, D: int = 10**7):
         coef = m_hi(t0) + c - inv
         if coef < 0:
             return None, "coefficient negative: the monotone bound is invalid here"
-        sl = inv + coef * min(F(1), sin_hi(min(PI2_HI, B))**2)
+        sl = inv + coef * min(F(1), sin_hi(min(cap, B))**2)
         for _ in range(30):
-            cand = inv + coef * min(F(1), sin_hi(min(PI2_HI, B + sl * step))**2)
+            cand = inv + coef * min(F(1), sin_hi(min(cap, B + sl * step))**2)
             if cand <= sl:
                 break
             sl = ceil_rat(cand, D)
         B = ceil_rat(B + ceil_rat(sl, D) * step, D)
-        if B >= PI2_LO:
-            return None, f"crossed pi/2 at t = {float(t0):.4f}"
+        if B >= target:
+            tgt = "pi/2" if half == "R" else "pi"
+            return None, f"crossed {tgt} at t = {float(t0):.4f}"
     return B, "ok"
 
 
@@ -124,12 +148,33 @@ def main() -> int:
     print(f"  true value (float Prufer, cross-checked against FEM): 0.3885")
     print(f"  the elementary chain of prop:elem gives 1/12 = 0.0833 on this half")
 
-    print(f"\nNEGATIVE CONTROL: at c = 1/2 > 0.3885 the barrier MUST cross pi/2.")
-    B, st = barrier(F(1, 2), nseg)
-    ok = B is None
-    print(f"  c = 1/2: {st}")
-    print(f"  -> {'control passes' if ok else '*** ACCEPTED A FALSE CLAIM: UNSOUND ***'}")
-    return 0 if ok and best is not None else 1
+    print(f"\nLEFT HALF (Dirichlet-Dirichlet, target pi):")
+    bestL = None
+    for num, den in ((1, 2), (3, 4)):
+        c = F(num, den)
+        B, st = barrier(c, nseg, half="L")
+        if B is not None:
+            bestL = c
+        print(f"  {num:4d}/{den:<5d} {float(B) if B else float('nan'):10.5f}   "
+              f"{'PROVES c_L > ' + f'{num}/{den}' if B else st}")
+    print(f"  the sin upper bound degrades badly near pi, so this certifies far less")
+    print(f"  than the true 2.689.  It does not need to: the assembly takes")
+    print(f"  min(c_L, c_R), and the right half binds.")
+
+    if bestL is not None and best is not None:
+        m = min(bestL, best)
+        print(f"\n  ASSEMBLED HAND CONSTANT: min(c_L, c_R) > {m} = {float(m):.4f}")
+        print(f"  against 1/12 = {1/12:.4f} from prop:elem, a factor of {float(m)*12:.2f},")
+        print(f"  and {100*float(m)/0.7309566:.1f}% of the sharp c* = 0.7309566.")
+
+    print(f"\nNEGATIVE CONTROLS (rule I12): each must FAIL.")
+    B1, st1 = barrier(F(1, 2), nseg, half="R")
+    print(f"  right half at c = 1/2 > 0.3885: {st1}")
+    B2, st2 = barrier(F(3), nseg, half="L")
+    print(f"  left half  at c = 3   > 2.689 : {st2}")
+    ok = B1 is None and B2 is None
+    print(f"  -> {'both controls pass' if ok else '*** A FALSE CLAIM WAS ACCEPTED ***'}")
+    return 0 if ok and best is not None and bestL is not None else 1
 
 
 if __name__ == "__main__":

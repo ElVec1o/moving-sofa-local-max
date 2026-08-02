@@ -2350,12 +2350,20 @@ $1200$ segments give
   c_1\ >\ \tfrac{37}{100}
 \]
 for the right half at $(\lambda,\kappa)=(\tfrac9{20},\tfrac14)$, against the measured
-$0.3885$: the certificate captures $95\%$ of what is available, and $4.4$ times the
-$\tfrac1{12}$ of Proposition~\ref{prop:elem}. The same run at $c=\tfrac12$, above the
-eigenvalue, crosses $\pi/2$ as it must. What is not done is the left half and the
-re-assembly, so Proposition~\ref{prop:elem} is not superseded; the certificate is
-recorded because it is exact, elementary, and mechanically checkable
-(\verb|ambi_barrier.py|).
+$0.3885$. The left half is Dirichlet--Dirichlet, so the target is $\pi$ and the same run
+certifies $c_L>\tfrac12$; the Taylor bound on $\sin$ degrades badly for arguments near
+$\pi$, so that is far short of the true $2.689$, and it does not need to be otherwise,
+because the assembly takes $\min(c_L,c_R)$ and the right half binds. Hence
+\[
+  \tfrac12\,\delta^2Q[\eta]\ \le\ -\tfrac{37}{100}\,\|\eta\|^2_{L^2(0,\pi)}
+\]
+on the cell, by exact rational arithmetic: $4.44$ times the $\tfrac1{12}$ of
+Proposition~\ref{prop:elem} and $50.6\%$ of the sharp $c^\ast$. Both negative controls
+behave: the right half at $c=\tfrac12>0.3885$ crosses $\pi/2$, and the left at $c=3>2.689$
+crosses $\pi$ (\verb|ambi_barrier.py|). The comparison principle that turns a barrier into
+a bound on the phase is classical and is the one step not machine-checked; the monotone
+bound it is applied to is (\verb|prufer_rhs_eq|, \verb|prufer_rhs_le|,
+\verb|sin_sq_le_of_le|, \verb|coef_pos_right|, \verb|coef_pos_left|).
 \end{remark}
 
 The constant is $11\%$ of the sharp $c^\ast$, and that is the price of dispensing with

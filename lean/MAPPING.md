@@ -471,3 +471,19 @@ extremal region is exactly `2(2√2−1)`, so the hypothesis was unsatisfiable a
 assembly vacuous. Caught by the rule-I6 check (can the hypothesis hold at all?) one
 commit after it shipped; the bound is now `2(2√2−1)` with the change of variables
 recorded in the docstring.
+
+## The Prüfer barrier (`Barrier.lean`)
+
+| Piece | Lean declaration | Status |
+|---|---|---|
+| the identity `cos²θ/w + (m+c)sin²θ = 1/w + ((m+c)−1/w)sin²θ` | `prufer_rhs_eq` | VERIFIED |
+| the monotone bound from an upper bound on `sin²` | `prufer_rhs_le` | VERIFIED |
+| `sin²θ ≤ sin²B` for `0 ≤ θ ≤ B ≤ π/2` | `sin_sq_le_of_le` | VERIFIED |
+| coefficient positive on each piece, both halves | `coef_pos_right`, `coef_pos_left` | VERIFIED |
+| barrier below `π/2` ⟹ phase below `π/2` | `barrier_conclusion` | VERIFIED |
+| **the ODE comparison principle** | hypothesis of `barrier_conclusion` | Mathlib has no Sturm–Liouville or Prüfer theory; classical, not machine-checked |
+
+The identity is the whole game and is where the certificate went wrong twice: bounding
+`cos² ≤ 1` makes the slope never decay, and the barrier then crosses `π/2` at `t = 1.304`
+while the true phase reaches only `1.504` at `π/2`. The 1200-segment rational recursion
+lives in `ambi_barrier.py`; nothing in it can be wrong that these lemmas do not constrain.

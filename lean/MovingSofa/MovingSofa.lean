@@ -12,3 +12,4 @@ import MovingSofa.Reduction
 import MovingSofa.Poincare
 import MovingSofa.Wirtinger
 import MovingSofa.Slicing
+import MovingSofa.Barrier
