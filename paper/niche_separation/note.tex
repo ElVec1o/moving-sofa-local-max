@@ -1172,8 +1172,24 @@ Proposition~\ref{prop:onevar} is the sign of $T-t_0$:
 \item[(B)] $T<t_0$ and $\alpha_2(T)\le0$, which by Lemma~\ref{lem:imw} needs
 $\int_0^T(v\cos-u\sin)>c$ subject to $\int_0^T(u\cos+v\sin)\le\tfrac12$.
 \end{itemize}
-Branch (B) is bounded by $0.6854$, computed as a linear program, so it is empty for every
-$c\ge0.6854$ and in particular throughout the band. Branch (A) is a linear program in a
+Branch (B) has a closed form. Both the objective and the constraint push $u$ out of
+$[0,T]$, so $u$ decouples: it is $1$ on $[0,\omega]$ with $\sin\omega=k:=\max(0,\sin T
+-\tfrac12)$, the least mass the global moment permits. The residual budget for $v$ is then
+$\tfrac12-k$, and $v$ is bang-bang on $[0,\sigma]$ with $\cos\sigma=\tfrac12+k$, truncated
+at $T$. So
+\[
+  B(T)=\sin\bigl(\min(\sigma,T)\bigr)-1+\sqrt{1-k^2} ,
+\]
+and the two caps coincide when $\arccos(\sin T)=T$, that is $\sin T=\cos T$, at
+$T=\pi/4$. There
+\[
+  B_{\max}=\frac{\sqrt2}2-1+\sqrt{\tfrac14+\tfrac{\sqrt2}2}=0.685425125\ldots ,
+\]
+agreeing with the discretised program to $4\cdot10^{-8}$. Branch (B) is therefore empty
+whenever $c\ge B_{\max}$, and
+$\tfrac{\sqrt2}2+\sqrt{\tfrac14+\tfrac{\sqrt2}2}<\sqrt3$ holds with slack $0.0466$, checked
+in exact rational arithmetic. So branch (B) is empty throughout the band, and this is now
+\textsc{proved}, not measured. Branch (A) is a linear program in a
 single control, minimising $\alpha_1(T)$ subject to $\operatorname{Re}W(T)\ge0$; over
 $T\in[t_0,\pi/2]$ its value is smallest at $T=\pi/2$, where the constraint is vacuous
 ($\operatorname{Re}W(\pi/2)=\tfrac12$) and the minimum is exactly $c+1-\sqrt3$ by the

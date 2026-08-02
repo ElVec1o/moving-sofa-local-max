@@ -374,6 +374,73 @@ and it is nonnegative exactly when `c ≥ √3 - 1`. -/
 theorem branchA_at_right {c : ℝ} (h : Real.sqrt 3 - 1 ≤ c) : 0 ≤ c + 1 - Real.sqrt 3 := by
   linarith
 
+/-- **Branch (B) is empty throughout the band.**  Its exact maximum is
+`√2/2 - 1 + √(1/4 + √2/2)`, attained at `T = π/4` where the two bang-bang caps coincide
+(`arccos(sin T) = T` forces `sin T = cos T`).  Emptiness needs that to be below the floor
+`√3 - 1`, i.e. `√2/2 + √(1/4 + √2/2) < √3`, which holds with slack `0.0466`. -/
+theorem branchB_lt_floor :
+    Real.sqrt 2 / 2 + Real.sqrt (1/4 + Real.sqrt 2 / 2) < Real.sqrt 3 := by
+  have sq_le : ∀ a b : ℝ, 0 ≤ b → a ≤ b ^ 2 → Real.sqrt a ≤ b := by
+    intro a b hb hab
+    calc Real.sqrt a ≤ Real.sqrt (b ^ 2) := Real.sqrt_le_sqrt hab
+      _ = b := Real.sqrt_sq hb
+  have le_sq : ∀ a b : ℝ, 0 ≤ b → b ^ 2 ≤ a → b ≤ Real.sqrt a := by
+    intro a b hb hab
+    calc b = Real.sqrt (b ^ 2) := (Real.sqrt_sq hb).symm
+      _ ≤ Real.sqrt a := Real.sqrt_le_sqrt hab
+  have h2 : Real.sqrt 2 ≤ 1414214 / 10 ^ 6 := sq_le _ _ (by norm_num) (by norm_num)
+  have hinner : 1/4 + Real.sqrt 2 / 2 ≤ 957108 / 10 ^ 6 := by linarith
+  have hs : Real.sqrt (1/4 + Real.sqrt 2 / 2) ≤ 978320 / 10 ^ 6 :=
+    le_trans (Real.sqrt_le_sqrt hinner) (sq_le _ _ (by norm_num) (by norm_num))
+  have h3 : (1732050 : ℝ) / 10 ^ 6 ≤ Real.sqrt 3 := le_sq _ _ (by norm_num) (by norm_num)
+  linarith
+
+/-- The floor value in the same terms: `B_max < √3 - 1`. -/
+theorem branchB_max_lt : Real.sqrt 2 / 2 - 1 + Real.sqrt (1/4 + Real.sqrt 2 / 2)
+    < Real.sqrt 3 - 1 := by linarith [branchB_lt_floor]
+
+/-! ### The four linear programs, in closed form
+
+Each bounds one arm against one moment constraint, and each is bang-bang against a single
+multiplier whose switch point the moment constraint *fixes*, independently of `t`:
+
+| program | constraint | switch | value for large `t` |
+|---|---|---|---|
+| `U₂ = max ∫₀ᵗ u sin(t-s)` | `∫u cos = 1/2` | `sin σ = 1/2`, σ = π/6 | `cos(t-π/6) - cos t` |
+| `V₂ = max ∫₀ᵗ v cos(t-s)` | `∫v sin = 1/2` | `1 - cos σ = 1/2`, σ = π/3 | `sin t - sin(t-π/3)` |
+| `U₁ = min ∫₀ᵗ u cos(t-s)` | `∫u cos = 1/2` | `sin ω = sin t - 1/2` | `sin t - sin(t-ω)` |
+| `V₁ = max ∫₀ᵗ v sin(t-s)` | `∫v sin = 1/2` | `1 - cos σ = 1/2`, σ = π/3 | `cos(t-π/3) - cos t` |
+
+The two switch equations are `sin σ = 1/2` and `1 - cos σ = 1/2`, which is why `π/6` and
+`π/3` run through every constant in this section — including the floor witness and the
+`T = π/4` of branch (B), where `arccos(sin T) = T`. -/
+
+/-- The `U₂` switch: `∫₀^{π/6} cos = sin(π/6) = 1/2`, so `u = 1` on `[0, π/6]` exhausts the
+constraint exactly. -/
+theorem U2_switch : ∫ s in (0:ℝ)..(Real.pi/6), Real.cos s = 1/2 := floor_moment_u
+
+/-- The `V₂`/`V₁` switch: `∫₀^{π/3} sin = 1 - cos(π/3) = 1/2`. -/
+theorem V_switch : ∫ s in (0:ℝ)..(Real.pi/3), Real.sin s = 1/2 := floor_moment_v
+
+/-- `U₂` at `t ≥ π/6`, from the switch: `∫₀^{π/6} sin(t-s) ds = cos(t-π/6) - cos t`. -/
+theorem U2_value (t : ℝ) :
+    ∫ s in (0:ℝ)..(Real.pi/6), Real.sin (t - s)
+      = Real.cos (t - Real.pi/6) - Real.cos t := by
+  simp [intervalIntegral.integral_comp_sub_left (fun x => Real.sin x) t]
+
+/-- `V₁` at `t ≥ π/3`: `∫₀^{π/3} sin(t-s) ds = cos(t-π/3) - cos t`, the same integral with
+the other switch point. -/
+theorem V1_value (t : ℝ) :
+    ∫ s in (0:ℝ)..(Real.pi/3), Real.sin (t - s)
+      = Real.cos (t - Real.pi/3) - Real.cos t := by
+  simp [intervalIntegral.integral_comp_sub_left (fun x => Real.sin x) t]
+
+/-- `V₂` at `t ≥ π/3`: `∫₀^{π/3} cos(t-s) ds = sin t - sin(t-π/3)`. -/
+theorem V2_value (t : ℝ) :
+    ∫ s in (0:ℝ)..(Real.pi/3), Real.cos (t - s)
+      = Real.sin t - Real.sin (t - Real.pi/3) := by
+  simp [intervalIntegral.integral_comp_sub_left (fun x => Real.cos x) t]
+
 section Enclosures
 open Real
 
