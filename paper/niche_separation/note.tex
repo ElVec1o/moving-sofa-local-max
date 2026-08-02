@@ -3230,6 +3230,33 @@ data}: the exclusion is a property of the competitor class, not a limitation of 
 curvature hypothesis. Weakening (RC) cannot reach Gerver, and should not.
 \end{remark}
 
+\begin{remark}[Disconnected competitors]\label{rem:disconn}
+Connectedness is used in exactly one place, Remark~\ref{rem:gerverout}, and it is
+load-bearing there: when $M=\max_tc_y(t)$ exceeds $\tfrac12$ the two niches overlap, and
+inclusion--exclusion gives $|S|=|C_2|-2|N|+|U\cap\rho U|>Q(H)$, so overlap \emph{increases}
+area and cannot be assumed away on extremal grounds. A moving sofa is connected by
+definition, so the hypothesis is part of the problem rather than an added assumption, but
+that is a weak answer if the excluded competitors would win. They do not.
+
+Rasterising the intersection directly, rather than through the cap and niche bookkeeping
+that is exactly what fails when the niches overlap,
+\[
+  S=\bigcap_t\bigl[\mathrm{Hall}(t)\cap\rho\,\mathrm{Hall}(t)\bigr] ,
+\]
+$\Sig$ returns $1.64548$ against $A_R^\ast=1.6449552$. Refining the spatial grid from
+$400^2$ to $2000^2$ and the rotation sampling from $120$ to $900$ angles moves the value by
+at most $0.0015$, which is the error bar for everything below. Over admissible caps drawn
+with (RC) holding by construction and the forced boundary data exact, $46$ samples reached
+$M\ge\tfrac12$, and the largest area among them was $1.6032$, below $A_R^\ast$ by $0.042$,
+some $28$ times the error bar. The overlap gain is real but the caps that produce it lose
+more elsewhere.
+
+So dropping connectedness does not appear to raise the supremum, and
+Remark~\ref{rem:gerverout} is not smuggling in a restriction that does work. Rule~7: this
+is \textsc{heuristic}, a rasterised measurement over $55$ caps, and it is not a proof that
+no disconnected competitor beats $A_R^\ast$.
+\end{remark}
+
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
 $Q$ is $C^1$ and piecewise quadratic, so if every cell met by the segment
 $[H_\Sig,H]$ has $\delta^2Q\le0$, then $Q$ is concave along that segment and
