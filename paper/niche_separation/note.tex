@@ -3938,12 +3938,39 @@ margin $0.0549$, a gain of $3.83$.
 
 Rule~0: $\lambda_{\min}(M)\ge\tfrac35$, the $b$-tail bound and the $(Mz)$-tail formula are
 all \textsc{proved}, and the arithmetic is certified. The sole remaining input at a lower
-label is the numerical value of $C$, an $L^1$ norm evaluated by floating-point quadrature
-rather than interval quadrature; its convergence is monotone and $1.90$ is taken above it.
-With the exact $b$-tail the certificate closes for any $C\le2.4658$, so the enclosure has
-$31$ percent of headroom over the measured limit rather than $10$; and the identity
-$F-G'=(2-\chi)(w_p+w_p'')$ removes $w_q$ from it. The residual gap is a quadrature, not an
-estimate.
+label was the numerical value of $C$. It is now enclosed, and the enclosure is the
+subject of the next paragraph.
+
+The certificate is assembled by \texttt{ambi\_kcert.py} from the closed forms above, and
+the same integration by parts that fixed the $b$-tail supplies $C$ outright. With
+$w=\sum_j(z_j/n_j)\,\text{mode}_j$ the fixed witness function and $\chi$ the indicator of
+the layer, integrating the $p_k'$ factor by parts gives
+\[
+  D_\tau(p_k,w)=\int_0^{\pi/2}(1+\chi)\,p_k\,\bigl(w_p+w_p''\bigr)\ -\ p_k(\tau)\,J ,
+  \qquad J=w_q(\tau)-w_p'(\tau) ,
+\]
+the $w_q'$ terms cancelling identically as in the $b$-tail. Since $|p_k|\le1$ and
+$n_k\ge k\sqrt\pi$,
+\[
+  C\ \le\ \frac{\bigl\|(1+\chi)(w_p+w_p'')\bigr\|_{L^1}+|J|}{\sqrt\pi} ,
+\]
+one $L^1$ norm of a finite trigonometric polynomial and one point value. Both are
+enclosable without interval quadrature: $W=w_p+w_p''=\sum_k c_k\sin2kt$ has
+$\|W'\|_\infty\le\sum_k2k|c_k|=9070$ exactly, so a midpoint rule on $4\cdot10^6$ cells with
+$\tau$ on a cell boundary carries a Lipschitz slack of $5.6\cdot10^{-3}$ and a rounding
+allowance of $10^{-9}$. At $K=150$,
+\[
+  \bigl\|(1+\chi)W\bigr\|_{L^1}\le1.921953,\qquad |J|=0.257985,\qquad C\le1.229898 ,
+\]
+against the $2.4658$ the exact $b$-tail admits: a factor of two in hand. The bound also
+dominates the measured $\sup_{k}k|(Mz)_k|=0.5407$, as it must. Hence
+\[
+  K\ \le\ 0.172225892\ <\ \tfrac12\sin2\beta=0.273722337 ,
+\]
+margin $0.101496$, against the $0.0143$ of the first assembly: seven times the room, and no
+input below \textsc{proved}. Rule~7 is satisfied because $z$ is a witness --- the identity
+$b^{\mathsf T}M^{-1}b=z^{\mathsf T}Mz+2z^{\mathsf T}r+r^{\mathsf T}M^{-1}r$ holds for every
+$z$, so a floating-point solve costs nothing but sharpness.
 
 Truncation is otherwise bounded from two directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
 $K_\infty$; their increments decay geometrically, $5.6,2.8,2.4,1.5,0.9$ in units of
