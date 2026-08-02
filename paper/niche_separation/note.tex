@@ -3678,10 +3678,20 @@ needs, and it is consistent with the finite-basis value $-0.0850$ computed earli
 one is a lower bound, so $-0.0850\le\lambda_{\max}\le-0.0777$ and the two bracket the truth
 from opposite sides.
 
+Truncation is the only thing between $K$ and a certificate, and it is bounded from two
+directions. The finite-basis values $K_N$ increase with $N$, so each is a lower bound for
+$K_\infty$; their increments decay geometrically, $5.6,2.8,2.4,1.5,0.9$ in units of
+$10^{-4}$ at $N=45,60,80,100,120$, giving $K_\infty\approx0.1322$. Independently, the
+diagonal contribution of the modes beyond the truncation is $\sum b_k^2/|A_{kk}|$ with
+$b_k=O(1)$ and $|A_{kk}|\sim k^2$, hence $O(1/N)$; evaluated it is about $0.03$, a crude
+overestimate since it ignores the off-diagonal coupling that reduces the effective
+contribution. Both bounds leave $K$ well below $\tfrac12\sin2\beta=0.2737$, the looser one
+still by a factor of three.
+
 Rule~0: $|D_\tau[e]|=\tfrac12\sin2\sigma$ and the tail constant $\tfrac35$ are
 \textsc{proved}, as is the absorption step; $K=0.1320$ is \textsc{heuristic}, being the
 value of a finite-basis computation, though of a quantity involving no inequality and with
-a margin three orders above the drift. The constant $0.0777$ therefore carries
+a margin three orders above the increment. The constant $0.0777$ therefore carries
 \textsc{heuristic}, and certifying $K$ is the single remaining step. This replaces the
 measured table of Proposition~\ref{prop:h1}, whose entries bound the constants from the
 wrong side and establish nothing.
