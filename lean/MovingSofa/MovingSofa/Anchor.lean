@@ -441,6 +441,42 @@ theorem V2_value (t : ℝ) :
       = Real.sin t - Real.sin (t - Real.pi/3) := by
   simp [intervalIntegral.integral_comp_sub_left (fun x => Real.cos x) t]
 
+/-! ### The Gårding split at the end cap
+
+At `τ = π/2` the cross term of `D_τ` vanishes (`∫(pq)' = -p(π/2)q(π/2) = 0`), so the form
+is diagonal in `p_k = sin 2kt`, `q_k = sin(2k-1)t`.  The `H¹` Rayleigh quotients are
+`(1-4k²)/(1+4k²)` and `2(1-(2k-1)²)/(1+(2k-1)²)`.  Exactly one is nonnegative — the
+marginal mode `q₁ = sin t`, at `0` — and every other is at most `-3/5`, attained at
+`p₁ = sin 2t`.
+
+So the obstruction to coercivity is a SINGLE mode, not a tail; that is what makes a
+Gårding split possible here, and it needs no arithmetic precision at all. -/
+
+/-- Even modes `p_n = sin(nt)`, `n ≥ 2`: the quotient `(1-n²)/(1+n²) ≤ -3/5`, since the
+inequality is `8 ≤ 2n²`.  Equality at `n = 2`, which is where `3/5` is attained. -/
+theorem p_mode_quotient {n : ℝ} (hn : 2 ≤ n) : (1 - n^2) / (1 + n^2) ≤ -(3/5) := by
+  have hpos : (0:ℝ) < 1 + n^2 := by nlinarith
+  rw [div_le_iff₀ hpos]
+  nlinarith
+
+/-- Odd modes `q_n = sin(nt)`, `n ≥ 3`: the quotient `2(1-n²)/(1+n²) ≤ -3/5`, since the
+inequality is `13 ≤ 7n²`.  The excluded case is `n = 1`, where the quotient is `0` — the
+marginal mode. -/
+theorem q_mode_quotient {n : ℝ} (hn : 3 ≤ n) : 2 * (1 - n^2) / (1 + n^2) ≤ -(3/5) := by
+  have hpos : (0:ℝ) < 1 + n^2 := by nlinarith
+  rw [div_le_iff₀ hpos]
+  nlinarith
+
+/-- The marginal mode: at `n = 1` the `q` quotient is exactly `0`, so it is the one mode
+the split must remove. -/
+theorem q_mode_marginal : 2 * (1 - (1:ℝ)^2) / (1 + (1:ℝ)^2) = 0 := by norm_num
+
+/-- The cross term vanishes at `τ = π/2`: `∫₀^{π/2}(pq' + p'q) = [pq]₀^{π/2}`, which is `0`
+because `p(π/2) = 0` and `p(0) = 0`.  Stated as the algebraic fact about the boundary
+values that makes it so. -/
+theorem cross_vanishes {p0 pT q0 qT : ℝ} (h0 : p0 = 0) (hT : pT = 0) :
+    pT * qT - p0 * q0 = 0 := by rw [h0, hT]; ring
+
 section Enclosures
 open Real
 

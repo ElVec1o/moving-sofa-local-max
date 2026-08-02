@@ -3516,6 +3516,40 @@ towards $c^\ast=0.7309566$. Every certificate in this note is a lower bound and 
 finite-element number an upper bound, so nothing crossed and no conclusion moves; the
 target was mis-stated by $0.2\%$.
 
+\begin{proposition}[G\aa rding split at the end cap]\label{prop:garding}
+At $\tau=\pi/2$ the cross term of $D_\tau$ vanishes identically, since
+$\int_0^{\pi/2}(pq'+p'q)=[pq]_0^{\pi/2}=0$ by $p(\pi/2)=0$. Hence
+\[
+  D_{\pi/2}[p,q]=\int_0^{\pi/2}(p^2-p'^2)+2\int_0^{\pi/2}(q^2-q'^2) ,
+\]
+which is diagonal in the basis $p_k=\sin 2kt$, $q_k=\sin(2k-1)t$, with $H^1$ Rayleigh
+quotients
+\[
+  \frac{1-4k^2}{1+4k^2}\quad\text{and}\quad\frac{2\bigl(1-(2k-1)^2\bigr)}{1+(2k-1)^2} .
+\]
+The only nonnegative value is $0$, at $q_1=\sin t$. On the orthogonal complement of that
+single mode,
+\[
+  D_{\pi/2}[\eta]\ \le\ -\tfrac35\,\|\eta\|_{H^1}^2 ,
+\]
+and $\tfrac35$ is attained, at $p_1=\sin 2t$.
+\end{proposition}
+
+\begin{proof}
+For even $n\ge2$, $\tfrac{1-n^2}{1+n^2}\le-\tfrac35$ is $8\le2n^2$; for odd $n\ge3$,
+$\tfrac{2(1-n^2)}{1+n^2}\le-\tfrac35$ is $13\le7n^2$. Both hold, with equality only in the
+first at $n=2$.
+\end{proof}
+
+This is the G\aa rding split Remark~\ref{rem:direction} asks for, at the one place the form
+degenerates, and with an exact constant: the obstruction is a \emph{single} mode, not a
+tail. Numerically the same reduced quotient at $\tau<\pi/2$ runs from $-0.755$ at
+$\sigma=0.60$ down to $-0.600$ at $\sigma=0$, so $\tfrac35$ is the worst case over the whole
+family; that uniformity is \textsc{heuristic}, the endpoint statement is \textsc{proved}.
+Together with the linear damping of Remark~\ref{rem:endcap} on the marginal mode itself,
+the two pieces are exactly what a coercivity proof needs, and neither requires more
+arithmetic precision.
+
 \begin{remark}[The end-cap degeneracy is linear]\label{rem:endcap}
 The diagonal family $D_\tau$ degenerates as $\tau\to\pi/2$: at $\tau=\pi/2$ the mode
 $(0,\sin t)$ has $D$-value $0$, which is what forces the separate treatment in case (b) of
