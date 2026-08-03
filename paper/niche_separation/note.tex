@@ -3662,9 +3662,43 @@ The reduction is therefore sharper than the one through $\rho$. Remark~\ref{rem:
 and the complement of Theorem~\ref{thm:ordopt} follow from two statements about areas in a
 single real parameter: that $|C_2|$ is affine in the atom mass, and that $|N|$ is convex in
 it. Neither mentions a second variation, and in particular neither needs the realised-cell
-form that has no verified referent. Rule~0: the implication is \textsc{proved} and
-formalised; affineness and convexity are \textsc{heuristic}, measured on one family at
-rasterisation accuracy.
+form that has no verified referent.
+
+Both have closed forms, so neither stays at rasterisation accuracy. The atom adds
+$c\Phi$ to $H$ with $\Phi(\theta)=\max(0,-\cos\theta)$, supported on $[\pi/2,\pi]$. The area
+functional being quadratic in $H$, $|C_2|(c)$ is a quadratic polynomial in $c$ with leading
+coefficient
+\[
+  \int_0^\pi\bigl(\Phi^2-\Phi'^2\bigr)
+  =\int_{\pi/2}^\pi\bigl(\cos^2\theta-\sin^2\theta\bigr)d\theta
+  =\Bigl[\tfrac12\sin2\theta\Bigr]_{\pi/2}^{\pi}=0 ,
+\]
+a full half period. So $|C_2|$ is \emph{exactly} affine in $c$, and the $7.2\cdot10^{-4}$
+in the table is rasterisation noise and nothing else. Formalised as
+\texttt{atom\_quadratic\_vanishes}.
+
+The niche's second derivative in $c$ is, on the anchored structure with $E_2$ an initial
+segment of length $\pi/2-\beta$ and $E_1^-$ one of length $\beta$,
+\[
+  f(\beta)=2\!\int_{E_2}\!\cos^2 t-2\!\int_{E_1^-}\!\sin^2 t
+   =\tfrac\pi2-2\beta+\sin2\beta .
+\]
+Since $f'(\beta)=2(\cos2\beta-1)\le0$, $f$ is antitone, and admissible caps satisfy
+$\beta<\pi/6$ by the arm sandwich, so
+\[
+  f(\beta)\ \ge\ f(\pi/6)=\tfrac\pi6+\tfrac{\sqrt3}2=1.3896\ >\ 0
+\]
+uniformly: the convexity is not marginal. At $\Sig$'s own $\beta$, $f=1.5389$, predicting a
+second difference $h^2f(\beta)=0.003847$ at $h=0.05$ against the measured mean $0.003533$,
+a ratio of $0.918$. Formalised as \texttt{nicheConv\_hasDerivAt},
+\texttt{nicheConv\_antitone} and \texttt{nicheConv\_pos}.
+
+Rule~0: the implication is \textsc{proved} and formalised, and so are both closed forms,
+\emph{conditionally on} two structural inputs quoted from earlier sections rather than
+re-derived here --- the quadratic form of the cap area, and the first variation of the
+niche. Their conjunction, that $|C_2|$ is affine and $2|N|$ convex along the atom
+direction, is accordingly \textsc{proved} modulo those two, and \textsc{heuristic} in any
+other direction, since only this one family has been examined.
 \end{remark}
 
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}

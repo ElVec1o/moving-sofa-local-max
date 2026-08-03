@@ -844,4 +844,84 @@ theorem max_of_affine_sub_convex_approx {A k c c0 nic nic0 m ε : ℝ}
 
 end AffineMinusConvex
 
+section AtomDirection
+
+/-!
+### The atom direction: cap exactly affine, niche uniformly convex
+
+Freezing `Σ`'s absolutely continuous radius and varying only the atom mass `c` adds `c·Φ`
+to the support function, with `Φ(θ) = max(0, -cos θ)` supported on `[π/2, π]`. The area
+functional is quadratic in `H`, so `|C_2|(c)` is a quadratic polynomial whose leading
+coefficient is `∫₀^π (Φ² - Φ'²)`. On the support that integrand is `cos²θ - sin²θ = cos 2θ`,
+whose integral over `[π/2, π]` is a full half period and vanishes. So the cap is *exactly*
+affine: the `7.2·10⁻⁴` seen in the rasterised profile is noise and nothing else.
+
+The niche's second derivative in `c` is `f(β) = π/2 - 2β + sin 2β`. Its derivative is
+`2(cos 2β - 1) ≤ 0`, so `f` decreases, and admissible caps have `β < π/6`, where
+`f(π/6) = π/6 + √3/2 = 1.3896`. Convexity is therefore uniform, not marginal.
+
+Both statements are conditional on two structural inputs taken from the note: the quadratic
+form of the cap area, and the first variation of the niche. What is formalised here is the
+consequence of each.
+-/
+
+/-- The atom contributes no quadratic term to the cap area: a half period of `cos 2θ`. -/
+theorem atom_quadratic_vanishes :
+    (∫ θ in (Real.pi/2)..Real.pi, (Real.cos θ ^ 2 - Real.sin θ ^ 2)) = 0 := by
+  have hd : ∀ t ∈ Set.uIcc (Real.pi/2) Real.pi,
+      HasDerivAt (fun t : ℝ => Real.sin (2*t) / 2) (Real.cos t ^ 2 - Real.sin t ^ 2) t := by
+    intro t _
+    have hin : HasDerivAt (fun t : ℝ => 2*t) 2 t := by
+      simpa using (hasDerivAt_id t).const_mul (2:ℝ)
+    have h2 : HasDerivAt (fun t : ℝ => Real.sin (2*t)) (Real.cos (2*t) * 2) t :=
+      (Real.hasDerivAt_sin (2*t)).comp t hin
+    have h3 := h2.div_const 2
+    have he : Real.cos (2*t) * 2 / 2 = Real.cos t ^ 2 - Real.sin t ^ 2 := by
+      have hp := Real.sin_sq_add_cos_sq t
+      rw [Real.cos_two_mul]; linarith
+    rwa [he] at h3
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hd
+    (Continuous.intervalIntegrable (by fun_prop) _ _)]
+  rw [show (2:ℝ) * (Real.pi/2) = Real.pi by ring, Real.sin_pi, Real.sin_two_pi]
+  ring
+
+/-- The niche's second derivative in the atom mass. -/
+noncomputable def nicheConv (β : ℝ) : ℝ := Real.pi/2 - 2*β + Real.sin (2*β)
+
+theorem nicheConv_hasDerivAt (β : ℝ) :
+    HasDerivAt nicheConv (2 * (Real.cos (2*β) - 1)) β := by
+  have hin : HasDerivAt (fun t : ℝ => 2*t) 2 β := by
+    simpa using (hasDerivAt_id β).const_mul (2:ℝ)
+  have h2 : HasDerivAt (fun t : ℝ => Real.sin (2*t)) (Real.cos (2*β) * 2) β :=
+    (Real.hasDerivAt_sin (2*β)).comp β hin
+  have h := ((hasDerivAt_const β (Real.pi/2)).sub hin).add h2
+  have he : (0:ℝ) - 2 + Real.cos (2*β) * 2 = 2 * (Real.cos (2*β) - 1) := by ring
+  rw [← he]
+  exact h
+
+/-- Its derivative is nonpositive everywhere, so `nicheConv` decreases. -/
+theorem nicheConv_deriv_nonpos (β : ℝ) : 2 * (Real.cos (2*β) - 1) ≤ 0 := by
+  have := Real.cos_le_one (2*β); linarith
+
+/-- `nicheConv` is antitone, so its value on `β ≤ π/6` is bounded below by the endpoint. -/
+theorem nicheConv_antitone : Antitone nicheConv := by
+  refine antitone_of_deriv_nonpos (fun β => (nicheConv_hasDerivAt β).differentiableAt) ?_
+  intro β
+  rw [(nicheConv_hasDerivAt β).deriv]
+  exact nicheConv_deriv_nonpos β
+
+/-- At the arm-sandwich cap `β = π/6` the value is `π/6 + √3/2`. -/
+theorem nicheConv_at_pi_six : nicheConv (Real.pi/6) = Real.pi/6 + Real.sqrt 3 / 2 := by
+  unfold nicheConv
+  rw [show (2:ℝ) * (Real.pi/6) = Real.pi/3 by ring, Real.sin_pi_div_three]
+  ring
+
+/-- Hence convexity of the niche in the atom mass is uniform on admissible caps. -/
+theorem nicheConv_pos {β : ℝ} (h : β ≤ Real.pi/6) :
+    Real.pi/6 + Real.sqrt 3 / 2 ≤ nicheConv β := by
+  rw [← nicheConv_at_pi_six]
+  exact nicheConv_antitone h
+
+end AtomDirection
+
 end MovingSofa
