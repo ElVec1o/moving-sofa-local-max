@@ -3632,6 +3632,39 @@ spectral estimate, and it does not require the realised-cell second variation th
 verified referent. Rule~0: the factorisation is \textsc{proved} and formalised; the table
 is \textsc{heuristic}, and its rows maximise over a $26$-profile sample whose maximiser
 changes between rows, so $\rho$ is not read along one smooth family.
+
+Read along one smooth family --- freeze $\Sig$'s absolutely continuous radius and vary only
+the atom --- $\rho$ becomes a genuine function of $\alpha_2(0)$, and is strictly increasing:
+$0.735,0.771,0.808,0.846,0.884,0.923,0.966$ below $\Sig$ and $1.037,1.073,1.114,1.153,1.177$
+above, the one row within the rasterisation noise of $\Sig$ being omitted because there the
+denominator $|C_2|-|C_2|_\Sig$ is not reliably signed. The
+mechanism is visible in the two terms separately. With step $0.05$ on $[0.40,1.00]$ the
+second differences of $|C_2|$ have magnitude at most $7.2\cdot10^{-4}$ with mean zero,
+which is the rasterisation floor, while those of $2|N|$ are uniformly positive with mean
+$+3.5\cdot10^{-3}$, five times that floor. So on this family
+\[
+  |C_2| \text{ is affine in the atom mass},\qquad 2|N| \text{ is convex in it},
+\]
+and $|T|$, being affine minus convex, is concave; its second differences are negative at
+every interior point. The measured slopes are $1.0107$ for the cap and $1.0128$ for the
+niche at $\Sig$, so the critical point sits there.
+
+No concavity machinery is needed to finish from that. Convexity supplies a supporting line
+at $\Sig$, and subtracting it from the affine cap gives
+\[
+  (A+kc)-\mathrm{nic}(c)\ \le\ (A+kc_\Sig)-\mathrm{nic}(c_\Sig)
+\]
+whenever the supporting slope equals $k$: one line, \texttt{max\_of\_affine\_sub\_convex},
+with \texttt{max\_of\_affine\_sub\_convex\_approx} carrying the $2\cdot10^{-3}$ slope
+mismatch as an additive $\varepsilon|c-c_\Sig|$.
+
+The reduction is therefore sharper than the one through $\rho$. Remark~\ref{rem:profile}
+and the complement of Theorem~\ref{thm:ordopt} follow from two statements about areas in a
+single real parameter: that $|C_2|$ is affine in the atom mass, and that $|N|$ is convex in
+it. Neither mentions a second variation, and in particular neither needs the realised-cell
+form that has no verified referent. Rule~0: the implication is \textsc{proved} and
+formalised; affineness and convexity are \textsc{heuristic}, measured on one family at
+rasterisation accuracy.
 \end{remark}
 
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}

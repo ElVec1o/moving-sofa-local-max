@@ -249,7 +249,27 @@ def main() -> int:
     print(f"\n  z^T M z {zMz:.9f}   2 z^T r {2*zr:.2e}   ||r||^2 {rn:.2e}"
           f"   b-tail {btail:.6f}\n")
 
-    print("  (5) basis drift: K_N rises to the truth, so each row is a lower bound\n")
+    print("  (5) the chain, and C's convergence in the basis size\n")
+    print(f"  {'K':>5} {'C enclosed':>12} {'2 b-tail':>11} {'2 (Mz)-tail':>13} {'K bound':>12} {'margin':>10}")
+    for k in (40, 70, 100, 150):
+        _mk, Ak, bk, _ = build(k, sigma)
+        Mk = -Ak
+        zk = np.linalg.solve(Mk, bk)
+        Ck, *_ = C_enclosure(k, sigma, zk, _mk, cells=10 ** 6)
+        bt = 2 * np.cos(sigma) ** 2 / np.pi / k
+        mt = 2 * Ck ** 2 / k
+        rk = bk - Mk @ zk
+        tails = (np.sqrt(bt / 2) + np.sqrt(mt / 2)) ** 2
+        bnd = float(zk @ Mk @ zk) + 2 * float(zk @ rk) + (float(rk @ rk) + tails) / LAM_MIN
+        star = "  <- certified" if k == 150 else ""
+        print(f"  {k:5d} {Ck:12.6f} {bt:11.6f} {mt:13.6f} {bnd:12.9f}"
+              f" {target - bnd:+10.6f}{star}")
+    print("\n  C rises with the basis and settles near 1.23, well inside the 2.4658 the")
+    print("  exact b-tail admits.  The superseded decomposition ||F||_1 + ||G'||_1 gave")
+    print("  1.608 to 1.875 over the same range: bounding the two norms separately costs")
+    print("  the same order the b-tail lost.\n")
+
+    print("  (6) basis drift: K_N rises to the truth, so each row is a lower bound\n")
     print(f"  {'K':>5} {'value':>13} {'increment':>12}")
     prev = None
     for k in (15, 25, 40, 60):

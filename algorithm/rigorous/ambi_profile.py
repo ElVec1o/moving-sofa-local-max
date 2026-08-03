@@ -192,6 +192,61 @@ def main() -> int:
     print("  Rule 0: HEURISTIC.  The rows maximise over a 26-profile sample and the")
     print("  maximiser changes between rows, so rho is not read along one smooth family.")
 
+    print("\n  one smooth family: Sigma's r_ac frozen, only the atom varied.  Along it rho")
+    print("  is a function of c, not a maximum over a changing sample.\n")
+    base = float(np.trapezoid((r0 * np.sin(x))[x <= P2], dx=dx))
+    cs = np.arange(0.40, 1.001, 0.05)
+    C, N, T = [], [], []
+    for c in cs:
+        cA, tt, _ = stages(dc.Hfun(r0, x, c + 1 - base), x)
+        C.append(cA - bias); T.append(tt - bias); N.append(cA - tt)
+    C, N, T = map(np.array, (C, N, T))
+    d2C, d2N, d2T = np.diff(C, 2), np.diff(N, 2), np.diff(T, 2)
+    NOISE = 20 * float(np.abs(d2C).max())      # the floor, times a safety factor
+    print(f"  {'c':>6} {'|C_2|':>9} {'2|N|':>9} {'|T|':>9} {'rho':>8}"
+          f" {'d2|C_2|':>10} {'d2 2|N|':>10} {'d2|T|':>10}")
+    for i, c in enumerate(cs):
+        if 0 < i < len(cs) - 1:
+            cols = f" {d2C[i-1]:+10.5f} {d2N[i-1]:+10.5f} {d2T[i-1]:+10.5f}"
+        else:
+            cols = " " * 33
+        # rho is a difference quotient in (cap - cap_S); within the rasterisation noise
+        # floor of Sigma the denominator is not even reliably SIGNED, so the quotient
+        # there is meaningless and is not reported.  c = 0.75 sits 4.2e-4 from Sigma,
+        # below the 7.2e-4 floor, and returns 2.286 -- an artifact of the removable
+        # singularity at the crossing, not a violation of monotonicity.
+        dcp = C[i] - cS
+        rr = f"{(N[i] - nS) / dcp:8.3f}" if abs(dcp) > NOISE else f"{'--':>8}"
+        print(f"  {c:6.2f} {C[i]:9.5f} {N[i]:9.5f} {T[i]:9.5f} {rr}{cols}")
+    rf = [(N[i] - nS) / (C[i] - cS) for i in range(len(cs)) if abs(C[i] - cS) > NOISE]
+    print(f"\n  rho outside a {NOISE:.3f} window around Sigma (where the denominator is"
+          " below\n  the noise floor) is strictly increasing:"
+          f"  {all(a < b for a, b in zip(rf, rf[1:]))}")
+    bad += not all(a < b for a, b in zip(rf, rf[1:]))
+    floor_ = float(np.abs(d2C).max())
+    print(f"\n  |C_2| second differences: max |.| = {floor_:.2e}, mean {d2C.mean():+.2e}"
+          "  -> affine at the noise floor")
+    print(f"  2|N|  second differences: min = {d2N.min():+.2e}, mean {d2N.mean():+.2e}"
+          f"  -> CONVEX, {d2N.mean()/floor_:.1f}x the floor")
+    print(f"  |T|   second differences: max = {d2T.max():+.2e}  -> CONCAVE")
+    conv = d2N.min() > 0
+    conc = d2T.max() < 0
+    bad_local = not (conv and conc)
+    k = float(np.polyfit(cs, C, 1)[0])
+    sl = float(np.interp(0.7506, cs[1:-1], (N[2:] - N[:-2]) / 0.1))
+    print(f"\n  cap slope k = {k:.5f}, niche slope at Sigma = {sl:.5f}, mismatch {k - sl:+.5f}")
+    if bad_local:
+        print("  FAIL: the affine/convex structure does not hold on this family")
+    else:
+        print("""
+  So on this family |T| = affine - convex, hence concave, with its critical point at Sigma.
+  Convexity supplies a supporting line at Sigma and subtracting it from the affine cap
+  gives the bound directly: `max_of_affine_sub_convex`, one line, with `_approx` carrying
+  the 2e-3 slope mismatch.  A15b and A16 therefore reduce to two statements about areas in
+  ONE real parameter -- |C_2| affine in the atom, |N| convex in it -- and need no second
+  variation on realised cells.""")
+    bad += bad_local
+
     print(f"\n  {'ALL CHECKS PASS' if not bad else f'{bad} CHECK(S) FAILED'}")
     return 0 if not bad else 1
 

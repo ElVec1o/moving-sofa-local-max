@@ -802,4 +802,46 @@ theorem deficit_pos_of_rho_gt_one {cap nic capS nicS : ℝ}
 
 end Deficit
 
+section AffineMinusConvex
+
+/-!
+### Why `Σ` maximises: an affine cap minus a convex niche
+
+Along the one-parameter family that freezes `Σ`'s absolutely continuous radius and varies
+only the atom, the two terms of `|T| = |C_2| - 2|N|` behave differently. The cap is affine
+in the atom mass -- its second differences sit at the rasterisation noise floor, `±7·10⁻⁴`
+with mean zero -- while the niche is convex, its second differences uniformly positive at
+`+3.5·10⁻³`, five times that floor. Affine minus convex is concave, and the first-order
+condition at `Σ` (cap slope `1.0107`, niche slope `1.0128`) puts the critical point there.
+
+The argument needs no concavity machinery: convexity supplies a supporting line at `Σ`, and
+subtracting it from the affine cap leaves a bound that is exactly `0` when the slopes agree.
+`max_of_affine_sub_convex` is that one line; the `_approx` version carries the slope
+mismatch, since the two measured slopes agree only to `2·10⁻³`.
+
+This replaces the spectral route entirely. It asks for convexity of one area in one real
+parameter, not for a second variation on realised cells -- an object which, as
+`ambi_cell.py` shows, has no verified referent anywhere in the note.
+-/
+
+/-- Affine minus convex, at a critical point: the maximum is at `c₀`.
+`hsupp` is convexity's supporting line at `c₀`, `hcrit` the first-order condition. -/
+theorem max_of_affine_sub_convex {A k c c0 nic nic0 m : ℝ}
+    (hsupp : nic0 + m * (c - c0) ≤ nic) (hcrit : m = k) :
+    (A + k * c) - nic ≤ (A + k * c0) - nic0 := by
+  subst hcrit; linarith
+
+/-- The same with the slopes agreeing only to `ε`, which is the measured situation. -/
+theorem max_of_affine_sub_convex_approx {A k c c0 nic nic0 m ε : ℝ}
+    (hsupp : nic0 + m * (c - c0) ≤ nic) (hε : |k - m| ≤ ε) :
+    (A + k * c) - nic ≤ (A + k * c0) - nic0 + ε * |c - c0| := by
+  have h1 : (k - m) * (c - c0) ≤ |k - m| * |c - c0| := by
+    calc (k - m) * (c - c0) ≤ |(k - m) * (c - c0)| := le_abs_self _
+      _ = |k - m| * |c - c0| := abs_mul _ _
+  have h2 : |k - m| * |c - c0| ≤ ε * |c - c0| :=
+    mul_le_mul_of_nonneg_right hε (abs_nonneg _)
+  linarith
+
+end AffineMinusConvex
+
 end MovingSofa
