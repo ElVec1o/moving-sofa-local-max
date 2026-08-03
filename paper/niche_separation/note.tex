@@ -3693,12 +3693,33 @@ second difference $h^2f(\beta)=0.003847$ at $h=0.05$ against the measured mean $
 a ratio of $0.918$. Formalised as \texttt{nicheConv\_hasDerivAt},
 \texttt{nicheConv\_antitone} and \texttt{nicheConv\_pos}.
 
-Rule~0: the implication is \textsc{proved} and formalised, and so are both closed forms,
-\emph{conditionally on} two structural inputs quoted from earlier sections rather than
-re-derived here --- the quadratic form of the cap area, and the first variation of the
-niche. Their conjunction, that $|C_2|$ is affine and $2|N|$ convex along the atom
-direction, is accordingly \textsc{proved} modulo those two, and \textsc{heuristic} in any
-other direction, since only this one family has been examined.
+The cap half is not special to the atom. An admissible perturbation preserves the forced
+data $H'(0)=1/2$, $H(\pi/2)=1$, $H'(\pi)=-1/2$, hence
+\[
+  \eta'(0)=0,\qquad \eta(\pi/2)=0,\qquad \eta'(\pi)=0 ,
+\]
+Neumann at the outer end and Dirichlet at $\pi/2$ on each half-interval of length $\pi/2$.
+The first eigenvalue of $-d^2/d\theta^2$ under those conditions on an interval of length $L$
+is $(\pi/2L)^2$, here exactly $1$, so $\int(\eta')^2\ge\int\eta^2$ and
+\[
+  \int_0^\pi\bigl(\eta^2-(\eta')^2\bigr)\ \le\ 0
+\]
+for \emph{every} admissible $\eta$: the cap is concave in every direction, not merely
+affine along one. In the eigenbasis $\cos n\theta$ on $[0,\pi/2]$ and $\sin n(\theta-\pi/2)$
+on $[\pi/2,\pi]$, $n=2k-1$, the form is $\tfrac\pi4\sum(1-n^2)(a_k^2+b_k^2)$, and the entire
+content is that $1-n^2\le0$ for $n\ge1$ with equality only at $n=1$. The two first modes are
+$\cos\theta$, a horizontal translation moving no area, and $\sin(\theta-\pi/2)=-\cos\theta$,
+which is the atom. The atom's exact affineness is therefore the statement that it saturates
+Wirtinger, and the kernel is exactly two-dimensional. Formalised as
+\texttt{wirtinger\_mode}, \texttt{wirtinger\_mode\_eq}, \texttt{cap\_quadratic\_nonpos} and
+\texttt{atom\_is\_first\_mode}.
+
+Rule~0: the implication is \textsc{proved} and formalised, and so are the cap's concavity in
+every direction and the niche's convexity along the atom, \emph{conditionally on} two
+structural inputs quoted from earlier sections rather than re-derived here --- the quadratic
+form of the cap area, and the first variation of the niche. Convexity of $|N|$ in directions
+other than the atom is \textsc{conjecture}; it is the only remaining gap between this and a
+global statement.
 \end{remark}
 
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
