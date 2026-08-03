@@ -3574,16 +3574,29 @@ where the area has comfortable margin and the margin is thin only where concavit
 the complement of Theorem~\ref{thm:ordopt} would split at some $c_0$ between $0.60$ and
 $0.70$: a crude area bound below it, the existing concavity argument above.
 
-That reading is withdrawn pending a rebuild. An attempt to locate $c_0$ failed to reproduce
-the second row at all: reconstructing the second variation on realised cells from the
-conventions of Proposition~\ref{prop:garding} gives $\lambda_{\max}=+1.32$ at $c=0.60$ where
-the row records $+0.1701$, and the alternative sign convention gives $+1.08$; neither
-reproduces any of the four recorded values, and neither changes sign inside $[0.60,0.70]$.
-The recorded values come from a computation that was never shipped as a script, so they
-cannot be re-derived, exactly the defect that kept the coercivity certificate's last
-constant open for five rounds. Rule~0: the area row is \textsc{heuristic} and reproducible;
-the concavity row is \textsc{unverified} until the realised-cell second variation is
-shipped, and with it the refutation of concavity that row was used to support.
+That reading is withdrawn, and the reason is sharper than a missing script. The layer
+signs are pinned exactly: on the zero mode $e=(0,\sin t)$ both bulk terms vanish and the
+layer terms reduce to $\int_L\cos^2$ and $\int_L\sin^2$, so
+\[
+  \int_L\bigl(\cos^2 t-\sin^2 t\bigr)dt=-\tfrac12\sin2\sigma
+\]
+selects one sign pair, while the control $-\int_L(\cos^2+\sin^2)=-\sigma$ differs from it
+for every $\sigma>0$ since $\sin2\sigma<2\sigma$. Formalised as \texttt{layer\_pin},
+\texttt{layer\_pin\_neg} and \texttt{layer\_pin\_separates}. Under that convention the
+layer form reproduces Proposition~\ref{prop:coerc}: $\lambda_{\max}=-0.086725,-0.085421,
+-0.085031$ at $K=16,40,80$, rising to the finite-basis $-0.0850$, and
+\texttt{ambi\_kcert.py}'s independent closed-form assembly gives $-0.086746$ and $-0.085441$
+at the first two.
+
+The same convention on the \emph{realised} sets $E_1=[0,\beta]$, $E_2=[0,\pi/2-\beta]$ gives
+$\lambda_{\max}=+0.5643$ at $\Sig$, which would make $\Sig$ not even a local maximum and
+contradicts Proposition~\ref{prop:coerc}. The realised-cell form is therefore not
+$\delta^2Q$: the layer and the realised sets are different objects, and
+Proposition~\ref{prop:coerc} gates only the former. So there is no verified value for a
+realised-cell second variation anywhere in this note, and a claim about concavity on
+realised cells has no referent to be tested against. Rule~0: the area row is
+\textsc{heuristic} and reproducible; the concavity row is withdrawn, and with it the
+refutation it was used to support. \texttt{ambi\_cell.py} ships the enumeration.
 \end{remark}
 
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}

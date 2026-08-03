@@ -703,4 +703,59 @@ theorem btail_gain {σ c : ℝ} (hσ : 289/1000 ≤ σ) (hc0 : 0 ≤ c) (hc : c 
 
 end BTail
 
+section LayerPin
+
+/-!
+### The layer sign convention is pinned by the zero mode
+
+The second variation carries a sign on each of its two layer terms, and guessing wrong
+costs a round: the unreproducible A17 numbers came from a form whose signs were never
+checked against anything.  They need not be guessed.  On the zero mode `e = (0, sin t)`
+the two bulk terms vanish and the layer terms reduce to `∫_L cos²` and `∫_L sin²`, so the
+note's value `D_τ[e] = -(1/2) sin 2σ` selects one sign pair outright.
+
+`layer_pin` is the surviving choice `(+1,-1)`; `layer_pin_neg` is the control `(-1,-1)`,
+which integrates to `-σ`; and `layer_pin_separates` shows the two disagree for every
+`σ > 0`, so the identity really does determine the convention rather than merely being
+consistent with it.  Rule I12: the control is stated, not assumed.
+-/
+
+/-- On the zero mode the `(+1,-1)` layer convention gives exactly `-(1/2) sin 2σ`. -/
+theorem layer_pin (σ : ℝ) :
+    (∫ t in (Real.pi/2 - σ)..(Real.pi/2), (Real.cos t ^ 2 - Real.sin t ^ 2))
+      = -(Real.sin (2*σ) / 2) := by
+  have hd : ∀ t ∈ Set.uIcc (Real.pi/2 - σ) (Real.pi/2),
+      HasDerivAt (fun t : ℝ => Real.sin (2*t) / 2) (Real.cos t ^ 2 - Real.sin t ^ 2) t := by
+    intro t _
+    have hin : HasDerivAt (fun t : ℝ => 2*t) 2 t := by
+      simpa using (hasDerivAt_id t).const_mul (2:ℝ)
+    have h2 : HasDerivAt (fun t : ℝ => Real.sin (2*t)) (Real.cos (2*t) * 2) t :=
+      (Real.hasDerivAt_sin (2*t)).comp t hin
+    have h3 := h2.div_const 2
+    have he : Real.cos (2*t) * 2 / 2 = Real.cos t ^ 2 - Real.sin t ^ 2 := by
+      have hp := Real.sin_sq_add_cos_sq t
+      rw [Real.cos_two_mul]; linarith
+    rwa [he] at h3
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hd
+    (Continuous.intervalIntegrable (by fun_prop) _ _)]
+  rw [show (2:ℝ) * (Real.pi/2) = Real.pi by ring,
+      show (2:ℝ) * (Real.pi/2 - σ) = Real.pi - 2*σ by ring, Real.sin_pi, Real.sin_pi_sub]
+  ring
+
+/-- The control: the `(-1,-1)` convention integrates to `-σ`, a different function of `σ`. -/
+theorem layer_pin_neg (σ : ℝ) :
+    (∫ _t in (Real.pi/2 - σ)..(Real.pi/2), (-(Real.cos _t ^ 2) - Real.sin _t ^ 2)) = -σ := by
+  have h : ∀ t : ℝ, -(Real.cos t ^ 2) - Real.sin t ^ 2 = -1 := by
+    intro t; have := Real.sin_sq_add_cos_sq t; linarith
+  simp only [h]
+  rw [intervalIntegral.integral_const]
+  ring
+
+/-- The two conventions disagree for every `σ > 0`, so the zero mode does pin the sign. -/
+theorem layer_pin_separates {σ : ℝ} (h0 : 0 < σ) : -σ < -(Real.sin (2*σ) / 2) := by
+  have h := Real.sin_lt (show (0:ℝ) < 2*σ by linarith)
+  linarith
+
+end LayerPin
+
 end MovingSofa
