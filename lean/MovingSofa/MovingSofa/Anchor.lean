@@ -758,4 +758,48 @@ theorem layer_pin_separates {σ : ℝ} (h0 : 0 < σ) : -σ < -(Real.sin (2*σ) /
 
 end LayerPin
 
+section Deficit
+
+/-!
+### The deficit factorises through the tracking ratio
+
+Write `cap` and `nic` for `|C_2|` and `2|N|` at a competitor and `capS`, `nicS` for their
+values at `Σ`, so that the area is `cap - nic` and `A_R^* = capS - nicS`.  With
+
+    ρ = (nic - nicS) / (cap - capS)
+
+the deficit factorises as `(ρ - 1)(cap - capS)`.  Both factors change sign together at `Σ`,
+so the product is positive on both sides of it, and the two open statements about the area
+profile -- that it is unimodal with peak at `Σ`, and that competitors below the floor do
+not beat `Σ` -- collapse into the single claim that `ρ` crosses `1` exactly once.
+
+The sign here is worth stating carefully: it is `(ρ - 1)`, not `(1 - ρ)`.  The first draft
+of this had it backwards, which reversed every row of the table it was describing.
+-/
+
+/-- The deficit factorises through the tracking ratio. -/
+theorem deficit_factorisation {cap nic capS nicS : ℝ} (h : cap - capS ≠ 0) :
+    (capS - nicS) - (cap - nic)
+      = ((nic - nicS) / (cap - capS) - 1) * (cap - capS) := by
+  field_simp
+  ring
+
+/-- Below `Σ` the cap shrinks, so `ρ < 1` is exactly what makes the competitor lose. -/
+theorem deficit_pos_of_rho_lt_one {cap nic capS nicS : ℝ}
+    (hc : cap < capS) (hr : (nic - nicS) / (cap - capS) < 1) :
+    cap - nic < capS - nicS := by
+  have hd : cap - capS < 0 := by linarith
+  rw [div_lt_iff_of_neg hd] at hr
+  linarith
+
+/-- Above `Σ` the cap grows, and `ρ > 1` makes the competitor lose for the same reason. -/
+theorem deficit_pos_of_rho_gt_one {cap nic capS nicS : ℝ}
+    (hc : capS < cap) (hr : 1 < (nic - nicS) / (cap - capS)) :
+    cap - nic < capS - nicS := by
+  have hd : 0 < cap - capS := by linarith
+  rw [lt_div_iff₀ hd] at hr
+  linarith
+
+end Deficit
+
 end MovingSofa

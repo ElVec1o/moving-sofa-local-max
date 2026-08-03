@@ -3551,10 +3551,16 @@ cell it realises is
 \[
   \begin{array}{r|ccccc}
     c & 0.60 & 0.68 & 0.72 & 0.73 & 0.73195\\\hline
-    \lambda_{\max} & +0.1701 & -0.2520 & -0.4607 & -0.5065 & -0.5120\\
     \text{ordered} & \text{no} & \text{no} & \text{no} & \text{no} & \text{yes}
   \end{array}
 \]
+A row of top eigenvalues stood here and is withdrawn. It was produced by a form whose sign
+convention was never checked, and by an eigensolver applied to $H^{-1}D$, which is not
+symmetric even when both factors are, so one triangle was silently discarded; the values
+were out by an order. \texttt{ambi\_cell.py} now pins the convention against the zero mode
+and cross-checks against \texttt{ambi\_kcert.py}'s closed-form assembly. What survives is
+the orderedness row above, which \texttt{ambi\_cap.py} reproduces and which locates the
+floor independently.
 The sign change in orderedness between $0.73$ and $0.73195$ locates the floor
 $\sqrt3-1=0.7320508$ independently. At $c=0.60$ the form is positive, so concavity on the
 whole admissible set is \textsc{false} and that route to the complement is closed.
@@ -3566,7 +3572,7 @@ absolutely continuous radius and the atom are never conflated:
   \begin{array}{r|ccccccc}
     c & 0.40 & 0.50 & 0.60 & 0.65 & 0.70 & \sqrt3-1 & 2a_1-1\\\hline
     A_R^\ast-\max|T| & 0.0538 & 0.0244 & 0.0075 & 0.0046 & 0.0013 & 0.00042 & -0.00006\\
-    \delta^2Q\le0 & & & \text{fails} & & \text{holds} & \text{holds} & \text{holds}
+
   \end{array}
 \]
 against a rasterisation error bar of $0.0015$. If both rows stand, concavity fails only
@@ -3597,6 +3603,35 @@ realised-cell second variation anywhere in this note, and a claim about concavit
 realised cells has no referent to be tested against. Rule~0: the area row is
 \textsc{heuristic} and reproducible; the concavity row is withdrawn, and with it the
 refutation it was used to support. \texttt{ambi\_cell.py} ships the enumeration.
+
+With the second variation unavailable, the area functional itself is what is left, and it
+factorises. Write $\mathrm{cap}=|C_2|$ and $\mathrm{nic}=2|N|$, so $|T|=\mathrm{cap}-
+\mathrm{nic}$ and $A_R^\ast=\mathrm{cap}_\Sig-\mathrm{nic}_\Sig$, and set
+\[
+  \rho\ =\ \frac{\mathrm{nic}-\mathrm{nic}_\Sig}{\mathrm{cap}-\mathrm{cap}_\Sig} .
+\]
+Then
+\[
+  A_R^\ast-|T|\ =\ (\rho-1)\bigl(\mathrm{cap}-\mathrm{cap}_\Sig\bigr)
+\]
+identically, which is \texttt{deficit\_factorisation}; the two corollaries
+\texttt{deficit\_pos\_of\_rho\_lt\_one} and \texttt{deficit\_pos\_of\_rho\_gt\_one} are the
+two sides. Measured on the profile of \texttt{ambi\_profile.py}:
+\[
+  \begin{array}{r|ccccccccc}
+    \alpha_2(0) & 0.40 & 0.50 & 0.55 & 0.60 & 0.65 & 0.70 & \sqrt3-1 & 0.80 & 0.90\\\hline
+    \rho & 0.795 & 0.860 & 0.884 & 0.897 & 0.944 & 0.957 & 0.977 & 1.033 & 1.086
+  \end{array}
+\]
+Both factors change sign together at $\Sig$, so the product is positive on both sides, and
+$\rho=1$ at $\Sig$ is exactly the first-order condition rather than an extra hypothesis.
+The consequence is a reduction: Remark~\ref{rem:profile} and the complement of
+Theorem~\ref{thm:ordopt} are the same statement, namely that $\rho$ crosses $1$ exactly
+once. That is a comparison between two areas and the rates at which they move, not a
+spectral estimate, and it does not require the realised-cell second variation that has no
+verified referent. Rule~0: the factorisation is \textsc{proved} and formalised; the table
+is \textsc{heuristic}, and its rows maximise over a $26$-profile sample whose maximiser
+changes between rows, so $\rho$ is not read along one smooth family.
 \end{remark}
 
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}
