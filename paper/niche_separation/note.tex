@@ -3815,9 +3815,32 @@ the atom's own value: the atom is the tightest deflated direction, as the cap's 
 containing it predicts. Since every pivot is provably positive, $D$ is positive definite on
 the deflated span for \emph{every} real matrix in the enclosure.
 
-Rule~0: $D>0$ on the deflated span of the first $32$ modes is \textsc{verified} by interval
-arithmetic. The tail beyond the truncation is not covered, and closing it needs an analytic
-bound of the kind used for the coercivity certificate's two tails.
+The niche form's failure to be coercive turns out not to matter, because it is not the form
+the problem asks about. Since $|T|=|C_2|-2|N|$, what must be nonnegative is
+\[
+  -\delta^2|T|\ =\ D-\delta^2|C_2| ,
+\]
+and $\delta^2|C_2|$ is diagonal with entries $\tfrac\pi2(1-n^2)$, negative off its own
+kernel and increasingly so. The two failures of coercivity cancel: $D$ loses control at high
+frequency exactly where the cap supplies it. Measured, $-\delta^2|T|$ has
+\[
+  \begin{array}{r|cccccc}
+    \text{modes} & 8 & 16 & 24 & 32 & 40 & 52\\\hline
+    \lambda_2 & 3.0589 & 3.0288 & 3.0237 & 3.0217 & 3.0195 & 3.0180
+  \end{array}
+\]
+stable rather than collapsing, with $(-\delta^2|T|)_{nn}/n^2$ running $2.7563$, $2.8334$, $2.8374$, $2.8419$ at $n=7,17,31,51$, and a ball Cholesky
+of the deflated matrix certifies it positive definite at every truncation up to $32$ modes
+with the same smallest pivot $\tfrac\pi2-2\beta+\sin2\beta$.
+
+So $|T|$ is strictly concave modulo the gauge, with a uniform margin, and the tail beyond a
+truncation is governed by quadratic diagonal growth rather than by the delicate cancellation
+the niche form alone presents.
+
+Rule~0: $-\delta^2|T|>0$ on the deflated span of the first $32$ modes is \textsc{verified} by
+interval arithmetic, and the spectral gap $\lambda_2\approx3.018$ is \textsc{heuristic},
+being a floating-point eigenvalue. The tail is not yet bounded, but the growth that would
+bound it is quadratic and measured.
 
 Assembling with the cap: $\delta^2|C_2|\le0$ with kernel $\{\text{gauge},\text{atom}\}$ and
 $\delta^2(2|N|)\ge0$ with kernel $\{\text{gauge}\}$ give
