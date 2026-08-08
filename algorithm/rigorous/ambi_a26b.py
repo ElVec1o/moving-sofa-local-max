@@ -227,6 +227,39 @@ def main() -> int:
     print("  for the niche.  Rule 0: HEURISTIC.  This is a floating-point eigenvalue on a")
     print("  32-mode truncation, not a proof, and it inherits prop:V.\n")
 
+    print("  (5) the relation among the three variations\n")
+    print("      S := d(alpha_1) + d(sigma - alpha_1) = eta_F tan t + eta_K,   S(0) = 0")
+    print("      dS/dt = d(alpha_2) + tan t * d(sigma - alpha_1)\n")
+    rng2 = np.random.default_rng(7)
+    rows = [("atom", [], [1.0]), ("gauge cos t", [1.0], []), ("cos 5t", [0, 0, 1.0], []),
+            ("k=3 right", [], [0, 0, 1.0]),
+            ("random 6+6", list(rng2.normal(size=6)), list(rng2.normal(size=6)))]
+    print(f"  {'direction':<18} {'S(0)':>11} {'max|S - form|':>15} {'max|S. - RHS|':>15}")
+    ws = wd = 0.0
+    hstep = t[1] - t[0]
+    for nm, cl, cr in rows:
+        eF, dF = modes(cl, cr, t)
+        eK, dK = modes(cl, cr, t + P2)
+        w_, v_, u_ = eK - dF, eF + dK, eF * np.tan(t) + dF
+        S = w_ + u_
+        e1 = float(np.max(np.abs(S - (eF * np.tan(t) + eK))))
+        sl = slice(5, -int(0.02 * len(t)))
+        e2 = float(np.max(np.abs(np.gradient(S, hstep)[sl] - (v_ + np.tan(t) * u_)[sl])))
+        ws, wd = max(ws, e1), max(wd, e2)
+        print(f"  {nm:<18} {S[0]:11.2e} {e1:15.2e} {e2:15.2e}")
+    ok = ws < 1e-12 and wd < 1e-5
+    bad += not ok
+    print(f"\n  worst {ws:.1e} and {wd:.1e} (the second is finite-difference)"
+          f"   {'OK' if ok else 'FAIL'}")
+    print("  S(0) = 0 is the Dirichlet condition eta(pi/2) = 0, the same one that drives")
+    print("  the cap's Wirtinger bound: one boundary condition, both halves of D.\n")
+    print("  BARRIER.  D >= 0 reduces to int_{E_1} w^2 <= int_{E_2} v^2 + int_0^{pi/2} u^2.")
+    print("  Poincare on [0,beta] with S(0) = 0 gives ||S|| <= kappa ||S'||, kappa = 2beta/pi,")
+    print("  but routing w = S - u through the triangle inequality costs")
+    print("  ||w|| <= kappa||v|| + C||u|| with C = kappa tan beta + 1 >= 1, and Cauchy-Schwarz")
+    print("  would then need kappa^2 + C^2 <= 1, impossible for every kappa > 0")
+    print("  (`young_route_fails`).  The cross term must be kept, not bounded.\n")
+
     print(f"  {'ALL CHECKS PASS' if not bad else f'{bad} CHECK(S) FAILED'}")
     return 0 if not bad else 1
 

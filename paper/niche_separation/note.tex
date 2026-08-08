@@ -3774,6 +3774,22 @@ cap but contributes $\pi/2-2\beta+\sin2\beta\ge\pi/6+\sqrt3/2$ to the niche. For
 \texttt{cap\_sub\_niche\_nonpos}, \texttt{cap\_sub\_niche\_neg},
 \texttt{niche\_floor\_pos} and \texttt{atom\_strictly\_concave}.
 
+The three variations are not independent, which is where a proof would have to start.
+With $u=\delta(\sigma-\alpha_1)$, $v=\delta\alpha_2$, $w=\delta\alpha_1$,
+\[
+  S:=w+u=\eta_F\tan t+\eta_K,\qquad S(0)=0,\qquad S'=v+u\tan t ,
+\]
+the vanishing at $0$ being exactly the Dirichlet condition $\eta(\pi/2)=0$ that drives the
+cap's Wirtinger bound: one boundary condition controls both halves of $\delta^2|T|$.
+
+It does not yet close. $D\ge0$ reduces to
+$\int_{E_1^-}w^2\le\int_{E_2}v^2+\int_0^{\pi/2}u^2$, and Poincar\'e on $[0,\beta]$ with
+$S(0)=0$ gives $\|S\|\le\kappa\|S'\|$ with $\kappa=2\beta/\pi$; but routing $w=S-u$ through
+the triangle inequality costs $\|w\|\le\kappa\|v\|+C\|u\|$ with $C=\kappa\tan\beta+1\ge1$,
+and Cauchy--Schwarz would then require $\kappa^2+C^2\le1$, impossible for every $\kappa>0$
+(\texttt{young\_route\_fails}). The cross term $-2\int_{E_1^-}Su$ has to be kept rather than
+bounded.
+
 Rule~0: the left half is \textsc{proved} modulo Proposition~\ref{prop:V}, and so is the
 assembly, with the two semidefiniteness statements entering as hypotheses at the labels they
 carry. The niche form's positive semidefiniteness for $\eta_K\ne0$ is \textsc{heuristic}: a

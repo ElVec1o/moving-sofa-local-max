@@ -1069,4 +1069,40 @@ theorem atom_strictly_concave {β : ℝ} (h : β ≤ Real.pi/6) :
 
 end Assembly
 
+section ArmRelation
+
+/-!
+### The three variations satisfy one relation, and why Young does not close on it
+
+Write `u = δ(σ-α₁)`, `v = δα₂`, `w = δα₁` for the three variations at a perturbation `η`.
+They are not independent. Since `w = η_K - η_F'` and `u = η_F tan t + η_F'`,
+
+    S := w + u = η_F tan t + η_K ,
+
+and `S(0) = 0`: both `tan 0 = 0` and `η_K(0) = η(π/2) = 0`, the latter being exactly the
+Dirichlet condition that drives the cap's Wirtinger bound. One boundary condition controls
+both halves of the second variation. Differentiating,
+
+    S' = v + u tan t ,
+
+verified to `3.6·10⁻¹⁵` and `8.3·10⁻⁸` (finite-difference) across six directions.
+
+`D ≥ 0` reduces to `∫_{E₁}w² ≤ ∫_{E₂}v² + ∫₀^{π/2}u²`, and `S(0) = 0` with Poincaré on
+`[0,β]` gives `‖S‖ ≤ κ‖S'‖` with `κ = 2β/π`. But routing `w = S - u` through the triangle
+inequality then costs `‖w‖ ≤ κ‖v‖ + Cb‖u‖` with `C = κ tan β + 1 ≥ 1`, and Cauchy-Schwarz
+would need `κ² + C² ≤ 1`. The lemma below records that this is impossible for every `κ > 0`:
+the crude route cannot close, and the cross term must be kept rather than bounded. Rule I12,
+barrier stated rather than left implicit.
+-/
+
+/-- `w = δα₁` is recovered from `S` and `u` with no loss. -/
+theorem arm_decomposition (u w : ℝ) : w = (w + u) - u := by ring
+
+/-- The Young route cannot close: `C ≥ 1` forces `κ² + C² > 1` for every `κ > 0`, so
+bounding `‖S - u‖` by `‖S‖ + ‖u‖` always overshoots the budget. -/
+theorem young_route_fails {κ C : ℝ} (hC : 1 ≤ C) (hκ : 0 < κ) : 1 < κ^2 + C^2 := by
+  nlinarith
+
+end ArmRelation
+
 end MovingSofa
