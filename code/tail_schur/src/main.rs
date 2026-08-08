@@ -200,6 +200,13 @@ fn main() {
     println!("(2) the Schur complement S = A_hh - A_ht A_tt^-1 A_th\n");
     println!("{:>6} {:>7} {:>14} {:>16} {:>9}", "K", "head", "S pos def", "min pivot of S", "elapsed");
     for &k in ks.iter().filter(|&&x| x <= 192) {
+        // head >= k leaves an EMPTY tail, and solve_tail then indexes b[0].  The first
+        // version of this loop panicked on exactly that when run with head = 96.
+        if head >= k {
+            println!("{:>6} {:>7} {:>14} {:>16} {:>9}", k, 2 * head - 1,
+                     "skipped", "head >= K, no tail", "-");
+            continue;
+        }
         let n = 2 * k;
         let hd: Vec<usize> = (0..n).filter(|&i| (i % k) < head).collect();
         let tl: Vec<usize> = (0..n).filter(|&i| (i % k) >= head).collect();

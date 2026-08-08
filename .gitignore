@@ -24,3 +24,4 @@ private/
 !algorithm/rigorous/anchored_diag.json
 !algorithm/rigorous/anchored_mirr.json
 cross_K*.txt
+code/**/target/
