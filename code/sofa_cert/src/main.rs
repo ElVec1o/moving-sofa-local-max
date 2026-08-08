@@ -286,8 +286,67 @@ fn main() {
         println!("  That is a K-independent lower bound, exactly what interlacing denied to");
         println!("  the finite certificates.  It is far weaker than the measured 1.5069, but");
         println!("  it holds for the infinite form, and positivity is what the tail needs.");
-        println!("  Rule 0: rho is MEASURED here, not certified.  The argument is proved");
-        println!("  GIVEN a certified rho < 1; that bound is not yet established.");
+        println!("  Certifying rho < 1 needs BOTH ends of M's spectrum, so two Cholesky runs:");
+        println!("  I - M positive definite gives lam_max(M) < 1, and I + M positive definite");
+        println!("  gives lam_min(M) > -1.  Same rounding shift as everywhere else.\n");
+        println!("  {:>7} {:>7} {:>16} {:>16} {:>10}",
+                 "modes", "dim", "I - M pivot", "I + M pivot", "rho < 1");
+        let mut rho_cert = true;
+        for &k in ks.iter().filter(|&&x| 2 * x <= 256) {
+            let (a, m) = build(k);
+            let idx: Vec<usize> = (0..2 * k).filter(|&i| i != k).collect();
+            let mut mm = vec![0.0f64; m * m];
+            for r in 0..m {
+                for s in 0..m {
+                    let (a1r, _) = pair(idx[r], k);
+                    let (a1s, _) = pair(idx[s], k);
+                    mm[r * m + s] = -2.0 * ip(a1r, a1s, BETA);
+                }
+            }
+            for r in 0..m {
+                let dr = a[r * m + r].sqrt();
+                for s in 0..m { mm[r * m + s] /= dr; }
+            }
+            for s in 0..m {
+                let ds = a[s * m + s].sqrt();
+                for r in 0..m { mm[r * m + s] /= ds; }
+            }
+            for r in 0..m { for s in 0..r {
+                let v = 0.5 * (mm[r * m + s] + mm[s * m + r]);
+                mm[r * m + s] = v; mm[s * m + r] = v;
+            } }
+            let mut norm_inf = 0.0f64;
+            for r in 0..m {
+                let s: f64 = (0..m).map(|c| mm[r * m + c].abs()).sum();
+                if s > norm_inf { norm_inf = s; }
+            }
+            let d = 10.0 * (20.0 * (m as f64 + 1.0) * U * (1.0 + norm_inf) + 8.0 * U * norm_inf);
+            let mut minus = vec![0.0f64; m * m];
+            let mut plus = vec![0.0f64; m * m];
+            for r in 0..m { for s in 0..m {
+                minus[r * m + s] = if r == s { 1.0 - mm[r * m + s] } else { -mm[r * m + s] };
+                plus[r * m + s] = if r == s { 1.0 + mm[r * m + s] } else { mm[r * m + s] };
+            } }
+            let pm = cholesky_shifted(&minus, m, d);
+            let pp = cholesky_shifted(&plus, m, d);
+            let ok = pm.is_some() && pp.is_some();
+            rho_cert &= ok;
+            println!("  {:>7} {:>7} {:>16} {:>16} {:>10}",
+                     2 * k, m,
+                     pm.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
+                     pp.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
+                     if ok { "CERTIFIED" } else { "fails" });
+        }
+        if rho_cert {
+            println!("\n  rho < 1 is CERTIFIED at every truncation, so A41's hypothesis holds");
+            println!("  there and lam_min >= 0.649 with it.  The bound is K-independent in");
+            println!("  FORM, but the certificate is still per-truncation: what remains is a");
+            println!("  single K-free bound on rho, which the stability of 0.5774 suggests but");
+            println!("  does not prove.");
+        } else {
+            println!("\n  rho < 1 does NOT certify at every truncation above, so A41's");
+            println!("  hypothesis is not established and the bound does not follow.");
+        }
     }
 
     println!();
