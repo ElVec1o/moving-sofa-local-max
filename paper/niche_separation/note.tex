@@ -3718,8 +3718,39 @@ Rule~0: the implication is \textsc{proved} and formalised, and so are the cap's 
 every direction and the niche's convexity along the atom, \emph{conditionally on} two
 structural inputs quoted from earlier sections rather than re-derived here --- the quadratic
 form of the cap area, and the first variation of the niche. Convexity of $|N|$ in directions
-other than the atom is \textsc{conjecture}; it is the only remaining gap between this and a
-global statement.
+other than the atom is settled on half the space and open on the rest.
+
+By Proposition~\ref{prop:V} and the affineness of $\alpha_1,\alpha_2,\sigma$ in $H$, the
+second variation of the niche carries no boundary terms --- each squared integrand vanishes
+at its own moving endpoint by the definition of $E_2$ and $E_1^-$ --- and no second-order
+arm terms, so
+\[
+  D[\eta]=2\!\int_{E_2}\!(\delta\alpha_2)^2+2\!\int_0^{\pi/2}\!\bigl(\delta(\sigma-\alpha_1)\bigr)^2
+   -2\!\int_{E_1^-}\!(\delta\alpha_1)^2 ,
+\]
+with $\delta\alpha_1=\eta_K-\eta_F'$, $\delta\alpha_2=\eta_F+\eta_K'$ and
+$\delta(\sigma-\alpha_1)=\eta_F\tan t+\eta_F'$. For $\eta$ supported on $[0,\pi/2]$ this
+collapses. Expanding the middle square and integrating $4\int\eta_F\eta_F'\tan t$ by parts
+--- both boundary terms vanish, at $0$ because $\tan0=0$ and at $\pi/2$ because
+$\eta_F(\pi/2)=0$ beats the blow-up --- every term cancels except
+\[
+  D[\eta]=2\!\int_\beta^{\pi/2}\!(\eta_F')^2-2\!\int_{\pi/2-\beta}^{\pi/2}\!\eta_F^2 .
+\]
+Since $\beta\le\pi/4$ the second interval lies inside the first, so
+$\int_{\pi/2-\beta}^{\pi/2}(\eta_F')^2\le\int_\beta^{\pi/2}(\eta_F')^2$, and Poincar\'e with
+a Dirichlet end on an interval of length $\beta$ gives
+$\int\eta_F^2\le(4\beta^2/\pi^2)\int(\eta_F')^2$. Together these force $D[\eta]\ge0$ for
+every $\beta\le\pi/2$, with surplus $2(\pi^2/4\beta^2-1)\int\eta_F^2$; at $\Sig$ the factor
+$\pi^2/4\beta^2$ is $29.4$ against the $1$ it must beat. Formalised as
+\texttt{a26b\_left\_nonneg} and \texttt{a26b\_left\_margin}.
+
+Rule~0: the left half is \textsc{proved} modulo Proposition~\ref{prop:V}; the case
+$\eta_K\ne0$ is \textsc{heuristic}, sixteen directions tested without a counterexample. A
+report that $D$ can be negative was issued from a computation using two of the three terms
+of Proposition~\ref{prop:V} and is withdrawn: the omitted term is the reach, positive and
+integrated over all of $[0,\pi/2]$ while the negative term covers only $E_1^-$ of length
+$\beta$. The check that missed it exercised the atom alone, where $\eta_F=0$ makes the reach
+term vanish identically.
 \end{remark}
 
 \begin{proposition}[Beyond $\Sig$'s own cell]\label{prop:beyond}

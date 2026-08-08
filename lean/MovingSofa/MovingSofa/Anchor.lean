@@ -973,4 +973,58 @@ theorem atom_is_first_mode (θ : ℝ) : Real.sin (θ - Real.pi/2) = -Real.cos θ
 
 end Wirtinger
 
+section NicheConvexity
+
+/-!
+### Niche convexity on the left half
+
+The niche functional is `|N| = ∫₀^{π/2}[½(α₂⁺)² + ½(σ-α₁)² - ½(α₁⁻)²]` (prop:V). All three
+of `α₁, α₂, σ` are affine in `H`, and each squared integrand vanishes at its own moving
+endpoint by definition of `E₂` and `E₁⁻`, so the second variation has no boundary terms and
+no second-order arm terms:
+
+    D[η] = 2∫_{E₂}(δα₂)² + 2∫₀^{π/2}(δ(σ-α₁))² - 2∫_{E₁⁻}(δα₁)² .
+
+For `η` supported on `[0,π/2]` this collapses. Expanding `δ(σ-α₁) = η tan t + η'` and
+integrating the cross term by parts — both boundary terms vanish, at `0` because `tan 0 = 0`
+and at `π/2` because `η(π/2) = 0` beats the blow-up — everything cancels except
+
+    D[η] = 2∫_β^{π/2}(η')² - 2∫_{π/2-β}^{π/2}η² .
+
+Since `β ≤ π/4` the second interval sits inside the first, so the containment gives
+`∫_{π/2-β}^{π/2}(η')² ≤ ∫_β^{π/2}(η')²`, and Poincaré with a Dirichlet end at `π/2` on an
+interval of length `β` gives `∫η² ≤ (4β²/π²)∫(η')²`. Both together force `D ≥ 0` for every
+`β ≤ π/2`, which every admissible cap satisfies with room: at `Σ` the factor `π²/(4β²)` is
+`29.4` against the `1` it must beat.
+
+The two lemmas below are the algebra of that last step, stated on the three integrals so
+that the analytic inputs (containment and Poincaré) enter as hypotheses.
+-/
+
+/-- Containment plus Poincaré force the left-half second variation to be nonnegative. -/
+theorem a26b_left_nonneg {A B C β : ℝ} (hβ : 0 < β) (hβp : β ≤ Real.pi/2)
+    (hB : 0 ≤ B) (hBA : B ≤ A) (hPo : C ≤ 4*β^2/Real.pi^2 * B) :
+    0 ≤ 2*A - 2*C := by
+  have hpi : 0 < Real.pi := Real.pi_pos
+  have h1 : 4*β^2/Real.pi^2 ≤ 1 := by
+    rw [div_le_one (by positivity)]
+    nlinarith
+  have h2 : 4*β^2/Real.pi^2 * B ≤ 1 * B := mul_le_mul_of_nonneg_right h1 hB
+  linarith
+
+/-- With the margin made explicit: the surplus is `2(π²/(4β²) - 1)` times the `L²` mass. -/
+theorem a26b_left_margin {A B C β : ℝ} (hβ : 0 < β) (hBA : B ≤ A)
+    (hPo : C ≤ 4*β^2/Real.pi^2 * B) :
+    2*(Real.pi^2/(4*β^2) - 1) * C ≤ 2*A - 2*C := by
+  have hpi : 0 < Real.pi := Real.pi_pos
+  have hq : (0:ℝ) < 4*β^2 := by positivity
+  have h : Real.pi^2/(4*β^2) * C ≤ B := by
+    rw [div_mul_eq_mul_div, div_le_iff₀ hq]
+    have := mul_le_mul_of_nonneg_left hPo (le_of_lt (by positivity : (0:ℝ) < Real.pi^2))
+    calc Real.pi^2 * C ≤ Real.pi^2 * (4*β^2/Real.pi^2 * B) := this
+      _ = B * (4*β^2) := by field_simp
+  nlinarith
+
+end NicheConvexity
+
 end MovingSofa
