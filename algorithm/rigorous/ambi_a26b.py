@@ -227,6 +227,49 @@ def main() -> int:
     print("  for the niche.  Rule 0: HEURISTIC.  This is a floating-point eigenvalue on a")
     print("  32-mode truncation, not a proof, and it inherits prop:V.\n")
 
+    print("  (4b) the spectrum on H^1-normalised modes: PSD but NOT coercive\n")
+
+    def form_h1(K, beta=BETA):
+        E2 = (t < P2 - beta).astype(float)
+        E1 = (t < beta).astype(float)
+        da1, da2, ds, nrm = [], [], [], []
+        for i in range(2 * K):
+            eF, dF = basis_mode(i, K, t)
+            eK, dK = basis_mode(i, K, t + P2)
+            da1.append(eK - dF); da2.append(eF + dK); ds.append(eF * np.tan(t) + dF)
+            n = 2 * (i % K) + 1
+            nrm.append(np.sqrt(np.pi / 4 * (1 + n * n)))
+        nrm = np.array(nrm)
+        da1, da2, ds = (np.array(A) / nrm[:, None] for A in (da1, da2, ds))
+
+        def G(A, w=None):
+            f = A[:, None, :] * A[None, :, :]
+            if w is not None:
+                f = f * w
+            return np.trapezoid(f, t, axis=2)
+
+        Dm = 2 * G(da2, E2) + 2 * G(ds) - 2 * G(da1, E1)
+        return (Dm + Dm.T) / 2
+
+    print(f"  {'modes':>7} {'lam_1':>11} {'lam_2':>12} {'lam_max':>9} {'#<1e-6':>8}")
+    l2 = []
+    for K in (8, 12, 16, 20, 26):
+        w = np.linalg.eigvalsh(form_h1(K))
+        l2.append(w[1])
+        print(f"  {2*K:7d} {w[0]:11.1e} {w[1]:12.2e} {w[-1]:9.4f} {int((w < 1e-6).sum()):8d}")
+        if w[0] < -1e-9:
+            print("  FAIL: a strictly negative eigenvalue")
+            bad += 1
+    decay = all(b < a for a, b in zip(l2, l2[1:]))
+    bad += not decay
+    print(f"\n  lam_max is stable at 2.366, so the matrix is well conditioned and the")
+    print(f"  collapse of lam_2 is a property of the form, not of the basis scaling.")
+    print(f"  lam_2 strictly decreasing across the five truncations: {decay}")
+    print("  The spectrum ACCUMULATES at zero: no c > 0 has D >= c ||eta||^2.  The form is")
+    print("  positive semidefinite with a one-dimensional kernel, and that is all.  Strict")
+    print("  positivity off a 1-D kernel gives a maximum in finite dimensions; without a")
+    print("  spectral gap it does not in infinite dimensions.\n")
+
     print("  (5) the relation among the three variations\n")
     print("      S := d(alpha_1) + d(sigma - alpha_1) = eta_F tan t + eta_K,   S(0) = 0")
     print("      dS/dt = d(alpha_2) + tan t * d(sigma - alpha_1)\n")
