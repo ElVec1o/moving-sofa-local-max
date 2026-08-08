@@ -98,6 +98,58 @@ fn p_u_full(i: usize, j: usize, k: usize) -> f64 {
     2.0 * (ni * nj * cc(ni, nj, p2()) - ss(ni, nj, p2()))
 }
 
+/// Cyclic Jacobi eigendecomposition of a symmetric matrix.  Returns (eigenvalues ascending,
+/// eigenvectors as columns).  No crates; reliable at these sizes and needed because the
+/// criterion has to be posed on the quotient by ker P, which requires P's spectrum.
+fn jacobi(a_in: &[f64], n: usize) -> (Vec<f64>, Vec<f64>) {
+    let mut a = a_in.to_vec();
+    let mut v = vec![0.0f64; n * n];
+    for i in 0..n { v[i * n + i] = 1.0; }
+    for _sweep in 0..100 {
+        let mut off = 0.0;
+        for i in 0..n { for j in i + 1..n { off += a[i * n + j] * a[i * n + j]; } }
+        if off.sqrt() < 1e-13 { break; }
+        for p in 0..n {
+            for q in p + 1..n {
+                let apq = a[p * n + q];
+                if apq.abs() < 1e-300 { continue; }
+                let theta = (a[q * n + q] - a[p * n + p]) / (2.0 * apq);
+                let t = theta.signum() / (theta.abs() + (theta * theta + 1.0).sqrt());
+                let c = 1.0 / (t * t + 1.0).sqrt();
+                let s = t * c;
+                for k in 0..n {
+                    let akp = a[k * n + p];
+                    let akq = a[k * n + q];
+                    a[k * n + p] = c * akp - s * akq;
+                    a[k * n + q] = s * akp + c * akq;
+                }
+                for k in 0..n {
+                    let apk = a[p * n + k];
+                    let aqk = a[q * n + k];
+                    a[p * n + k] = c * apk - s * aqk;
+                    a[q * n + k] = s * apk + c * aqk;
+                }
+                for k in 0..n {
+                    let vkp = v[k * n + p];
+                    let vkq = v[k * n + q];
+                    v[k * n + p] = c * vkp - s * vkq;
+                    v[k * n + q] = s * vkp + c * vkq;
+                }
+            }
+        }
+    }
+    let mut w: Vec<f64> = (0..n).map(|i| a[i * n + i]).collect();
+    let mut ord: Vec<usize> = (0..n).collect();
+    ord.sort_by(|&x, &y| w[x].partial_cmp(&w[y]).unwrap());
+    let ws: Vec<f64> = ord.iter().map(|&i| w[i]).collect();
+    let mut vs = vec![0.0f64; n * n];
+    for (c, &o) in ord.iter().enumerate() {
+        for r in 0..n { vs[r * n + c] = v[r * n + o]; }
+    }
+    w = ws;
+    (w, vs)
+}
+
 /// Cholesky in place; false if a pivot is not positive.
 fn chol(a: &mut [f64], n: usize) -> bool {
     for i in 0..n {
@@ -190,6 +242,46 @@ fn main() {
                     // quadrature as N because the tan identity is invalid on that interval
                     pmat[a * d + b] = p_entry(i, j, k) + p_u_full(i, j, k) - ubeta[a * d + b];
                 }
+            }
+            // The quotient by ker P.  P is PSD with a growing kernel, so lam_max(N,P) is not
+            // defined on the whole space.  Split P's spectrum at a relative threshold, keep
+            // the range, and pose the criterion there; separately, D >= 0 forces N <= 0 on
+            // ker P, which is checked rather than assumed.
+            if res_i == 0 {
+                let (pw, pv) = jacobi(&pmat, d);
+                let pmax = pw[d - 1].max(1e-300);
+                let cut = 1e-10 * pmax;
+                let ker: Vec<usize> = (0..d).filter(|&i| pw[i] <= cut).collect();
+                let rng: Vec<usize> = (0..d).filter(|&i| pw[i] > cut).collect();
+                // N restricted to ker P must be negative semidefinite
+                let mut worst_ker = f64::NEG_INFINITY;
+                for &c1 in &ker {
+                    let mut q = 0.0;
+                    for r in 0..d { for s in 0..d { q += pv[r * d + c1] * nmat[r * d + s] * pv[s * d + c1]; } }
+                    if q > worst_ker { worst_ker = q; }
+                }
+                // the criterion on the range: max over range directions of (x'Nx)/(x'Px)
+                let mut worst_rng = f64::NEG_INFINITY;
+                for &c1 in &rng {
+                    let mut qn = 0.0;
+                    let mut qp = 0.0;
+                    for r in 0..d {
+                        for s in 0..d {
+                            qn += pv[r * d + c1] * nmat[r * d + s] * pv[s * d + c1];
+                            qp += pv[r * d + c1] * pmat[r * d + s] * pv[s * d + c1];
+                        }
+                    }
+                    if qp > 0.0 && qn / qp > worst_rng { worst_rng = qn / qp; }
+                }
+                // worst_rng iterates over P's EIGENVECTORS, so it is the largest DIAGONAL
+                // entry of the restricted pencil, not its largest eigenvalue.  It is a lower
+                // bound on lam_max restricted to range(P), and labelled as such.  Computing
+                // the true restricted lam_max needs a second eigensolve on the restriction.
+                println!("  quotient at {:>4} modes: dim ker P = {:<3}  max N on ker P = {:>11.3e}  \
+                          max diag of restricted pencil = {:>8.4}",
+                         n2, ker.len(),
+                         if ker.is_empty() { 0.0 } else { worst_ker },
+                         worst_rng);
             }
             if !chol(&mut pmat, d) {
                 // P = 2 int_E2 v^2 + 2 int_[beta,pi/2] u^2 is a sum of two PSD forms and is
