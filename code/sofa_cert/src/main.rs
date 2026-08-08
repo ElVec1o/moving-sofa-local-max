@@ -339,6 +339,77 @@ fn main() {
             println!("  is doing something the sketch ignores.");
         }
         println!();
+        println!("  Certify rho < 0.7 at beta = pi/6, the largest admissible beta.  Both ends\n  again: 0.7 I - M and 0.7 I + M positive definite, same rounding shift.\n");
+        println!("  {:>7} {:>7} {:>18} {:>18} {:>11}",
+                 "modes", "dim", "0.7I - M pivot", "0.7I + M pivot", "rho < 0.7");
+        let b6 = std::f64::consts::PI / 6.0;
+        let mut cert7 = true;
+        for &kb in [16usize, 32, 64].iter() {
+            let n2 = 2 * kb;
+            let idx: Vec<usize> = (0..n2).filter(|&i| i != kb).collect();
+            let m = idx.len();
+            let mut aa = vec![0.0f64; m * m];
+            for r in 0..m { for c in 0..m {
+                let (a1r, a2r) = pair(idx[r], kb);
+                let (a1c, a2c) = pair(idx[c], kb);
+                let mut v = 2.0 * ip(a2r, a2c, p2() - b6) - 2.0 * ip(a1r, a1c, b6);
+                if (freq(idx[r], kb) - freq(idx[c], kb)).abs() < 1e-12
+                    && ((idx[r] < kb) == (idx[c] < kb)) {
+                    let n = freq(idx[r], kb);
+                    v += p2() * (n * n - 1.0);
+                    if idx[r] < kb { v += p2() * (n * n - 1.0); }
+                }
+                aa[r * m + c] = v;
+            } }
+            let mut g = vec![0.0f64; m * m];
+            for r in 0..m { for s in 0..m {
+                let (a1r, _) = pair(idx[r], kb);
+                let (a1s, _) = pair(idx[s], kb);
+                g[r * m + s] = 2.0 * ip(a1r, a1s, b6) / (aa[r * m + r] * aa[s * m + s]).sqrt();
+            } }
+            for r in 0..m { for s in 0..r {
+                let v = 0.5 * (g[r * m + s] + g[s * m + r]);
+                g[r * m + s] = v; g[s * m + r] = v;
+            } }
+            let mut ninf = 0.0f64;
+            for r in 0..m { let s: f64 = (0..m).map(|c| g[r * m + c].abs()).sum(); if s > ninf { ninf = s; } }
+            let d = 10.0 * (20.0 * (m as f64 + 1.0) * U * (0.7 + ninf) + 8.0 * U * ninf);
+            let mut mi = vec![0.0f64; m * m];
+            let mut pl = vec![0.0f64; m * m];
+            for r in 0..m { for s in 0..m {
+                mi[r * m + s] = if r == s { 0.7 - g[r * m + s] } else { -g[r * m + s] };
+                pl[r * m + s] = if r == s { 0.7 + g[r * m + s] } else { g[r * m + s] };
+            } }
+            let pm = cholesky_shifted(&mi, m, d);
+            let pp = cholesky_shifted(&pl, m, d);
+            let ok = pm.is_some() && pp.is_some();
+            cert7 &= ok;
+            println!("  {:>7} {:>7} {:>18} {:>18} {:>11}", n2, m,
+                     pm.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
+                     pp.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
+                     if ok { "CERTIFIED" } else { "fails" });
+        }
+        if cert7 {
+            let fb6 = std::f64::consts::PI / 6.0 + 3.0f64.sqrt() / 2.0;
+            println!("\n  rho < 0.7 CERTIFIED at beta = pi/6, so with lam_min >= (1-rho) f(beta)");
+            println!("  and f(pi/6) = {:.6}, lam_min >= {:.6} > 0 at the extreme beta.",
+                     fb6, 0.3 * fb6);
+            println!("  Still per-truncation, and still assuming rho is monotone in beta.");
+            println!();
+            println!("  AND THE MARGIN IS ERODING.  The 0.7I - M pivot runs 0.268678,");
+            println!("  0.239563, 0.180187 at 32, 64 and 128 modes, with decrements 0.029 then");
+            println!("  0.059 -- growing, not shrinking.  Unlike the f(beta) pivot and the");
+            println!("  0.7I + M pivot, both of which are K-independent to six digits, this one");
+            println!("  moves.  Extrapolating, 0.7 may not survive much past 256 modes, and the");
+            println!("  right reading is that rho(pi/6) sits close to 0.7 rather than safely");
+            println!("  below it.  A larger threshold would certify with room; 0.7 was chosen");
+            println!("  before this column was looked at.");
+        } else {
+            println!("\n  rho < 0.7 does not certify at beta = pi/6, so the bound at the");
+            println!("  extreme beta is not established.");
+        }
+
+        println!();
         println!("  How does rho depend on beta?  Identifying the functional form says which\n  classical frame bound is the one to quote.\n");
         println!("  {:>9} {:>10} {:>12} {:>12} {:>12}",
                  "beta", "2 beta/pi", "rho(beta)", "rho/(2b/pi)", "sqrt(2b/pi)");
