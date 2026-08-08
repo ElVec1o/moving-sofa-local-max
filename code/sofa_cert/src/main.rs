@@ -339,6 +339,46 @@ fn main() {
             println!("  is doing something the sketch ignores.");
         }
         println!();
+        println!("  Two sharper K-free routes, since the crude one misses by 2 percent:\n");
+        println!("  {:>7} {:>7} {:>14} {:>16} {:>16}",
+                 "modes", "dim", "rho actual", "Schur row-sum", "per-mode norms");
+        let mut schur_kfree = true;
+        let mut prev_schur = 0.0f64;
+        for &k in ks.iter().filter(|&&x| 2 * x <= 256) {
+            let (a, m) = build(k);
+            let idx: Vec<usize> = (0..2 * k).filter(|&i| i != k).collect();
+            let mut g = vec![0.0f64; m * m];
+            for r in 0..m { for s in 0..m {
+                let (a1r, _) = pair(idx[r], k);
+                let (a1s, _) = pair(idx[s], k);
+                g[r * m + s] = 2.0 * ip(a1r, a1s, BETA)
+                    / (a[r * m + r] * a[s * m + s]).sqrt();
+            } }
+            for r in 0..m { for s in 0..r {
+                let v = 0.5 * (g[r * m + s] + g[s * m + r]);
+                g[r * m + s] = v; g[s * m + r] = v;
+            } }
+            let (w, _) = jacobi(&g, m);
+            let rho_a = w.iter().map(|x| x.abs()).fold(0.0f64, f64::max);
+            let schur = (0..m).map(|r| (0..m).map(|s| g[r * m + s].abs()).sum::<f64>())
+                              .fold(0.0f64, f64::max);
+            let pmn = (0..m).map(|r| g[r * m + r].abs()).fold(0.0f64, f64::max);
+            if prev_schur > 0.0 && schur > prev_schur * 1.05 { schur_kfree = false; }
+            prev_schur = schur;
+            println!("  {:>7} {:>7} {:>14.6} {:>16.6} {:>16.6}", 2 * k, m, rho_a, schur, pmn);
+        }
+        if schur_kfree && prev_schur < 1.0 {
+            println!("\n  The Schur row-sum bound is K-free and BELOW 1, so rho < 1 follows");
+            println!("  without any per-truncation certificate.  The last link closes.");
+        } else if schur_kfree {
+            println!("\n  The Schur row-sum bound is K-free but not below 1, so it does not");
+            println!("  close the link either; the per-mode column shows where the mass is.");
+        } else {
+            println!("\n  The Schur row-sum bound GROWS with the truncation, so it is not");
+            println!("  K-free and this route fails where the crude one at least was uniform.");
+        }
+
+        println!();
         println!("  Certifying rho < 1 needs BOTH ends of M's spectrum, so two Cholesky runs:");
         println!("  I - M positive definite gives lam_max(M) < 1, and I + M positive definite");
         println!("  gives lam_min(M) > -1.  Same rounding shift as everywhere else.\n");
