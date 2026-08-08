@@ -339,6 +339,44 @@ fn main() {
             println!("  is doing something the sketch ignores.");
         }
         println!();
+        println!("  How does rho depend on beta?  Identifying the functional form says which\n  classical frame bound is the one to quote.\n");
+        println!("  {:>9} {:>10} {:>12} {:>12} {:>12}",
+                 "beta", "2 beta/pi", "rho(beta)", "rho/(2b/pi)", "sqrt(2b/pi)");
+        let kb = 64usize;
+        for &bb in [0.05f64, 0.10, 0.20, BETA, 0.40, 0.5236].iter() {
+            let n2 = 2 * kb;
+            let idx: Vec<usize> = (0..n2).filter(|&i| i != kb).collect();
+            let m = idx.len();
+            let mut aa = vec![0.0f64; m * m];
+            for r in 0..m { for c in 0..m {
+                let (a1r, a2r) = pair(idx[r], kb);
+                let (a1c, a2c) = pair(idx[c], kb);
+                let mut v = 2.0 * ip(a2r, a2c, p2() - bb) - 2.0 * ip(a1r, a1c, bb);
+                if (freq(idx[r], kb) - freq(idx[c], kb)).abs() < 1e-12
+                    && ((idx[r] < kb) == (idx[c] < kb)) {
+                    let n = freq(idx[r], kb);
+                    v += p2() * (n * n - 1.0);
+                    if idx[r] < kb { v += p2() * (n * n - 1.0); }
+                }
+                aa[r * m + c] = v;
+            } }
+            let mut g = vec![0.0f64; m * m];
+            for r in 0..m { for s in 0..m {
+                let (a1r, _) = pair(idx[r], kb);
+                let (a1s, _) = pair(idx[s], kb);
+                g[r * m + s] = 2.0 * ip(a1r, a1s, bb) / (aa[r * m + r] * aa[s * m + s]).sqrt();
+            } }
+            for r in 0..m { for s in 0..r {
+                let v = 0.5 * (g[r * m + s] + g[s * m + r]);
+                g[r * m + s] = v; g[s * m + r] = v;
+            } }
+            let (w, _) = jacobi(&g, m);
+            let rr = w.iter().map(|x| x.abs()).fold(0.0f64, f64::max);
+            let frac = 2.0 * bb / std::f64::consts::PI;
+            println!("  {:>9.4} {:>10.4} {:>12.6} {:>12.4} {:>12.4}",
+                     bb, frac, rr, rr / frac, frac.sqrt());
+        }
+        println!();
         println!("  Two sharper K-free routes, since the crude one misses by 2 percent:\n");
         println!("  {:>7} {:>7} {:>14} {:>16} {:>16}",
                  "modes", "dim", "rho actual", "Schur row-sum", "per-mode norms");
