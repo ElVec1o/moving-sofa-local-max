@@ -336,6 +336,43 @@ def main() -> int:
     print("  would then need kappa^2 + C^2 <= 1, impossible for every kappa > 0")
     print("  (`young_route_fails`).  The cross term must be kept, not bounded.\n")
 
+    print("  (6) the S-coordinates: why every dominance test failed\n")
+    print("  Substituting w = S - u is an identity:")
+    print("    D = 2 int_E2 v^2 + 2 int_[beta,pi/2] u^2 + 4 int_E1 S u - 2 int_E1 S^2")
+    print("  and the u^2 budget on E_1 cancels EXACTLY.  What that buys is the growth rate")
+    print("  of the negative term.\n")
+    E1m = t < BETA
+    E2m = t < P2 - BETA
+    print(f"  {'block':>6} {'n':>5} {'-2 int_E1 S^2':>15} {'-2 int_E1 w^2':>15} {'2 int u^2':>12}")
+    negS, negW = [], []
+    for blk, mk in (("L", lambda n: ([0.0] * ((n - 1) // 2) + [1.0], [])),
+                    ("R", lambda n: ([], [0.0] * ((n - 1) // 2) + [1.0]))):
+        for n in (5, 21, 81):
+            cl, cr = mk(n)
+            eF, dF = modes(cl, cr, t)
+            eK, dK = modes(cl, cr, t + P2)
+            w_ = eK - dF
+            u_ = eF * np.tan(t) + dF
+            S_ = w_ + u_
+            ns = -2 * float(np.trapezoid(np.where(E1m, S_ * S_, 0.0), t))
+            nw = -2 * float(np.trapezoid(np.where(E1m, w_ * w_, 0.0), t))
+            pu = 2 * float(np.trapezoid(np.where(~E1m, u_ * u_, 0.0), t))
+            if blk == "L":
+                negS.append(abs(ns))
+                negW.append(abs(nw))
+            print(f"  {blk:>6} {n:5d} {ns:15.6f} {nw:15.2f} {pu:12.2f}")
+    grewS = max(negS) / min(negS) < 5.0
+    grewW = max(negW) / min(negW) > 100.0
+    bad += not (grewS and grewW)
+    print(f"\n  |-2 int_E1 w^2| grows by {max(negW)/min(negW):.0f}x from n = 5 to 81;")
+    print(f"  |-2 int_E1 S^2| changes by only {max(negS)/min(negS):.1f}x.")
+    print("  S = eta_F tan t + eta_K carries no derivative, so it has no factor of n, while")
+    print("  w = eta_K - eta_F' does.  The negative term is therefore UNIFORMLY BOUNDED in")
+    print("  the S-coordinates while the positive terms grow like n^2.  Plain and weighted")
+    print("  dominance both failed because they were applied in the w-coordinates, where")
+    print("  the negative term is as large as the positive ones and cancellation is")
+    print("  unavoidable.  Rule 0: this is the mechanism, not yet the estimate.\n")
+
     print(f"  {'ALL CHECKS PASS' if not bad else f'{bad} CHECK(S) FAILED'}")
     return 0 if not bad else 1
 

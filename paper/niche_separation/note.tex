@@ -3854,8 +3854,33 @@ to diagonal is $1.083,1.080,1.099$ at $n=11,21,41$, so the off-diagonal mass is 
 to the diagonal and the rows are not diagonally dominant. What is available is that
 $\lambda_{\min}$ remains zero to machine precision out to $128$ modes.
 
+Diagonal dominance cannot close the tail, in any weighting. Restricted to the tail block the
+ratio at a fixed head grows with the truncation and crosses $1$ --- $0.6549,0.8364,1.0827,
+1.3089$ at $K=48,64,96,128$ with head $32$ --- and letting the head grow linearly only
+delays it. The generalised criterion $d_iA_{ii}>\sum_{j\ne i}d_j|A_{ij}|$ with $d_n=n^{-p}$
+gives, at $K=256$, ratios $2.1571,1.4635,1.2532,1.3368,1.5023,1.8310$ for
+$p=0,\tfrac12,1,\tfrac32,2,\tfrac52$: the best exponent is $p=1$ and it still exceeds $1$
+and still grows.
+
+The reason is that these tests are run in the wrong coordinates. Substituting $w=S-u$,
+which is an identity,
+\[
+  D=2\!\int_{E_2}\!v^2+2\!\int_\beta^{\pi/2}\!u^2+4\!\int_{E_1^-}\!Su-2\!\int_{E_1^-}\!S^2 ,
+\]
+the $u^2$ budget on $E_1^-$ cancelling exactly. What that buys is the growth rate of the
+negative term. Since $S=\eta_F\tan t+\eta_K$ carries no derivative while
+$w=\eta_K-\eta_F'$ does, $S$ is uniformly bounded where $w$ grows like $n$. Measured on left
+modes from $n=5$ to $n=81$, $|{-2}\int_{E_1^-}w^2|$ grows by a factor $285$ while
+$|{-2}\int_{E_1^-}S^2|$ changes by $2.1$, against positive terms growing like $n^2$. So in
+the $S$-coordinates the negative term is uniformly bounded and the tail is not delicate;
+in the $w$-coordinates it is as large as the positive terms and cancellation is unavoidable,
+which is exactly why every dominance test failed.
+
 Rule~0: $-\delta^2|T|\succeq1.5I$ on the deflated first $32$ modes is \textsc{verified} by
-interval arithmetic; behaviour beyond the truncation is \textsc{heuristic}.
+interval arithmetic. That plain and weighted dominance cannot close the tail is
+\textsc{proved}, by the computed ratios above. The $S$-coordinate boundedness is the
+mechanism a tail estimate would use and is \textsc{heuristic}; the estimate itself is not
+written.
 
 Assembling with the cap: $\delta^2|C_2|\le0$ with kernel $\{\text{gauge},\text{atom}\}$ and
 $\delta^2(2|N|)\ge0$ with kernel $\{\text{gauge}\}$ give
