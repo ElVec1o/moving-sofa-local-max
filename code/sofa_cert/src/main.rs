@@ -225,6 +225,40 @@ fn main() {
     }
 
     println!();
+    println!("Is the spectrum below a threshold FINITE?  Weyl says it must be.\n");
+    println!("-d2|T| is a diagonal operator growing like 2.84 n^2 plus a perturbation");
+    println!("supported on E_1 = [0, beta].  If that perturbation is compact the essential");
+    println!("spectrum is that of the diagonal, so only finitely many eigenvalues lie below");
+    println!("any threshold, and the count must STOP growing with the truncation.\n");
+    println!("{:>7} {:>7} {:>9} {:>9} {:>9} {:>9} {:>14}",
+             "modes", "dim", "<2", "<5", "<20", "<100", "lam_min");
+    let mut counts: Vec<(usize, usize, usize, usize, usize)> = Vec::new();
+    for &k in ks.iter().filter(|&&x| 2 * x <= 256) {
+        let (a, m) = build(k);
+        let (w, _) = jacobi(&a, m);
+        let c2 = w.iter().filter(|&&x| x < 2.0).count();
+        let c5 = w.iter().filter(|&&x| x < 5.0).count();
+        let c20 = w.iter().filter(|&&x| x < 20.0).count();
+        let c100 = w.iter().filter(|&&x| x < 100.0).count();
+        counts.push((2 * k, c2, c5, c20, c100));
+        println!("{:>7} {:>7} {:>9} {:>9} {:>9} {:>9} {:>14.6}",
+                 2 * k, m, c2, c5, c20, c100, w[0]);
+    }
+    let stable_low = counts.windows(2).all(|p| p[0].1 == p[1].1 && p[0].2 == p[1].2);
+    if stable_low {
+        println!("\n  The counts below 2 and below 5 STOP GROWING while the dimension");
+        println!("  quadruples.  That is the signature Weyl predicts: the E_1 perturbation is");
+        println!("  compact against a diagonal going to infinity, so the spectrum is discrete");
+        println!("  and only finitely many eigenvalues sit below any threshold.  Those are");
+        println!("  exactly the ones a finite truncation already sees, which is what bridges");
+        println!("  the gap A39 opened between finite certificates and the infinite form.");
+    } else {
+        println!("\n  The low counts keep GROWING with the dimension, so the spectrum below");
+        println!("  those thresholds does not look finite and the compactness route does not");
+        println!("  apply as stated.");
+    }
+
+    println!();
     println!("Can a finite-K certificate ever close the tail?\n");
     println!("entry(i,j,k) depends on k only through freq and is_left, so indexed by");
     println!("(side, frequency) the entries do not depend on k at all.  Checking that:");
