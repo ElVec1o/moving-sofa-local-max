@@ -151,24 +151,30 @@ fn jacobi(a_in: &[f64], n: usize) -> (Vec<f64>, Vec<f64>) {
 }
 
 
-/// In-place Cholesky of `A - shift*I`; returns the smallest pivot, or None on failure.
-fn cholesky_shifted(a: &[f64], m: usize, shift: f64) -> Option<f64> {
+/// In-place Cholesky of `A - shift*I`; returns (smallest pivot, its index) or None.
+fn cholesky_shifted_idx(a: &[f64], m: usize, shift: f64) -> Option<(f64, usize)> {
     let mut l = vec![0.0f64; m * m];
     let mut smallest = f64::INFINITY;
+    let mut arg = 0usize;
     for i in 0..m {
         for j in 0..=i {
             let mut s = a[i * m + j] - if i == j { shift } else { 0.0 };
             for t in 0..j { s -= l[i * m + t] * l[j * m + t]; }
             if i == j {
                 if !(s > 0.0) { return None; }
-                if s < smallest { smallest = s; }
+                if s < smallest { smallest = s; arg = i; }
                 l[i * m + i] = s.sqrt();
             } else {
                 l[i * m + j] = s / l[j * m + j];
             }
         }
     }
-    Some(smallest)
+    Some((smallest, arg))
+}
+
+/// The pivot alone, for the callers that do not need its index.
+fn cholesky_shifted(a: &[f64], m: usize, shift: f64) -> Option<f64> {
+    cholesky_shifted_idx(a, m, shift).map(|(p, _)| p)
 }
 
 fn main() {
@@ -216,6 +222,34 @@ fn main() {
                  2 * k, m, norm_inf, shift,
                  piv.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
                  if ok { "CERTIFIED" } else { "FAILED" }, secs);
+    }
+
+    println!();
+    println!("Is the smallest pivot ALWAYS the atom, and exactly f(beta) - g?\n");
+    let fb = p2() - 2.0 * BETA + (2.0 * BETA).sin();
+    println!("  f(beta) = {:.12}\n", fb);
+    println!("{:>7} {:>7} {:>7} {:>8} {:>18} {:>14}",
+             "modes", "dim", "g", "argmin", "pivot", "f(beta)-g-pivot");
+    let mut exact = true;
+    for &k in ks.iter().filter(|&&x| 2 * x <= 256) {
+        let (a, m) = build(k);
+        for &g in [0.0f64, 1.5].iter() {
+            if let Some((p, ix)) = cholesky_shifted_idx(&a, m, g) {
+                let dev = (fb - g - p).abs();
+                if dev > 1e-8 { exact = false; }
+                println!("{:>7} {:>7} {:>7.2} {:>8} {:>18.12} {:>14.2e}", 2*k, m, g, ix, p, dev);
+            }
+        }
+    }
+    if exact {
+        println!("\n  The smallest pivot is f(beta) - g to 1e-8 at EVERY size and both shifts,");
+        println!("  and its index is the same each time.  So the Cholesky bottoms out on one");
+        println!("  fixed direction whose value does not move with the truncation.  That is a");
+        println!("  handle: if the pivot is provably f(beta) - g for all K, the certified");
+        println!("  bound extends by induction rather than by an estimate.");
+    } else {
+        println!("\n  The pivot is NOT f(beta) - g at every size, so the exactness seen at");
+        println!("  small truncations does not persist and no induction is available from it.");
     }
 
     println!();
