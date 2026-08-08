@@ -201,6 +201,7 @@ fn main() {
              "modes", "dim", "lam_max(N,P)", "at half res", "verdict", "secs");
 
     let mut prev_ok = true;
+    let mut lam_hi = 0.0f64;
     for k in [4usize, 8, 16, 32, 64].iter().cloned().filter(|&x| 2 * x <= max_modes.max(8)) {
         let t0 = Instant::now();
         let n2 = 2 * k;
@@ -300,6 +301,7 @@ fn main() {
                 }
                 let (mw, _) = jacobi(&mres, mr);
                 let lam_restricted = mw[mr - 1];
+                if lam_restricted > lam_hi { lam_hi = lam_restricted; }
                 println!("  quotient at {:>4} modes: dim ker P = {:<3}  max N on ker P = {:>11.3e}  \
                           diag {:>7.4}  TRUE lam_max on range(P) = {:>8.4}",
                          n2, ker.len(),
@@ -349,17 +351,23 @@ fn main() {
     }
 
     println!();
-    println!("  THE MARGIN DOES NOT SURVIVE.  Restricted to range(P) the true lam_max runs");
-    println!("  0.1620, 0.5927, 0.9994, 0.9997, 1.0000 at 8, 16, 32, 64, 128 modes: it stays");
-    println!("  at or below 1, which is consistent with D >= 0 and with the certificate, but");
-    println!("  it SATURATES at 1 rather than sitting below it.  So the S-coordinate route");
-    println!("  confirms D >= 0 and gives no uniform margin, which is what extending past a");
-    println!("  truncation would require.");
-    println!();
-    println!("  The diagonal of the same restricted pencil is 0.0507, 0.1286, 0.0961, 0.0764,");
-    println!("  0.0832 -- an order of magnitude smaller and flat.  A previous round read that");
-    println!("  as the margin surviving.  It is a lower bound on lam_max and nothing more;");
-    println!("  the off-diagonal mass is what carries the value to 1.");
+    let saturates = lam_hi >= 0.99;
+    if saturates {
+        println!("  THE MARGIN DOES NOT SURVIVE.  Restricted to range(P) the true lam_max runs");
+        println!("  0.1620, 0.5927, 0.9994, 0.9997, 1.0000 at 8, 16, 32, 64, 128 modes: it stays");
+        println!("  at or below 1, which is consistent with D >= 0 and with the certificate, but");
+        println!("  it SATURATES at 1 rather than sitting below it.  So the S-coordinate route");
+        println!("  confirms D >= 0 and gives no uniform margin, which is what extending past a");
+        println!("  truncation would require.");
+        println!();
+        println!("  The diagonal of the same restricted pencil is 0.0507, 0.1286, 0.0961, 0.0764,");
+        println!("  0.0832 -- an order of magnitude smaller and flat.  A previous round read that");
+        println!("  as the margin surviving.  It is a lower bound on lam_max and nothing more;");
+        println!("  the off-diagonal mass is what carries the value to 1.");
+    } else {
+        println!("  lam_max stays strictly below 1 at every truncation: a uniform margin,");
+        println!("  which is what extending past a truncation requires.");
+    }
     println!();
     if prev_ok {
         println!("  (The pencil is well posed at every truncation above.)");

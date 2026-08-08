@@ -1,0 +1,9 @@
+[package]
+name = "sofa_narr"
+version = "1.0.0"
+edition = "2021"
+[[bin]]
+name = "sofa_narr"
+path = "src/main.rs"
+[profile.release]
+opt-level = 3
