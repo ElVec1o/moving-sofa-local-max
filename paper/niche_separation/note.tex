@@ -768,6 +768,23 @@ turns each $\int|\det|$ into the area of the image, disjointness makes the two
 areas add, and covering makes the sum $|N|$.
 \end{proof}
 
+\begin{remark}[The three hypotheses, and where they stand]\label{rem:v3}
+The first is not open. Baek \cite{Bae24} states and proves an injectivity condition for the
+one-corner problem: a monotone sofa with rotation angle $\omega\in(0,\pi/2]$ satisfies it when
+its rotation path $x_S:[0,\omega]\to\mathbb R^2$ is injective and stays above the bottom lines
+of both hallways, and he establishes it for the maximiser by a differential inequality built
+on an ODE of Romik. That is exactly the first hypothesis here, for one corner, with a proof
+and a technique attached.
+
+What does not transfer is the rest. The ambidextrous problem has two corners and
+$C_2=C\cap\rho C$, so \eqref{eq:V} needs the condition for \emph{two} sweeps at once, together
+with their disjointness and their covering $N$. Neither of the latter is a one-corner
+statement, and a literature sweep found no prior art for either. The honest split is
+therefore: injectivity of each sweep is \textsc{proved} elsewhere and needs only a transfer
+argument; disjointness and covering are open, and are the only part of
+Proposition~\ref{prop:V} that this note takes on faith.
+\end{remark}
+
 \begin{remark}[What is measured, and what it gives]\label{rem:V}
 For $\Sig$ the three hypotheses of Proposition~\ref{prop:V} are verified
 numerically and sharply: the two sweeps have intersection area $0$ and leave
