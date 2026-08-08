@@ -209,6 +209,93 @@ def main() -> int:
     print("  beyond any truncation is controlled by that quadratic growth rather than being")
     print("  the delicate cancellation the niche form alone presents.\n")
 
+    print("  the gap, certified rather than measured\n")
+    print("  Deflating removes the zero but does NOT hand over the full matrix's lam_2:")
+    print("  by Cauchy interlacing the submatrix's least eigenvalue lies between 0 and")
+    print("  lam_2, and it is bounded above by the smallest Cholesky pivot, f(beta).")
+    print("  So 3.018 is not certifiable here; what is, is a gap up to f(beta).\n")
+    print(f"  {'K':>4} {'modes':>7} {'g':>7} {'verdict':>12} {'smallest pivot':>26}")
+    for K in (8, 16):
+        if K > maxK:
+            break
+        MT = T_form(K)
+        idx = [i for i in range(2 * K) if i != K]
+        for g in (0.5, 1.0, 1.5, 3.0):
+            M2 = [[MT[i][j] - (arb(g) if i == j else arb(0)) for j in range(2 * K)]
+                  for i in range(2 * K)]
+            ok, bp, sm = cholesky_certifies(M2, idx)
+            # g = 3 is expected to FAIL: interlacing caps the deflated least eigenvalue
+            # by the smallest pivot f(beta) = 1.5389, so 3 is out of reach.  Counting it
+            # as an error would be counting a documented negative control as a defect.
+            expect = g < 1.6
+            bad += (ok != expect)
+            print(f"  {K:4d} {2*K:7d} {g:7.2f} {'CERTIFIED' if ok else 'fails, expected':>15} "
+                  f"{str(sm if ok else bp)[:26]:>26}")
+    print("\n  So -delta^2|T| >= 1.5 I on the deflated span of the first 32 modes, in ball")
+    print("  arithmetic: coercivity with an explicit constant, not merely positivity.")
+    print("  g = 3 fails with pivot exactly f(beta) - 3, confirming the interlacing bound.\n")
+
+    print("  the tail: Gershgorin does NOT close it\n")
+    import math
+
+    def _ssf(a, b, T):
+        if a == b:
+            return T / 2 - math.sin(2 * a * T) / (4 * a)
+        return 0.5 * (math.sin((a - b) * T) / (a - b) - math.sin((a + b) * T) / (a + b))
+
+    def _ccf(a, b, T):
+        if a == b:
+            return T / 2 + math.sin(2 * a * T) / (4 * a)
+        return 0.5 * (math.sin((a - b) * T) / (a - b) + math.sin((a + b) * T) / (a + b))
+
+    def _scf(a, b, T):
+        if a == b:
+            return (1 - math.cos(2 * a * T)) / (4 * a)
+        return 0.5 * ((1 - math.cos((a - b) * T)) / (a - b)
+                      + (1 - math.cos((a + b) * T)) / (a + b))
+
+    def _ipf(p, q, T):
+        (c1, n1, k1), (c2, n2, k2) = p, q
+        v = (_ssf(n1, n2, T) if (k1 == 's' and k2 == 's') else
+             _ccf(n1, n2, T) if (k1 == 'c' and k2 == 'c') else
+             _scf(n1, n2, T) if k1 == 's' else _scf(n2, n1, T))
+        return c1 * c2 * v
+
+    def _pairf(i, K):
+        n = freq(i, K)
+        return ((n, n, 's'), (1.0, n, 'c')) if i < K else ((1.0, n, 's'), (n, n, 'c'))
+
+    # float closed form: O(N^2) memory.  The earlier quadrature route built an N x N x M
+    # array -- 8.7 GB at 52 modes and 4e5 points -- which is why this uses closed forms.
+    Kg = 64
+    P2f, bf = math.pi / 2, 0.2896538208173209
+    T2f = P2f - bf
+    N = 2 * Kg
+    A = [[0.0] * N for _ in range(N)]
+    for i in range(N):
+        a1i, a2i = _pairf(i, Kg)
+        for j in range(i, N):
+            a1j, a2j = _pairf(j, Kg)
+            v = 2 * _ipf(a2i, a2j, T2f) - 2 * _ipf(a1i, a1j, bf)
+            if freq(i, Kg) == freq(j, Kg) and ((i < Kg) == (j < Kg)):
+                v += (math.pi / 2) * (freq(i, Kg) ** 2 - 1)
+                if i < Kg:
+                    v += (math.pi / 2) * (freq(i, Kg) ** 2 - 1)
+            A[i][j] = A[j][i] = v
+    print(f"  {'n':>5} {'diagonal':>12} {'row radius':>12} {'ratio':>8}")
+    worst = 0.0
+    for i in (5, 10, 20, 40):
+        n = freq(i, Kg)
+        rad = sum(abs(A[i][j]) for j in range(N)) - abs(A[i][i])
+        r = rad / A[i][i]
+        worst = max(worst, r)
+        print(f"  {n:5d} {A[i][i]:12.2f} {rad:12.2f} {r:8.3f}")
+    dom = worst < 1.0
+    print(f"\n  diagonally dominant? {dom}.  The ratios exceed 1, so the off-diagonal mass is")
+    print("  comparable to the diagonal and Gershgorin cannot close the tail.  What holds is")
+    print("  that lam_min stays at machine zero out to 128 modes; the tail needs a Schur")
+    print("  complement or the S-relation, not a diagonal-dominance argument.\n")
+
     print(f"  {'ALL CHECKS PASS' if not bad else f'{bad} CHECK(S) FAILED'}")
     return 0 if not bad else 1
 

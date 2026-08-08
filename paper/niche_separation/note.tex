@@ -3837,10 +3837,25 @@ So $|T|$ is strictly concave modulo the gauge, with a uniform margin, and the ta
 truncation is governed by quadratic diagonal growth rather than by the delicate cancellation
 the niche form alone presents.
 
-Rule~0: $-\delta^2|T|>0$ on the deflated span of the first $32$ modes is \textsc{verified} by
-interval arithmetic, and the spectral gap $\lambda_2\approx3.018$ is \textsc{heuristic},
-being a floating-point eigenvalue. The tail is not yet bounded, but the growth that would
-bound it is quadratic and measured.
+The gap is certifiable, though not at the value the full matrix shows. Deflation removes the
+zero but does not hand over $\lambda_2$: by Cauchy interlacing the submatrix's least
+eigenvalue lies between $0$ and $\lambda_2$, and it is bounded above by the smallest Cholesky
+pivot $\tfrac\pi2-2\beta+\sin2\beta$. A ball Cholesky of $-\delta^2|T|-gI$ on the deflated
+span succeeds at $g=0.5,1.0,1.5$ and fails at $g=3$, the failing pivot being exactly
+$f(\beta)-3$. So
+\[
+  -\delta^2|T|\ \succeq\ 1.5\,I
+\]
+on the deflated span of the first $32$ modes, certified: coercivity with an explicit
+constant rather than positivity alone.
+
+The tail is not closed. Gershgorin does not suffice: at $128$ modes the ratio of row radius
+to diagonal is $1.083,1.080,1.099$ at $n=11,21,41$, so the off-diagonal mass is comparable
+to the diagonal and the rows are not diagonally dominant. What is available is that
+$\lambda_{\min}$ remains zero to machine precision out to $128$ modes.
+
+Rule~0: $-\delta^2|T|\succeq1.5I$ on the deflated first $32$ modes is \textsc{verified} by
+interval arithmetic; behaviour beyond the truncation is \textsc{heuristic}.
 
 Assembling with the cap: $\delta^2|C_2|\le0$ with kernel $\{\text{gauge},\text{atom}\}$ and
 $\delta^2(2|N|)\ge0$ with kernel $\{\text{gauge}\}$ give
