@@ -45,8 +45,17 @@ const RUST_BINS: &[(&str, &[&str])] = &[
 /// Captured stdout of not-yet-ported producers.  Every entry here is migration debt.
 const LEGACY_OUTPUTS: &[&str] = &["private/legacy_outputs"];
 
-/// Pull every decimal literal out of a string: a run of digits, a dot, a run of digits.
+/// Pull decimal literals out of a string, matching the note scanner exactly:
+/// at least FOUR digits after the point, not preceded by a digit or a dot, and not an
+/// arXiv identifier.  A first version required only five characters total, which admits
+/// 0.001 and 0.884 and over-reported by 26.
 fn decimals(s: &str) -> BTreeSet<String> {
+    let stripped: String = s
+        .lines()
+        .filter(|l| !l.trim_start().starts_with('%'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let s: &str = &stripped;
     let b: Vec<char> = s.chars().collect();
     let mut out = BTreeSet::new();
     let mut i = 0usize;
@@ -54,15 +63,21 @@ fn decimals(s: &str) -> BTreeSet<String> {
         if b[i].is_ascii_digit() {
             let start = i;
             while i < b.len() && b[i].is_ascii_digit() { i += 1; }
-            if i < b.len() && b[i] == '.' && i + 1 < b.len() && b[i + 1].is_ascii_digit() {
+            if i < b.len() && b[i] == '.' {
+                let dot = i;
                 i += 1;
+                let frac_start = i;
                 while i < b.len() && b[i].is_ascii_digit() { i += 1; }
-                // reject a version-like a.b.c and anything glued to a letter
-                let after_ok = i >= b.len() || !(b[i] == '.' || b[i].is_alphabetic());
-                let before_ok = start == 0 || !(b[start - 1] == '.' || b[start - 1].is_alphabetic());
-                if after_ok && before_ok {
+                let frac = i - frac_start;
+                let before_ok = start == 0 || !(b[start - 1] == '.' || b[start - 1].is_ascii_digit());
+                let arxiv = {
+                    let lo = start.saturating_sub(8);
+                    b[lo..start].iter().collect::<String>().contains("arXiv:")
+                };
+                if frac >= 4 && before_ok && !arxiv {
                     out.insert(b[start..i].iter().collect::<String>());
                 }
+                if frac == 0 { i = dot + 1; }
             }
         } else {
             i += 1;
@@ -136,7 +151,11 @@ fn main() {
 
     let note = root.join("paper/niche_separation/note.tex");
     let reg_file = root.join("private/tools/check_constants.py");
-    let baseline_file = root.join("private/tools/custody_baseline.txt");
+    // A SEPARATE baseline from the Python gate.  That one measures coverage over 19 Python
+    // producers; this one measures it over the Rust binaries only, so the two counts are not
+    // comparable and sharing a file would silently clobber one with the other.  This number
+    // is the migration backlog: it falls as programs are ported and must never be raised.
+    let baseline_file = root.join("private/tools/custody_baseline_rust.txt");
 
     let note_text = fs::read_to_string(&note).unwrap_or_default();
     let reg_text = fs::read_to_string(&reg_file).unwrap_or_default();
@@ -167,7 +186,7 @@ fn main() {
         false
     };
     let unregistered: Vec<&String> = printed.iter()
-        .filter(|d| d.len() >= 5 && !reg_lits.contains(d.as_str()) && !exempt(d))
+        .filter(|d| !reg_lits.contains(d.as_str()) && !exempt(d))
         .collect();
     println!("CONSTANTS");
     println!("  decimals in the note {:>5}", printed.len());
