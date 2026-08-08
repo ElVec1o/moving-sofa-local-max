@@ -422,7 +422,10 @@ fn main() {
         println!("  {:>9} {:>10} {:>12} {:>12} {:>12}",
                  "beta", "2 beta/pi", "rho(beta)", "rho/(2b/pi)", "sqrt(2b/pi)");
         let kb = 64usize;
-        for &bb in [0.05f64, 0.10, 0.20, BETA, 0.40, 0.5236].iter() {
+        let mut prev_rho = 0.0f64;
+        let mut mono = true;
+        let grid: Vec<f64> = (1..=26).map(|i| 0.02 * i as f64).collect();
+        for &bb in grid.iter() {
             let n2 = 2 * kb;
             let idx: Vec<usize> = (0..n2).filter(|&i| i != kb).collect();
             let m = idx.len();
@@ -452,8 +455,21 @@ fn main() {
             let (w, _) = jacobi(&g, m);
             let rr = w.iter().map(|x| x.abs()).fold(0.0f64, f64::max);
             let frac = 2.0 * bb / std::f64::consts::PI;
-            println!("  {:>9.4} {:>10.4} {:>12.6} {:>12.4} {:>12.4}",
-                     bb, frac, rr, rr / frac, frac.sqrt());
+            if rr < prev_rho - 1e-9 { mono = false; }
+            prev_rho = rr;
+            if (bb * 100.0).round() as i64 % 10 == 0 || (bb - BETA).abs() < 0.011 {
+                println!("  {:>9.4} {:>10.4} {:>12.6} {:>12.4} {:>12.4}",
+                         bb, frac, rr, rr / frac, frac.sqrt());
+            }
+        }
+        if mono {
+            println!("\n  rho is INCREASING at all 26 grid points from 0.02 to 0.52, not just");
+            println!("  the six sampled before.  Combined with rho(pi/6) < 0.8 certified, that");
+            println!("  gives rho < 0.8 for every admissible beta -- still sampling, but a grid");
+            println!("  fine enough that a reversal would have to hide between adjacent points.");
+        } else {
+            println!("\n  rho is NOT monotone on the fine grid, so the beta-uniform claim");
+            println!("  cannot rest on monotonicity and needs the supremum bounded directly.");
         }
         println!();
         println!("  Two sharper K-free routes, since the crude one misses by 2 percent:\n");
