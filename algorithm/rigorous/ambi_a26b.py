@@ -270,6 +270,39 @@ def main() -> int:
     print("  positivity off a 1-D kernel gives a maximum in finite dimensions; without a")
     print("  spectral gap it does not in infinite dimensions.\n")
 
+    print("  (4c) WHY lam_2 collapses: the three terms cancel at high frequency\n")
+    Kd = 26
+    Dm = form_h1(Kd)
+    wv, Vv = np.linalg.eigh(Dm)
+    E2m = (t < P2 - BETA).astype(float)
+    E1m = (t < BETA).astype(float)
+    d1L, d2L, dsL, nrL = [], [], [], []
+    for i in range(2 * Kd):
+        eF, dF = basis_mode(i, Kd, t)
+        eK, dK = basis_mode(i, Kd, t + P2)
+        d1L.append(eK - dF); d2L.append(eF + dK); dsL.append(eF * np.tan(t) + dF)
+        n = 2 * (i % Kd) + 1
+        nrL.append(np.sqrt(np.pi / 4 * (1 + n * n)))
+    nrL = np.array(nrL)
+    d1L, d2L, dsL = (np.array(A) / nrL[:, None] for A in (d1L, d2L, dsL))
+    print(f"  {'i':>3} {'lam':>11} {'2int_E2 v2':>12} {'2int u2':>11} {'-2int_E1 w2':>12}"
+          f" {'peak':>6}")
+    for i in range(4):
+        vv = Vv[:, i]
+        aa = 2 * float(np.trapezoid((vv @ d2L) ** 2 * E2m, t))
+        bb = 2 * float(np.trapezoid((vv @ dsL) ** 2, t))
+        cc = -2 * float(np.trapezoid((vv @ d1L) ** 2 * E1m, t))
+        j = int(np.argmax(np.abs(vv)))
+        pk = f"{'L' if j < Kd else 'R'}{2 * (j % Kd) + 1}"
+        print(f"  {i:3d} {wv[i]:11.2e} {aa:12.6f} {bb:11.6f} {cc:12.6f} {pk:>6}")
+    print("\n  The near-null directions sit at HIGH frequency and their three terms are")
+    print("  individually of order one, cancelling to 1e-10.  So the accumulation is not a")
+    print("  basis defect: it is u and w annihilating, the same cancellation structure that")
+    print("  governs every other estimate here.  Consequence: floating point cannot certify")
+    print("  the sign at high frequency, since the smallest nonzero eigenvalues sit only six")
+    print("  orders above the rounding floor of an order-one difference.  Interval")
+    print("  arithmetic is required, exactly as it was for the coercivity constant.\n")
+
     print("  (5) the relation among the three variations\n")
     print("      S := d(alpha_1) + d(sigma - alpha_1) = eta_F tan t + eta_K,   S(0) = 0")
     print("      dS/dt = d(alpha_2) + tan t * d(sigma - alpha_1)\n")

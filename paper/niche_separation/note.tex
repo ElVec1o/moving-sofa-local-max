@@ -3777,8 +3777,23 @@ with the small eigenvalues arriving in near-degenerate pairs and the count below
 growing from $1$ to $5$. The spectrum accumulates at zero, so no $c>0$ satisfies
 $D[\eta]\ge c\|\eta\|^2_{H^1}$. Strict positivity off a one-dimensional kernel yields a
 maximum in finite dimensions; without a spectral gap it does not do so in infinite
-dimensions, and the concavity assembly below is correspondingly weaker than it reads. Rule~0:
-what is supported is $D\ge0$ with $\ker=\{\text{gauge}\}$, not coercivity.
+dimensions, and the concavity assembly below is correspondingly weaker than it reads.
+
+The accumulation is not a defect of the basis. The near-null eigenvectors are supported at
+high frequency --- peak modes $13,27,37$ at $52$ modes --- and on them the three terms of
+$D$ are individually of order one and cancel:
+\[
+  0.020503+1.903802-1.924305=2.97\cdot10^{-10} .
+\]
+So $\lambda_2\to0$ is $u$ and $w$ annihilating at high frequency, the same cancellation
+structure that governs every other estimate in this problem. It follows that floating point
+cannot certify the sign there: at $52$ modes the smallest nonzero eigenvalues sit six orders
+above the rounding floor of a difference of order-one quantities, and any further truncation
+closes that margin. Deciding $D\ge0$ at high frequency requires interval arithmetic, exactly
+as the coercivity certificate's last constant did.
+
+Rule~0: what is supported is $D\ge0$ with $\ker=\{\text{gauge}\}$ on the truncations tested,
+not coercivity, and not a certified sign at high frequency.
 
 Assembling with the cap: $\delta^2|C_2|\le0$ with kernel $\{\text{gauge},\text{atom}\}$ and
 $\delta^2(2|N|)\ge0$ with kernel $\{\text{gauge}\}$ give
