@@ -3792,8 +3792,32 @@ above the rounding floor of a difference of order-one quantities, and any furthe
 closes that margin. Deciding $D\ge0$ at high frequency requires interval arithmetic, exactly
 as the coercivity certificate's last constant did.
 
-Rule~0: what is supported is $D\ge0$ with $\ker=\{\text{gauge}\}$ on the truncations tested,
-not coercivity, and not a certified sign at high frequency.
+Ball arithmetic settles the sign that floating point cannot. The obstacle to an exact
+assembly appeared to be the reach term, whose integrand carries $\tan t$; but polarising the
+integration by parts that gave the left-half identity,
+\[
+  \int_0^{\pi/2}u_iu_j=\int_0^{\pi/2}\bigl(\eta_i'\eta_j'-\eta_i\eta_j\bigr) ,
+\]
+so $\tan$ cancels in the bilinear form and not merely on the diagonal. On the admissible
+basis that block is diagonal with entries $\tfrac\pi4(n^2-1)$, which are precisely the
+Wirtinger weights above, zero only at $n=1$. Every entry of $D$ is then an elementary
+trigonometric integral.
+
+$D$ is not positive definite --- the gauge is in its kernel --- so deflate it. The gauge is
+$\cos\theta$ on both halves, which in this basis is the difference of the two first modes,
+so deleting the first right mode leaves a complement of the kernel. A Cholesky factorisation
+of that submatrix carried out in ball arithmetic at $800$ bits has every pivot a ball
+strictly above zero, at $6,8,12,16,24$ and $32$ modes, with smallest pivot
+\[
+  1.538933358735018\pm6.7\cdot10^{-16}=\tfrac\pi2-2\beta+\sin2\beta ,
+\]
+the atom's own value: the atom is the tightest deflated direction, as the cap's kernel
+containing it predicts. Since every pivot is provably positive, $D$ is positive definite on
+the deflated span for \emph{every} real matrix in the enclosure.
+
+Rule~0: $D>0$ on the deflated span of the first $32$ modes is \textsc{verified} by interval
+arithmetic. The tail beyond the truncation is not covered, and closing it needs an analytic
+bound of the kind used for the coercivity certificate's two tails.
 
 Assembling with the cap: $\delta^2|C_2|\le0$ with kernel $\{\text{gauge},\text{atom}\}$ and
 $\delta^2(2|N|)\ge0$ with kernel $\{\text{gauge}\}$ give
