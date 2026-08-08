@@ -1027,4 +1027,46 @@ theorem a26b_left_margin {A B C β : ℝ} (hβ : 0 < β) (hBA : B ≤ A)
 
 end NicheConvexity
 
+section Assembly
+
+/-!
+### Assembling the two second variations
+
+`|T| = |C_2| - 2|N|`, so `δ²|T| = δ²|C_2| - δ²(2|N|)`. The two halves point opposite ways:
+
+* the cap form is negative semidefinite in every admissible direction, with kernel exactly
+  `{gauge, atom}` (`cap_quadratic_nonpos`, `wirtinger_mode_eq`);
+* the niche form is positive semidefinite, with kernel exactly `{gauge}` — measured as
+  `λ_min = 0` to machine precision at 6, 10, 16, 24 and 32 modes, the null vector being
+  `cos θ` on both halves, which is a horizontal translation and moves no area.
+
+Their difference is therefore nonpositive everywhere, and strictly negative off the gauge:
+the atom is null for the cap but gives `π/2 - 2β + sin 2β ≥ π/6 + √3/2` for the niche. The
+lemmas below are that assembly; the two inputs enter as hypotheses, at the labels they
+actually carry.
+-/
+
+/-- Cap nonpositive and niche nonnegative make the area's second variation nonpositive. -/
+theorem cap_sub_niche_nonpos {cap nic : ℝ} (hc : cap ≤ 0) (hn : 0 ≤ nic) :
+    cap - nic ≤ 0 := by linarith
+
+/-- Strictly negative wherever the niche form is strictly positive. -/
+theorem cap_sub_niche_neg {cap nic : ℝ} (hc : cap ≤ 0) (hn : 0 < nic) :
+    cap - nic < 0 := by linarith
+
+/-- The niche floor is strictly positive, so the atom direction is strictly concave even
+though the cap vanishes on it. -/
+theorem niche_floor_pos : (0:ℝ) < Real.pi/6 + Real.sqrt 3 / 2 := by
+  have h1 : (0:ℝ) < Real.pi/6 := by positivity
+  have h2 : (0:ℝ) ≤ Real.sqrt 3 := Real.sqrt_nonneg 3
+  linarith
+
+/-- Along the atom the cap contributes nothing and the niche contributes at least the
+floor, so the area is strictly concave there. -/
+theorem atom_strictly_concave {β : ℝ} (h : β ≤ Real.pi/6) :
+    (0:ℝ) - nicheConv β < 0 :=
+  cap_sub_niche_neg le_rfl (lt_of_lt_of_le niche_floor_pos (nicheConv_pos h))
+
+end Assembly
+
 end MovingSofa

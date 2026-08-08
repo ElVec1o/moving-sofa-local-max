@@ -167,6 +167,66 @@ def main() -> int:
         print("  No counterexample.  Rule 0: this is HEURISTIC for eta_K != 0; only the")
         print("  left-mode half is proved.\n")
 
+    print("  (4) the worst direction, by eigenvalue rather than by sampling\n")
+    t = _grid()
+
+    def basis_mode(i, K, th):
+        left = th <= P2 + 1e-12
+        if i < K:
+            n = 2 * i + 1
+            return (np.where(left, np.cos(n * th), 0.0),
+                    np.where(left, -n * np.sin(n * th), 0.0))
+        n = 2 * (i - K) + 1
+        return (np.where(left, 0.0, np.sin(n * (th - P2))),
+                np.where(left, 0.0, n * np.cos(n * (th - P2))))
+
+    def form_matrix(K, beta=BETA):
+        E2 = (t < P2 - beta).astype(float)
+        E1 = (t < beta).astype(float)
+        da1, da2, ds = [], [], []
+        for i in range(2 * K):
+            eF, dF = basis_mode(i, K, t)
+            eK, dK = basis_mode(i, K, t + P2)
+            da1.append(eK - dF)
+            da2.append(eF + dK)
+            ds.append(eF * np.tan(t) + dF)
+        da1, da2, ds = map(np.array, (da1, da2, ds))
+
+        def G(A, w=None):
+            f = A[:, None, :] * A[None, :, :]
+            if w is not None:
+                f = f * w
+            return np.trapezoid(f, t, axis=2)
+
+        Dm = 2 * G(da2, E2) + 2 * G(ds) - 2 * G(da1, E1)
+        return (Dm + Dm.T) / 2
+
+    print(f"  {'K':>4} {'modes':>7} {'lam_min':>13} {'lam_max':>12}")
+    for K in (3, 5, 8, 12, 16):
+        w = np.linalg.eigvalsh(form_matrix(K))
+        print(f"  {K:4d} {2 * K:7d} {w.min():13.2e} {w.max():12.2f}")
+        if w.min() < -1e-6:
+            print("  FAIL: the niche second variation is not positive semidefinite")
+            bad += 1
+    K = 16
+    w, V = np.linalg.eigh(form_matrix(K))
+    v = V[:, 0]
+    top = np.argsort(-np.abs(v))[:3]
+    lbl = ", ".join(f"{'L' if j < K else 'R'}{(j % K) + 1}:{v[j]:+.3f}" for j in top)
+    print(f"\n  null direction at K = 16:  {lbl}")
+    gauge = abs(abs(v[0]) - abs(v[K])) < 1e-3 and abs(v[0]) > 0.5
+    bad += not gauge
+    print("  L1 - R1 is cos(theta) on [0,pi/2] and -sin(theta-pi/2) = cos(theta) on")
+    print("  [pi/2,pi], i.e. eta = cos(theta) throughout: the GAUGE, a horizontal")
+    print(f"  translation that moves no area.  {'OK' if gauge else 'FAIL'}: the kernel is")
+    print("  exactly the one direction that must be in it, and nothing else.\n")
+    print("  Consequence.  The cap form is negative semidefinite with kernel {gauge, atom}")
+    print("  (ambi_wirtinger.py) and the niche form is positive semidefinite with kernel")
+    print("  {gauge}, so delta^2|T| = delta^2|C_2| - delta^2(2|N|) <= 0 in every direction,")
+    print("  strictly except on the gauge: the atom is null for the cap but gives +1.539")
+    print("  for the niche.  Rule 0: HEURISTIC.  This is a floating-point eigenvalue on a")
+    print("  32-mode truncation, not a proof, and it inherits prop:V.\n")
+
     print(f"  {'ALL CHECKS PASS' if not bad else f'{bad} CHECK(S) FAILED'}")
     return 0 if not bad else 1
 

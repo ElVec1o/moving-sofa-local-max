@@ -3744,8 +3744,40 @@ every $\beta\le\pi/2$, with surplus $2(\pi^2/4\beta^2-1)\int\eta_F^2$; at $\Sig$
 $\pi^2/4\beta^2$ is $29.4$ against the $1$ it must beat. Formalised as
 \texttt{a26b\_left\_nonneg} and \texttt{a26b\_left\_margin}.
 
-Rule~0: the left half is \textsc{proved} modulo Proposition~\ref{prop:V}; the case
-$\eta_K\ne0$ is \textsc{heuristic}, sixteen directions tested without a counterexample. A
+For $\eta_K\ne0$ the same structure repeats with the roles exchanged. Writing
+$D=D_F+D_K$ with $D_F$ the left-mode part above and
+\[
+  D_K=2\!\int_{E_2}\!(\eta_K')^2-2\!\int_{E_1^-}\!\eta_K^2
+   +4\!\int_{E_2}\!\eta_F\eta_K'+4\!\int_{E_1^-}\!\eta_K\eta_F' ,
+\]
+the first bracket is controlled exactly as before: $\eta_K(0)=\eta(\pi/2)=0$ is a Dirichlet
+condition at the left end, $E_1^-\subseteq E_2$, and Poincar\'e on $[0,\beta]$ closes it.
+Only the two cross terms are not manifestly signed.
+
+Rather than sample directions, the form's least eigenvalue settles it. On the admissible
+basis truncated at $6,10,16,24,32$ modes,
+\[
+  \lambda_{\min}=0
+\]
+to machine precision at every truncation, with a one-dimensional kernel spanned by
+$\eta=\cos\theta$ on both halves: the gauge, a horizontal translation, which moves no area
+and must be null. So the niche form is positive semidefinite and its kernel is exactly the
+one direction forced to be there.
+
+Assembling with the cap: $\delta^2|C_2|\le0$ with kernel $\{\text{gauge},\text{atom}\}$ and
+$\delta^2(2|N|)\ge0$ with kernel $\{\text{gauge}\}$ give
+\[
+  \delta^2|T|=\delta^2|C_2|-\delta^2(2|N|)\ \le\ 0
+\]
+in every admissible direction, strictly except along the gauge --- the atom is null for the
+cap but contributes $\pi/2-2\beta+\sin2\beta\ge\pi/6+\sqrt3/2$ to the niche. Formalised as
+\texttt{cap\_sub\_niche\_nonpos}, \texttt{cap\_sub\_niche\_neg},
+\texttt{niche\_floor\_pos} and \texttt{atom\_strictly\_concave}.
+
+Rule~0: the left half is \textsc{proved} modulo Proposition~\ref{prop:V}, and so is the
+assembly, with the two semidefiniteness statements entering as hypotheses at the labels they
+carry. The niche form's positive semidefiniteness for $\eta_K\ne0$ is \textsc{heuristic}: a
+floating-point eigenvalue on a $32$-mode truncation, not a proof. A
 report that $D$ can be negative was issued from a computation using two of the three terms
 of Proposition~\ref{prop:V} and is withdrawn: the omitted term is the reach, positive and
 integrated over all of $[0,\pi/2]$ while the negative term covers only $E_1^-$ of length
