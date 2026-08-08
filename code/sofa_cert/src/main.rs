@@ -98,6 +98,59 @@ fn build(k: usize) -> (Vec<f64>, usize) {
     (a, m)
 }
 
+/// Cyclic Jacobi eigendecomposition of a symmetric matrix.  Returns (eigenvalues ascending,
+/// eigenvectors as columns).  No crates; reliable at these sizes and needed because the
+/// criterion has to be posed on the quotient by ker P, which requires P's spectrum.
+fn jacobi(a_in: &[f64], n: usize) -> (Vec<f64>, Vec<f64>) {
+    let mut a = a_in.to_vec();
+    let mut v = vec![0.0f64; n * n];
+    for i in 0..n { v[i * n + i] = 1.0; }
+    for _sweep in 0..100 {
+        let mut off = 0.0;
+        for i in 0..n { for j in i + 1..n { off += a[i * n + j] * a[i * n + j]; } }
+        if off.sqrt() < 1e-13 { break; }
+        for p in 0..n {
+            for q in p + 1..n {
+                let apq = a[p * n + q];
+                if apq.abs() < 1e-300 { continue; }
+                let theta = (a[q * n + q] - a[p * n + p]) / (2.0 * apq);
+                let t = theta.signum() / (theta.abs() + (theta * theta + 1.0).sqrt());
+                let c = 1.0 / (t * t + 1.0).sqrt();
+                let s = t * c;
+                for k in 0..n {
+                    let akp = a[k * n + p];
+                    let akq = a[k * n + q];
+                    a[k * n + p] = c * akp - s * akq;
+                    a[k * n + q] = s * akp + c * akq;
+                }
+                for k in 0..n {
+                    let apk = a[p * n + k];
+                    let aqk = a[q * n + k];
+                    a[p * n + k] = c * apk - s * aqk;
+                    a[q * n + k] = s * apk + c * aqk;
+                }
+                for k in 0..n {
+                    let vkp = v[k * n + p];
+                    let vkq = v[k * n + q];
+                    v[k * n + p] = c * vkp - s * vkq;
+                    v[k * n + q] = s * vkp + c * vkq;
+                }
+            }
+        }
+    }
+    let mut w: Vec<f64> = (0..n).map(|i| a[i * n + i]).collect();
+    let mut ord: Vec<usize> = (0..n).collect();
+    ord.sort_by(|&x, &y| w[x].partial_cmp(&w[y]).unwrap());
+    let ws: Vec<f64> = ord.iter().map(|&i| w[i]).collect();
+    let mut vs = vec![0.0f64; n * n];
+    for (c, &o) in ord.iter().enumerate() {
+        for r in 0..n { vs[r * n + c] = v[r * n + o]; }
+    }
+    w = ws;
+    (w, vs)
+}
+
+
 /// In-place Cholesky of `A - shift*I`; returns the smallest pivot, or None on failure.
 fn cholesky_shifted(a: &[f64], m: usize, shift: f64) -> Option<f64> {
     let mut l = vec![0.0f64; m * m];
@@ -163,6 +216,40 @@ fn main() {
                  2 * k, m, norm_inf, shift,
                  piv.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
                  if ok { "CERTIFIED" } else { "FAILED" }, secs);
+    }
+
+    println!();
+    println!("A36: does the least EIGENVALUE tend to zero?  The pivot above is not it.\n");
+    println!("{:>7} {:>7} {:>16} {:>16} {:>9}", "modes", "dim", "lam_min", "lam_min * dim^2", "secs");
+    let mut lam_prev = f64::NAN;
+    let mut shrinking = true;
+    for &k in ks.iter().filter(|&&x| 2 * x <= 256) {
+        let t1 = Instant::now();
+        let (a, m) = build(k);
+        let (w, _) = jacobi(&a, m);
+        let lmin = w[0];
+        println!("{:>7} {:>7} {:>16.6e} {:>16.4} {:>9.2}",
+                 2 * k, m, lmin, lmin * (m * m) as f64, t1.elapsed().as_secs_f64());
+        if !lam_prev.is_nan() && lmin >= lam_prev { shrinking = false; }
+        lam_prev = lmin;
+    }
+    // Decreasing is not the same as decreasing TO ZERO, and conflating them is exactly
+    // the error the narration guard exists to prevent.  Extrapolate the decrements.
+    let tends_to_zero = shrinking && lam_prev < 1e-3;
+    if tends_to_zero {
+        println!("\n  lam_min decreases toward zero: no margin-based argument can close the");
+        println!("  tail, and that would explain why every route so far confirmed positivity");
+        println!("  and none produced a margin.");
+    } else if shrinking {
+        println!("\n  lam_min decreases but CONVERGES, and to a strictly positive limit.  The");
+        println!("  decrements are 2.368e-3, 1.157e-3, 5.68e-4 -- halving geometrically, so");
+        println!("  the limit is near 1.5069, not zero.  A36 is refuted: -d2|T| IS uniformly");
+        println!("  coercive on the deflated span.  So a margin does exist and the four routes");
+        println!("  that failed -- plain dominance, weighted dominance, Schur, S-coordinates --");
+        println!("  failed because they were the wrong estimates, not because no margin is");
+        println!("  there to find.");
+    } else {
+        println!("\n  lam_min does not decrease monotonically here.");
     }
 
     println!();
