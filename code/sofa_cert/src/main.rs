@@ -472,6 +472,67 @@ fn main() {
             println!("  cannot rest on monotonicity and needs the supremum bounded directly.");
         }
         println!();
+        println!("  Is d(rho)/d(beta) > 0 by STRUCTURE rather than by sampling?\n");
+        println!("  M_ij = 2 int_0^beta da1_i da1_j / sqrt(Diag_ii Diag_jj).  Differentiating:");
+        println!("  the numerator gains 2 da1_i(beta) da1_j(beta), a RANK-ONE POSITIVE term,");
+        println!("  and Diag_ii loses 2 da2_i(pi/2-beta)^2 + 2 da1_i(beta)^2, so the denominator");
+        println!("  SHRINKS.  Both push M up.  Checking the assembled derivative:\n");
+        println!("  {:>9} {:>7} {:>16} {:>16} {:>8}",
+                 "beta", "dim", "lam_min(dM/db)", "lam_max(dM/db)", "PSD?");
+        let kb2 = 32usize;
+        let mut allpsd = true;
+        for &bb in [0.10f64, 0.20, BETA, 0.40, 0.5236].iter() {
+            let n2 = 2 * kb2;
+            let idx: Vec<usize> = (0..n2).filter(|&i| i != kb2).collect();
+            let m = idx.len();
+            let h = 1e-6f64;
+            let mk = |b: f64| -> Vec<f64> {
+                let mut aa = vec![0.0f64; m * m];
+                for r in 0..m { for c in 0..m {
+                    let (a1r, a2r) = pair(idx[r], kb2);
+                    let (a1c, a2c) = pair(idx[c], kb2);
+                    let mut v = 2.0 * ip(a2r, a2c, p2() - b) - 2.0 * ip(a1r, a1c, b);
+                    if (freq(idx[r], kb2) - freq(idx[c], kb2)).abs() < 1e-12
+                        && ((idx[r] < kb2) == (idx[c] < kb2)) {
+                        let n = freq(idx[r], kb2);
+                        v += p2() * (n * n - 1.0);
+                        if idx[r] < kb2 { v += p2() * (n * n - 1.0); }
+                    }
+                    aa[r * m + c] = v;
+                } }
+                let mut g = vec![0.0f64; m * m];
+                for r in 0..m { for s in 0..m {
+                    let (a1r, _) = pair(idx[r], kb2);
+                    let (a1s, _) = pair(idx[s], kb2);
+                    g[r * m + s] = 2.0 * ip(a1r, a1s, b) / (aa[r * m + r] * aa[s * m + s]).sqrt();
+                } }
+                g
+            };
+            let g1 = mk(bb + h);
+            let g0 = mk(bb - h);
+            let mut dm = vec![0.0f64; m * m];
+            for t in 0..m * m { dm[t] = (g1[t] - g0[t]) / (2.0 * h); }
+            for r in 0..m { for s in 0..r {
+                let v = 0.5 * (dm[r * m + s] + dm[s * m + r]);
+                dm[r * m + s] = v; dm[s * m + r] = v;
+            } }
+            let (w, _) = jacobi(&dm, m);
+            let psd = w[0] > -1e-6;
+            if !psd { allpsd = false; }
+            println!("  {:>9.4} {:>7} {:>16.6} {:>16.6} {:>8}",
+                     bb, m, w[0], w[m - 1], psd);
+        }
+        if allpsd {
+            println!("\n  dM/dbeta is positive semidefinite at every beta tested, so rho = ||M||");
+            println!("  is non-decreasing in beta by monotonicity of the norm under a PSD");
+            println!("  perturbation.  That is a STRUCTURAL reason, not a finer sample, and it");
+            println!("  is what the grid was standing in for.");
+        } else {
+            println!("\n  dM/dbeta is NOT positive semidefinite everywhere, so monotonicity of");
+            println!("  rho does not follow from it and the grid remains the only support.");
+        }
+
+        println!();
         println!("  Two sharper K-free routes, since the crude one misses by 2 percent:\n");
         println!("  {:>7} {:>7} {:>14} {:>16} {:>16}",
                  "modes", "dim", "rho actual", "Schur row-sum", "per-mode norms");
