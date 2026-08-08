@@ -225,6 +225,36 @@ fn main() {
     }
 
     println!();
+    println!("Can a finite-K certificate ever close the tail?\n");
+    println!("entry(i,j,k) depends on k only through freq and is_left, so indexed by");
+    println!("(side, frequency) the entries do not depend on k at all.  Checking that:");
+    let mut same = true;
+    for &(i1, j1, k1, i2, j2, k2) in [(0usize,1usize,8usize,0usize,1usize,64usize),
+                                      (2,5,8,2,5,64),(3,3,8,3,3,64),
+                                      (8+1,8+2,8,64+1,64+2,64)].iter() {
+        let a = entry(i1, j1, k1);
+        let b = entry(i2, j2, k2);
+        if (a - b).abs() > 1e-12 { same = false; }
+        println!("    ({},{}) at k={:<3} = {:>14.9}   same mode at k={:<3} = {:>14.9}",
+                 i1, j1, k1, a, k2, b);
+    }
+    if same {
+        println!("\n  The entries are k-independent, so A_K is a PRINCIPAL SUBMATRIX of");
+        println!("  A_(K+1).  Cauchy interlacing then gives lam_min(A_(K+1)) <= lam_min(A_K):");
+        println!("  the least eigenvalue DECREASES with the truncation, which is exactly the");
+        println!("  1.511541, 1.509173, 1.508016, 1.507448 seen above.");
+        println!();
+        println!("  That settles the direction question.  Interlacing runs the WRONG WAY for");
+        println!("  induction: a certificate at every finite K does not bound the infinite");
+        println!("  form from below, because the infimum over all K is approached from above.");
+        println!("  So A31 and A37, however far K is pushed, cannot close the tail by");
+        println!("  themselves.  A lower bound on the infinite form is needed directly.");
+    } else {
+        println!("\n  The entries are NOT k-independent, so the submatrix structure does not");
+        println!("  hold and the interlacing argument does not apply.");
+    }
+
+    println!();
     println!("Is the smallest pivot ALWAYS the atom, and exactly f(beta) - g?\n");
     let fb = p2() - 2.0 * BETA + (2.0 * BETA).sin();
     println!("  f(beta) = {:.12}\n", fb);
