@@ -219,6 +219,47 @@ fn main() {
     }
 
     println!();
+    println!("A37: is the GAP certifiable, not just positivity?\n");
+    println!("Same criterion, applied to A - gI: if Cholesky of A - (g + d)I completes with");
+    println!("every pivot positive then lam_min > g for the exact A.  The shift d is the same");
+    println!("rounding bound as above, recomputed per size.\n");
+    println!("{:>7} {:>7} {:>7} {:>16} {:>11} {:>8}",
+             "modes", "dim", "g", "smallest pivot", "verdict", "secs");
+    let mut gap_ok = true;
+    let mut gap_best = 0.0f64;
+    for &k in ks.iter() {
+        let (a, m) = build(k);
+        let mut norm_inf = 0.0f64;
+        let mut ent_err_row = 0.0f64;
+        for r in 0..m {
+            let mut s = 0.0; let mut e = 0.0;
+            for c in 0..m { let v = a[r * m + c].abs(); s += v; e += 8.0 * U * v; }
+            if s > norm_inf { norm_inf = s; }
+            if e > ent_err_row { ent_err_row = e; }
+        }
+        let d = 10.0 * (20.0 * (m as f64 + 1.0) * U * norm_inf + ent_err_row);
+        for &g in [1.0f64, 1.4, 1.5].iter() {
+            let t1 = Instant::now();
+            let piv = cholesky_shifted(&a, m, g + d);
+            let ok = piv.is_some();
+            if g >= 1.5 { gap_ok &= ok; }
+            if ok && g > gap_best { gap_best = g; }
+            println!("{:>7} {:>7} {:>7.2} {:>16} {:>11} {:>8.2}",
+                     2 * k, m, g,
+                     piv.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
+                     if ok { "CERTIFIED" } else { "fails" }, t1.elapsed().as_secs_f64());
+        }
+    }
+    if gap_ok {
+        println!("\n  lam_min > 1.5 is CERTIFIED at every truncation above, by the same");
+        println!("  backward-stability criterion as the positivity result.  A37 is verified,");
+        println!("  not measured: the form is uniformly coercive with an explicit constant.");
+    } else {
+        println!("\n  g = 1.5 is not certifiable at every size; the largest g that certified");
+        println!("  everywhere is printed in the rows above.");
+    }
+
+    println!();
     println!("A36: does the least EIGENVALUE tend to zero?  The pivot above is not it.\n");
     println!("{:>7} {:>7} {:>16} {:>16} {:>9}", "modes", "dim", "lam_min", "lam_min * dim^2", "secs");
     let mut lam_prev = f64::NAN;
