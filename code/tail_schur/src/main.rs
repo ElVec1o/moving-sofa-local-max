@@ -20,7 +20,7 @@
 //! f(beta) = 1.5389 and approaches it from below, which is the behaviour a working argument
 //! would produce.  But the Gauss-Seidel solve depends on the same dominance, so those
 //! numbers are only meaningful where part (1) reports true.  The tail needs a different
-//! mechanism -- a weighted dominance, or A29's S-relation -- not this one.
+//! mechanism.
 //!
 //! WHY RUST.  The Python route built an N x N x M quadrature tensor -- 8.7 GB at 52 modes --
 //! which is the defect this replaces.  Here every entry is a closed-form trigonometric
@@ -146,6 +146,23 @@ fn solve_tail(k: usize, tail: &[usize], b: &Vec<Vec<f64>>, iters: usize) -> Vec<
     x
 }
 
+/// Generalised (H-matrix) dominance with weights d_n = n^{-p}:
+/// A is positive definite if d_i A_ii > sum_{j != i} d_j |A_ij| for every i.
+/// Plain dominance is p = 0, which fails; a weight that decays fast enough may not.
+fn weighted_dominance(k: usize, head: usize, p: f64) -> f64 {
+    let n = 2 * k;
+    let tail: Vec<usize> = (0..n).filter(|&i| (i % k) >= head).collect();
+    let w = |i: usize| freq(i, k).powf(-p);
+    let mut worst = 0.0f64;
+    for &i in &tail {
+        let mut rad = 0.0;
+        for &j in &tail { if j != i { rad += w(j) * entry(i, j, k).abs(); } }
+        let r = rad / (w(i) * entry(i, i, k));
+        if r > worst { worst = r; }
+    }
+    worst
+}
+
 fn checkpoint(path: &str, text: &str) {
     let tmp = format!("{}.tmp", path);
     if let Ok(mut f) = fs::File::create(&tmp) {
@@ -196,6 +213,36 @@ fn main() {
         println!("  part (2) needs that dominance to converge, so the Schur numbers below");
         println!("  are only trustworthy where part (1) says true.\n");
     }
+
+    println!("(1b) weighted dominance: d_n = n^-p, the H-matrix criterion\n");
+    println!("  A is positive definite if d_i A_ii > sum_j!=i d_j |A_ij|.  Plain dominance is");
+    println!("  p = 0 and fails.  A faster-decaying weight may not.\n");
+    let ps = [0.0f64, 0.5, 1.0, 1.5, 2.0, 2.5];
+    print!("{:>6}", "K");
+    for p in ps.iter() { print!("{:>10}", format!("p={:.1}", p)); }
+    println!();
+    let mut best_p: Option<f64> = None;
+    for &k in ks.iter() {
+        print!("{:>6}", k);
+        for (t, &p) in ps.iter().enumerate() {
+            let r = weighted_dominance(k, head, p);
+            print!("{:>10.4}", r);
+            if r < 1.0 && k == *ks.last().unwrap() && best_p.is_none() && t > 0 { best_p = Some(p); }
+        }
+        println!();
+    }
+    match best_p {
+        Some(p) => {
+            println!("\n  At the largest truncation the smallest exponent with ratio < 1 is");
+            println!("  p = {:.1}.  If that ratio also stays below 1 as K grows, the weighted", p);
+            println!("  criterion closes the tail where plain dominance could not.");
+        }
+        None => {
+            println!("\n  No exponent tested gives a ratio below 1 at the largest truncation.");
+            println!("  Weighted dominance does not rescue the argument either.");
+        }
+    }
+    println!();
 
     println!("(2) the Schur complement S = A_hh - A_ht A_tt^-1 A_th\n");
     println!("{:>6} {:>7} {:>14} {:>16} {:>9}", "K", "head", "S pos def", "min pivot of S", "elapsed");
