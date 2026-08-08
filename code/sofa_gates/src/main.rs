@@ -10,7 +10,8 @@
 //!               this project were withdrawn for exactly that.
 //!
 //! Both are reimplemented here with the standard library alone: no crates, no network, no
-//! interpreter.  The registry still lives in the old file, but only as DATA -- this program
+//! interpreter.  The registry lives in constants_registry.py, which is DATA and nothing else
+//! -- it was check_constants.py until that gate was retired; this program
 //! parses its `"literal": ("key", "V"|"D", "note"),` lines textually and never executes it.
 //!
 //! CUSTODY AND THE MIGRATION.  Coverage is harvested from the shipped Rust binaries, which
@@ -150,7 +151,7 @@ fn main() {
     let update = args.iter().any(|a| a == "--update-baseline");
 
     let note = root.join("paper/niche_separation/note.tex");
-    let reg_file = root.join("private/tools/check_constants.py");
+    let reg_file = root.join("private/tools/constants_registry.py");
     // A SEPARATE baseline from the Python gate.  That one measures coverage over 19 Python
     // producers; this one measures it over the Rust binaries only, so the two counts are not
     // comparable and sharing a file would silently clobber one with the other.  This number

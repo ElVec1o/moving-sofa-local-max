@@ -11,8 +11,16 @@
 //!   1. sofa_gates  — every decimal printed in the note is registered, and every declared
 //!                    measurement is produced by a shipped program (custody ratchet).
 //!   2. sofa_narr   — no verdict is printed from outside a conditional.
-//!   3. release     — the Rule 11 checks: nothing from private/ is tracked, no build
+//!   3. sync        — every file the release repo tracks matches its source counterpart.
+//!   4. release     — the Rule 11 checks: nothing from private/ is tracked, no build
 //!                    artifacts are tracked, and the commit author is the project's.
+//!
+//! It replaces check_sync.sh, check_custody.py and check_prose.py, which are retired.  One
+//! coverage loss is real and stated rather than hidden: check_prose compared each Python
+//! script's prose against its own output, and sofa_narr scans only Rust.  The 33 remaining
+//! Python files therefore have no verdict check.  None of them has been executed since the
+//! ban, so nothing they print is load-bearing, but if any is ever run again that gap is
+//! open.
 //!
 //! It does not commit or push.  It reports whether a push would be legitimate, and the
 //! decision stays with the person running it.
@@ -65,8 +73,38 @@ fn main() {
     println!("{}", tail(&out2, 3));
     if !ok2 { failed.push("sofa_narr"); }
 
-    println!("\n[3] release checks (Rule 11)");
+    // Every file the release repo tracks must match its source counterpart.  Content flows
+    // SOURCE -> RELEASE only; a divergence in either direction is the bug, because it means
+    // a push would ship something no source tree produced.  Three defects in this project
+    // came from sync round-trips silently reverting work.  This absorbs the last thing the
+    // retired shell gate did that nothing else covered.
+    println!("\n[3] source <-> release sync");
     let tracked = git(rel, &["ls-files"]);
+    let mut diverged: Vec<&str> = Vec::new();
+    let mut checked = 0usize;
+    for f in tracked.lines() {
+        // release-only by design: repo metadata and archived material with no source twin
+        if matches!(f, ".gitignore" | "CITATION.cff" | "LICENSE" | "README.md")
+            || f.starts_with("paper/manuscript") || f.starts_with("paper/UNIQUENESS")
+            || f.starts_with("paper/OFFDIAG") || f.starts_with("paper/figures/")
+            || f.ends_with("Cargo.lock")
+            || f == "algorithm/rigorous/probe_spurious_direction.py"
+        { continue; }
+        let s = root.join(f);
+        let r = rel.join(f);
+        if !s.exists() { diverged.push(f); continue; }
+        checked += 1;
+        match (std::fs::read(&s), std::fs::read(&r)) {
+            (Ok(a), Ok(b)) if a == b => {}
+            _ => diverged.push(f),
+        }
+    }
+    println!("  compared               {}", checked);
+    println!("  diverged / release-only {}", diverged.len());
+    for f in diverged.iter().take(8) { println!("    {}", f); }
+    if !diverged.is_empty() { failed.push("sync"); }
+
+    println!("\n[4] release checks (Rule 11)");
     let leaked = tracked.lines().filter(|l| l.starts_with("private/")).count();
     let artifacts = tracked.lines().filter(|l| l.contains("/target/")).count();
     let author = git(rel, &["config", "user.name"]).trim().to_string();
