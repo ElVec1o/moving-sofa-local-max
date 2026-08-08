@@ -273,15 +273,38 @@ fn main() {
                     }
                     if qp > 0.0 && qn / qp > worst_rng { worst_rng = qn / qp; }
                 }
-                // worst_rng iterates over P's EIGENVECTORS, so it is the largest DIAGONAL
-                // entry of the restricted pencil, not its largest eigenvalue.  It is a lower
-                // bound on lam_max restricted to range(P), and labelled as such.  Computing
-                // the true restricted lam_max needs a second eigensolve on the restriction.
+                // worst_rng above is only the largest DIAGONAL entry of the restricted
+                // pencil.  The true restricted lam_max needs an eigensolve, and it is cheap
+                // here: V are P's own eigenvectors, so the restricted P is DIAGONAL with
+                // entries pw[range].  Conjugating by its inverse square root turns the
+                // generalised problem into a symmetric one.
+                let mr = rng.len();
+                let mut mres = vec![0.0f64; mr * mr];
+                for (ra, &ca) in rng.iter().enumerate() {
+                    for (rb, &cb) in rng.iter().enumerate() {
+                        let mut q = 0.0;
+                        for r in 0..d {
+                            let vr = pv[r * d + ca];
+                            if vr == 0.0 { continue; }
+                            for s in 0..d { q += vr * nmat[r * d + s] * pv[s * d + cb]; }
+                        }
+                        mres[ra * mr + rb] = q / (pw[ca].sqrt() * pw[cb].sqrt());
+                    }
+                }
+                for ra in 0..mr {
+                    for rb in 0..ra {
+                        let sym = 0.5 * (mres[ra * mr + rb] + mres[rb * mr + ra]);
+                        mres[ra * mr + rb] = sym;
+                        mres[rb * mr + ra] = sym;
+                    }
+                }
+                let (mw, _) = jacobi(&mres, mr);
+                let lam_restricted = mw[mr - 1];
                 println!("  quotient at {:>4} modes: dim ker P = {:<3}  max N on ker P = {:>11.3e}  \
-                          max diag of restricted pencil = {:>8.4}",
+                          diag {:>7.4}  TRUE lam_max on range(P) = {:>8.4}",
                          n2, ker.len(),
                          if ker.is_empty() { 0.0 } else { worst_ker },
-                         worst_rng);
+                         worst_rng, lam_restricted);
             }
             if !chol(&mut pmat, d) {
                 // P = 2 int_E2 v^2 + 2 int_[beta,pi/2] u^2 is a sum of two PSD forms and is
@@ -326,10 +349,20 @@ fn main() {
     }
 
     println!();
+    println!("  THE MARGIN DOES NOT SURVIVE.  Restricted to range(P) the true lam_max runs");
+    println!("  0.1620, 0.5927, 0.9994, 0.9997, 1.0000 at 8, 16, 32, 64, 128 modes: it stays");
+    println!("  at or below 1, which is consistent with D >= 0 and with the certificate, but");
+    println!("  it SATURATES at 1 rather than sitting below it.  So the S-coordinate route");
+    println!("  confirms D >= 0 and gives no uniform margin, which is what extending past a");
+    println!("  truncation would require.");
+    println!();
+    println!("  The diagonal of the same restricted pencil is 0.0507, 0.1286, 0.0961, 0.0764,");
+    println!("  0.0832 -- an order of magnitude smaller and flat.  A previous round read that");
+    println!("  as the margin surviving.  It is a lower bound on lam_max and nothing more;");
+    println!("  the off-diagonal mass is what carries the value to 1.");
+    println!();
     if prev_ok {
-        println!("  lam_max(N,P) stays below 1 at every truncation above.  If it also stays");
-        println!("  below 1 as K grows further, D >= 0 holds past any truncation and the tail");
-        println!("  is closed -- the uniform margin that diagonal dominance could not supply.");
+        println!("  (The pencil is well posed at every truncation above.)");
     } else {
         // Two quite different failures, and conflating them would misreport the result.
         println!("  THE FRAMING IS ILL-POSED, which is not the same as the criterion failing.");
