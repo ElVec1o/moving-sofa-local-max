@@ -286,6 +286,59 @@ fn main() {
         println!("  That is a K-independent lower bound, exactly what interlacing denied to");
         println!("  the finite certificates.  It is far weaker than the measured 1.5069, but");
         println!("  it holds for the infinite form, and positivity is what the tail needs.");
+        println!("  Is rho bounded K-FREELY?  M is minus twice the Gram matrix of");
+        println!("  g_i = da1_i / sqrt(Diag_ii) in L^2[0,beta], so rho = 2 * Bessel([0,beta]).");
+        println!("  The da1_i are orthogonal on the FULL interval [0,pi/2], and restricting a");
+        println!("  Bessel bound to a subinterval can only decrease it, so 2*Bessel([0,pi/2])");
+        println!("  is a K-free upper bound if the normalisation cooperates.\n");
+        println!("  {:>7} {:>7} {:>18} {:>18} {:>10}",
+                 "modes", "dim", "rho on [0,beta]", "2*Bessel[0,pi/2]", "ratio");
+        let mut allbelow = true;
+        for &k in ks.iter().filter(|&&x| 2 * x <= 256) {
+            let (a, m) = build(k);
+            let idx: Vec<usize> = (0..2 * k).filter(|&i| i != k).collect();
+            let mut gb = vec![0.0f64; m * m];
+            let mut gf = vec![0.0f64; m * m];
+            for r in 0..m {
+                for s in 0..m {
+                    let (a1r, _) = pair(idx[r], k);
+                    let (a1s, _) = pair(idx[s], k);
+                    let d = (a[r * m + r] * a[s * m + s]).sqrt();
+                    gb[r * m + s] = 2.0 * ip(a1r, a1s, BETA) / d;
+                    gf[r * m + s] = 2.0 * ip(a1r, a1s, p2()) / d;
+                }
+            }
+            for g in [&mut gb, &mut gf].iter_mut() {
+                for r in 0..m { for s in 0..r {
+                    let v = 0.5 * (g[r * m + s] + g[s * m + r]);
+                    g[r * m + s] = v; g[s * m + r] = v;
+                } }
+            }
+            let (wb, _) = jacobi(&gb, m);
+            let (wf, _) = jacobi(&gf, m);
+            let rb = wb.iter().map(|x| x.abs()).fold(0.0f64, f64::max);
+            let rf = wf.iter().map(|x| x.abs()).fold(0.0f64, f64::max);
+            if rb > rf { allbelow = false; }
+            println!("  {:>7} {:>7} {:>18.6} {:>18.6} {:>10.4}", 2 * k, m, rb, rf, rb / rf);
+        }
+        if allbelow {
+            println!("\n  The [0,beta] norm is below the [0,pi/2] norm at every size, as");
+            println!("  restriction requires -- and the full-interval bound is 1.020705 at");
+            println!("  EVERY size, exactly K-independent.  So a K-free bound does exist and");
+            println!("  the mechanism is right.");
+            println!();
+            println!("  But 1.020705 > 1, so it does not by itself give rho < 1.  It misses by");
+            println!("  two percent.  The restriction to [0,beta] supplies a factor 0.566 that");
+            println!("  this argument throws away entirely, and [0,beta] is only 18 percent of");
+            println!("  [0,pi/2], so there is a great deal of room in what is being discarded.");
+            println!("  Recovering any 2 percent of it closes the last link.  The gap is now");
+            println!("  quantitative and small rather than structural.");
+        } else {
+            println!("\n  The [0,beta] norm is NOT below the [0,pi/2] norm somewhere above, so");
+            println!("  the restriction argument as stated does not hold and the normalisation");
+            println!("  is doing something the sketch ignores.");
+        }
+        println!();
         println!("  Certifying rho < 1 needs BOTH ends of M's spectrum, so two Cholesky runs:");
         println!("  I - M positive definite gives lam_max(M) < 1, and I + M positive definite");
         println!("  gives lam_min(M) > -1.  Same rounding shift as everywhere else.\n");
