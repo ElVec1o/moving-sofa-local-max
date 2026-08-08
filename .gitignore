@@ -25,3 +25,4 @@ private/
 !algorithm/rigorous/anchored_mirr.json
 cross_K*.txt
 code/**/target/
+code/**/tail_schur_checkpoint.txt
