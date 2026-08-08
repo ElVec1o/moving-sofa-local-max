@@ -340,11 +340,11 @@ fn main() {
         }
         println!();
         println!("  Certify rho < 0.7 at beta = pi/6, the largest admissible beta.  Both ends\n  again: 0.7 I - M and 0.7 I + M positive definite, same rounding shift.\n");
-        println!("  {:>7} {:>7} {:>18} {:>18} {:>11}",
-                 "modes", "dim", "0.7I - M pivot", "0.7I + M pivot", "rho < 0.7");
+        println!("  {:>5} {:>7} {:>7} {:>16} {:>16} {:>11}",
+                 "thr", "modes", "dim", "tI - M pivot", "tI + M pivot", "verdict");
         let b6 = std::f64::consts::PI / 6.0;
         let mut cert7 = true;
-        for &kb in [16usize, 32, 64].iter() {
+        for &(thr, kb) in [(0.7f64,16usize),(0.7,32),(0.7,64),(0.8,16),(0.8,32),(0.8,64),(0.9,16),(0.9,32),(0.9,64)].iter() {
             let n2 = 2 * kb;
             let idx: Vec<usize> = (0..n2).filter(|&i| i != kb).collect();
             let m = idx.len();
@@ -373,18 +373,18 @@ fn main() {
             } }
             let mut ninf = 0.0f64;
             for r in 0..m { let s: f64 = (0..m).map(|c| g[r * m + c].abs()).sum(); if s > ninf { ninf = s; } }
-            let d = 10.0 * (20.0 * (m as f64 + 1.0) * U * (0.7 + ninf) + 8.0 * U * ninf);
+            let d = 10.0 * (20.0 * (m as f64 + 1.0) * U * (thr + ninf) + 8.0 * U * ninf);
             let mut mi = vec![0.0f64; m * m];
             let mut pl = vec![0.0f64; m * m];
             for r in 0..m { for s in 0..m {
-                mi[r * m + s] = if r == s { 0.7 - g[r * m + s] } else { -g[r * m + s] };
-                pl[r * m + s] = if r == s { 0.7 + g[r * m + s] } else { g[r * m + s] };
+                mi[r * m + s] = if r == s { thr - g[r * m + s] } else { -g[r * m + s] };
+                pl[r * m + s] = if r == s { thr + g[r * m + s] } else { g[r * m + s] };
             } }
             let pm = cholesky_shifted(&mi, m, d);
             let pp = cholesky_shifted(&pl, m, d);
             let ok = pm.is_some() && pp.is_some();
-            cert7 &= ok;
-            println!("  {:>7} {:>7} {:>18} {:>18} {:>11}", n2, m,
+            if thr <= 0.85 { cert7 &= ok; }
+            println!("  {:>5.1} {:>7} {:>7} {:>16} {:>16} {:>11}", thr, n2, m,
                      pm.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
                      pp.map(|p| format!("{:.9}", p)).unwrap_or("-".into()),
                      if ok { "CERTIFIED" } else { "fails" });
@@ -396,7 +396,15 @@ fn main() {
                      fb6, 0.3 * fb6);
             println!("  Still per-truncation, and still assuming rho is monotone in beta.");
             println!();
-            println!("  AND THE MARGIN IS ERODING.  The 0.7I - M pivot runs 0.268678,");
+            println!("  USE 0.8, NOT 0.7.  At thresholds 0.8 and 0.9 the pivot is EXACTLY");
+            println!("  K-independent -- 0.426191674 and 0.546348663 at 32, 64 and 128 modes,");
+            println!("  identical to nine digits.  Only at 0.7 does the minimum switch to a");
+            println!("  K-dependent direction and erode.  So rho < 0.8 certifies with a");
+            println!("  K-independent margin of 0.426, and (1 - 0.8) f(pi/6) = 0.2779 > 0 still");
+            println!("  suffices downstream, because only positivity is needed.  The tighter");
+            println!("  threshold bought a number that looked better and was less robust.");
+            println!();
+            println!("  At 0.7 the margin erodes.  The 0.7I - M pivot runs 0.268678,");
             println!("  0.239563, 0.180187 at 32, 64 and 128 modes, with decrements 0.029 then");
             println!("  0.059 -- growing, not shrinking.  Unlike the f(beta) pivot and the");
             println!("  0.7I + M pivot, both of which are K-independent to six digits, this one");
