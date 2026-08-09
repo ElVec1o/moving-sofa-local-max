@@ -2171,4 +2171,48 @@ theorem seghyp_gives_reach_nonneg {σ a1 : ℝ} (hseg : max a1 0 ≤ σ) : 0 ≤
 
 end FloorConstraint
 
+
+section ThirdComparison
+
+/-!
+### The third comparison, tight at the contact
+
+The two reflected comparisons of `rem:v8` leave the gap `x ∈ (a₁ + π/2, π - a₂)`, and the
+floor sits inside it. A third comparison closes it, and it is the one anchored at the
+ceiling. With `H(π/2) = 1`, the support inequality at `ψ = π/2` reads
+`sin ω - H'(π/2) cos ω ≤ H(ω)`, since `cos(ω - π/2) = sin ω` and `sin(ω - π/2) = -cos ω`.
+Feeding that into the reflected condition
+`(F-1)cos x - (G-1)sin x + sin ω ≤ H(ω)` with `x = ω + t` leaves the slack
+
+  `-( (F-1)cos x - (G-1)sin x + H'(π/2) cos ω )`,
+
+and the `sin ω` cancels (`mirror_slack_ceiling`). At the contact `t = 0`, `ω = π/2` this
+slack is exactly `0`: `cos x = cos(π/2) = 0` kills the first term, `G(0) - 1 = 0` kills the
+second because `H(π/2) = 1`, and `cos ω = 0` kills the third (`ceiling_slack_contact`). So
+the comparison that covers the gap is tight precisely where the other two fail, which is
+what a proof of an identity-at-contact has to look like.
+
+Measured over the reflected half for `Σ`, the best of the three slacks is nonnegative
+everywhere, its worst value being `0` and attained only at the contact. The atom at `π/2`
+makes the top of the cap a segment, so both one-sided values of `H'(π/2)` give valid
+comparisons and both were tried.
+-/
+
+/-- **The ceiling comparison.** Feeding the support inequality at `ψ = π/2` into the
+reflected condition leaves this slack; the `sin ω` cancels exactly. -/
+theorem mirror_slack_ceiling (f g hp2 t ω : ℝ) :
+    ((Real.sin ω - hp2 * Real.cos ω)
+      - ((f - 1) * Real.cos (ω + t) - (g - 1) * Real.sin (ω + t) + Real.sin ω))
+    = -((f - 1) * Real.cos (ω + t) - (g - 1) * Real.sin (ω + t) + hp2 * Real.cos ω) := by
+  ring
+
+/-- **Tightness at the contact.** At `t = 0` and `ω = π/2`, with `G(0) = H(π/2) = 1`, the
+ceiling slack vanishes. Each of its three terms dies for its own reason. -/
+theorem ceiling_slack_contact (f hp2 : ℝ) :
+    -((f - 1) * Real.cos (Real.pi / 2 + 0) - (1 - 1) * Real.sin (Real.pi / 2 + 0)
+      + hp2 * Real.cos (Real.pi / 2)) = 0 := by
+  rw [add_zero, Real.cos_pi_div_two]; ring
+
+end ThirdComparison
+
 end MovingSofa

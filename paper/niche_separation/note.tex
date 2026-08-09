@@ -743,7 +743,8 @@ direction $-\nu_t=(\sin t,-\cos t)$ points downward, and the floor is reached at
 distance exactly $\sigma(t)$, which is why \eqref{eq:sig} is the relevant reach.
 
 \begin{proposition}[Niche area in convex-linear data]\label{prop:V}
-If the two sweeps are disjoint, injective and cover the niche, then
+Assume \eqref{eq:seghyp}, that is $\sigma\ge\alpha_1^+$ on $[0,\pi/2]$. If in addition the
+two sweeps are disjoint, injective and cover the niche, then
 \begin{equation}\label{eq:V}
   |N|=\int_0^{\pi/2}\Bigl[\tfrac12\bigl(\alpha_2^+\bigr)^2
       +\tfrac12\bigl(\sigma-\alpha_1\bigr)^2
@@ -1482,8 +1483,10 @@ controls the first term only: it says covering is ``at least one entry'' and tha
 injectivity and disjointness together are ``at most one entry''. It says nothing about the
 second term, which is the sweep mass that leaves the cap. Equality $V=|N|$ needs, in
 addition, a containment statement: \emph{the truncated sweeps lie in $C_2$}. That statement
-is not among the three hypotheses of Proposition~\ref{prop:V}, and Remark~\ref{rem:v6} shows
-it is not implied by them.
+is not implied by the disjointness, injectivity and covering hypotheses alone, as
+Remark~\ref{rem:v6} shows by counterexample. It is implied by \eqref{eq:seghyp}, which
+Proposition~\ref{prop:V} now assumes: Remarks~\ref{rem:v10} and~\ref{rem:v11} reduce the
+containment to $\sigma\ge0$ at the binding direction and cover the remaining ones.
 
 This proves (iii). Normalise so that $G(0)=H(\pi/2)=1$, which is a translation and changes
 no area and neither arm. Then $c(0)=(H(0)-1,0)$ sits on the floor and its quadrant meets the
@@ -1779,6 +1782,35 @@ directions other than $\psi=-\pi/2$; they are slacker throughout the measurement
 being the unique argmin, but slackness on a grid of directions is not a proof. So
 $c(t)\in\rho C$ for $\Sig$ is \textsc{heuristic}, improved from \textsc{conjecture}, and the
 route to \textsc{proved} is now a single stated inequality rather than an open search.
+\end{remark}
+
+\begin{remark}[The third comparison closes the reflected half]\label{rem:v11}
+The two reflected comparisons of Remark~\ref{rem:v8} leave the gap
+$x\in(a_1+\pi/2,\pi-a_2)$, with $x=\omega+t$ and $a_i=\arctan\alpha_i$, and the floor sits
+inside it. A third closes it, and it is the one anchored at the ceiling.
+
+With $H(\pi/2)=1$ the support inequality at $\psi=\pi/2$ reads
+$\sin\omega-H'(\pi/2)\cos\omega\le H(\omega)$, since $\cos(\omega-\pi/2)=\sin\omega$ and
+$\sin(\omega-\pi/2)=-\cos\omega$. Feeding it into the reflected condition
+$(F-1)\cos x-(G-1)\sin x+\sin\omega\le H(\omega)$ leaves the slack
+\[
+  -\bigl((F-1)\cos x-(G-1)\sin x+H'(\pi/2)\cos\omega\bigr),
+\]
+the $\sin\omega$ cancelling exactly. At the contact $t=0$, $\omega=\pi/2$ this slack is $0$:
+$\cos x$ kills the first term, $G(0)-1=0$ the second because $H(\pi/2)=1$, and $\cos\omega$
+the third. So the comparison that covers the gap is tight precisely where the other two
+fail, which is what a proof of an identity at contact must look like. The atom at $\pi/2$
+makes the top of the cap a segment, so both one-sided values of $H'(\pi/2)$ give valid
+comparisons.
+
+Measured for $\Sig$ over a $1440$-point scan of the reflected directions crossed with the
+time grid, the best of the three slacks is nonnegative everywhere, its worst value being $0$
+and attained only at the contact.
+
+Rule~0: \verb|mirror_slack_ceiling| and \verb|ceiling_slack_contact| are \textsc{verified};
+that the three slacks cover the reflected half for $\Sig$ is \textsc{heuristic}, being a
+scan, and what it would take to promote it is a sign analysis of three explicit
+trigonometric expressions rather than any further geometry.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which

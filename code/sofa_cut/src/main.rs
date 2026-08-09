@@ -383,6 +383,37 @@ fn main() {
     println!("  min (alpha_2 + tan t)            {:+.6}  (needed >= 0)", m2);
     println!("  max |alpha_1|, max |alpha_2|     {:.6}  {:.6}", ma1, ma2);
     println!("  worst c(t) outside C, outside rC {:+.6}  {:+.6}", cout, rout);
+    // THREE COMPARISONS for the reflected half.  psi = -t gives slack cos x + a1 sin x,
+    // psi = -(t+pi/2) gives -(sin x + a2 cos x), with x = omega + t; those two leave a gap
+    // (a1 + pi/2, pi - a2) that contains the floor.  A third at psi = pi/2 is TIGHT at the
+    // contact and covers the gap if the quantity below is nonpositive.  Both one-sided
+    // values of H'(pi/2) are legitimate, the atom making the top a segment, so both are tried.
+    {
+        let hpl_p2 = interp(&x, &hpl, p2());
+        let hpr_p2 = interp(&x, &hp, p2());
+        let mut worst = -1e9f64;
+        let (mut bt, mut bw) = (0.0f64, 0.0f64);
+        for f in fr.iter() {
+            let t = f.my.atan2(f.mx);
+            let fm1 = f.cx * f.mx + f.cy * f.my;      // = F - 1
+            let gm1 = f.cx * f.nx + f.cy * f.ny;      // = G - 1
+            for k in 1..=1440 {
+                let om = k as f64 / 1440.0 * std::f64::consts::PI;
+                let xx = om + t;
+                let s1 = xx.cos() + f.a1 * xx.sin();
+                let s2 = -(xx.sin() + f.a2 * xx.cos());
+                let base = fm1 * xx.cos() - gm1 * xx.sin();
+                let s3 = -(base + hpl_p2 * om.cos());
+                let s4 = -(base + hpr_p2 * om.cos());
+                let best = s1.max(s2).max(s3).max(s4);
+                if -best > worst { worst = -best; bt = t; bw = om; }
+            }
+        }
+        println!("  three-comparison worst failure   {:+.8} at t = {:.5}, omega = {:.5}",
+                 worst, bt, bw);
+        println!("  (negative means the reflected half is covered everywhere)");
+    }
+
     // WHICH lower-half direction binds?  Scan psi in [-pi, 0) using h(psi) = H(-psi) - sin(-psi)
     // = H(|psi|) + sin(psi), the rho-invariance relation.  If the argmin is psi = -pi/2 the
     // whole mirror condition is c_y(t) >= 0: the corner never dips below the floor.
