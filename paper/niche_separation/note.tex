@@ -1911,6 +1911,32 @@ rather than assumed silently. Rule~0: \verb|width_at_half_pi| and
 \verb|width_needed_for_endpoint| are \textsc{verified}; that $\Sig$ satisfies the condition
 with equality only at $\pi/2$ is \textsc{heuristic}.
 \end{remark}
+
+\begin{remark}[Why the width condition is tight at $\pi/2$, and only there]\label{rem:v15}
+Put $D(\theta)=H(\theta)+H(\pi-\theta)-\sin\theta-1$, so that Remark~\ref{rem:v14}'s condition
+is $D\ge0$. Two facts fix its shape.
+
+$D$ is symmetric about $\pi/2$: the substitution $\theta\mapsto\pi-\theta$ swaps the two
+support terms and fixes $\sin\theta$. And since $H+H''=r$ while $\sin$ is annihilated by
+$d^2/d\theta^2+1$,
+\[
+  D''+D=r(\theta)+r(\pi-\theta)-1 ,
+\]
+so the atom of $r$ at $\pi/2$ enters $D''$ twice, once from each term, contributing a Dirac
+of mass twice the facet length. Hence $D'$ jumps by that amount at $\pi/2$, while symmetry
+forces the two one-sided slopes to be negatives of each other. Together they are exactly
+$\mp$ the facet length, so $D$ has a \emph{corner} minimum at $\pi/2$, and $D(\pi/2)=0$ under
+the gauge makes that minimum the tight value.
+
+Measured for $\Sig$: the two one-sided slopes agree with $\mp$ the facet length
+$1.1670498$ of Remark~\ref{rem:cap} to the finite-difference error, and
+$|D(\theta)-D(\pi-\theta)|$ is at machine precision.
+
+The tightness at $\pi/2$ is therefore forced by the ceiling facet rather than being a
+numerical accident, and $D>0$ on a punctured neighbourhood of $\pi/2$. Rule~0:
+\verb|width_symmetric| and \verb|corner_slopes_from_atom| are \textsc{verified}; that $D$ has
+no other zero is \textsc{heuristic} and is the remaining content of the width condition.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

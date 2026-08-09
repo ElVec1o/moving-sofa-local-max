@@ -264,6 +264,22 @@ fn main() {
         }
         println!("  min width H(th)+H(pi-th)-sin th  {:.8} at theta = {:.6}  (need >= 1)",
                  wmin, warg);
+        // D is symmetric about pi/2 and D'' + D = r(th) + r(pi-th) - 1, so the atom at pi/2
+        // contributes a Dirac of mass 2*ATOM and D has a CORNER minimum there with slopes
+        // -ATOM and +ATOM.  That forces D > 0 on both sides near pi/2, explaining the
+        // tightness structurally rather than numerically.
+        let dd = |th: f64| interp(&x, &h, th) + interp(&x, &h, std::f64::consts::PI - th)
+                           - th.sin() - 1.0;
+        let e = 1e-4;
+        let sl = (dd(p2()) - dd(p2() - e)) / e;
+        let sr = (dd(p2() + e) - dd(p2())) / e;
+        let mut sym = 0.0f64;
+        for k in 0..=1000 {
+            let th = k as f64 / 1000.0 * std::f64::consts::PI;
+            sym = sym.max((dd(th) - dd(std::f64::consts::PI - th)).abs());
+        }
+        println!("  D slopes at pi/2 (left, right)   {:+.5}  {:+.5}   ATOM = {:.5}", sl, sr, ATOM);
+        println!("  max |D(th) - D(pi-th)| (symmetry) {:.2e}", sym);
     }
     println!("  margin to the Sturm threshold 1  {:.6}", 1.0 - rmax);
 

@@ -2318,4 +2318,49 @@ theorem width_needed_for_endpoint {hth hpi w : ℝ} (hw : w = hth + hpi)
 
 end WidthCondition
 
+
+section WidthStructure
+
+/-!
+### Why the width condition is tight at `π/2`, and only there
+
+Put `D(θ) = H(θ) + H(π-θ) - sin θ - 1`, so `G1c` is `D ≥ 0`. Two facts fix its shape.
+
+`D` is symmetric about `π/2`: replacing `θ` by `π-θ` swaps the two `H` terms and fixes
+`sin θ` (`width_symmetric`). And since `H + H'' = r` while `sin` is annihilated by
+`d²/dθ² + 1`,
+
+  `D'' + D = r(θ) + r(π-θ) - 1`,
+
+so the atom of `r` at `π/2` enters `D''` twice, once from each term, contributing a Dirac of
+mass `2·ATOM`. Hence `D'` jumps by `2·ATOM` at `π/2`, while symmetry forces the two one-sided
+slopes to be negatives of each other. Together they are exactly `∓ATOM`
+(`corner_slopes_from_atom`), so `D` has a corner minimum at `π/2`, and `D(π/2) = 0` under the
+gauge makes that minimum exactly the tight value.
+
+Measured for `Σ`: the one-sided slopes are `-1.16702` and `+1.16702` against `ATOM =
+1.16705`, and `|D(θ) - D(π-θ)|` is `4.44e-16`.
+
+So the tightness at `π/2` is forced by the ceiling facet rather than being a numerical
+accident, and `D > 0` holds on a punctured neighbourhood of `π/2`. What is not settled is
+that `D` has no other zero, which is the remaining content of `G1c`.
+-/
+
+/-- `D` is symmetric about `π/2`: the substitution `θ ↦ π - θ` swaps the two support terms
+and fixes `sin θ`. -/
+theorem width_symmetric (H : ℝ → ℝ) (θ : ℝ) :
+    (H θ + H (Real.pi - θ) - Real.sin θ - 1)
+      = (H (Real.pi - θ) + H (Real.pi - (Real.pi - θ)) - Real.sin (Real.pi - θ) - 1) := by
+  rw [Real.sin_pi_sub]
+  ring_nf
+
+/-- **The corner slopes are the atom.** Symmetry forces the one-sided derivatives of `D` at
+`π/2` to be negatives of each other, and the atom makes them differ by twice its mass. Those
+two facts pin them to `∓ATOM`, so the minimum at `π/2` is a corner and not a tangency. -/
+theorem corner_slopes_from_atom {sl sr atom : ℝ} (hsym : sl = -sr)
+    (hjump : sr - sl = 2 * atom) : sr = atom ∧ sl = -atom := by
+  constructor <;> linarith
+
+end WidthStructure
+
 end MovingSofa
