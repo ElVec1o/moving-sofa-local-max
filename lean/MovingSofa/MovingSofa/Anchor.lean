@@ -2413,4 +2413,75 @@ theorem escape_zero {capA v sofa : ℝ}
 
 end InnerFunctional
 
+
+section AffineMargin
+
+/-!
+### The affine margin: a lower bound on the niche that stays convex
+
+`V_in` bounds without containment, but it is the wrong repair for the variational step.
+Writing `Q_in = |C₂| - 2V_in = Q + 2E`, and `Q` being concave, `Q_in` is concave only if the
+escaping mass `E` is, and there is no reason for that. The obstruction is that restricting
+the domain by "image lies in `C₂`" is not an affine condition on `H`.
+
+Shrink the windows instead. Replace `[0, α₂⁺]` by `[0, (α₂-δ)⁺]` and `[α₁⁺, σ]` by
+`[α₁⁺, σ-δ]`. Pulling a window in by `δ` pulls the corresponding sweep endpoint in by `δ`
+along its own ray, so once `δ` dominates the endpoint excursion the shrunken sweep lies in
+`C₂` and the resulting functional is `≤ |N|` exactly as `V_in` is. The gain is that the
+truncation is now AFFINE: `α₂ - δ` is affine in `H` whenever `δ` is, so
+`½((α₂-δ)⁺)²` is a convex function of an affine function of `H`, hence convex
+(`margin_term_convex`), and the whole functional keeps the structure the concavity argument
+consumes.
+
+Nothing is lost where containment holds: `δ = 0` recovers `V` (`margin_zero`), and shrinking
+only decreases the functional (`margin_monotone`), so the bound degrades gracefully rather
+than failing. For `Σ`, where the measured escape is zero, `δ = 0` is admissible and the
+classical bound is unchanged.
+
+What this does not settle is how small `δ` may be taken as a function of `H`, that is, how
+the endpoint excursion is bounded. That is the remaining content, and it is a bound on one
+curve rather than an exact containment.
+-/
+
+/-- Shrinking the window can only decrease the term, so the margin functional is below the
+classical one for every nonnegative `δ`. -/
+theorem margin_monotone {x δ : ℝ} (hδ : 0 ≤ δ) :
+    max (x - δ) 0 ^ 2 ≤ max x 0 ^ 2 := by
+  have h1 : 0 ≤ max (x - δ) 0 := le_max_right _ _
+  have h2 : max (x - δ) 0 ≤ max x 0 := max_le_max (by linarith) le_rfl
+  nlinarith
+
+/-- At zero margin the functional is the classical one, so nothing is lost where containment
+already holds. -/
+theorem margin_zero (x : ℝ) : max (x - 0) 0 ^ 2 = max x 0 ^ 2 := by rw [sub_zero]
+
+/-- **The margin term is convex.** `x ↦ max (x - δ) 0` is a maximum of two affine functions,
+hence convex and nonnegative, and squaring a nonnegative convex function preserves convexity.
+This is what the restricted-domain functional loses and the margin functional keeps. -/
+theorem margin_term_convex (δ : ℝ) :
+    ConvexOn ℝ Set.univ (fun x : ℝ => max (x - δ) 0 ^ 2) := by
+  have hmax : ConvexOn ℝ Set.univ (fun x : ℝ => max (x - δ) 0) := by
+    refine ⟨convex_univ, fun x _ y _ a b ha hb hab => ?_⟩
+    simp only [smul_eq_mul]
+    have hshift : a * x + b * y - δ = a * (x - δ) + b * (y - δ) := by
+      have hd : a * δ + b * δ = δ := by rw [← add_mul, hab, one_mul]
+      linarith
+    rw [hshift]
+    have n1 : (0:ℝ) ≤ max (x - δ) 0 := le_max_right _ _
+    have n2 : (0:ℝ) ≤ max (y - δ) 0 := le_max_right _ _
+    have h1 : a * (x - δ) ≤ a * max (x - δ) 0 :=
+      mul_le_mul_of_nonneg_left (le_max_left _ _) ha
+    have h2 : b * (y - δ) ≤ b * max (y - δ) 0 :=
+      mul_le_mul_of_nonneg_left (le_max_left _ _) hb
+    exact max_le (by linarith) (by nlinarith)
+  exact hmax.pow (fun x _ => le_max_right _ _) 2
+
+/-- The margin functional bounds the sofa area, given that the margin forces containment. -/
+theorem margin_bound {capA niche marg sofa : ℝ}
+    (hdecomp : sofa = capA - 2 * niche) (hin : marg ≤ niche) :
+    sofa ≤ capA - 2 * marg := by
+  rw [hdecomp]; linarith
+
+end AffineMargin
+
 end MovingSofa

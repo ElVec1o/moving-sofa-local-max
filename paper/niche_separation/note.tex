@@ -1968,6 +1968,33 @@ concavity argument of Theorem~\ref{thm:final} consumes; without that the new bou
 but not yet usable in the variational step. That is the next question, and it is a question
 about a restricted integral rather than about geometry.
 \end{remark}
+
+\begin{remark}[The affine margin: a lower bound that stays convex]\label{rem:v17}
+$V_{\mathrm{in}}$ bounds without containment, but it is the wrong repair for the variational
+step. Writing $Q_{\mathrm{in}}=|C_2|-2V_{\mathrm{in}}=Q+2E$, and $Q$ being concave,
+$Q_{\mathrm{in}}$ is concave only if the escaping mass $E$ is, and there is no reason for
+that. The obstruction is that restricting the domain by ``image lies in $C_2$'' is not an
+affine condition on $H$.
+
+Shrink the windows instead. Replace $[0,\alpha_2^+]$ by $[0,(\alpha_2-\delta)^+]$ and
+$[\alpha_1^+,\sigma]$ by $[\alpha_1^+,\sigma-\delta]$. Pulling a window in by $\delta$ pulls
+the corresponding sweep endpoint in by $\delta$ along its own ray, so once $\delta$ dominates
+the endpoint excursion the shrunken sweep lies in $C_2$ and the functional is $\le|N|$ exactly
+as $V_{\mathrm{in}}$ is. The gain is that the truncation is now \emph{affine}:
+$\alpha_2-\delta$ is affine in $H$ whenever $\delta$ is, so $\tfrac12((\alpha_2-\delta)^+)^2$
+is a convex function of an affine function of $H$, hence convex, and the functional keeps the
+structure the concavity argument of Theorem~\ref{thm:final} consumes.
+
+Nothing is lost where containment holds: $\delta=0$ recovers $V$, and shrinking only decreases
+the functional, so the bound degrades gracefully rather than failing. For $\Sig$, where the
+measured escape is $0$, $\delta=0$ is admissible and the classical bound is unchanged.
+
+Rule~0: \verb|margin_monotone|, \verb|margin_zero|, \verb|margin_term_convex| and
+\verb|margin_bound| are \textsc{verified}. What is not settled is how small $\delta$ may be
+taken as a function of $H$, that is, how the endpoint excursion is bounded. That is the
+remaining content, and it is a bound on one curve rather than an exact containment of two
+two-parameter families.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
