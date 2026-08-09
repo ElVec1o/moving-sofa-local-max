@@ -2301,6 +2301,46 @@ Remark~\ref{rem:v24}. It does not by itself discharge the containment hypothesis
 Theorem~\ref{thm:final}, which is about the truncated sweeps and not about the corner path
 alone.
 \end{remark}
+
+\begin{remark}[Retraction: the width condition is necessary, not sufficient]\label{rem:v30}
+The Scope paragraph of Remark~\ref{rem:v29} asserted that the second endpoint condition
+$X(\theta)-\mu_\theta\in C_2$ \emph{is} the width condition of Remark~\ref{rem:v14}. That is
+withdrawn. Membership in $C_2$ is the whole family $\langle X(\theta)-\mu_\theta,\mu_\varphi
+\rangle\le h_2(\varphi)$ over all $\varphi$, and the width condition is that family at the
+single direction $\varphi=\theta+\pi$. Remark~\ref{rem:v14} and the Lean statement
+\verb|width_needed_for_endpoint| both say ``only if'', correctly; the prose upgraded it.
+
+The gap is not cosmetic. A triangle with vertices $(0,0)$, $(0.1,-10)$, $(5,-0.1)$ has width
+$10$ in the vertical direction and does not contain $X(\pi/2)-\mu_{\pi/2}$. For $\Sig$ the two
+quantities vanish at different orders at the contact: with $\delta=\pi/2-\theta$, $D\to m\delta$
+while the true containment margin $\to\tfrac12\rho_1(\pi/2^-)\delta^2$. So no bound
+$\text{margin}\ge cD$ holds at any constant, and Remark~\ref{rem:v29}'s theorem, though correct
+as a statement about $D$, cannot supply the endpoint. The substitution survived earlier scrutiny
+because $\varphi=\theta+\pi$ is never the binding direction except at $\theta=\pi/2$, where it
+coincides with the floor.
+
+The required statement is nevertheless true on $\mathcal D$, by a shorter argument that uses
+the brackets already established. Both facets have the same $x$-shadow $[-\alpha_2(0),\kappa]$,
+so $C_2$ contains the rectangle $R=[-\alpha_2(0),\kappa]\times[0,1]$. For $\theta\in[0,\pi/2]$,
+$X(\theta)-\mu_\theta=(A(\theta),A_2(\theta))$ with $A=(H-1)\cos\theta-H'\sin\theta$ and
+$A_2=(H-1)\sin\theta+H'\cos\theta$; by the bracket identities $A'=\rho_1\sin\ge0$ with $A(0)=0$,
+$A(\pi/2)=\kappa$, and $A_2'=-\rho_1\cos\le0$ with $A_2(0)=\tfrac12$, $A_2(\pi/2)=0$. Hence the
+point lies in $[0,\kappa]\times[0,\tfrac12]\subset R$. The reflected range is symmetric, and
+there the endpoint of the $x$-range is $1-H(\pi)\le\kappa$, which is $\alpha_1(\pi/2)\ge0$.
+
+So the endpoint condition consumes (d) at \emph{both} $t=0$ and $t=\pi/2$, not at $t=0$ alone.
+The same rectangle argument reproves Remark~\ref{rem:v29}'s corner containment, and subsumes
+Remarks~\ref{rem:v7} through~\ref{rem:v12}.
+
+Rule~0: the identification of the endpoint condition with the width condition is
+\textsc{false}; Remark~\ref{rem:v29}'s theorem about $D$ stands; the endpoint condition itself
+is \textsc{proved} by the rectangle argument, which is not yet written out or formalised.
+Theorem~\ref{thm:final} remains \textsc{conjecture}: besides this, \eqref{eq:seghyp} is
+undischarged in its proof, Remark~\ref{rem:v24}'s argument was written for the old (d) and needs
+the replacement given by the referee, its concavity step cites a superseded remark where
+\verb|cor:anchored| is the live result, and its $V=|N|$ sentence still cites the proposition
+whose proof Remark~\ref{rem:v13} found unsupported.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
