@@ -1676,17 +1676,37 @@ and $\max|c'|^2=0.813328$ against $2$. The disjunction is also checked directly 
 $(t,\theta)$ grid and fails nowhere, its worst margin being $0.437739$; the corner path sits
 inside $C_2$ with worst excursion $0.000911$ inward (\verb|sofa_cut|).
 
-Two gaps are stated rather than hidden. The disjunction argument as formalised assumes both
-arms nonnegative, and $\Sig$ has $\alpha_1<0$ on $E_1$, where the range condition
-$t\le\pi/2-|\arctan\alpha_1|$ is needed and is covered by the measurement but not by the
-proof. And $C_2=C\cap\rho C$, so membership in $\rho C$ needs the mirror of this argument,
-which the mirror of Proposition~\ref{prop:V} supplies but which is not written out.
+The sign restriction is removable. Redoing the argument without assuming the arms
+nonnegative, the worst $\phi$ sits at the two ends of the range $[-t,\pi-t]$, and the
+conditions there are
+\[
+  \alpha_1\sin t+\cos t\ge0,\qquad \alpha_2\cos t+\sin t\ge0,
+\]
+that is $\alpha_1\ge-\cot t$ and $\alpha_2\ge-\tan t$, each binding only where the
+corresponding arm is negative, and symmetric under $\alpha_1\leftrightarrow\alpha_2$,
+$t\leftrightarrow\pi/2-t$. Each propagates inward from its end by the angle-subtraction
+formula alone: multiplying the slack by $\sin t$ and using $\sin(t-\psi)\ge0$ reduces it to
+the end condition, with no division and no $\arctan$. For $\Sig$ both margins are
+$0.751117$, equal because $\Sig$ carries that symmetry.
+
+The product bound is exact, not measured. $\max|\alpha_1|=\max|\alpha_2|$ agrees with
+$\alpha_2(0)=2a_1-1=0.750574724825464$, so $\alpha_1\alpha_2\le(2a_1-1)^2<1$ with no appeal
+to floating point.
+
+What remains is the mirror, and it is the binding constraint rather than a formality. With
+$C_2=C\cap\rho C$, the corner path clears $C$ by $0.613436$ but clears $\rho C$ by only
+$0.000911$, a factor of $670$. The reason is structural: $\rho$-invariance of $C_2$ gives
+$H(-\theta)=H(\theta)-\sin\theta$, so membership in $\rho C$ is the same family of
+inequalities at directions $\psi\in[-\pi,0]$, where $\phi=\psi-t$ ranges over
+$[-3\pi/2,0]$ and meets the third quadrant that the argument above excludes. So the
+disjunction does not transfer, and a separate argument is needed.
 
 Rule~0: \verb|corner_slack_one|, \verb|corner_slack_two|, \verb|corner_disjunction|,
-\verb|no_third_quadrant|, \verb|corner_in_cap| and \verb|arm_prod_le_of_speed| are
-\textsc{verified}; $c(t)\in C_2$ for $\Sig$ is \textsc{proved} on $E_1^c$ and
-\textsc{heuristic} on $E_1$, so Proposition~\ref{prop:V} for $\Sig$ inherits
-\textsc{heuristic} until those two gaps close.
+\verb|no_third_quadrant|, \verb|corner_in_cap|, \verb|arm_prod_le_of_speed|,
+\verb|slack_at_lower_end|, \verb|slack_at_upper_end| and \verb|slack_first_quadrant| are
+\textsc{verified}; $c(t)\in C$ for $\Sig$ is \textsc{proved} for arms of either sign; and
+$c(t)\in\rho C$ is \textsc{heuristic}, so Proposition~\ref{prop:V} for $\Sig$ inherits
+\textsc{heuristic} until the mirror closes.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which

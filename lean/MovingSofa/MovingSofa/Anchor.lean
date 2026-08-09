@@ -1936,4 +1936,76 @@ theorem arm_prod_le_of_speed {a1 a2 : ℝ} (h : a1 * a1 + a2 * a2 < 2) : a1 * a2
 
 end CornerContainment
 
+
+section EndConditions
+
+/-!
+### The disjunction for arms of either sign
+
+`corner_in_cap` assumed both arms nonnegative, and `Σ` has `α₁ < 0` on `E₁`. Redoing the
+argument without that assumption shows the worst `φ` sits at the two ends of the range
+`[-t, π-t]`, and the conditions there are
+
+  `α₁ sin t + cos t ≥ 0`   (only binding where `α₁ < 0`),
+  `α₂ cos t + sin t ≥ 0`   (only binding where `α₂ < 0`),
+
+that is `α₁ ≥ -cot t` and `α₂ ≥ -tan t`, symmetric under `α₁ ↔ α₂`, `t ↔ π/2 - t`. Each
+propagates inward from its end by the angle-subtraction formula alone, with no division and
+no `arctan`: multiplying the slack by `sin t` and using `sin(t-ψ) ≥ 0` reduces it to the end
+condition. So the sign restriction is removed rather than patched.
+
+For `Σ`, `sofa_cut` measures `min(α₁ + cot t) = min(α₂ + tan t) = 0.751117`, the two being
+equal because `Σ` is symmetric under `α₁ ↔ α₂`, `t ↔ π/2 - t`. Also `max|α₁| = max|α₂|`
+agrees with `α₂(0) = 2a₁ - 1 = 0.750574724825464`, which is exact, so
+`α₁α₂ ≤ (2a₁-1)² < 1` holds without recourse to floating point.
+-/
+
+/-- The lower-end condition propagates inward: if `α₁ sin t + cos t ≥ 0` then the face-1
+slack stays nonnegative for every `ψ` between `0` and `t`. Division-free: multiply by
+`sin t` and use `sin(t - ψ) ≥ 0`. -/
+theorem slack_at_lower_end {a1 t ψ : ℝ} (ht : 0 < t) (htp : t ≤ Real.pi / 2)
+    (hψ : 0 ≤ ψ) (hψt : ψ ≤ t) (hC1 : 0 ≤ a1 * Real.sin t + Real.cos t) :
+    0 ≤ Real.cos ψ + a1 * Real.sin ψ := by
+  have hpi := Real.pi_pos
+  have hsub : 0 ≤ Real.sin (t - ψ) :=
+    Real.sin_nonneg_of_nonneg_of_le_pi (by linarith) (by linarith)
+  rw [Real.sin_sub] at hsub
+  have hst : 0 < Real.sin t := Real.sin_pos_of_pos_of_lt_pi ht (by linarith)
+  have hsψ : 0 ≤ Real.sin ψ := Real.sin_nonneg_of_nonneg_of_le_pi hψ (by linarith)
+  nlinarith [hsub, hst, hsψ, hC1]
+
+/-- The upper-end condition, the mirror statement under `α₁ ↔ α₂`, `t ↔ π/2 - t`. -/
+theorem slack_at_upper_end {a2 t ψ : ℝ} (ht : 0 < t) (htp : t ≤ Real.pi / 2)
+    (hψ : t ≤ ψ) (hψt : ψ ≤ Real.pi / 2) (hC2 : 0 ≤ a2 * Real.cos t + Real.sin t) :
+    0 ≤ Real.sin ψ + a2 * Real.cos ψ := by
+  have hpi := Real.pi_pos
+  have hsub : 0 ≤ Real.sin (ψ - t) :=
+    Real.sin_nonneg_of_nonneg_of_le_pi (by linarith) (by linarith)
+  rw [Real.sin_sub] at hsub
+  have hct : 0 ≤ Real.cos t := Real.cos_nonneg_of_mem_Icc ⟨by linarith, htp⟩
+  have hcψ : 0 ≤ Real.cos ψ := Real.cos_nonneg_of_mem_Icc ⟨by linarith, hψt⟩
+  have hsψ : 0 ≤ Real.sin ψ := Real.sin_nonneg_of_nonneg_of_le_pi (by linarith) (by linarith)
+  rcases le_total 0 a2 with h | h
+  · positivity
+  · rcases eq_or_lt_of_le hct with h0 | hpos
+    · have hst : 0 < Real.sin t := Real.sin_pos_of_pos_of_lt_pi ht (by linarith)
+      have hz : Real.cos ψ = 0 := by nlinarith [hsub, hcψ, hst]
+      rw [hz]; simpa using hsψ
+    · nlinarith [hsub, mul_nonneg hcψ hC2, hpos]
+
+/-- The first-quadrant case needs only `α₁α₂ ≤ 1`, with no sign hypothesis: if both slacks
+were negative there, multiplying them would force `α₁α₂ > 1`. -/
+theorem slack_first_quadrant {a1 a2 φ : ℝ} (hs : 0 < Real.sin φ) (hc : 0 < Real.cos φ)
+    (hprod : a1 * a2 ≤ 1) :
+    0 ≤ Real.cos φ - a1 * Real.sin φ ∨ 0 ≤ Real.sin φ - a2 * Real.cos φ := by
+  by_contra hcon
+  push_neg at hcon
+  obtain ⟨hA, hB⟩ := hcon
+  have h1 : Real.cos φ < a1 * Real.sin φ := by linarith
+  have h2 : Real.sin φ < a2 * Real.cos φ := by linarith
+  have hkey := mul_lt_mul'' h1 h2 hc.le hs.le
+  nlinarith [hkey, mul_pos hc hs, hprod]
+
+end EndConditions
+
 end MovingSofa

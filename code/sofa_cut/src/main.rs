@@ -361,6 +361,28 @@ fn main() {
     }
     println!("  worst failure of the disjunction {:+.6}  (negative means it always holds)",
              worst_disj);
+    // The exact endpoint conditions, valid for arms of ANY sign: the worst phi in the range
+    // [-t, pi-t] sits at its two ends, giving alpha_1 >= -cot t and alpha_2 >= -tan t.
+    let (mut m1, mut m2) = (1e9f64, 1e9f64);
+    let (mut ma1, mut ma2) = (0.0f64, 0.0f64);
+    let (mut cout, mut rout) = (-1.0f64, -1.0f64);
+    for f in fr.iter() {
+        let t = f.my.atan2(f.mx);
+        if t > 1e-6 && t < p2() - 1e-6 {
+            m1 = m1.min(f.a1 + 1.0 / t.tan());
+            m2 = m2.min(f.a2 + t.tan());
+        }
+        ma1 = ma1.max(f.a1.abs());
+        ma2 = ma2.max(f.a2.abs());
+        for &(ex_, ey, hh) in cap.iter() {
+            cout = cout.max(f.cx * ex_ + f.cy * ey - hh);
+            rout = rout.max(f.cx * ex_ + (1.0 - f.cy) * ey - hh);
+        }
+    }
+    println!("  min (alpha_1 + cot t)            {:+.6}  (needed >= 0)", m1);
+    println!("  min (alpha_2 + tan t)            {:+.6}  (needed >= 0)", m2);
+    println!("  max |alpha_1|, max |alpha_2|     {:.6}  {:.6}", ma1, ma2);
+    println!("  worst c(t) outside C, outside rC {:+.6}  {:+.6}", cout, rout);
 
     println!("\n  |N| rasterised                   {:.6}", area_n);
     // prop:reynolds proves V >= |N| for every admissible H, so a measurement the other way
