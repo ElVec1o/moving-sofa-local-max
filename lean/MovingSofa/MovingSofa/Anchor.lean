@@ -2748,4 +2748,50 @@ theorem rate_pos {a1 : ℝ} (h : a1 < 3 / 2) : 0 < 1 - (2/3) * a1 := by linarith
 
 end DegenerationRate
 
+
+section InnerContent
+
+/-!
+### The inner functional, with its content in the statements
+
+`inner_bound` and its companions carry the whole claim as a hypothesis, so they verify the
+arithmetic and none of the mathematics. The content is a membership chain and a multiplicity
+count, and both are set-level statements that can be said properly.
+
+A point of the restricted domain is a sweep value at a window point. By
+`face1_window_iff_entry` and `face2_window_iff_entry` a window point is an entry into `T(p)`,
+so the point is cut at some time and therefore lies in `U`. Restricting the domain puts it in
+`C₂` as well, and `U ∩ C₂ = N`, so the restricted image lies in `N` (`restricted_image_subset`).
+With at most one entry per point the map is injective on the restricted domain, so the
+integral of the Jacobian counts the image once and is at most `|N|`
+(`image_measure_le_of_subset`).
+
+Neither step needs containment or covering, which is the whole point of the construction: the
+restriction is what replaces them.
+-/
+
+/-- A restricted-domain sweep value lies in the niche: being a window point puts it in `U`,
+and the restriction puts it in `C₂`, and the niche is their intersection. -/
+theorem restricted_image_subset {α : Type*} {U C N S : Set α}
+    (hN : N = U ∩ C) (hSU : S ⊆ U) (hSC : S ⊆ C) : S ⊆ N := by
+  rw [hN]; exact Set.subset_inter hSU hSC
+
+/-- With the image inside the niche, its measure is at most the niche's. Together with
+injectivity on the restricted domain, this is `V_in ≤ |N|`. -/
+theorem image_measure_le_of_subset {α : Type*} [MeasurableSpace α]
+    (μ : MeasureTheory.Measure α) {S N : Set α} (h : S ⊆ N) : μ S ≤ μ N :=
+  MeasureTheory.measure_mono h
+
+/-- The chain in one statement: restricted image inside the niche, hence measure at most the
+niche's, hence the bound on the sofa area through the cap decomposition. -/
+theorem inner_chain {α : Type*} [MeasurableSpace α] (μ : MeasureTheory.Measure α)
+    {U C N S : Set α} {capA sofa : ℝ} {inner niche : ℝ}
+    (hN : N = U ∩ C) (hSU : S ⊆ U) (hSC : S ⊆ C)
+    (hinner : (inner : ℝ) ≤ niche)
+    (hdecomp : sofa = capA - 2 * niche) :
+    S ⊆ N ∧ sofa ≤ capA - 2 * inner :=
+  ⟨restricted_image_subset hN hSU hSC, by rw [hdecomp]; linarith⟩
+
+end InnerContent
+
 end MovingSofa

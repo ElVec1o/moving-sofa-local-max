@@ -2184,6 +2184,37 @@ Rule~0: \textsc{proved}, subject to the phase decomposition of $\Sig$'s class. W
 open is the reflected directions other than $\psi=-\pi/2$, still supported only by a
 $1440$-point scan.
 \end{remark}
+
+\begin{remark}[The inner functional, with its content stated]\label{rem:v25}
+The lemmas cited for Remark~\ref{rem:v16} carried the whole claim as a hypothesis, so they
+verified its arithmetic and none of its mathematics. The content is a membership chain and a
+multiplicity count.
+
+A point of the restricted domain is a sweep value at a window point. By
+Remark~\ref{rem:v4} a window point is an entry into $T(p)$, so the point is cut at some time
+and lies in $U$. The restriction puts it in $C_2$, and $U\cap C_2=N$, so the restricted image
+lies in $N$. With at most one entry per point the sweep is injective on the restricted domain,
+so the Jacobian integral counts the image once and is at most $|N|$. Neither step uses
+containment or covering: the restriction is what replaces them.
+
+Rule~0: \verb|restricted_image_subset|, \verb|image_measure_le_of_subset| and
+\verb|inner_chain| are \textsc{verified}, and unlike their predecessors they carry the
+membership and the measure comparison rather than assuming them. What is still assumed is the
+area formula itself, which supplies the identification of the Jacobian integral with the
+counted image.
+\end{remark}
+
+\begin{remark}[A norm mismatch in the near-regime estimate]\label{rem:v26}
+The surviving half of Remark~\ref{rem:v20} bounds the perturbation of a constraint near a
+gauge contact by $O(d\|\eta\|)$ at angular distance $d$. Writing the perturbation explicitly,
+$\delta g[\eta](t,\psi)=\eta(t)\cos(\psi-t)+\eta(t+\pi/2)\sin(\psi-t)-\eta(|\psi|)$, the bound
+follows from $\eta(\pi/2)=0$ together with a \emph{Lipschitz} bound on $\eta$.
+
+It is false in $C^0$ or $L^2$: a spike of height $h$ and width $d$ placed at $\pi/2-d/2$ has
+$\|\eta\|_\infty=h$ and gives $\delta g\asymp h$ at distance $d/2$, with no factor of $d$. The
+coercivity used elsewhere in this note is $L^2$, so the two estimates are stated in
+incompatible norms and cannot be chained as written. Recorded rather than repaired.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
