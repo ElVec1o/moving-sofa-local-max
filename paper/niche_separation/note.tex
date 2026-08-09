@@ -2235,6 +2235,72 @@ pointwise constraint.
 Rule~0: \verb|lipschitz_of_deriv_bound| and \verb|pert_linear_of_lipschitz| are
 \textsc{verified}. Every local statement in this note is therefore local in $C^2$.
 \end{remark}
+
+\begin{remark}[Hypothesis (d), repaired]\label{rem:v28}
+Condition (d) previously read ``$\alpha_1<0$ exactly on $[0,\beta)$ and $\alpha_2>0$ exactly on
+$[0,\pi/2-\beta)$'' with $\beta$ the fixed constant of \eqref{eq:beta}. That form is defective
+in two ways. Continuity plus ``exactly'' forces $\alpha_1(\beta)=0$ and $\alpha_2(\pi/2-\beta)=0$,
+two affine equalities, so $\mathcal D$ would be a codimension-two slice with empty interior in
+every norm, contradicting Remark~\ref{rem:notopt} and Proposition~\ref{prop:ball}, which lets
+the crossings move inside windows of half-width $0.15$. Read loosely as $E_1\subseteq E_2$ the
+condition is a disjunction, hence not convex, and the convexity step of
+Theorem~\ref{thm:final} fails.
+
+The fixed-$T$ form now stated is affine in $H$ for each fixed $T$, has nonempty $C^2$ interior,
+gives $\tau_1\le T\le\tau_2$, and is exactly what the arm-sign step of Remark~\ref{rem:v29}
+consumes. $\Sig$ satisfies it with $T$ anywhere in $[\beta,\pi/2-\beta]$. The pinning of the
+crossings to $\beta$ was never used by any proof in this note; it was a description of $\Sig$
+that had been promoted to a hypothesis.
+\end{remark}
+
+\begin{remark}[The reflected half, proved]\label{rem:v29}
+Write $\Theta(t,\omega)=H(\omega)-\sin\omega-c_x(t)\cos\omega+c_y(t)\sin\omega$, so that
+$c(t)\in\rho C$ is $\Theta\ge0$ for $\omega\in[0,\pi]$.
+
+Working in $\omega$ rather than in $\omega+t$ separates the parameters. The support inequality
+at $\psi=\pi/2$, valid with \emph{either} one-sided derivative because the atom makes the top a
+facet, gives
+\[
+  \Theta(t,\omega)\ \ge\ -\bigl(H'(\pi/2^\pm)+c_x(t)\bigr)\cos\omega+c_y(t)\sin\omega .
+\]
+With $c_y\ge0$ (Remark~\ref{rem:v24}), taking the left derivative on $[0,\pi/2]$ and the right
+on $[\pi/2,\pi]$ reduces everything to
+\[
+  -\alpha_2(0)\ \le\ c_x(t)\ \le\ \kappa:=-H'(\pi/2^-) ,
+\]
+that is, $c_x$ lies in the horizontal shadow of the ceiling facet, an interval of width the
+atom mass.
+
+Both bounds follow from exact identities. With $\rho_1=1-r_{ac}$ on $[0,\pi/2]$ and
+$\rho_2=1-r_{ac}(\cdot+\pi/2)$, both in $[0,1]$ by (RC),
+\[
+  \kappa-c_x=\alpha_1\sin t+\int_t^{\pi/2}\!\rho_1\sin ,\qquad
+  c_x+\alpha_2(0)=\alpha_2\cos t+\int_0^{t}\!\rho_2\cos .
+\]
+Where the relevant arm is nonnegative the identity gives the bound at once. Where it is
+negative, (d) supplies a sign for the other arm and the moment identities
+$\int_0^{\pi/2}\rho_1\cos=\tfrac12$, $\int_0^{\pi/2}\rho_2\sin=\tfrac12$ close it, since
+$\int\rho_i\ge\int\rho_i\cos=\tfrac12$. Bang-bang optimisation makes the surplus exactly
+$\pi/6-\tfrac12$ in each case.
+
+Two byproducts hold on all of $\mathcal D$: $\kappa\ge1-\sqrt3/2$, so the sign condition on
+$H'(\pi/2^-)$ assumed in Remark~\ref{rem:v12} is forced rather than assumed; and the ceiling
+facet has length exceeding $1-\sqrt3/2$, so the atom is quantitatively nondegenerate. A third,
+$\kappa-x(t)=\sec t\int_t^{\pi/2}\rho_1(s)\sin(s-t)\,ds\ge0$, needs neither the moments nor
+(d) and supersedes the monotonicity argument of Remark~\ref{rem:cap}.
+
+Scope, stated precisely. This proves $c(t)\in C_2$, one of the two endpoint conditions of the
+convexity reduction of Remark~\ref{rem:v6}; the other, $X(\theta)-\mu_\theta\in C_2$, is the
+width condition of Remark~\ref{rem:v14} and remains open. And the argument does not cover its
+own binding direction $\omega=\pi/2$, where the bound degenerates to $\Theta\ge c_y$: that case
+is imported from Remark~\ref{rem:v24}. So it replaces two of the three comparisons of
+Remark~\ref{rem:v11}, not all three.
+
+Rule~0: \textsc{proved}, subject to (d) in its repaired form and to
+Remark~\ref{rem:v24}. It does not by itself discharge the containment hypothesis of
+Theorem~\ref{thm:final}, which is about the truncated sweeps and not about the corner path
+alone.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
@@ -3479,8 +3545,8 @@ $H'(\pi)=-\tfrac12$, the last two being the vanishing of the junction atoms of t
 $\rho$-extension (Lemma~\ref{lem:bdry});
 \item[(c)] $c_y(t)=(H(t)-1)\sin t+(H(t+\pi/2)-1)\cos t\le\tfrac12$ for $t\in[0,\pi/2]$
 \emph{(note $\le$, not $<$: this gives $|U\cap\rho U|=0$, which is all an area bound needs)};
-\item[(d)] $\alpha_1<0$ exactly on $[0,\beta)$ and $\alpha_2>0$ exactly on
-$[0,\pi/2-\beta)$.
+\item[(d)] there is a fixed $T\in(0,\pi/2)$ with $\alpha_2>0$ on $[0,T]$ and $\alpha_1\ge0$
+on $[T,\pi/2]$.
 \end{enumerate}
 Then $\mathcal D$ is convex, $\Sig\in\mathcal D$, and
 \[
