@@ -781,13 +781,14 @@ $C_2=C\cap\rho C$, so \eqref{eq:V} needs the condition for \emph{two} sweeps at 
 with their disjointness and their covering $N$. Neither of the latter is a one-corner
 statement, and a literature sweep found no prior art for either. The honest split is
 therefore: injectivity of each sweep is \textsc{proved} elsewhere and needs only a transfer
-argument; disjointness and covering are open, and are the only part of
-Proposition~\ref{prop:V} that this note takes on faith.
+argument, while disjointness and covering are settled in Remarks~\ref{rem:v4}
+and~\ref{rem:v5} for any cap whose curvature radius stays below $1$ away from the atom.
+Proposition~\ref{prop:V} is therefore no longer taken on faith for $\Sig$.
 \end{remark}
 
 \begin{remark}[What is measured, and what it gives]\label{rem:V}
-For $\Sig$ the three hypotheses of Proposition~\ref{prop:V} are verified
-numerically and sharply: the two sweeps have intersection area $0$ and leave
+For $\Sig$ the three hypotheses of Proposition~\ref{prop:V} are confirmed
+numerically and sharply, and are proved in Remarks~\ref{rem:v4} and~\ref{rem:v5}: the two sweeps have intersection area $0$ and leave
 $0$ of the niche uncovered, to the printing precision of the polygon oracle. The
 right-hand side of \eqref{eq:V}, evaluated with exact derivatives of
 SOL1/SOL5/SOL6 and Gauss--Legendre quadrature on each phase separately, is
@@ -850,9 +851,11 @@ convex-linear quantity, i.e.\ a $\mathcal J$-type term of the same kind the
 one-corner argument must itself control, and it is localised on the phase where
 $\Sig$ degenerates. Establishing or refuting concavity of
 $|C_2|-2V$ is a Hessian computation on the space of support-function
-perturbations, and is not attempted here. Neither is the second half of the
-argument, which would have to show that the three hypotheses of
-Proposition~\ref{prop:V} hold for competitors and not only for $\Sig$. So
+perturbations, and is not attempted here. The second half of the argument, that
+the three hypotheses of Proposition~\ref{prop:V} hold for competitors and not
+only for $\Sig$, now reduces to the single open condition $r<1$ away from the
+atom, which $\Sig$ satisfies with margin $0.161429$ and which therefore persists
+under small perturbations. So
 \emph{optimality of $\Sig$ remains open}; what is new is that the upper bound is
 now tight and expressed entirely in convex-linear data, with a single explicitly
 computed term of the wrong sign.
@@ -1528,13 +1531,21 @@ $\max r=0.838571$, a margin of $0.161429$ to the threshold (\verb|sofa_cut|). It
 condition, so it survives the perturbations $H+\varepsilon\eta$ of the second-variation
 analysis for $\varepsilon$ small, provided the atom stays at $\pi/2$.
 
-Rule~0: the Sturm step is \textsc{proved}, not \textsc{verified}; its two analytic inputs,
-integration by parts and Wirtinger, are carried as explicit hypotheses of
-\verb|negative_hump_contradiction| rather than formalised. The structural steps are
-\textsc{verified}: \verb|arm_shift|, \verb|point_part_harmonic|,
-\verb|cut_set_ordConnected|, \verb|exists_first_entry|, \verb|covering_first_entry|. What
-this settles is a hypothesis the note previously assumed; it is not a statement about the
-moving sofa problem itself.
+The Sturm step needs neither integration by parts nor Wirtinger. Anchor
+$G=W'\sin(\theta-x)-W\cos(\theta-x)$ at a point where $W>0$; then $G(x)=-W(x)<0$ and
+$G'=q\sin(\theta-x)<0$, so $G$ stays negative. If $W$ dipped to $0$ before a later point
+where $W>0$, then at the first return $t_1$ one has $G(t_1)=W'(t_1)\sin(t_1-x)$ with
+$\sin(t_1-x)>0$, forcing $W'(t_1)<0$, while $W$ rising to $W(t_1)=0$ forces
+$W'(t_1)\ge0$. Strict monotonicity of $G$ is the only analytic input, and it follows from
+the sign of its derivative.
+
+Rule~0: hypotheses (ii) and (iii) are \textsc{verified}, as are the steps to them
+(\verb|arm_shift|, \verb|point_part_harmonic|, \verb|cut_set_ordConnected|,
+\verb|exists_first_entry|, \verb|covering_first_entry|, \verb|exit_deriv_nonneg|,
+\verb|negative_hump_impossible|, \verb|pos_between|, \verb|pos_set_ordConnected|). The one
+remaining \textsc{proved}-not-\textsc{verified} link is the area formula behind
+$V=\int_N\#\{\text{entries}\}$. What this settles is a hypothesis the note previously
+assumed; it is not a statement about the moving sofa problem itself.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
@@ -4023,9 +4034,14 @@ and Cauchy--Schwarz would then require $\kappa^2+C^2\le1$, impossible for every 
 (\texttt{young\_route\_fails}). The cross term $-2\int_{E_1^-}Su$ has to be kept rather than
 bounded.
 
-Rule~0: the left half is \textsc{proved} modulo Proposition~\ref{prop:V}, and so is the
-assembly, with the two semidefiniteness statements entering as hypotheses at the labels they
-carry. The niche form's positive semidefiniteness for $\eta_K\ne0$ is \textsc{heuristic}: a
+Rule~0: the left half is \textsc{proved}, and so is the assembly, with the two
+semidefiniteness statements entering as hypotheses at the labels they carry. The
+qualification ``modulo Proposition~\ref{prop:V}'' that this line previously carried is
+discharged by Remarks~\ref{rem:v4} and~\ref{rem:v5}, at the cost of the standing hypothesis
+$r<1$ away from the atom. That hypothesis is now the weakest link in the chain, so by
+Rule~0 it is the label every statement downstream of Proposition~\ref{prop:V} inherits: each
+such statement holds for caps satisfying it, which includes $\Sig$ and a neighbourhood of
+$\Sig$, and is not asserted beyond that. The niche form's positive semidefiniteness for $\eta_K\ne0$ is \textsc{heuristic}: a
 floating-point eigenvalue on a $32$-mode truncation, not a proof. A
 report that $D$ can be negative was issued from a computation using two of the three terms
 of Proposition~\ref{prop:V} and is withdrawn: the omitted term is the reach, positive and

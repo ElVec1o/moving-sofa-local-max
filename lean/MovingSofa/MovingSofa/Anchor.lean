@@ -1410,22 +1410,75 @@ set, and it is the whole reason the quarter-period shift matters. -/
 theorem cut_set_ordConnected {P Q : Set ℝ} (hP : P.OrdConnected) (hQ : Q.OrdConnected) :
     (P ∩ Q).OrdConnected := hP.inter hQ
 
-/-- **Negative humps are long.** If `W < 0` on `(a,b)` with `W` vanishing at both ends, the
-forcing `q = r - 1` is negative there, and Wirtinger holds on `(a,b)` (which needs
-`b - a ≤ π`), the three are contradictory. So a negative hump has length exceeding `π`, and
-a gap between two components of `{W > 0}` inside an interval of length `π/2` is impossible.
+/-- Mirror of `entry_deriv_nonneg`: a function vanishing at `b` and negative immediately to
+the left has nonnegative derivative there. -/
+theorem exit_deriv_nonneg {w : ℝ → ℝ} {d a b : ℝ} (hlt : a < b)
+    (hd : HasDerivAt w d b) (hz : w b = 0)
+    (hneg : ∀ t, a < t → t < b → w t < 0) : 0 ≤ d := by
+  have hw : HasDerivWithinAt w d (Set.Iio b) b := hd.hasDerivWithinAt
+  rw [hasDerivWithinAt_iff_tendsto_slope,
+    Set.diff_singleton_eq_self (by simp : b ∉ Set.Iio b)] at hw
+  refine ge_of_tendsto hw ?_
+  filter_upwards [Ioo_mem_nhdsLT hlt] with y hy
+  have hy2 : y < b := hy.2
+  rw [slope_def_field, hz, sub_zero]
+  exact le_of_lt (div_pos_of_neg_of_neg (hneg y hy.1 hy2) (by linarith))
 
-The two analytic inputs are explicit: `henergy` is integration by parts against `W`, whose
-boundary terms vanish because `W(a) = W(b) = 0`, and `hwirt` is Wirtinger's inequality. -/
-theorem negative_hump_contradiction {W q : ℝ → ℝ} {a b : ℝ} (hab : a < b)
-    (hWneg : ∀ t ∈ Set.Ioo a b, W t < 0) (hqneg : ∀ t ∈ Set.Ioo a b, q t < 0)
-    (hint : IntervalIntegrable (fun t => q t * W t) MeasureTheory.volume a b)
-    (henergy : (∫ t in a..b, q t * W t)
-        = (∫ t in a..b, (W t) ^ 2) - (∫ t in a..b, (deriv W t) ^ 2))
-    (hwirt : (∫ t in a..b, (W t) ^ 2) ≤ (∫ t in a..b, (deriv W t) ^ 2)) : False := by
-  have hpos : 0 < ∫ t in a..b, q t * W t := by
-    refine intervalIntegral.intervalIntegral_pos_of_pos_on hint (fun t ht => ?_) hab
-    exact mul_pos_of_neg_of_neg (hqneg t ht) (hWneg t ht)
+/-- **Negative humps are long, by Wronskian comparison.** If `W'' + W = q` with `q < 0` on
+`(a,b)`, `W` vanishes at both ends and is negative between, and `b - a < π`, that is
+contradictory.
+
+The proof needs no integration theory. Put `G = W'·sin(θ-a) - W·cos(θ-a)`. Then
+`G' = q·sin(θ-a)`, negative on `(a,b)` because `sin(θ-a) > 0` there, so `G` is strictly
+decreasing; and `G(a) = -W(a) = 0`, so `G(b) < 0`. But `G(b) = W'(b)·sin(b-a)` with
+`sin(b-a) > 0`, forcing `W'(b) < 0`, while `W < 0` rising to `W(b) = 0` forces `W'(b) ≥ 0`.
+
+This replaces an earlier route through integration by parts and Wirtinger, whose two
+analytic inputs had to be carried as hypotheses. Nothing is assumed here. `W''` is required
+only on the open hump, which matters because `r` jumps at the phase boundaries of `Σ`. -/
+theorem negative_hump_impossible {W W1 q : ℝ → ℝ} {a b : ℝ}
+    (hab : a < b) (hlen : b - a < Real.pi)
+    (hW : ∀ t, HasDerivAt W (W1 t) t)
+    (hW1c : ContinuousOn W1 (Set.Icc a b))
+    (hW1 : ∀ t ∈ Set.Ioo a b, HasDerivAt W1 (q t - W t) t)
+    (hWa : W a = 0) (hWb : W b = 0)
+    (hneg : ∀ t ∈ Set.Ioo a b, W t < 0)
+    (hq : ∀ t ∈ Set.Ioo a b, q t < 0) : False := by
+  have hWc : Continuous W := continuous_iff_continuousAt.mpr fun t => (hW t).continuousAt
+  set G : ℝ → ℝ := fun s => W1 s * Real.sin (s - a) - W s * Real.cos (s - a) with hGdef
+  have hsin : ∀ w : ℝ, HasDerivAt (fun s => Real.sin (s - a)) (Real.cos (w - a)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const a).sin
+  have hcos : ∀ w : ℝ, HasDerivAt (fun s => Real.cos (s - a)) (-Real.sin (w - a)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const a).cos
+  have hG : ∀ w ∈ Set.Ioo a b, HasDerivAt G (q w * Real.sin (w - a)) w := by
+    intro w hw
+    have h := ((hW1 w hw).mul (hsin w)).sub ((hW w).mul (hcos w))
+    have e : q w * Real.sin (w - a)
+        = (q w - W w) * Real.sin (w - a) + W1 w * Real.cos (w - a)
+          - (W1 w * Real.cos (w - a) + W w * -Real.sin (w - a)) := by ring
+    rw [hGdef, e]
+    exact h
+  have hGc : ContinuousOn G (Set.Icc a b) := by
+    have h1 : ContinuousOn (fun s : ℝ => Real.sin (s - a)) (Set.Icc a b) :=
+      (Real.continuous_sin.comp (continuous_id.sub continuous_const)).continuousOn
+    have h2 : ContinuousOn (fun s : ℝ => Real.cos (s - a)) (Set.Icc a b) :=
+      (Real.continuous_cos.comp (continuous_id.sub continuous_const)).continuousOn
+    exact (hW1c.mul h1).sub (hWc.continuousOn.mul h2)
+  have hanti : StrictAntiOn G (Set.Icc a b) := by
+    refine strictAntiOn_of_deriv_neg (convex_Icc a b) hGc ?_
+    intro w hw
+    rw [interior_Icc] at hw
+    rw [(hG w hw).deriv]
+    exact mul_neg_of_neg_of_pos (hq w hw)
+      (Real.sin_pos_of_pos_of_lt_pi (by linarith [hw.1]) (by linarith [hw.2]))
+  have hGa : G a = 0 := by simp [hGdef, hWa]
+  have hGb : G b = W1 b * Real.sin (b - a) := by simp [hGdef, hWb]
+  have hlt : G b < G a := hanti ⟨le_rfl, hab.le⟩ ⟨hab.le, le_rfl⟩ hab
+  have hsb : 0 < Real.sin (b - a) :=
+    Real.sin_pos_of_pos_of_lt_pi (by linarith) (by linarith)
+  have hW1b : W1 b < 0 := by
+    rw [hGa, hGb] at hlt; nlinarith [hlt, hsb]
+  have hge := exit_deriv_nonneg hab (hW b) hWb (fun t h1 h2 => hneg t ⟨h1, h2⟩)
   linarith
 
 end OneFunction
@@ -1492,5 +1545,99 @@ theorem covering_first_entry {u v A1 A2 : ℝ → ℝ} {a ts : ℝ} (hat : a < t
     linarith
 
 end CoveringAssembly
+
+
+section Connectivity
+
+/-!
+### No gap: `{W > 0}` is order-connected on any window shorter than `π`
+
+This is the step that was still prose. The same Wronskian comparison that makes negative
+humps long shows directly that there is no gap at all. Anchor `G = W'·sin(θ-x) - W·cos(θ-x)`
+at a point `x` where `W > 0`. Then `G(x) = -W(x) < 0` and `G' = q·sin(θ-x) < 0`, so `G` stays
+negative on the whole window. If `W` dipped to `0` before a later point `z` with `W(z) > 0`,
+take the first entry `t₁` after the dip: there `W(t₁) = 0` and `W > 0` afterwards, so
+`G(t₁) = W'(t₁)·sin(t₁-x)` with `sin(t₁-x) > 0` forces `W'(t₁) < 0`, while
+`entry_deriv_nonneg` forces `W'(t₁) ≥ 0`.
+
+Combined with `cut_set_ordConnected` this closes hypothesis (ii): `T(p)` is the intersection
+of `{W > 0}` with its own `π/2`-translate, each order-connected on its side of the atom
+because `π/2 < π`.
+-/
+
+/-- **No dip between two positive values**, on a window shorter than `π` with `q < 0`. -/
+theorem pos_between {W W1 q : ℝ → ℝ} {x z : ℝ} (hxz : x < z) (hlen : z - x < Real.pi)
+    (hW : ∀ t, HasDerivAt W (W1 t) t)
+    (hW1c : ContinuousOn W1 (Set.Icc x z))
+    (hW1 : ∀ t ∈ Set.Ioo x z, HasDerivAt W1 (q t - W t) t)
+    (hq : ∀ t ∈ Set.Ioo x z, q t < 0)
+    (hx : 0 < W x) (hz : 0 < W z) : ∀ t ∈ Set.Ioo x z, 0 < W t := by
+  intro y hy
+  by_contra hcon
+  push_neg at hcon
+  have hWc : Continuous W := continuous_iff_continuousAt.mpr fun t => (hW t).continuousAt
+  set G : ℝ → ℝ := fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x) with hGdef
+  have hsin : ∀ w : ℝ, HasDerivAt (fun s => Real.sin (s - x)) (Real.cos (w - x)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const x).sin
+  have hcos : ∀ w : ℝ, HasDerivAt (fun s => Real.cos (s - x)) (-Real.sin (w - x)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const x).cos
+  have hG : ∀ w ∈ Set.Ioo x z, HasDerivAt G (q w * Real.sin (w - x)) w := by
+    intro w hw
+    have h := ((hW1 w hw).mul (hsin w)).sub ((hW w).mul (hcos w))
+    have e : q w * Real.sin (w - x)
+        = (q w - W w) * Real.sin (w - x) + W1 w * Real.cos (w - x)
+          - (W1 w * Real.cos (w - x) + W w * -Real.sin (w - x)) := by ring
+    rw [hGdef, e]
+    exact h
+  have hGc : ContinuousOn G (Set.Icc x z) := by
+    have h1 : ContinuousOn (fun s : ℝ => Real.sin (s - x)) (Set.Icc x z) :=
+      (Real.continuous_sin.comp (continuous_id.sub continuous_const)).continuousOn
+    have h2 : ContinuousOn (fun s : ℝ => Real.cos (s - x)) (Set.Icc x z) :=
+      (Real.continuous_cos.comp (continuous_id.sub continuous_const)).continuousOn
+    exact (hW1c.mul h1).sub (hWc.continuousOn.mul h2)
+  have hanti : StrictAntiOn G (Set.Icc x z) := by
+    refine strictAntiOn_of_deriv_neg (convex_Icc x z) hGc ?_
+    intro w hw
+    rw [interior_Icc] at hw
+    rw [(hG w hw).deriv]
+    exact mul_neg_of_neg_of_pos (hq w hw)
+      (Real.sin_pos_of_pos_of_lt_pi (by linarith [hw.1]) (by linarith [hw.2]))
+  have hGx : G x = -W x := by simp [hGdef]
+  obtain ⟨t₁, h1, h2, hz1, hp⟩ := exists_first_entry hy.2 hWc hcon hz
+  have hxt : x < t₁ := lt_of_lt_of_le hy.1 h1
+  have hGt : G t₁ < 0 := by
+    have hh := hanti ⟨le_rfl, hxz.le⟩ ⟨hxt.le, h2.le⟩ hxt
+    rw [hGx] at hh; linarith
+  have hsb : 0 < Real.sin (t₁ - x) :=
+    Real.sin_pos_of_pos_of_lt_pi (by linarith) (by linarith)
+  have hGt' : G t₁ = W1 t₁ * Real.sin (t₁ - x) := by simp [hGdef, hz1]
+  have hnegd : W1 t₁ < 0 := by rw [hGt'] at hGt; nlinarith [hGt, hsb]
+  have hge := entry_deriv_nonneg h2 (hW t₁) hz1 hp
+  linarith
+
+/-- **Hypothesis (ii), assembled.** On a window shorter than `π` the set where `W` is
+positive is order-connected. Applied to the two sides of the atom, each of length `π/2`, and
+intersected via `cut_set_ordConnected`, this makes `T(p)` an interval. -/
+theorem pos_set_ordConnected {W W1 q : ℝ → ℝ} {lo hi : ℝ} (hlen : hi - lo < Real.pi)
+    (hW : ∀ t, HasDerivAt W (W1 t) t)
+    (hW1c : ContinuousOn W1 (Set.Icc lo hi))
+    (hW1 : ∀ t ∈ Set.Ioo lo hi, HasDerivAt W1 (q t - W t) t)
+    (hq : ∀ t ∈ Set.Ioo lo hi, q t < 0) :
+    {t | t ∈ Set.Icc lo hi ∧ 0 < W t}.OrdConnected := by
+  constructor
+  intro x hx z hz y hy
+  rcases eq_or_lt_of_le hy.1 with h | hxy
+  · exact h ▸ hx
+  rcases eq_or_lt_of_le hy.2 with h | hyz
+  · exact h ▸ hz
+  have hxz : x < z := lt_trans hxy hyz
+  have hsub : Set.Icc x z ⊆ Set.Icc lo hi := Set.Icc_subset_Icc hx.1.1 hz.1.2
+  have hsub' : Set.Ioo x z ⊆ Set.Ioo lo hi := fun t ht =>
+    ⟨lt_of_le_of_lt hx.1.1 ht.1, lt_of_lt_of_le ht.2 hz.1.2⟩
+  refine ⟨⟨le_trans hx.1.1 hxy.le, le_trans hyz.le hz.1.2⟩, ?_⟩
+  exact pos_between hxz (by linarith [hx.1.1, hz.1.2]) hW (hW1c.mono hsub)
+    (fun t ht => hW1 t (hsub' ht)) (fun t ht => hq t (hsub' ht)) hx.2 hz.2 y ⟨hxy, hyz⟩
+
+end Connectivity
 
 end MovingSofa
