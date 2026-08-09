@@ -38,10 +38,15 @@ The niche of an ambidextrous sofa is expressed exactly in convex-linear data: wr
 $H(\theta)=h_K(\mu_\theta)$ for the cap's support function, the two arms
 $\alpha_1,\alpha_2$ and the reach $\sigma$ are affine in $H$, and
 $|N|=\int_0^{\pi/2}[\tfrac12(\alpha_2^+)^2+\tfrac12(\sigma-\alpha_1)^2
--\tfrac12(\alpha_1^-)^2]\,dt$ whenever the associated sweep is injective. Injectivity
+-\tfrac12(\alpha_1^-)^2]\,dt$ whenever the associated sweep is injective, disjoint,
+covers the niche, and stays inside the cap. Injectivity
 follows from a single linear condition (RC), that the cap's radius of curvature be at most
 the corridor width; the proof reduces each of the three required statements to a forced
-harmonic oscillator whose kernel is non-negative because the rotation angle is $\pi/2$.
+harmonic oscillator whose kernel is non-negative because the rotation angle is $\pi/2$. The
+fourth hypothesis, containment, does not follow from (RC): Remark~\ref{rem:v6} exhibits a
+cap satisfying (RC) for which the identity fails by three per cent, and
+Remark~\ref{rem:v13} corrects an earlier misattribution of its cause. Containment is
+therefore assumed, and Theorem~\ref{thm:final} is conditional on it.
 (RC) is classical: by the dual of Blaschke's rolling theorem it says the cap slides
 freely inside a unit ball, up to the corridor facets. What is new is its use.
 
@@ -3112,8 +3117,10 @@ against the wider literature.
 
 \section{The main theorem}\label{sec:main}
 
-\begin{theorem}\label{thm:final}
-Let $\mathcal D$ be the set of support functions $H$ on $[0,\pi]$ of admissible caps such
+\begin{theorem}[conditional on containment]\label{thm:final}
+Assume the truncated sweeps lie in $C_2$, which by Remarks~\ref{rem:v6} and~\ref{rem:v13} is
+not implied by the other hypotheses and is open for $\Sig$. Let $\mathcal D$ be the set of
+support functions $H$ on $[0,\pi]$ of admissible caps such
 that
 \begin{enumerate}
 \item[(a)] $H(0)=H(\pi/2)=1$ \emph{(the gauge: horizontal translation, unit corridor)};
@@ -3141,8 +3148,10 @@ $\Sig$ satisfies (b) by Proposition~\ref{prop:rcsigma}, (c) with margin
 $\tfrac12-M=0.1121\ldots$ by Theorem~\ref{thm:main}, and (d) by definition of $\beta$.
 
 By (b) and Theorems~\ref{thm:rc} and \ref{thm:cross} the combined sweep is injective, so
-$V=|N|$ by Proposition~\ref{prop:convex}, whose proof also supplies the covering and
-containment that Proposition~\ref{prop:V} assumes. By (c) and Lemma~\ref{lem:ceiling},
+$V=|N|$ by Proposition~\ref{prop:convex}, whose proof supplies the covering that
+Proposition~\ref{prop:V} assumes. It does \emph{not} supply the containment: its argument
+places an advancing face point in $Q_{t+\varepsilon}$, which gives sweep $\subseteq U$ and
+not sweep $\subseteq U\cap C_2=N$. Containment is the standing hypothesis of this theorem. By (c) and Lemma~\ref{lem:ceiling},
 $U\subseteq\{y\le\tfrac12\}$ and $\rho U\subseteq\{y\ge\tfrac12\}$, so
 $|U\cap\rho U|=0$; with $C_2$ $\rho$-invariant this gives
 $|T|\le|C_2|-|N|-|\rho N|=|C_2|-2|N|=Q$. (Corollary~\ref{cor:sep} states the strict form

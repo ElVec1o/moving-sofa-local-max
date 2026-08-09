@@ -2085,16 +2085,15 @@ support function is the only remaining step.
 /-- On one phase, where `W'' = q - W` holds pointwise with `q < 0`, the Wronskian
 `G = W'·sin(·-x) - W·cos(·-x)` is strictly decreasing. Chained across phases by
 `strictAntiOn_glue`, this is what `pos_between_of_strictAnti` consumes. -/
-theorem wronskian_strictAntiOn {W W1 q : ℝ → ℝ} {x a b : ℝ} (hab : a ≤ b)
-    (hlen : b - x < Real.pi) (hxa : x ≤ a)
-    (hW : ∀ t, HasDerivAt W (W1 t) t)
+theorem wronskian_strictAntiOn {W W1 q : ℝ → ℝ} {x a b : ℝ}
+    (hWc : Continuous W)
+    (hW : ∀ t ∈ Set.Icc a b, HasDerivAt W (W1 t) t)
     (hW1c : ContinuousOn W1 (Set.Icc a b))
     (hW1 : ∀ t ∈ Set.Ioo a b, HasDerivAt W1 (q t - W t) t)
     (hq : ∀ t ∈ Set.Ioo a b, q t < 0)
     (hpos : ∀ t ∈ Set.Ioo a b, 0 < Real.sin (t - x)) :
     StrictAntiOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
       (Set.Icc a b) := by
-  have hWc : Continuous W := continuous_iff_continuousAt.mpr fun t => (hW t).continuousAt
   have hsin : ∀ w : ℝ, HasDerivAt (fun s => Real.sin (s - x)) (Real.cos (w - x)) w := by
     intro w; simpa using ((hasDerivAt_id w).sub_const x).sin
   have hcos : ∀ w : ℝ, HasDerivAt (fun s => Real.cos (s - x)) (-Real.sin (w - x)) w := by
@@ -2111,7 +2110,7 @@ theorem wronskian_strictAntiOn {W W1 q : ℝ → ℝ} {x a b : ℝ} (hab : a ≤
   rw [interior_Icc] at hw
   have hd : HasDerivAt (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
       (q w * Real.sin (w - x)) w := by
-    have h := ((hW1 w hw).mul (hsin w)).sub ((hW w).mul (hcos w))
+    have h := ((hW1 w hw).mul (hsin w)).sub ((hW w (Set.mem_Icc_of_Ioo hw)).mul (hcos w))
     have e : q w * Real.sin (w - x)
         = (q w - W w) * Real.sin (w - x) + W1 w * Real.cos (w - x)
           - (W1 w * Real.cos (w - x) + W w * -Real.sin (w - x)) := by ring
@@ -2208,10 +2207,10 @@ theorem mirror_slack_ceiling (f g hp2 t ω : ℝ) :
 
 /-- **Tightness at the contact.** At `t = 0` and `ω = π/2`, with `G(0) = H(π/2) = 1`, the
 ceiling slack vanishes. Each of its three terms dies for its own reason. -/
-theorem ceiling_slack_contact (f hp2 : ℝ) :
-    -((f - 1) * Real.cos (Real.pi / 2 + 0) - (1 - 1) * Real.sin (Real.pi / 2 + 0)
+theorem ceiling_slack_contact {f g0 hp2 : ℝ} (hg : g0 = 1) :
+    -((f - 1) * Real.cos (Real.pi / 2 + 0) - (g0 - 1) * Real.sin (Real.pi / 2 + 0)
       + hp2 * Real.cos (Real.pi / 2)) = 0 := by
-  rw [add_zero, Real.cos_pi_div_two]; ring
+  rw [add_zero, Real.cos_pi_div_two, hg]; ring
 
 end ThirdComparison
 
@@ -2269,8 +2268,20 @@ theorem ceiling_two_sided {hl hr x : ℝ} (hlneg : hl ≤ 0) (hrpos : 0 ≤ hr) 
 /-- The contact point `ρc(0) = (H(0) - 1, 1)` lies on the cap's ceiling segment, whose
 endpoints are the two one-sided values of `H'(π/2)`, exactly when this holds. The segment
 has length the atom's mass, so a cap without the atom cannot satisfy it strictly. -/
-theorem contact_on_ceiling {hl hr f0 : ℝ} (h1 : hl ≤ f0 - 1) (h2 : f0 - 1 ≤ hr) :
-    f0 - 1 ∈ Set.Icc hl hr := ⟨h1, h2⟩
+theorem contact_on_ceiling {hl hr f0 : ℝ} (h1 : hl ≤ 1 - f0) (h2 : 1 - f0 ≤ hr) :
+    1 - f0 ∈ Set.Icc hl hr := ⟨h1, h2⟩
+
+/-- **The right end of the ceiling segment is free.** `X(π/2) = (-H'(π/2), 1)`, so the facet
+runs from `-H'(π/2⁺)` to `-H'(π/2⁻)` and the contact abscissa `c_x(0) = H(0) - 1` lies in it
+exactly when `H'(π/2⁻) ≤ 1 - H(0) ≤ H'(π/2⁺)`. The right-hand inequality is not an
+assumption: it is `α₂(0) ≥ 0`, since `α₂(0) = H(0) - 1 + H'(π/2⁺)`. For `Σ`,
+`α₂(0) = 2a₁ - 1 > 0`.
+
+An earlier version of `contact_on_ceiling` had the sign the other way, writing `f0 - 1` for
+the abscissa. The two agree exactly when `H(0) = 1`, which is why the numerics did not
+separate them; the statement above is the one that survives dropping that gauge. -/
+theorem ceiling_right_from_arm {f0 hr : ℝ} (harm : 0 ≤ f0 - 1 + hr) : 1 - f0 ≤ hr := by
+  linarith
 
 end CeilingSegment
 
