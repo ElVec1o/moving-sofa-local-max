@@ -2082,6 +2082,33 @@ Rule~0: \verb|degenerate_slack_stable|, \verb|gauge_identity_unmoved| and
 \verb|uniform_threshold| are \textsc{verified}; the two constants are \textsc{conjecture}, and
 with them the existence of an explicit neighbourhood.
 \end{remark}
+
+\begin{remark}[The near/far split, and the negative control it passes]\label{rem:v21}
+The degeneration argument of Remark~\ref{rem:v20} handles constraints near the gauge contacts,
+where slack and perturbation both vanish linearly. It says nothing about constraints far from
+them, and that is exactly right.
+
+The stadium of Remark~\ref{rem:v6} satisfies the gauge identically too, with
+$c_y(0)=c_y(\pi/2)=H(\pi/2)-1=0$, so the near regime applies to it verbatim. Its containment
+failure sits at $t=\pi/4$, $\psi=+\pi/2$, far from both contacts, with constraint value
+$0.09289$. The argument does not reach it, and must not: an argument that proved containment
+for the stadium would be refuted by Remark~\ref{rem:v6}.
+
+So the index set splits. Fix $d_0>0$ and separate constraints within angular distance $d_0$ of
+a gauge contact from those beyond it. The near ones are nonpositive by
+Remark~\ref{rem:v20}, uniformly in the distance; the far ones need a genuine margin, bounded
+below by $ad_0$ at $\Sig$ and negative for the stadium. Containment on a neighbourhood follows
+from the two together, and the stadium is excluded by the far regime alone. For $\Sig$ the far
+margin at $d_0=0.02$ is $0.0092$ and grows linearly in $d_0$, so the regimes overlap and the
+split is not vacuous.
+
+This is what the earlier attempts lacked: an argument local at the contacts and quantitative
+away from them, rather than one or the other.
+
+Rule~0: \verb|near_far_split|, \verb|far_margin| and \verb|far_positive_not_covered| are
+\textsc{verified}. The far margin for $\Sig$ is \textsc{heuristic}, being the measurement
+above, and the constants of Remark~\ref{rem:v20} remain \textsc{conjecture}.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

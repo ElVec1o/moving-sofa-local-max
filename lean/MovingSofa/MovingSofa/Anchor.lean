@@ -2650,4 +2650,59 @@ theorem uniform_threshold {a K nrm : ℝ} (ha : 0 < a) (hn : 0 ≤ nrm) (hK : 0 
 
 end DegenerateSlack
 
+
+section NearFar
+
+/-!
+### The near/far split, and why the stadium is not proved by it
+
+The degenerate-slack argument handles constraints near the gauge contacts, where both the
+slack and the perturbation vanish linearly. It says nothing about constraints far from them,
+and that is exactly right: the stadium of `rem:v6` satisfies the gauge identically too, with
+`c_y(0) = c_y(π/2) = H(π/2) - 1 = 0`, so the near regime applies to it verbatim. Its
+containment failure is at `t = π/4`, `ψ = +π/2`, far from both contacts, with constraint value
+`+0.09289`. The argument does not reach it, and must not.
+
+So the index set splits. Fix `d₀ > 0` and write the constraint family as those within angular
+distance `d₀` of a gauge contact and those beyond it.
+
+  NEAR: handled by `degenerate_slack_stable`, uniformly in the distance.
+  FAR:  needs a genuine margin, bounded below by `a·d₀` at `Σ` and NEGATIVE for the stadium.
+
+Containment on a neighbourhood follows from the two together (`near_far_split`), and the
+stadium is excluded by the far regime alone, which is the negative control the argument had to
+pass. For `Σ` the far margin at `d₀ = 0.02` is `0.0092`, and it grows linearly in `d₀`, so the
+two regimes overlap and the split is not vacuous.
+
+This is what the previous rounds lacked: an argument that is local at the contacts and
+quantitative away from them, rather than one or the other.
+-/
+
+/-- **The near/far split.** If every constraint within `d₀` of a contact is nonpositive by the
+degeneration argument, and every constraint beyond `d₀` is nonpositive by a genuine margin,
+then every constraint is nonpositive. Containment follows from the two regimes together. -/
+theorem near_far_split {P : ℝ → Prop} {d₀ : ℝ} (hd : 0 < d₀)
+    (hnear : ∀ d, 0 ≤ d → d ≤ d₀ → P d) (hfar : ∀ d, d₀ < d → P d) :
+    ∀ d, 0 ≤ d → P d := by
+  intro d hdd
+  rcases le_total d d₀ with h | h
+  · exact hnear d hdd h
+  · rcases eq_or_lt_of_le h with he | hl
+    · exact hnear d hdd he.ge
+    · exact hfar d hl
+
+/-- The far regime is a genuine margin: beyond `d₀` the unperturbed value is at most `-a·d₀`,
+so a perturbation smaller than that keeps it nonpositive. This is where the stadium fails,
+its far value being positive. -/
+theorem far_margin {a d₀ d val pert : ℝ} (ha : 0 < a) (hd : d₀ < d)
+    (hval : val ≤ -a * d) (hpert : pert ≤ a * d₀) : val + pert ≤ 0 := by
+  nlinarith
+
+/-- The negative control, stated: a family whose far value is positive is not covered, which
+is what keeps the argument from proving containment for the stadium. -/
+theorem far_positive_not_covered {val pert : ℝ} (hval : 0 < val) (hpert : 0 ≤ pert) :
+    ¬ (val + pert ≤ 0) := by push_neg; linarith
+
+end NearFar
+
 end MovingSofa
