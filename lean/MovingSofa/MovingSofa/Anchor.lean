@@ -1105,4 +1105,55 @@ theorem young_route_fails {κ C : ℝ} (hC : 1 ≤ C) (hκ : 0 < κ) : 1 < κ^2 
 
 end ArmRelation
 
+section SweepDisjoint
+
+/-!
+### The two sweeps meet only at the corner, at equal parameters
+
+Proposition `prop:V` computes `|N|` as a sum of two sweep integrals and needs the sweeps
+disjoint. Writing them in the moving frame makes the same-parameter case exact.
+
+The face-2 sweep is `Φ(s,t) = c(t) - s·μ_t` with `s ∈ [0, α₂⁺]`, the face-1 sweep is
+`Ψ(s,t) = c(t) - s·ν_t` with `s ∈ [α₁⁺, σ]`, and `⟨μ_t, ν_t⟩ = 0`. If a point lies on both
+at the *same* `t`, then `s·μ_t = s'·ν_t`; pairing against `μ_t` and against `ν_t` and using
+orthogonality forces `s = s' = 0`, so the point is `c(t)` itself. A single point per `t`
+sweeps out a curve, which has measure zero, so the same-parameter overlap contributes
+nothing to `|N|`.
+
+`sweep_same_param` is that step. What it does not settle is `t ≠ t'`, which is the actual
+content of disjointness and is left open: a face-2 point at `t` and a face-1 point at `t'`
+could in principle coincide, and ruling that out needs the arm system, not orthogonality.
+Rasterising both sweeps (`sofa_sweep`) puts the total overlap at `0.0041` of `|N|` and
+halving with resolution, consistent with the whole overlap being the measure-zero curve this
+lemma identifies.
+-/
+
+/-- Orthogonal directions, equal parameters: the two sweeps meet only where both offsets
+vanish, that is, only at the corner point `c(t)`. -/
+theorem sweep_same_param {μx μy νx νy s s' : ℝ}
+    (horth : μx * νx + μy * νy = 0)
+    (hμ : μx * μx + μy * μy = 1) (hν : νx * νx + νy * νy = 1)
+    (hx : s * μx = s' * νx) (hy : s * μy = s' * νy) :
+    s = 0 ∧ s' = 0 := by
+  -- Pair the two offset equations against mu and against nu.  Against mu: the left side
+  -- collapses by |mu| = 1 and the right side is s' times <nu,mu> = 0.  Against nu: the same
+  -- with the roles exchanged.  Both are exact linear combinations, which is why nlinarith
+  -- does not find them and linear_combination does.
+  refine ⟨?_, ?_⟩
+  · linear_combination (-s) * hμ + μx * hx + μy * hy + s' * horth
+  · linear_combination (-s') * hν - νx * hx - νy * hy + s * horth
+
+/-- Consequently the offsets being equal forces the two sweep points to be the same point. -/
+theorem sweep_same_param_eq {cx cy μx μy νx νy s s' : ℝ}
+    (horth : μx * νx + μy * νy = 0)
+    (hμ : μx * μx + μy * μy = 1) (hν : νx * νx + νy * νy = 1)
+    (hx : cx - s * μx = cx - s' * νx) (hy : cy - s * μy = cy - s' * νy) :
+    (cx - s * μx, cy - s * μy) = (cx, cy) := by
+  have hx2 : s * μx = s' * νx := by linear_combination -hx
+  have hy2 : s * μy = s' * νy := by linear_combination -hy
+  obtain ⟨hs, _⟩ := sweep_same_param horth hμ hν hx2 hy2
+  simp [hs]
+
+end SweepDisjoint
+
 end MovingSofa
