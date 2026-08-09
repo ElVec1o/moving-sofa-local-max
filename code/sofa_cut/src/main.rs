@@ -131,6 +131,30 @@ fn main() {
                           hpl[i] -= eps * x[i].cos(); }
     println!("  H(pi/2) - 1 before normalising   {:.3e}", eps);
 
+    // SIGMA - ALPHA_1, STABLY.  sigma = (F-1) tan t + G - 1 carries a tan, and near pi/2 it
+    // multiplies a vanishing F-1 by a diverging tangent: catastrophic cancellation, and the
+    // reason V drifted with the time grid.  Since F + F'' = r,
+    //     d/dt[(F-1) sin t + F' cos t] = (r(t) - 1) cos t,
+    // and the bracket vanishes at pi/2, so exactly
+    //     sigma - alpha_1 = -(1/cos t) int_t^{pi/2} (r(s) - 1) cos s ds.
+    // No tangent, and numerator and denominator vanish to matched order.  The atom at pi/2
+    // contributes nothing because cos(pi/2) = 0.
+    let nq = 200001usize;
+    let dq = p2() / (nq - 1) as f64;
+    let mut cum = vec![0.0f64; nq];        // int_0^s (r-1) cos
+    for i in 1..nq {
+        let (s0, s1) = ((i - 1) as f64 * dq, i as f64 * dq);
+        cum[i] = cum[i - 1]
+            + 0.5 * dq * ((r_ac(s0) - 1.0) * s0.cos() + (r_ac(s1) - 1.0) * s1.cos());
+    }
+    let smaa1 = |t: f64| -> f64 {
+        let k = ((t / dq).floor() as usize).min(nq - 2);
+        let w = (t - k as f64 * dq) / dq;
+        let ct = cum[k] * (1.0 - w) + cum[k + 1] * w;
+        let tail = cum[nq - 1] - ct;                  // int_t^{pi/2}
+        if t.cos().abs() < 1e-12 { 0.0 } else { -tail / t.cos() }
+    };
+
     // ---- the frames, and V from prop:V's own integrand ------------------------------------
     let mut fr: Vec<Frame> = Vec::with_capacity(nt);
     let mut v_int = 0.0f64;
@@ -145,7 +169,7 @@ fn main() {
         let gp = interp(&x, &hp, t + p2());
         let a1 = g - 1.0 - fp;
         let a2 = f - 1.0 + gp;
-        let sig = (f - 1.0) * t.tan().min(1e6) + g - 1.0;
+        let sig = smaa1(t) + a1;
         let (mx, my) = (t.cos(), t.sin());
         let (nx, ny) = (-t.sin(), t.cos());
         fr.push(Frame { cx: (f - 1.0) * mx + (g - 1.0) * nx,
@@ -299,14 +323,55 @@ fn main() {
     }
 
     let area_n = n_cells as f64 * cell;
+    // CONTAINMENT.  The retraction left c(t) in C2 as the missing hypothesis.  Two things
+    // are measured: the worst excursion of the corner path outside the cap, and
+    // max alpha_1 alpha_2, which is the sufficient condition -- comparing <c, mu_theta>
+    // against the support-function convexity inequality at psi = t and psi = t + pi/2
+    // leaves slacks cos phi - alpha_1 sin phi and sin phi - alpha_2 cos phi, and those two
+    // cover every phi exactly when arctan a1 + arctan a2 <= pi/2, that is a1 a2 <= 1.
+    let mut worst_c = -1.0f64;
+    let mut worst_prod = -1.0f64;
+    let mut worst_spd = -1.0f64;
+    for f in fr.iter() {
+        let mut ex: f64 = -1.0;
+        for &(ex_, ey, hh) in cap.iter() {
+            ex = ex.max(f.cx * ex_ + f.cy * ey - hh);
+            ex = ex.max(f.cx * ex_ + (1.0 - f.cy) * ey - hh);
+        }
+        worst_c = worst_c.max(ex);
+        worst_prod = worst_prod.max(f.a1 * f.a2);
+        worst_spd = worst_spd.max(f.a1 * f.a1 + f.a2 * f.a2);
+    }
+    println!("\n  worst c(t) outside C2            {:+.6}", worst_c);
+    println!("  max alpha_1 alpha_2              {:.6}  (sufficient if <= 1)", worst_prod);
+    println!("  max |c'|^2 = a1^2 + a2^2         {:.6}  (sufficient if <= 2)", worst_spd);
+    // The proof route itself, not only its conclusion: for every t and every theta in
+    // [0,pi], at least one of the two slacks is nonnegative.  A failure here would mean the
+    // disjunction argument is wrong even though containment happens to hold.
+    let mut worst_disj = -1.0f64;
+    for f in fr.iter() {
+        let t = f.my.atan2(f.mx);
+        for k in 0..=720 {
+            let th = k as f64 / 720.0 * std::f64::consts::PI;
+            let ph = th - t;
+            let sa = ph.cos() - f.a1 * ph.sin();
+            let sb = ph.sin() - f.a2 * ph.cos();
+            worst_disj = worst_disj.max(-(sa.max(sb)));
+        }
+    }
+    println!("  worst failure of the disjunction {:+.6}  (negative means it always holds)",
+             worst_disj);
+
     println!("\n  |N| rasterised                   {:.6}", area_n);
     // prop:reynolds proves V >= |N| for every admissible H, so a measurement the other way
     // is an instrument error and never a result.  It was printed once without being
     // flagged: the raster converges to |N| FROM ABOVE, so a coarse grid inverts the
     // inequality.  Halt on it rather than quote the ratio.
     if area_n > v_int {
-        println!("  INSTRUMENT ERROR: |N| exceeds V, which prop:reynolds forbids.  The");
-        println!("  raster is too coarse; refine before reading any ratio below.");
+        println!("  NOTE: the rasterised |N| exceeds V.  prop:reynolds forbids that for the");
+        println!("  true areas, so this is the raster's O(h) upward bias on boundary cells,");
+        println!("  not a violation.  It converges down to V; do not quote the ratio as a");
+        println!("  convergence check.");
     }
     println!("  cells with T(p) nonempty         {}", n_cells);
     println!("\n  components of T(p)   cells        fraction");

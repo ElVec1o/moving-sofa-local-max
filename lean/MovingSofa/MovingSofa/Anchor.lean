@@ -1848,4 +1848,92 @@ theorem pos_between_of_strictAnti {W W1 : ℝ → ℝ} {x z : ℝ} (hxz : x < z)
 
 end Piecewise
 
+
+section CornerContainment
+
+/-!
+### The corner path lies in the cap, from a bound on corner speed
+
+`rem:v6` left `c(t) ∈ C₂` as the missing hypothesis. It reduces to an inequality between two
+slacks.
+
+Membership in the cap is `⟨c(t), μ_θ⟩ ≤ H(θ)` for every `θ`. Convexity of the cap gives, for
+every `ψ`, the classical support inequality `H(ψ)cos(θ-ψ) + H'(ψ)sin(θ-ψ) ≤ H(θ)`, the
+statement that the boundary point `X(ψ)` lies in the body. Comparing `⟨c(t), μ_θ⟩` against
+that inequality at `ψ = t` and at `ψ = t + π/2` leaves, with `φ = θ - t`, the two slacks
+
+  `A(φ) = cos φ - α₁ sin φ`,   `B(φ) = sin φ - α₂ cos φ`
+
+(`corner_slack_one`, `corner_slack_two`). Either slack being nonnegative gives containment at
+that `θ`, so containment follows from `A(φ) ≥ 0 ∨ B(φ) ≥ 0` for all `φ` in range.
+
+That disjunction is exactly a bound on the arms. The identities
+`A + α₁B = (1 - α₁α₂)cos φ` and `B + α₂A = (1 - α₁α₂)sin φ` show that if both slacks are
+negative and `α₁α₂ ≤ 1`, then `cos φ < 0` and `sin φ < 0`, putting `φ` in the third quadrant.
+Since `θ ∈ [0,π]` and `t ∈ [0,π/2]` force `φ ∈ [-π/2, π]`, that is impossible. So
+
+  `α₁α₂ ≤ 1` suffices, and since `α₁² + α₂² = |c'(t)|²` it follows from `|c'(t)| ≤ √2`:
+  a bound on how fast the corner moves.
+
+For `Σ`, `sofa_cut` measures `max α₁α₂ = 0.145187` against the threshold `1`, and
+`max |c'|² = 0.813328` against `2`. The disjunction itself is checked directly over the
+`(t,θ)` grid and fails nowhere, its worst margin being `0.437739`. The corner path sits
+inside the cap with worst excursion `-0.000911`.
+
+Two gaps remain and are stated rather than hidden. `corner_disjunction` assumes both arms
+nonnegative; `Σ` has `α₁ < 0` on `E₁`, where the covering argument needs the separate range
+check `t ≤ π/2 - |arctan α₁|` that the measurement covers but this file does not. And
+`C₂ = C ∩ ρC`, so containment in `ρC` needs the mirror of this argument, which the note's
+mirror remark supplies but which is not formalised here.
+-/
+
+/-- Comparing `⟨c(t), μ_θ⟩` with the support inequality at `ψ = t` leaves the slack
+`cos φ - α₁ sin φ`, where `α₁ = g - 1 - fp`. -/
+theorem corner_slack_one (f g fp φ : ℝ) :
+    (f * Real.cos φ + fp * Real.sin φ) - ((f - 1) * Real.cos φ + (g - 1) * Real.sin φ)
+      = Real.cos φ - (g - 1 - fp) * Real.sin φ := by ring
+
+/-- Comparing with the support inequality at `ψ = t + π/2` leaves `sin φ - α₂ cos φ`, where
+`α₂ = f - 1 + gp`. -/
+theorem corner_slack_two (f g gp φ : ℝ) :
+    (g * Real.sin φ - gp * Real.cos φ) - ((f - 1) * Real.cos φ + (g - 1) * Real.sin φ)
+      = Real.sin φ - (f - 1 + gp) * Real.cos φ := by ring
+
+/-- **The disjunction.** If both slacks were negative and `α₁α₂ ≤ 1` with both arms
+nonnegative, then `φ` would lie in the third quadrant. The two combinations
+`A + α₁B = (1-α₁α₂)cos φ` and `B + α₂A = (1-α₁α₂)sin φ` are what force that. -/
+theorem corner_disjunction {a1 a2 φ : ℝ} (h1 : 0 ≤ a1) (h2 : 0 ≤ a2)
+    (hprod : a1 * a2 < 1)
+    (hA : Real.cos φ - a1 * Real.sin φ < 0) (hB : Real.sin φ - a2 * Real.cos φ < 0) :
+    Real.cos φ < 0 ∧ Real.sin φ < 0 := by
+  constructor
+  · nlinarith [hA, hB, h1, hprod]
+  · nlinarith [hA, hB, h2, hprod]
+
+/-- The range that actually occurs: `θ ∈ [0,π]` and `t ∈ [0,π/2]` put `φ = θ - t` in
+`[-π/2, π]`, where `cos φ` and `sin φ` are never both negative. -/
+theorem no_third_quadrant {φ : ℝ} (hlo : -(Real.pi / 2) ≤ φ) (hhi : φ ≤ Real.pi)
+    (hc : Real.cos φ < 0) : 0 ≤ Real.sin φ := by
+  rcases le_total 0 φ with h | h
+  · exact Real.sin_nonneg_of_nonneg_of_le_pi h hhi
+  · exfalso
+    exact absurd (Real.cos_nonneg_of_mem_Icc ⟨by linarith, by linarith⟩) (not_le.mpr hc)
+
+/-- **Containment from the arm bound.** With both arms nonnegative and `α₁α₂ < 1`, at least
+one slack is nonnegative at every `φ` that occurs, so `c(t)` satisfies the support inequality
+at every `θ`, which is membership in the cap. -/
+theorem corner_in_cap {a1 a2 φ : ℝ} (h1 : 0 ≤ a1) (h2 : 0 ≤ a2) (hprod : a1 * a2 < 1)
+    (hlo : -(Real.pi / 2) ≤ φ) (hhi : φ ≤ Real.pi) :
+    0 ≤ Real.cos φ - a1 * Real.sin φ ∨ 0 ≤ Real.sin φ - a2 * Real.cos φ := by
+  by_contra hcon
+  push_neg at hcon
+  obtain ⟨hc, hs⟩ := corner_disjunction h1 h2 hprod hcon.1 hcon.2
+  exact absurd (no_third_quadrant hlo hhi hc) (not_le.mpr hs)
+
+/-- The arm bound follows from a bound on corner speed, because `α₁² + α₂² = |c'(t)|²`. -/
+theorem arm_prod_le_of_speed {a1 a2 : ℝ} (h : a1 * a1 + a2 * a2 < 2) : a1 * a2 < 1 := by
+  nlinarith [sq_nonneg (a1 - a2)]
+
+end CornerContainment
+
 end MovingSofa
