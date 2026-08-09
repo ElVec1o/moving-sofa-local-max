@@ -1937,6 +1937,37 @@ numerical accident, and $D>0$ on a punctured neighbourhood of $\pi/2$. Rule~0:
 \verb|width_symmetric| and \verb|corner_slopes_from_atom| are \textsc{verified}; that $D$ has
 no other zero is \textsc{heuristic} and is the remaining content of the width condition.
 \end{remark}
+
+\begin{remark}[The inner functional: a bound that does not need containment]\label{rem:v16}
+The obstruction at $G_1$ is direction, not difficulty. Since $|T|=|C_2|-2|N|$, an upper bound
+on $|T|$ requires a \emph{lower} bound on $|N|$. What Proposition~\ref{prop:reynolds} supplies
+is $V\ge|N|$, an upper bound, so $|C_2|-2V\le|T|$ and the inequality runs backwards. That is
+why exact equality $V=|N|$ is needed and why every gram of slack has been fatal.
+
+Replace $V$ by a functional that is $\le|N|$ by construction. Let $V_{\mathrm{in}}$ be the
+sweep integral restricted to the part of the windows whose image lies in $C_2$. If the sweeps
+are injective and disjoint, that image is a subset of $N$ covered with multiplicity one, so
+\[
+  V_{\mathrm{in}}\le|N| ,\qquad\text{hence}\qquad |T|=|C_2|-2|N|\ \le\ |C_2|-2V_{\mathrm{in}} ,
+\]
+and this uses neither containment nor covering. Containment is exactly the statement
+$V_{\mathrm{in}}=V$, so the two agree on $\Sig$ and the classical bound is recovered there;
+where containment fails, $V_{\mathrm{in}}$ still bounds and $V$ does not. Writing
+$V_{\mathrm{in}}=V-E$ with $E$ the escaping mass gives $|T|\le|C_2|-2V+2E$, so an upper bound
+on $E$ replaces a proof that $E=0$.
+
+This reverses the burden. Instead of an exact geometric containment, which
+Remarks~\ref{rem:v6} and~\ref{rem:v13} show is not implied by the other hypotheses, it asks
+how much sweep can leave the cap, and any bound at all yields a valid, if weaker, upper bound
+on the sofa area. For the stadium family the escape is measured directly and is what the
+table of Remark~\ref{rem:v6} records in its fourth column.
+
+Rule~0: \verb|inner_bound|, \verb|escape_bound| and \verb|escape_zero| are \textsc{verified}.
+What is not established is that $V_{\mathrm{in}}$ is convex-linear in $H$, which is what the
+concavity argument of Theorem~\ref{thm:final} consumes; without that the new bound is valid
+but not yet usable in the variational step. That is the next question, and it is a question
+about a restricted integral rather than about geometry.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

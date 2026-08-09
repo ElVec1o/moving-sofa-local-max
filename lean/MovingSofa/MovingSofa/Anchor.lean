@@ -2363,4 +2363,54 @@ theorem corner_slopes_from_atom {sl sr atom : ℝ} (hsym : sl = -sr)
 
 end WidthStructure
 
+
+section InnerFunctional
+
+/-!
+### The inner functional: a bound that does not need containment
+
+The obstruction to `G1` is not difficulty but DIRECTION. Since `|T| = |C₂| - 2|N|`, an upper
+bound on `|T|` needs a LOWER bound on `|N|`. What `prop:reynolds` supplies is `V ≥ |N|`, an
+upper bound, so `|C₂| - 2V ≤ |T|` and the inequality runs backwards. That is why the note
+needs exact equality `V = |N|`, and why every gram of slack has been fatal.
+
+The fix is to replace `V` by a functional that is `≤ |N|` by construction. Let `V_in` be the
+sweep integral restricted to the part of the windows whose image lies in `C₂`. If the sweeps
+are injective and disjoint, that image is a subset of `N` covered with multiplicity one, so
+
+  `V_in ≤ |N|`,  hence  `|T| = |C₂| - 2|N| ≤ |C₂| - 2·V_in`,
+
+and this needs NEITHER containment NOR covering (`inner_bound`). Containment is exactly the
+statement `V_in = V`, so the two functionals agree on `Σ` and the classical bound is
+recovered there; but where containment fails the inner functional still bounds, while `V`
+does not. `V_in = V - E` with `E` the escaping mass, so an upper bound on `E` suffices in
+place of a proof that `E = 0` (`escape_bound`).
+
+This reverses the burden. Instead of proving an exact geometric containment, which two
+counterexamples show is not implied by the other hypotheses, it asks for a bound on how much
+sweep can leave the cap, and any bound at all yields a valid, if weaker, upper bound on the
+sofa area.
+-/
+
+/-- **The inner bound.** If a functional is at most the niche area, it bounds the sofa area
+from above through the cap decomposition, with no containment hypothesis. -/
+theorem inner_bound {capA niche inner sofa : ℝ}
+    (hdecomp : sofa = capA - 2 * niche) (hin : inner ≤ niche) :
+    sofa ≤ capA - 2 * inner := by
+  rw [hdecomp]; linarith
+
+/-- **The escape bound.** Writing the classical functional as the inner one plus the escaping
+mass, any upper bound on the escape converts the classical functional into a valid bound.
+Containment is the special case `escape = 0`. -/
+theorem escape_bound {capA niche v escape sofa : ℝ}
+    (hdecomp : sofa = capA - 2 * niche) (hsplit : v - escape ≤ niche) :
+    sofa ≤ capA - 2 * v + 2 * escape := by
+  rw [hdecomp]; linarith
+
+/-- With no escape the two coincide, so nothing is lost where containment does hold. -/
+theorem escape_zero {capA v sofa : ℝ}
+    (h : sofa ≤ capA - 2 * v + 2 * 0) : sofa ≤ capA - 2 * v := by linarith
+
+end InnerFunctional
+
 end MovingSofa
