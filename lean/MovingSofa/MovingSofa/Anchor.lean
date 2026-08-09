@@ -2121,4 +2121,54 @@ theorem wronskian_strictAntiOn {W W1 q : ℝ → ℝ} {x a b : ℝ} (hab : a ≤
 
 end PiecewiseSturm
 
+
+section FloorConstraint
+
+/-!
+### The mirror reduces to the floor, and the floor is `eq:seghyp`
+
+Scanning the reflected directions `ψ ∈ [-π, 0)` for `Σ`, the binding one is `ψ = -π/2` and
+nothing else comes close. That direction is the floor, and it says something one-dimensional.
+
+By `ρ`-invariance the cap's support function at `-π/2` is `H(π/2) - sin(π/2) = 0` after the
+normalisation `H(π/2) = 1`, so the constraint there is `⟨c(t), μ_{-π/2}⟩ ≤ 0`, that is
+`c_y(t) ≥ 0`: the corner never dips below the floor. And `c_y(t) = σ(t)\cos t`
+(`corner_height_eq`), so it follows from `σ ≥ 0`, which is implied by
+`σ ≥ α₁⁺` (`floor_from_seghyp`).
+
+That last inequality is `eq:seghyp`, which `rem:seghyp` already carries and which
+Proposition~`prop:V`'s statement omits. So the fourth hypothesis that `rem:v6` showed to be
+missing is not new: it is `eq:seghyp`, and the containment failure of the stadium is a
+failure of `eq:seghyp` and not of anything invented for the purpose.
+
+What this does not settle: the reflected directions other than `ψ = -π/2`. They are slacker
+throughout the measurement, the floor being the unique argmin, but slackness at a grid of
+directions is not a proof.
+-/
+
+/-- The corner's height is the reach times `cos t`. This is what turns the floor constraint,
+a statement about a reflected support direction, into a statement about `σ`. -/
+theorem corner_height_eq (f g t : ℝ) (hc : Real.cos t ≠ 0) :
+    (f - 1) * Real.sin t + (g - 1) * Real.cos t
+      = ((f - 1) * (Real.sin t / Real.cos t) + (g - 1)) * Real.cos t := by
+  field_simp
+
+/-- After the normalisation `H(π/2) = 1`, the cap's support value in the downward direction
+is `0`, so the floor constraint is exactly `c_y ≥ 0`. -/
+theorem floor_support_zero {g0 : ℝ} (hg : g0 = 1) :
+    g0 - Real.sin (Real.pi / 2) = 0 := by
+  rw [Real.sin_pi_div_two, hg]; ring
+
+/-- **The floor constraint follows from `eq:seghyp`.** `σ ≥ α₁⁺` gives `σ ≥ 0`, and with
+`cos t ≥ 0` on `[0, π/2]` that gives `c_y = σ cos t ≥ 0`. -/
+theorem floor_from_seghyp {σ a1 t : ℝ} (hseg : max a1 0 ≤ σ)
+    (ht : 0 ≤ Real.cos t) : 0 ≤ σ * Real.cos t :=
+  mul_nonneg (le_trans (le_max_right a1 0) hseg) ht
+
+/-- The reach is nonnegative under `eq:seghyp`, which is the one-dimensional content. -/
+theorem seghyp_gives_reach_nonneg {σ a1 : ℝ} (hseg : max a1 0 ≤ σ) : 0 ≤ σ :=
+  le_trans (le_max_right a1 0) hseg
+
+end FloorConstraint
+
 end MovingSofa

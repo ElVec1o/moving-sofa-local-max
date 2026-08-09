@@ -383,6 +383,29 @@ fn main() {
     println!("  min (alpha_2 + tan t)            {:+.6}  (needed >= 0)", m2);
     println!("  max |alpha_1|, max |alpha_2|     {:.6}  {:.6}", ma1, ma2);
     println!("  worst c(t) outside C, outside rC {:+.6}  {:+.6}", cout, rout);
+    // WHICH lower-half direction binds?  Scan psi in [-pi, 0) using h(psi) = H(-psi) - sin(-psi)
+    // = H(|psi|) + sin(psi), the rho-invariance relation.  If the argmin is psi = -pi/2 the
+    // whole mirror condition is c_y(t) >= 0: the corner never dips below the floor.
+    {
+        let (mut best, mut bt, mut bps) = (1e9f64, 0.0f64, 0.0f64);
+        let mut mincy = 1e9f64;
+        let mut argcy = 0.0f64;
+        for f in fr.iter() {
+            let t = f.my.atan2(f.mx);
+            if f.cy < mincy { mincy = f.cy; argcy = t; }
+            for k in 1..=1440 {
+                let ps = -(k as f64) / 1440.0 * std::f64::consts::PI;
+                let hps = interp(&x, &h, -ps) + ps.sin();
+                let sl = hps - (f.cx * ps.cos() + f.cy * ps.sin());
+                if sl < best { best = sl; bt = t; bps = ps; }
+            }
+        }
+        println!("  binding lower-half direction     slack {:+.8} at t = {:.5}, psi = {:.5}",
+                 best, bt, bps);
+        println!("  (-pi/2 = {:.5}, so the floor binds iff psi matches it)", -p2());
+        println!("  min c_y(t)                       {:+.8} at t = {:.5}", mincy, argcy);
+    }
+
     // Is the rho-C margin real or a discretisation artifact?  Refine the direction grid and
     // report the argmin.  A margin collapsing to 0 means the corner path TOUCHES the mirror
     // cap, so containment is exactly tight and only a sharp argument can prove it.

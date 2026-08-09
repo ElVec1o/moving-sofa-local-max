@@ -1753,6 +1753,33 @@ then runs on the whole window. All three are \textsc{verified}, so supplying $\S
 function in Lean is the only remaining step in hypothesis (ii); no further mathematics is
 required for it.
 \end{remark}
+
+\begin{remark}[The mirror reduces to the floor, and the floor is \eqref{eq:seghyp}]\label{rem:v10}
+Scanning the reflected directions $\psi\in[-\pi,0)$ for $\Sig$, the binding one is
+$\psi=-\pi/2$ and nothing else is close: the minimum slack over a $1440$-point scan is
+attained there, at $t=0$, and equals $0$.
+
+That direction is the floor, and it says something one-dimensional. By $\rho$-invariance the
+cap's support value at $-\pi/2$ is $H(\pi/2)-\sin(\pi/2)=0$ after the normalisation
+$H(\pi/2)=1$, so the constraint is $\langle c(t),\mu_{-\pi/2}\rangle\le0$, that is
+$c_y(t)\ge0$: the corner never dips below the floor. Since
+$c_y(t)=\sigma(t)\cos t$, this follows from $\sigma\ge0$, which follows from
+$\sigma\ge\alpha_1^+$.
+
+That last inequality is \eqref{eq:seghyp}, which Remark~\ref{rem:seghyp} already carries and
+which Proposition~\ref{prop:V}'s statement omits. So the fourth hypothesis that
+Remark~\ref{rem:v6} showed to be missing is not new machinery: it is \eqref{eq:seghyp}. The
+stadium of Remark~\ref{rem:v6} fails containment because it fails \eqref{eq:seghyp}, not
+because of anything peculiar to the sweeps, and the disc of radius $\tfrac12$, for which
+$\sigma<0$ on $(0,\pi/2]$, is the same failure in its starkest form.
+
+Rule~0: \verb|corner_height_eq|, \verb|floor_support_zero|, \verb|floor_from_seghyp| and
+\verb|seghyp_gives_reach_nonneg| are \textsc{verified}. What is not settled is the reflected
+directions other than $\psi=-\pi/2$; they are slacker throughout the measurement, the floor
+being the unique argmin, but slackness on a grid of directions is not a proof. So
+$c(t)\in\rho C$ for $\Sig$ is \textsc{heuristic}, improved from \textsc{conjecture}, and the
+route to \textsc{proved} is now a single stated inequality rather than an open search.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
