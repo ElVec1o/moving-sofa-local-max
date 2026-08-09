@@ -411,6 +411,9 @@ fn main() {
         }
         println!("  three-comparison worst failure   {:+.8} at t = {:.5}, omega = {:.5}",
                  worst, bt, bw);
+        println!("  H'(pi/2) left, right             {:+.6}  {:+.6}  (need left <= 0 <= right)",
+                 hpl_p2, hpr_p2);
+        println!("  H(0) - 1                         {:+.6}", interp(&x, &h, 0.0) - 1.0);
         println!("  (negative means the reflected half is covered everywhere)");
     }
 

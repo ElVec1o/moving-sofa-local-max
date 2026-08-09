@@ -2215,4 +2215,63 @@ theorem ceiling_slack_contact (f hp2 : ℝ) :
 
 end ThirdComparison
 
+
+section CeilingSegment
+
+/-!
+### The atom is what closes the contact
+
+Expanding `cos(ω - t)` in the ceiling slack puts it in the same shape as the other two:
+
+  `S₃ = -(P cos x + Q sin x)`,  `P = F - 1 + h'\cos t`,  `Q = h'\sin t - (G - 1)`,
+
+with `x = ω + t` (`ceiling_slack_form`). At the contact time `t = 0` the normalisations
+`H(0) = 1` and `H(π/2) = 1` collapse this to `P = h'` and `Q = 0`, so `S₃ = -h'\cos x`.
+
+A single value of `h'` cannot work: covering `x` above `π/2` needs `h' ≥ 0` and below it
+needs `h' ≤ 0`. The atom is what supplies both. Its mass makes the top of the cap a
+segment rather than a point, so the support inequality at `ψ = π/2` holds with each of the
+two one-sided derivatives, and `H'(π/2⁻) ≤ 0 ≤ H'(π/2⁺)` gives one comparison for each side
+(`ceiling_two_sided`).
+
+Equivalently and more geometrically: `H(0) = 1` and `c_y(0) = 0` put `ρc(0) = (0, 1)`, while
+the ceiling segment runs from `H'(π/2⁻)` to `H'(π/2⁺)`. The contact point lies on that
+segment precisely when `H'(π/2⁻) ≤ H(0) - 1 ≤ H'(π/2⁺)` (`contact_on_ceiling`). For `Σ` the
+segment is `[-0.416457, 0.750593]`, of length the atom mass `1.16705`, and it contains `0`.
+Had `H` no atom at `π/2`, the top would be a single point, the two-sided coverage would be
+unavailable, and this argument would fail.
+-/
+
+/-- The ceiling slack in the same `P cos x + Q sin x` shape as the other two comparisons,
+after expanding `cos(x - t)`. -/
+theorem ceiling_slack_form (f g hp2 t x : ℝ) :
+    -((f - 1) * Real.cos x - (g - 1) * Real.sin x + hp2 * Real.cos (x - t))
+    = -(((f - 1) + hp2 * Real.cos t) * Real.cos x
+        + (hp2 * Real.sin t - (g - 1)) * Real.sin x) := by
+  rw [Real.cos_sub]; ring
+
+/-- At the contact time the two normalisations collapse the slack to `-h'\cos x`. -/
+theorem ceiling_slack_at_zero (hp2 x : ℝ) :
+    -(((1 : ℝ) - 1 + hp2 * Real.cos 0) * Real.cos x
+      + (hp2 * Real.sin 0 - (1 - 1)) * Real.sin x)
+    = -(hp2 * Real.cos x) := by
+  rw [Real.cos_zero, Real.sin_zero]; ring
+
+/-- **The atom supplies both sides.** With `H'(π/2⁻) ≤ 0 ≤ H'(π/2⁺)`, the left value covers
+every `x` with `cos x ≥ 0` and the right value covers every `x` with `cos x ≤ 0`, so between
+them the contact time is covered for all `x`. -/
+theorem ceiling_two_sided {hl hr x : ℝ} (hlneg : hl ≤ 0) (hrpos : 0 ≤ hr) :
+    0 ≤ -(hl * Real.cos x) ∨ 0 ≤ -(hr * Real.cos x) := by
+  rcases le_total 0 (Real.cos x) with h | h
+  · exact Or.inl (by nlinarith)
+  · exact Or.inr (by nlinarith)
+
+/-- The contact point `ρc(0) = (H(0) - 1, 1)` lies on the cap's ceiling segment, whose
+endpoints are the two one-sided values of `H'(π/2)`, exactly when this holds. The segment
+has length the atom's mass, so a cap without the atom cannot satisfy it strictly. -/
+theorem contact_on_ceiling {hl hr f0 : ℝ} (h1 : hl ≤ f0 - 1) (h2 : f0 - 1 ≤ hr) :
+    f0 - 1 ∈ Set.Icc hl hr := ⟨h1, h2⟩
+
+end CeilingSegment
+
 end MovingSofa

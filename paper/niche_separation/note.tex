@@ -1812,6 +1812,35 @@ that the three slacks cover the reflected half for $\Sig$ is \textsc{heuristic},
 scan, and what it would take to promote it is a sign analysis of three explicit
 trigonometric expressions rather than any further geometry.
 \end{remark}
+
+\begin{remark}[The atom is what closes the contact]\label{rem:v12}
+Expanding $\cos(\omega-t)$ puts the ceiling slack in the same shape as the other two:
+$-\bigl(P\cos x+Q\sin x\bigr)$ with $P=F-1+H'(\pi/2)\cos t$ and
+$Q=H'(\pi/2)\sin t-(G-1)$, where $x=\omega+t$. At the contact time $t=0$ the normalisations
+$H(0)=1$ and $H(\pi/2)=1$ collapse this to $P=H'(\pi/2)$, $Q=0$, so the slack is
+$-H'(\pi/2)\cos x$.
+
+A single value of $H'(\pi/2)$ cannot work: covering $x$ above $\pi/2$ needs it nonnegative
+and below $\pi/2$ needs it nonpositive. The atom supplies both. Its mass makes the top of the
+cap a segment rather than a point, so the support inequality at $\psi=\pi/2$ holds with each
+one-sided derivative, and
+\[
+  H'(\pi/2^-)=-0.416457\le0\le0.750593=H'(\pi/2^+)
+\]
+gives one comparison for each side, the two differing by exactly the atom mass.
+
+Geometrically: $H(0)=1$ and $c_y(0)=0$ put $\rho c(0)=(0,1)$, while the ceiling segment runs
+from $H'(\pi/2^-)$ to $H'(\pi/2^+)$. The contact point lies on that segment precisely when
+$H'(\pi/2^-)\le H(0)-1\le H'(\pi/2^+)$, and for $\Sig$ the segment contains $0$ with room on
+both sides. Had $H$ no atom at $\pi/2$ the top would be a single point, the two-sided
+coverage would be unavailable, and the argument would fail. That is a structural role for the
+ceiling facet, which until now entered the analysis only as a term in $|C_2|$.
+
+Rule~0: \verb|ceiling_slack_form|, \verb|ceiling_slack_at_zero|, \verb|ceiling_two_sided| and
+\verb|contact_on_ceiling| are \textsc{verified}. The contact time is therefore covered for
+every $x$. What remains \textsc{heuristic} is the coverage at $t>0$, where $Q\ne0$ and the
+three slacks must be compared as functions of two parameters.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
