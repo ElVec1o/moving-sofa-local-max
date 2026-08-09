@@ -251,6 +251,20 @@ fn main() {
         if rr > rmax { rmax = rr; rarg = th; }
     }
     println!("  max curvature radius r off atom  {:.6} at theta = {:.6}", rmax, rarg);
+    // OBJECTION 14.  The inner sweep endpoint X(th) - mu_th lies in C2 only if C2 has width
+    // at least 1 in every direction.  By rho-invariance width(th) = H(th) + H(pi-th) - sin th,
+    // which is exactly 1 at th = pi/2.  A SECOND exactly-tight endpoint condition, nowhere
+    // stated as a hypothesis of prop:V.
+    {
+        let (mut wmin, mut warg) = (1e9f64, 0.0f64);
+        for k in 0..=200000usize {
+            let th = k as f64 / 200000.0 * std::f64::consts::PI;
+            let w = interp(&x, &h, th) + interp(&x, &h, std::f64::consts::PI - th) - th.sin();
+            if w < wmin { wmin = w; warg = th; }
+        }
+        println!("  min width H(th)+H(pi-th)-sin th  {:.8} at theta = {:.6}  (need >= 1)",
+                 wmin, warg);
+    }
     println!("  margin to the Sturm threshold 1  {:.6}", 1.0 - rmax);
 
     let mut ident_max = 0.0f64;      // max |u(t) - W(t)| and |v(t) - W(t+pi/2)|

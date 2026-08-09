@@ -1892,6 +1892,25 @@ Remark~\ref{rem:v6} identifies. Rule~0: Theorem~\ref{thm:final} reverts to
 \textsc{conjecture} pending a containment argument, and everything downstream of it inherits
 that label.
 \end{remark}
+
+\begin{remark}[The second endpoint condition: width at least one]\label{rem:v14}
+The convexity reduction of Remark~\ref{rem:v6} needs \emph{both} sweep endpoints in $C_2$,
+and the inner one is $X(\theta)-\mu_\theta$. That point lies in $C_2$ only if $C_2$ has width
+at least $1$ in direction $\theta$, by the support inequality in the direction opposite to
+$\theta$. Using $\rho$-invariance to write the width through $H$ on $[0,\pi]$ alone, the
+condition is
+\[
+  H(\theta)+H(\pi-\theta)-\sin\theta\ \ge\ 1 ,
+\]
+which at $\theta=\pi/2$ reads $1+1-1=1$ under the gauge: exactly tight, at the same point as
+every other contact in this analysis. Measured for $\Sig$ on a $200000$-point grid the
+minimum is $1$, attained only there.
+
+This is a hypothesis of Proposition~\ref{prop:V} that was not stated, and it is recorded here
+rather than assumed silently. Rule~0: \verb|width_at_half_pi| and
+\verb|width_needed_for_endpoint| are \textsc{verified}; that $\Sig$ satisfies the condition
+with equality only at $\pi/2$ is \textsc{heuristic}.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

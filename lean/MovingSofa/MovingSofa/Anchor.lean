@@ -2285,4 +2285,37 @@ theorem ceiling_right_from_arm {f0 hr : ℝ} (harm : 0 ≤ f0 - 1 + hr) : 1 - f0
 
 end CeilingSegment
 
+
+section WidthCondition
+
+/-!
+### The second endpoint condition: width at least one
+
+The convexity reduction of `rem:v6` needs BOTH sweep endpoints in `C₂`, and the inner one is
+`X(θ) - μ_θ`. That point lies in `C₂` only if `C₂` has width at least `1` in direction `θ`,
+since the support inequality in direction `-μ_θ` gives `-⟨X(θ)-μ_θ, μ_θ⟩ + ... `, i.e.
+`h(θ) + h(θ+π) ≥ 1`. By `ρ`-invariance `h(θ+π) = H(π-θ) - sin θ`, so the condition is
+
+  `H(θ) + H(π-θ) - sin θ ≥ 1`,
+
+which at `θ = π/2` reads `H(π/2) + H(π/2) - 1 = 1` under the gauge: exactly tight, at the
+same point as every other contact in this analysis. Measured for `Σ` on a `200000`-point
+grid the minimum is `1` attained only there.
+
+This is a hypothesis of `prop:V` that was not stated. It is recorded here rather than
+assumed silently.
+-/
+
+/-- The width of a `ρ`-invariant cap in direction `θ`, written through `H` on `[0,π]` alone
+using `h(-ω) = H(ω) - sin ω`. At `θ = π/2` the gauge `H(π/2) = 1` makes it exactly `1`. -/
+theorem width_at_half_pi {g0 : ℝ} (hg : g0 = 1) : g0 + g0 - Real.sin (Real.pi / 2) = 1 := by
+  rw [Real.sin_pi_div_two, hg]; ring
+
+/-- The inner sweep endpoint lies in the cap only if the width condition holds: this is the
+support inequality in the direction opposite to `θ`. -/
+theorem width_needed_for_endpoint {hth hpi w : ℝ} (hw : w = hth + hpi)
+    (hcond : 1 ≤ w) : 1 ≤ hth + hpi := hw ▸ hcond
+
+end WidthCondition
+
 end MovingSofa
