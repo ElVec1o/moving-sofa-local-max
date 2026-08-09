@@ -1,0 +1,11 @@
+[package]
+name = "sofa_dtau"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "sofa_dtau"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3

@@ -2927,48 +2927,69 @@ The moment identity comes from the other bracket. `A₂(t) = (F - 1)sin t + F' c
 `∫_0^{π/2} ρ₁ cos = H'(0)`, which is `1/2` under hypothesis (b) (`moment_from_bracket`).
 -/
 
-/-- The bracket's derivative is the curvature deficit times `sin`. This is the identity the
-whole reflected-half argument is built on. -/
-theorem bracket_deriv {F F' F'' : ℝ → ℝ} {t r : ℝ}
-    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+/-- The bracket's derivative is the curvature deficit times `sin`, **at the single point `t`**.
+Only the two derivatives at `t` are consumed, which is what lets the monotonicity lemmas below
+ask for them on an open interval instead of on all of `ℝ`. -/
+theorem bracket_deriv_at {F F' F'' : ℝ → ℝ} {t r : ℝ}
+    (h1 : HasDerivAt F (F' t) t) (h2 : HasDerivAt F' (F'' t) t)
     (hr : r = F t + F'' t) :
     HasDerivAt (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s)
       ((1 - r) * Real.sin t) t := by
   have hc : HasDerivAt (fun s => (F s - 1) * Real.cos s)
       (F' t * Real.cos t + (F t - 1) * (-Real.sin t)) t :=
-    ((h1 t).sub_const 1).mul (Real.hasDerivAt_cos t)
+    (h1.sub_const 1).mul (Real.hasDerivAt_cos t)
   have hs : HasDerivAt (fun s => F' s * Real.sin s)
       (F'' t * Real.sin t + F' t * Real.cos t) t :=
-    (h2 t).mul (Real.hasDerivAt_sin t)
+    h2.mul (Real.hasDerivAt_sin t)
   have h := hc.sub hs
   have e : (1 - r) * Real.sin t
       = F' t * Real.cos t + (F t - 1) * (-Real.sin t)
         - (F'' t * Real.sin t + F' t * Real.cos t) := by rw [hr]; ring
   rw [e]; exact h
 
+/-- The bracket's derivative is the curvature deficit times `sin`. This is the identity the
+whole reflected-half argument is built on. The globally quantified hypotheses are a
+convenience wrapper around `bracket_deriv_at`; nothing but the derivatives at `t` is used. -/
+theorem bracket_deriv {F F' F'' : ℝ → ℝ} {t r : ℝ}
+    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+    (hr : r = F t + F'' t) :
+    HasDerivAt (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s)
+      ((1 - r) * Real.sin t) t :=
+  bracket_deriv_at (h1 t) (h2 t) hr
+
 /-- The corner's abscissa is the bracket corrected by the first arm. Pure algebra. -/
 theorem cx_from_bracket (f g fp t : ℝ) :
     (f - 1) * Real.cos t - (g - 1) * Real.sin t
       = ((f - 1) * Real.cos t - fp * Real.sin t) - (g - 1 - fp) * Real.sin t := by ring
 
-/-- The companion bracket, whose endpoints give the moment identity: its derivative is minus
-the deficit times `cos`, it equals `H'(0)` at `0` and `H(π/2) - 1` at `π/2`. -/
-theorem moment_bracket_deriv {F F' F'' : ℝ → ℝ} {t r : ℝ}
-    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+/-- The companion bracket's derivative **at the single point `t`**: minus the deficit times
+`cos`. As with `bracket_deriv_at`, only the two derivatives at `t` are consumed. -/
+theorem moment_bracket_deriv_at {F F' F'' : ℝ → ℝ} {t r : ℝ}
+    (h1 : HasDerivAt F (F' t) t) (h2 : HasDerivAt F' (F'' t) t)
     (hr : r = F t + F'' t) :
     HasDerivAt (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
       (-((1 - r) * Real.cos t)) t := by
   have hs : HasDerivAt (fun s => (F s - 1) * Real.sin s)
       (F' t * Real.sin t + (F t - 1) * Real.cos t) t :=
-    ((h1 t).sub_const 1).mul (Real.hasDerivAt_sin t)
+    (h1.sub_const 1).mul (Real.hasDerivAt_sin t)
   have hc : HasDerivAt (fun s => F' s * Real.cos s)
       (F'' t * Real.cos t + F' t * (-Real.sin t)) t :=
-    (h2 t).mul (Real.hasDerivAt_cos t)
+    h2.mul (Real.hasDerivAt_cos t)
   have h := hs.add hc
   have e : -((1 - r) * Real.cos t)
       = F' t * Real.sin t + (F t - 1) * Real.cos t
         + (F'' t * Real.cos t + F' t * (-Real.sin t)) := by rw [hr]; ring
   rw [e]; exact h
+
+/-- The companion bracket, whose endpoints give the moment identity: its derivative is minus
+the deficit times `cos`, it equals `H'(0)` at `0` and `H(π/2) - 1` at `π/2`. Wrapper around
+`moment_bracket_deriv_at`. -/
+theorem moment_bracket_deriv {F F' F'' : ℝ → ℝ} {t r : ℝ}
+    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+    (hr : r = F t + F'' t) :
+    HasDerivAt (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
+      (-((1 - r) * Real.cos t)) t :=
+  moment_bracket_deriv_at (h1 t) (h2 t) hr
 
 /-- The moment identity, from the endpoint values of the companion bracket: the integral of
 the deficit against `cos` is `H'(0)`, hence `1/2` under the boundary hypothesis. -/
@@ -2976,72 +2997,216 @@ theorem moment_from_bracket {A0 Ahalf mom : ℝ} (hend : Ahalf - A0 = -mom)
     (h0 : A0 = 1/2) (hhalf : Ahalf = 0) : mom = 1/2 := by
   rw [h0, hhalf] at hend; linarith
 
-/-- **The bracket is nondecreasing.** `A(θ) = (F-1)cos θ - F' sin θ` has `A' = (1-r) sin θ`,
-so `A` increases wherever the curvature deficit and `sin` are both nonnegative. On `[0,π]`
-the second is automatic, so this is hypothesis (b) and nothing else. -/
+/-!
+#### The monotonicity of the two brackets, in the two forms `D` actually supplies
+
+`rem:v31` first recorded the three monotonicity lemmas below in a form carrying
+`(h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)`, quantified over all
+of `ℝ`. **No member of `D` satisfies that.** Hypothesis (b) gives only that `H'` is Lipschitz
+with `H'' ∈ L^∞` a.e.; `H'` jumps at `π/2`, so `h2` fails there outright, and `Σ`'s own `r`
+jumps at `β`, inside `(0,π/2)`, so `h2` fails at an interior point as well. This is the same
+regression `rem:v5b` diagnosed for `pos_between`/`wronskian_strictAntiOn`, and the repair is
+the one it used: two forms, neither of which asks for a second derivative where `D` has none.
+
+* **Localised form** (`bracket_monotoneOn_Ioo` and friends). The derivative hypotheses are
+  asked for only on the OPEN interval, and `F`, `F'` only continuous on the closed one. This
+  is exactly what `monotoneOn_of_hasDerivWithinAt_nonneg` consumes, and it instantiates at
+  `Σ` phase by phase: the jump of `r` at `β` and the atom of `H'` at `π/2` sit at endpoints of
+  the phases, never inside them. `monotoneOn_glue`/`antitoneOn_glue` chain the phases.
+
+* **Measure form** (`bracket_monotoneOn_of_deficit` and friends). No derivative anywhere: the
+  input is the increment representation `A(v) - A(u) = ∫_u^v ρ sin` with `ρ = 1 - r_ac ≥ 0`,
+  which is the inequality between measures that (b) states. This instantiates at EVERY member
+  of `D`, including those with no phase structure and no pointwise second derivative at any
+  point. As in `rem:v5b`, the passage from (b) to the increment representation is carried in
+  the note and appears here as a hypothesis, not as a derivation.
+
+The globally quantified originals are retained below as the pointwise special case, since
+that is the shape the `Σ`-specific consequences in `Proved.lean` are written against; they
+are corollaries of the localised form and are labelled accordingly.
+-/
+
+/-- **The bracket is nondecreasing, localised.** `A(θ) = (F-1)cos θ - F' sin θ` has
+`A' = (1-r) sin θ`. Derivatives are required only on `Ioo a b`; `F` and `F'` need only be
+continuous on `Icc a b`. This is the form that instantiates at a member of `D` on a phase. -/
+theorem bracket_monotoneOn_Ioo {F F' F'' : ℝ → ℝ} {a b : ℝ}
+    (hFc : ContinuousOn F (Set.Icc a b)) (hF'c : ContinuousOn F' (Set.Icc a b))
+    (h1 : ∀ s ∈ Set.Ioo a b, HasDerivAt F (F' s) s)
+    (h2 : ∀ s ∈ Set.Ioo a b, HasDerivAt F' (F'' s) s)
+    (hcurv : ∀ s ∈ Set.Ioo a b, F s + F'' s ≤ 1)
+    (hsin : ∀ s ∈ Set.Ioo a b, 0 ≤ Real.sin s) :
+    MonotoneOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s) (Set.Icc a b) := by
+  have hcont : ContinuousOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s)
+      (Set.Icc a b) :=
+    ((hFc.sub continuousOn_const).mul Real.continuous_cos.continuousOn).sub
+      (hF'c.mul Real.continuous_sin.continuousOn)
+  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc a b) hcont
+    (f' := fun s => (1 - (F s + F'' s)) * Real.sin s) (fun x hx => ?_) ?_
+  · rw [interior_Icc] at hx
+    exact (bracket_deriv_at (h1 x hx) (h2 x hx) rfl).hasDerivWithinAt
+  · intro x hx
+    rw [interior_Icc] at hx
+    exact mul_nonneg (by linarith [hcurv x hx]) (hsin x hx)
+
+/-- **The companion bracket is nonincreasing where `cos ≥ 0`, localised.**
+`A₂' = -(1-r) cos θ`. -/
+theorem moment_bracket_antitoneOn_Ioo {F F' F'' : ℝ → ℝ} {a b : ℝ}
+    (hFc : ContinuousOn F (Set.Icc a b)) (hF'c : ContinuousOn F' (Set.Icc a b))
+    (h1 : ∀ s ∈ Set.Ioo a b, HasDerivAt F (F' s) s)
+    (h2 : ∀ s ∈ Set.Ioo a b, HasDerivAt F' (F'' s) s)
+    (hcurv : ∀ s ∈ Set.Ioo a b, F s + F'' s ≤ 1)
+    (hcos : ∀ s ∈ Set.Ioo a b, 0 ≤ Real.cos s) :
+    AntitoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) := by
+  have hcont : ContinuousOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
+      (Set.Icc a b) :=
+    ((hFc.sub continuousOn_const).mul Real.continuous_sin.continuousOn).add
+      (hF'c.mul Real.continuous_cos.continuousOn)
+  refine antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc a b) hcont
+    (f' := fun s => -((1 - (F s + F'' s)) * Real.cos s)) (fun x hx => ?_) ?_
+  · rw [interior_Icc] at hx
+    exact (moment_bracket_deriv_at (h1 x hx) (h2 x hx) rfl).hasDerivWithinAt
+  · intro x hx
+    rw [interior_Icc] at hx
+    have : 0 ≤ (1 - (F x + F'' x)) * Real.cos x :=
+      mul_nonneg (by linarith [hcurv x hx]) (hcos x hx)
+    linarith
+
+/-- **And nondecreasing where `cos ≤ 0`, localised**, which is the `[π/2,π]` half. -/
+theorem moment_bracket_monotoneOn_Ioo {F F' F'' : ℝ → ℝ} {a b : ℝ}
+    (hFc : ContinuousOn F (Set.Icc a b)) (hF'c : ContinuousOn F' (Set.Icc a b))
+    (h1 : ∀ s ∈ Set.Ioo a b, HasDerivAt F (F' s) s)
+    (h2 : ∀ s ∈ Set.Ioo a b, HasDerivAt F' (F'' s) s)
+    (hcurv : ∀ s ∈ Set.Ioo a b, F s + F'' s ≤ 1)
+    (hcos : ∀ s ∈ Set.Ioo a b, Real.cos s ≤ 0) :
+    MonotoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) := by
+  have hcont : ContinuousOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
+      (Set.Icc a b) :=
+    ((hFc.sub continuousOn_const).mul Real.continuous_sin.continuousOn).add
+      (hF'c.mul Real.continuous_cos.continuousOn)
+  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc a b) hcont
+    (f' := fun s => -((1 - (F s + F'' s)) * Real.cos s)) (fun x hx => ?_) ?_
+  · rw [interior_Icc] at hx
+    exact (moment_bracket_deriv_at (h1 x hx) (h2 x hx) rfl).hasDerivWithinAt
+  · intro x hx
+    rw [interior_Icc] at hx
+    have : 0 ≤ (1 - (F x + F'' x)) * (-Real.cos x) :=
+      mul_nonneg (by linarith [hcurv x hx]) (by linarith [hcos x hx])
+    nlinarith [this]
+
+/-- **Monotonicity glues across a shared endpoint**, the twin of `antitoneOn_glue`. This is
+what chains the localised lemmas over the phases of a piecewise-analytic member of `D`. -/
+theorem monotoneOn_glue {f : ℝ → ℝ} {a b c : ℝ}
+    (h1 : MonotoneOn f (Set.Icc a b)) (h2 : MonotoneOn f (Set.Icc b c)) :
+    MonotoneOn f (Set.Icc a c) := by
+  intro p hp r hr hpr
+  rcases le_total r b with hrb | hrb
+  · exact h1 ⟨hp.1, le_trans hpr hrb⟩ ⟨hr.1, hrb⟩ hpr
+  · rcases le_total b p with hbp | hbp
+    · exact h2 ⟨hbp, hp.2⟩ ⟨le_trans hbp hpr, hr.2⟩ hpr
+    · have e1 : f p ≤ f b := h1 ⟨hp.1, hbp⟩ ⟨le_trans hp.1 hbp, le_rfl⟩ hbp
+      have e2 : f b ≤ f r := h2 ⟨le_rfl, le_trans hrb hr.2⟩ ⟨hrb, hr.2⟩ hrb
+      linarith
+
+/-- **Monotone from a nonnegative increment integral.** No derivative is required anywhere:
+the input is the increment representation, which is the inequality between measures. -/
+theorem monotoneOn_of_integral_increment {f g : ℝ → ℝ} {a b : ℝ}
+    (hrep : ∀ u ∈ Set.Icc a b, ∀ v ∈ Set.Icc a b, u ≤ v → f v - f u = ∫ s in u..v, g s)
+    (hg : ∀ s ∈ Set.Icc a b, 0 ≤ g s) :
+    MonotoneOn f (Set.Icc a b) := by
+  intro u hu v hv huv
+  have h := hrep u hu v hv huv
+  have hsub : Set.Icc u v ⊆ Set.Icc a b := Set.Icc_subset_Icc hu.1 hv.2
+  have hnn : (0 : ℝ) ≤ ∫ s in u..v, g s :=
+    intervalIntegral.integral_nonneg huv fun x hx => hg x (hsub hx)
+  linarith
+
+/-- **Antitone from a nonpositive increment integral.** The mirror of the previous lemma. -/
+theorem antitoneOn_of_integral_increment {f g : ℝ → ℝ} {a b : ℝ}
+    (hrep : ∀ u ∈ Set.Icc a b, ∀ v ∈ Set.Icc a b, u ≤ v → f v - f u = ∫ s in u..v, g s)
+    (hg : ∀ s ∈ Set.Icc a b, g s ≤ 0) :
+    AntitoneOn f (Set.Icc a b) := by
+  intro u hu v hv huv
+  have h := hrep u hu v hv huv
+  have hsub : Set.Icc u v ⊆ Set.Icc a b := Set.Icc_subset_Icc hu.1 hv.2
+  have hnn : (0 : ℝ) ≤ ∫ s in u..v, -g s :=
+    intervalIntegral.integral_nonneg huv fun x hx => by linarith [hg x (hsub hx)]
+  rw [intervalIntegral.integral_neg] at hnn
+  linarith
+
+/-- **The bracket is nondecreasing, measure form.** `A(v) - A(u) = ∫_u^v ρ sin` with
+`ρ = 1 - r_ac ≥ 0` from (b). No pointwise second derivative is used, so this instantiates at
+every member of `D`, phase structure or not. -/
+theorem bracket_monotoneOn_of_deficit {F F' rho : ℝ → ℝ} {a b : ℝ}
+    (hrep : ∀ u ∈ Set.Icc a b, ∀ v ∈ Set.Icc a b, u ≤ v →
+      ((F v - 1) * Real.cos v - F' v * Real.sin v)
+        - ((F u - 1) * Real.cos u - F' u * Real.sin u) = ∫ s in u..v, rho s * Real.sin s)
+    (hrho : ∀ s ∈ Set.Icc a b, 0 ≤ rho s)
+    (hsin : ∀ s ∈ Set.Icc a b, 0 ≤ Real.sin s) :
+    MonotoneOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s) (Set.Icc a b) :=
+  monotoneOn_of_integral_increment hrep fun s hs => mul_nonneg (hrho s hs) (hsin s hs)
+
+/-- **The companion bracket is nonincreasing where `cos ≥ 0`, measure form.**
+`A₂(v) - A₂(u) = -∫_u^v ρ cos`. -/
+theorem moment_bracket_antitoneOn_of_deficit {F F' rho : ℝ → ℝ} {a b : ℝ}
+    (hrep : ∀ u ∈ Set.Icc a b, ∀ v ∈ Set.Icc a b, u ≤ v →
+      ((F v - 1) * Real.sin v + F' v * Real.cos v)
+        - ((F u - 1) * Real.sin u + F' u * Real.cos u)
+          = ∫ s in u..v, -(rho s * Real.cos s))
+    (hrho : ∀ s ∈ Set.Icc a b, 0 ≤ rho s)
+    (hcos : ∀ s ∈ Set.Icc a b, 0 ≤ Real.cos s) :
+    AntitoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) :=
+  antitoneOn_of_integral_increment hrep fun s hs => by
+    have := mul_nonneg (hrho s hs) (hcos s hs); linarith
+
+/-- **And nondecreasing where `cos ≤ 0`, measure form**, the `[π/2,π]` half. -/
+theorem moment_bracket_monotoneOn_of_deficit {F F' rho : ℝ → ℝ} {a b : ℝ}
+    (hrep : ∀ u ∈ Set.Icc a b, ∀ v ∈ Set.Icc a b, u ≤ v →
+      ((F v - 1) * Real.sin v + F' v * Real.cos v)
+        - ((F u - 1) * Real.sin u + F' u * Real.cos u)
+          = ∫ s in u..v, -(rho s * Real.cos s))
+    (hrho : ∀ s ∈ Set.Icc a b, 0 ≤ rho s)
+    (hcos : ∀ s ∈ Set.Icc a b, Real.cos s ≤ 0) :
+    MonotoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) :=
+  monotoneOn_of_integral_increment hrep fun s hs => by
+    have : 0 ≤ rho s * -Real.cos s := mul_nonneg (hrho s hs) (by linarith [hcos s hs])
+    nlinarith [this]
+
+/-- **The bracket is nondecreasing, pointwise special case.** The globally quantified
+hypotheses are NOT satisfied by any member of `D` (`H'` jumps at `π/2`, `Σ`'s `r` jumps at
+`β`); this is retained only as the `C²`-surrogate corollary of
+`bracket_monotoneOn_Ioo`. Use the localised or the measure form on `D`. -/
 theorem bracket_monotoneOn {F F' F'' : ℝ → ℝ} {a b : ℝ}
     (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
     (hcurv : ∀ s ∈ Set.Icc a b, F s + F'' s ≤ 1)
     (hsin : ∀ s ∈ Set.Icc a b, 0 ≤ Real.sin s) :
-    MonotoneOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s) (Set.Icc a b) := by
-  have hFd : Differentiable ℝ F := fun x => (h1 x).differentiableAt
-  have hF'd : Differentiable ℝ F' := fun x => (h2 x).differentiableAt
-  have hcont : ContinuousOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s)
-      (Set.Icc a b) :=
-    (((hFd.continuous.sub continuous_const).mul Real.continuous_cos).sub
-      (hF'd.continuous.mul Real.continuous_sin)).continuousOn
-  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc a b) hcont
-    (f' := fun s => (1 - (F s + F'' s)) * Real.sin s)
-    (fun x _ => (bracket_deriv h1 h2 rfl).hasDerivWithinAt) ?_
-  intro x hx
-  rw [interior_Icc] at hx
-  have hx' : x ∈ Set.Icc a b := Set.Ioo_subset_Icc_self hx
-  exact mul_nonneg (by linarith [hcurv x hx']) (hsin x hx')
+    MonotoneOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s) (Set.Icc a b) :=
+  bracket_monotoneOn_Ioo (fun x _ => (h1 x).continuousAt.continuousWithinAt)
+    (fun x _ => (h2 x).continuousAt.continuousWithinAt) (fun s _ => h1 s) (fun s _ => h2 s)
+    (fun s hs => hcurv s (Set.Ioo_subset_Icc_self hs))
+    (fun s hs => hsin s (Set.Ioo_subset_Icc_self hs))
 
-/-- **The companion bracket is nonincreasing where `cos ≥ 0`.** `A₂' = -(1-r) cos θ`. -/
+/-- **The companion bracket is nonincreasing where `cos ≥ 0`, pointwise special case.** Same
+caveat as `bracket_monotoneOn`: the global derivative hypotheses fail on `D`. -/
 theorem moment_bracket_antitoneOn {F F' F'' : ℝ → ℝ} {a b : ℝ}
     (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
     (hcurv : ∀ s ∈ Set.Icc a b, F s + F'' s ≤ 1)
     (hcos : ∀ s ∈ Set.Icc a b, 0 ≤ Real.cos s) :
-    AntitoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) := by
-  have hFd : Differentiable ℝ F := fun x => (h1 x).differentiableAt
-  have hF'd : Differentiable ℝ F' := fun x => (h2 x).differentiableAt
-  have hcont : ContinuousOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
-      (Set.Icc a b) :=
-    (((hFd.continuous.sub continuous_const).mul Real.continuous_sin).add
-      (hF'd.continuous.mul Real.continuous_cos)).continuousOn
-  refine antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc a b) hcont
-    (f' := fun s => -((1 - (F s + F'' s)) * Real.cos s))
-    (fun x _ => (moment_bracket_deriv h1 h2 rfl).hasDerivWithinAt) ?_
-  intro x hx
-  rw [interior_Icc] at hx
-  have hx' : x ∈ Set.Icc a b := Set.Ioo_subset_Icc_self hx
-  have : 0 ≤ (1 - (F x + F'' x)) * Real.cos x :=
-    mul_nonneg (by linarith [hcurv x hx']) (hcos x hx')
-  linarith
+    AntitoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) :=
+  moment_bracket_antitoneOn_Ioo (fun x _ => (h1 x).continuousAt.continuousWithinAt)
+    (fun x _ => (h2 x).continuousAt.continuousWithinAt) (fun s _ => h1 s) (fun s _ => h2 s)
+    (fun s hs => hcurv s (Set.Ioo_subset_Icc_self hs))
+    (fun s hs => hcos s (Set.Ioo_subset_Icc_self hs))
 
-/-- **And nondecreasing where `cos ≤ 0`**, which is the `[π/2,π]` half. Same identity, other
-sign of the trigonometric factor. -/
+/-- **And nondecreasing where `cos ≤ 0`, pointwise special case.** Same caveat. -/
 theorem moment_bracket_monotoneOn {F F' F'' : ℝ → ℝ} {a b : ℝ}
     (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
     (hcurv : ∀ s ∈ Set.Icc a b, F s + F'' s ≤ 1)
     (hcos : ∀ s ∈ Set.Icc a b, Real.cos s ≤ 0) :
-    MonotoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) := by
-  have hFd : Differentiable ℝ F := fun x => (h1 x).differentiableAt
-  have hF'd : Differentiable ℝ F' := fun x => (h2 x).differentiableAt
-  have hcont : ContinuousOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
-      (Set.Icc a b) :=
-    (((hFd.continuous.sub continuous_const).mul Real.continuous_sin).add
-      (hF'd.continuous.mul Real.continuous_cos)).continuousOn
-  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc a b) hcont
-    (f' := fun s => -((1 - (F s + F'' s)) * Real.cos s))
-    (fun x _ => (moment_bracket_deriv h1 h2 rfl).hasDerivWithinAt) ?_
-  intro x hx
-  rw [interior_Icc] at hx
-  have hx' : x ∈ Set.Icc a b := Set.Ioo_subset_Icc_self hx
-  have : 0 ≤ (1 - (F x + F'' x)) * (-Real.cos x) :=
-    mul_nonneg (by linarith [hcurv x hx']) (by linarith [hcos x hx'])
-  nlinarith [this]
+    MonotoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) :=
+  moment_bracket_monotoneOn_Ioo (fun x _ => (h1 x).continuousAt.continuousWithinAt)
+    (fun x _ => (h2 x).continuousAt.continuousWithinAt) (fun s _ => h1 s) (fun s _ => h2 s)
+    (fun s hs => hcurv s (Set.Ioo_subset_Icc_self hs))
+    (fun s hs => hcos s (Set.Ioo_subset_Icc_self hs))
 
 end BracketIdentities
 
@@ -3073,9 +3238,15 @@ mass. `C₂` is `ρ`-invariant, so the floor facet is the image of the ceiling f
 STEP 2 (the brackets). `A' = (1-r) sin θ` and `A₂' = -(1-r) cos θ` with `1 - r ≥ 0` from (b),
 so on `[0,π/2]` `A` increases from `A(0) = 0` to `A(π/2⁻) = κ` and `A₂` decreases from
 `A₂(0) = H'(0) = 1/2` to `A₂(π/2) = H(π/2) - 1 = 0`; on `[π/2,π]` both increase, `A` from
-`A(π/2⁺) = -α₂(0)` to `A(π) = 1 - H(π)` and `A₂` from `0` to `A₂(π) = -H'(π) = 1/2`
-(`bracket_monotoneOn`, `moment_bracket_antitoneOn`, `moment_bracket_monotoneOn`, then
-`endpoint_range_lower` and `endpoint_range_upper`).
+`A(π/2⁺) = -α₂(0)` to `A(π) = 1 - H(π)` and `A₂` from `0` to `A₂(π) = -H'(π) = 1/2`. The
+monotonicity comes from `bracket_monotoneOn_Ioo`, `moment_bracket_antitoneOn_Ioo`,
+`moment_bracket_monotoneOn_Ioo` on a phase (glued by `monotoneOn_glue`/`antitoneOn_glue`), or
+from `bracket_monotoneOn_of_deficit`, `moment_bracket_antitoneOn_of_deficit`,
+`moment_bracket_monotoneOn_of_deficit` on a general member of `D`; the globally quantified
+`bracket_monotoneOn`, `moment_bracket_antitoneOn`, `moment_bracket_monotoneOn` are the `C²`
+special case and do NOT instantiate on `D`. Then `endpoint_range_lower` and
+`endpoint_range_upper`, or the packaged `endpoint_in_cap_lower`/`endpoint_in_cap_upper`,
+which consume monotonicity and nothing else.
 
 STEP 3 (the two ends of (d)). `[0,κ] ⊆ [-α₂(0),κ]` is `α₂(0) ≥ 0`, hypothesis (d) at `t = 0`;
 and `1 - H(π) ≤ κ` is `α₁(π/2) = H(π) - 1 + κ ≥ 0`, hypothesis (d) at `t = π/2`
@@ -3176,6 +3347,40 @@ theorem endpoint_in_cap {C : Set (ℝ × ℝ)} (hC : Convex ℝ C) {l r : ℝ}
     {A A2 : ℝ} (hA : A ∈ Set.Icc l r) (hB : A2 ∈ Set.Icc (0 : ℝ) 1) :
     ((A, A2) : ℝ × ℝ) ∈ C :=
   rectangle_of_facets hC hfloor hceil hA hB
+
+/-- **`X(θ) - μ_θ ∈ C₂` on `[0,π/2]`, from monotonicity alone.** The whole chain of Steps 1–3
+with no derivative hypothesis anywhere: the two brackets enter only through `MonotoneOn` and
+`AntitoneOn`, which is what the localised and the measure forms of `BracketIdentities`
+supply. This is the statement `rem:v31` may claim on all of `D`. -/
+theorem endpoint_in_cap_lower {C : Set (ℝ × ℝ)} (hC : Convex ℝ C) {a20 κ : ℝ}
+    (hfloor : ∀ p ∈ Set.Icc (-a20) κ, ((p, 0) : ℝ × ℝ) ∈ C)
+    (hceil : ∀ p ∈ Set.Icc (-a20) κ, ((p, 1) : ℝ × ℝ) ∈ C)
+    (ha20 : 0 ≤ a20)
+    {A A2 : ℝ → ℝ} (hA : MonotoneOn A (Set.Icc 0 (Real.pi / 2))) (hA0 : A 0 = 0)
+    (hAh : A (Real.pi / 2) = κ)
+    (hB : AntitoneOn A2 (Set.Icc 0 (Real.pi / 2))) (hB0 : A2 0 = 1 / 2)
+    (hBh : A2 (Real.pi / 2) = 0)
+    {θ : ℝ} (hθ : θ ∈ Set.Icc 0 (Real.pi / 2)) :
+    ((A θ, A2 θ) : ℝ × ℝ) ∈ C := by
+  obtain ⟨h1, h2⟩ := endpoint_range_lower hA hA0 hAh hB hB0 hBh hθ
+  obtain ⟨h3, h4⟩ := endpoint_mem_rectangle_lower ha20 h1 h2
+  exact endpoint_in_cap hC hfloor hceil h3 h4
+
+/-- **`X(θ) - μ_θ ∈ C₂` on `[π/2,π]`, from monotonicity alone.** Steps 1, 2 and 4 with the
+same discipline; (d) enters only as `α₁(π/2) = H(π) - 1 + κ ≥ 0`. -/
+theorem endpoint_in_cap_upper {C : Set (ℝ × ℝ)} (hC : Convex ℝ C) {a20 κ hpi : ℝ}
+    (hfloor : ∀ p ∈ Set.Icc (-a20) κ, ((p, 0) : ℝ × ℝ) ∈ C)
+    (hceil : ∀ p ∈ Set.Icc (-a20) κ, ((p, 1) : ℝ × ℝ) ∈ C)
+    (harm : 0 ≤ hpi - 1 + κ)
+    {A A2 : ℝ → ℝ} (hA : MonotoneOn A (Set.Icc (Real.pi / 2) Real.pi))
+    (hA0 : A (Real.pi / 2) = -a20) (hAh : A Real.pi = 1 - hpi)
+    (hB : MonotoneOn A2 (Set.Icc (Real.pi / 2) Real.pi)) (hB0 : A2 (Real.pi / 2) = 0)
+    (hBh : A2 Real.pi = 1 / 2)
+    {θ : ℝ} (hθ : θ ∈ Set.Icc (Real.pi / 2) Real.pi) :
+    ((A θ, A2 θ) : ℝ × ℝ) ∈ C := by
+  obtain ⟨h1, h2⟩ := endpoint_range_upper hA hA0 hAh hB hB0 hBh hθ
+  obtain ⟨h3, h4⟩ := endpoint_mem_rectangle_upper harm h1 h2
+  exact endpoint_in_cap hC hfloor hceil h3 h4
 
 end Rectangle
 

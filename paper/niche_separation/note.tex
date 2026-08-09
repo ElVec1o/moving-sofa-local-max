@@ -132,8 +132,10 @@ which is linear in $H$ and hence convex. It is classical, being the sliding-ball
 dual to Blaschke's rolling theorem (Remark~\ref{rem:rcclassical}); what is new is its use.
 Theorem~\ref{thm:rc} shows that (RC) implies all three injectivity conditions of the
 sweep, by reducing each to a forced harmonic oscillator whose kernel is non-negative
-precisely because the rotation angle is $\pi/2$. That is three of the four hypotheses of
-Proposition~\ref{prop:V}; the fourth, containment, is assumed, and with it $V=|N|$ and $Q$
+precisely because the rotation angle is $\pi/2$. That is two of the five hypotheses of
+Proposition~\ref{prop:V}, injectivity and disjointness; covering and the fifth, that the
+sweeps lie in $U$, come from the two steps of Proposition~\ref{prop:convex}'s proof; the
+fourth, containment, is assumed, and with it $V=|N|$ and $Q$
 is tight. Two of the three --- injectivity of each sweep, and disjointness of the two ---
 have a second and shorter proof from the same (RC), through connectedness of the cut set
 rather than through pairwise line intersections (Proposition~\ref{prop:oneentry}); it is
@@ -165,10 +167,14 @@ pattern, with the quantitative form
 \[
   |T|\ \le\ A_R^\ast-\tfrac{73}{100}\,\|H-H_\Sig\|^2_{L^2(0,\pi)}
 \]
-of Theorem~\ref{thm:stab} and uniqueness (Corollary~\ref{cor:uniq}). Proposition
+of Theorem~\ref{thm:stab} \emph{on $\Sig$'s own sign cell} --- off it the deficit is
+strictly positive but carries no rate (Remark~\ref{rem:v33}) --- and uniqueness on all of
+$\mathcal D$ (Corollary~\ref{cor:uniq}). Proposition
 \ref{prop:ball} exhibits an explicit $C^2$-ball of radius $\tfrac1{20}$ inside
 $\mathcal D$. Theorem~\ref{thm:mirrorstab} is the non-perturbative version: on the mirror
 class, with no smallness of $H-H_\Sig$ assumed, $|T|\le A_R^\ast-\tfrac3{10}\|H-H_\Sig\|^2$.
+It carries the same containment hypothesis as Theorem~\ref{thm:final}, and for the same
+reason; its class lies inside $\mathcal D$ (Remark~\ref{rem:v35}).
 
 \subsection*{What is not proved, and why}
 
@@ -755,8 +761,16 @@ direction $-\nu_t=(\sin t,-\cos t)$ points downward, and the floor is reached at
 distance exactly $\sigma(t)$, which is why \eqref{eq:sig} is the relevant reach.
 
 \begin{proposition}[Niche area in convex-linear data]\label{prop:V}
-Assume the two truncated sweeps lie in $C_2$. If in addition they are disjoint, injective
-and cover the niche, then
+Assume the two truncated sweeps
+\begin{enumerate}
+\item[(i)] are injective;
+\item[(ii)] are disjoint;
+\item[(iii)] cover the niche $N$;
+\item[(iv)] lie in $C_2$ \emph{(containment)};
+\item[(v)] lie in $U$, the region swept by the corner --- so that with (iv) they lie in
+$N=U\cap C_2$.
+\end{enumerate}
+Then
 \begin{equation}\label{eq:V}
   |N|=\int_0^{\pi/2}\Bigl[\tfrac12\bigl(\alpha_2^+\bigr)^2
       +\tfrac12\bigl(\sigma-\alpha_1\bigr)^2
@@ -776,10 +790,28 @@ $\det=s-\alpha_1$, and
   =\tfrac12(\sigma-\alpha_1)^2-\tfrac12(\alpha_1^-)^2 ,
 \]
 which is $\tfrac12(\sigma-\alpha_1)^2$ when $\alpha_1\ge0$ and
-$\tfrac12\sigma^2-\alpha_1\sigma$ when $\alpha_1<0$, as required. Injectivity
-turns each $\int|\det|$ into the area of the image, disjointness makes the two
-areas add, and covering makes the sum $|N|$.
+$\tfrac12\sigma^2-\alpha_1\sigma$ when $\alpha_1<0$, as required.
+
+Write $S$ for the union of the two truncated sweeps' images. By (i) each $\int|\det|$ is the
+area of its image, and by (ii) the two areas add, so $V=|S|$. By (iii), $N\subseteq S$; by
+(iv) and (v), $S\subseteq C_2\cap U=N$. Hence $S=N$ up to a null set and $V=|N|$.
 \end{proof}
+
+\begin{remark}[Why (v) is a hypothesis and not a remark]\label{rem:Vfifth}
+Hypotheses (i)--(iv) give only
+\[
+  V=|S|\ \ge\ |N| ,\qquad V-|N|=|S\setminus N|=\bigl|S\cap(C_2\setminus U)\bigr| ,
+\]
+the second equality because (iv) puts $S$ inside $C_2$ and $N=U\cap C_2$. So equality is the
+statement $|S\setminus U|=0$, which is (v), and no amount of injectivity, disjointness or
+covering supplies it: those three are ``at most one entry'' and ``at least one entry'' for
+points \emph{of $N$}, and say nothing about sweep mass that stays inside the cap and misses
+the niche. The one source of (v) in this note is the advancing-face step inside the proof of
+Proposition~\ref{prop:convex}, which places an advancing face point in
+$Q_{t+\varepsilon}\subseteq U$. That step is exactly the half of Proposition~\ref{prop:convex}
+that Remark~\ref{rem:v13} \emph{preserved}: what Remark~\ref{rem:v13} denied is that the same
+step gives containment in $C_2$, and it does not.
+\end{remark}
 
 \begin{remark}[The three hypotheses, and where they stand]\label{rem:v3}
 The first is not open. Baek \cite{Bae24} states and proves an injectivity condition for the
@@ -795,14 +827,16 @@ with their disjointness and their covering $N$. Neither of the latter is a one-c
 statement, and a literature sweep found no prior art for either. The honest split is
 therefore: injectivity of each sweep is \textsc{proved} elsewhere and needs only a transfer
 argument; disjointness and covering are settled in Remarks~\ref{rem:v4} and~\ref{rem:v5} for
-any cap whose curvature radius stays below $1$ away from the atom, but the three hypotheses
-are not sufficient for $\eqref{eq:V}$: a fourth, containment of the truncated sweeps in
-$C_2$, is needed and is open for face~2 (Remark~\ref{rem:v6}). That containment is the part
-of Proposition~\ref{prop:V} this note takes on faith.
+any cap whose curvature radius stays below $1$ away from the atom, but (i)--(iii)
+are not sufficient for $\eqref{eq:V}$: two more are needed. Hypothesis (v), that the sweeps
+lie in $U$, is proved by the advancing-face step of Proposition~\ref{prop:convex}
+(Remark~\ref{rem:Vfifth}); hypothesis (iv), containment of the truncated sweeps in $C_2$, is
+open for face~2 (Remark~\ref{rem:v6}). That containment is the one part of
+Proposition~\ref{prop:V} this note takes on faith.
 \end{remark}
 
 \begin{remark}[What is measured, and what it gives]\label{rem:V}
-For $\Sig$ the three hypotheses of Proposition~\ref{prop:V} are confirmed
+For $\Sig$ hypotheses (i)--(iii) of Proposition~\ref{prop:V} are confirmed
 numerically and sharply, and are proved in Remarks~\ref{rem:v4} and~\ref{rem:v5}, though
 they do not by themselves give \eqref{eq:V} (Remark~\ref{rem:v6}): the two sweeps have
 intersection area $0$ and leave
@@ -1486,20 +1520,28 @@ precisely the set of boundary points at which the trajectory is entering $T(p)$;
 remaining limits are $s\ge0$ and, since $c-\sigma\nu_t=(F-1)\sec t\,(1,0)$ lies on the floor,
 $s\le\sigma$ iff $p_y\ge0$. The area formula applied to the two truncated sweeps therefore
 gives
-\[
+\begin{equation}\label{eq:entrysplit}
   V=\int_{\R^2} \#\{\text{entries of }T(p)\}\,dA
-   =\int_N \#\{\text{entries}\}\,dA+\int_{\R^2\setminus C_2} \#\{\text{entries}\}\,dA ,
-\]
-while $|N|=\int_N 1\,dA$. So \emph{$T(p)$ is a nonempty interval for almost every $p\in N$}
-controls the first term only: it says covering is ``at least one entry'' and that
-injectivity and disjointness together are ``at most one entry''. It says nothing about the
-second term, which is the sweep mass that leaves the cap. Equality $V=|N|$ needs, in
-addition, a containment statement: \emph{the truncated sweeps lie in $C_2$}. That statement
-is not implied by the disjointness, injectivity and covering hypotheses alone, as
-Remark~\ref{rem:v6} shows by counterexample, and it is \emph{not} implied by
-\eqref{eq:seghyp} either (Remark~\ref{rem:v13}). Proposition~\ref{prop:V} therefore assumes
-it outright. What Remark~\ref{rem:v7} supplies is a sufficient condition for the half of it
-that concerns $C$, namely $\alpha_1\alpha_2\le1$ with the two end conditions.
+   =\int_N \#\,dA+\int_{C_2\setminus N} \#\,dA+\int_{\R^2\setminus C_2} \#\,dA ,
+\end{equation}
+while $|N|=\int_N 1\,dA$. An earlier version of \eqref{eq:entrysplit} carried the first and
+third terms only. Dropping the middle one is not a simplification: it is exactly hypothesis
+(v) of Proposition~\ref{prop:V}, and it was being assumed silently.
+
+So \emph{$T(p)$ is a nonempty interval for almost every $p\in N$} controls the first term
+only: it says covering is ``at least one entry'' and that injectivity and disjointness
+together are ``at most one entry''. It says nothing about the other two. The third term is
+the sweep mass that leaves the cap, and it vanishes exactly on hypothesis (iv),
+\emph{the truncated sweeps lie in $C_2$}. The second is the sweep mass that stays inside the
+cap and misses the niche, that is the mass landing in $C_2\setminus U$, and it vanishes
+exactly on hypothesis (v), \emph{the truncated sweeps lie in $U$}. Hypothesis (v) is proved,
+by the advancing-face step inside the proof of Proposition~\ref{prop:convex}
+(Remark~\ref{rem:Vfifth}). Hypothesis (iv) is not implied by the disjointness, injectivity
+and covering hypotheses, as Remark~\ref{rem:v6} shows by counterexample, and it is \emph{not}
+implied by \eqref{eq:seghyp} either (Remark~\ref{rem:v13}). Proposition~\ref{prop:V}
+therefore assumes it outright. What Remark~\ref{rem:v7} supplies is a sufficient condition
+for the half of it that concerns $C$, namely $\alpha_1\alpha_2\le1$ with the two end
+conditions.
 
 This proves (iii). Normalise so that $G(0)=H(\pi/2)=1$, which is a translation and changes
 no area and neither arm. Then $c(0)=(H(0)-1,0)$ sits on the floor and its quadrant meets the
@@ -1778,7 +1820,7 @@ is the only gap in the chain.
 \end{remark}
 
 \begin{remark}[The containment gap, with a counterexample]\label{rem:v6}
-Proposition~\ref{prop:V} is false as stated: its three hypotheses do not imply
+Proposition~\ref{prop:V} is false as stated without (iv): its hypotheses (i)--(iii) do not imply
 $V=|N|$. Take the stadium cap
 \[
   H(\theta)=\tfrac12+\tfrac12\sin\theta+L|\cos\theta|,\qquad \theta\in[0,\pi],
@@ -1804,7 +1846,7 @@ covering holds with multiplicity one. Nevertheless
 At $L=1.30$ the discrepancy $V-|N|=0.04715$ is $3\%$ and is tracked by the sweep mass
 leaving the cap, $0.05076$; the raster noise, visible in the $L\le1.20$ columns, is two
 orders of magnitude smaller. The degenerate version is the disc of radius $\tfrac12$, for
-which $N=\emptyset$ and all three hypotheses hold vacuously while $\eqref{eq:V}$ returns
+which $N=\emptyset$ and (i)--(iii) hold vacuously while $\eqref{eq:V}$ returns
 $(2-\pi)/8=-0.1427$, a negative area.
 
 The missing ingredient is containment of the truncated sweeps in $C_2$, and it localises to a
@@ -1826,7 +1868,7 @@ corner path itself, so the hypothesis to add is
   c(t)\in C_2 \quad\text{for all } t\in[0,\pi/2],
 \]
 a statement about one curve rather than two two-parameter families. Rule~0: the claim that
-the three hypotheses discharge Proposition~\ref{prop:V} for every cap with $r<1$ is
+(i)--(iii) discharge Proposition~\ref{prop:V} for every cap with $r<1$ is
 \textsc{false}; the endpoint identities are \textsc{verified}
 (\verb|face2_endpoint|, \verb|face1_endpoint|, \verb|sweep_subset_of_endpoints|); and
 $c(t)\in C_2$ is \textsc{conjecture} for $\Sig$.
@@ -2067,6 +2109,66 @@ Remark~\ref{rem:v6} identifies. Rule~0: Theorem~\ref{thm:final} reverts to
 that label.
 \end{remark}
 
+\begin{remark}[Audit: the fifth hypothesis, and two statements that overclaimed]\label{rem:v34}
+Remark~\ref{rem:v13} repaired two of the five places where $V=|N|$ was asserted --- the
+hypothesis list of Proposition~\ref{prop:V}, and Theorem~\ref{thm:final}'s citation for
+containment. Three survived. They are bookkeeping, not mathematics: no proof in this note
+changes, only what the statements claim.
+
+\emph{First, Proposition~\ref{prop:V} had an unnamed fifth hypothesis.} With injectivity,
+disjointness and containment the two truncated sweeps have union $S$ with $V=|S|$ and
+$S\subseteq C_2$; with covering, $N\subseteq S$. Together these give $V\ge|N|$ and nothing
+more. Equality is $|S\setminus N|=0$, and since $S\subseteq C_2$ and $N=U\cap C_2$, that is
+$|S\setminus U|=0$: the sweeps must lie in $U$. That is now hypothesis (v), and
+Remark~\ref{rem:Vfifth} records both why it is independent of (i)--(iv) and where it comes
+from --- the advancing-face step in the proof of Proposition~\ref{prop:convex}, which is
+the half of that proposition this remark's parent \emph{preserved}. The entry-count identity
+of Remark~\ref{rem:v4} has been corrected in the same place: written as
+$V=\int_N\#+\int_{\R^2\setminus C_2}\#$ it drops the term $\int_{C_2\setminus N}\#$, and
+dropping that term is exactly assuming (v).
+
+\emph{Second, Proposition~\ref{prop:convex} and Theorem~\ref{thm:cross} asserted $V=|N|$ from
+injectivity alone.} Both are refuted by this note's own stadium
+$H(\theta)=\tfrac12+\tfrac12\sin\theta+L|\cos\theta|$. The absolutely continuous part of
+$H+H''$ is $\tfrac12$ on each of $(0,\pi/2)$ and $(\pi/2,\pi)$ and the only atom is at
+$\pi/2$, of mass $2L$; this is Remark~\ref{rem:rcclassical}'s characterisation read
+backwards, a horizontal segment of length $2L$ Minkowski-summed with the disc of radius
+$\tfrac12$. The horizontal translation by $\tfrac12-L$ that the gauge (a) demands adds
+$(\tfrac12-L)\cos\theta$, which is annihilated by $d^2/d\theta^2+1$ and leaves $\alpha_1$,
+$\alpha_2$, $\sigma$ and hence $V$ unchanged, and it puts $H(0)=H(\pi/2)=1$. So the gauged
+stadium satisfies (RC) exactly, \emph{for every $L$}, and Theorems~\ref{thm:rc}
+and~\ref{thm:cross} themselves place it in $\mathcal K'$. Recomputed for this correction by a
+route independent of \verb|sofa_stadium| --- $V$ in closed form, $|N|$ by bisecting every row
+transition instead of rastering --- with
+\[
+  V(L)=L^2\Bigl(\tfrac\pi2-2\beta_L\Bigr)-\tfrac32L\cos\beta_L
+       +\tfrac18\Bigl(\tfrac\pi2-2\beta_L\Bigr)+L+\tfrac18\Bigl(2-\tfrac\pi2\Bigr),
+  \qquad \beta_L=\arcsin\tfrac1{4L},
+\]
+the two arms and $\sigma-\alpha_1=(1-\sin t)/(2\cos t)$ being elementary on this family:
+\[
+  \begin{array}{r|ccccc}
+    L & 1.10 & 1.20 & 1.30 & 1.40 & 1.50\\\hline
+    V & 1.031675 & 1.294548 & 1.588590 & 1.913856 & 2.270383\\
+    |N| & 1.031674 & 1.294547 & 1.541711 & 1.767445 & 1.985412\\
+    V-|N| & 0.000001 & 0.000001 & 0.046879 & 0.146411 & 0.284971
+  \end{array}
+\]
+The closed form and a $4\cdot10^5$-node Simpson quadrature of \eqref{eq:V} agree to six
+places at every $L$; the $V$ row reproduces Remark~\ref{rem:v6}'s to every digit it prints.
+The $|N|$ row is stable to $3\cdot10^{-6}$ from $10^3$ to $8\cdot10^3$ rows and sits
+$2.7\cdot10^{-4}$ above Remark~\ref{rem:v6}'s rasterised $1.54144$ at $L=1.30$, which is that
+raster's upward bias on boundary cells; the discrepancy $V-|N|$ is accordingly $0.0469$ here
+against $0.047$ there. So a member of $\mathcal K'$ has $V-|N|=0.047$, two orders of
+magnitude above either method's error, and the two statements are false as they stood. Both now claim only injectivity and disjointness, hence $V\ge|N|$, with equality
+identified as hypothesis (iv). Note that the discrepancy is invisible at $L\le1.20$: the
+column is not raster noise but the true value, and containment genuinely holds there.
+
+\emph{Third, Theorem~\ref{thm:mirrorstab}'s proof still read ``and (RC) gives $V=|N|$''.} It
+is rerouted through $\mathcal D$ in its own proof, and carries containment as a standing
+hypothesis in consequence.
+\end{remark}
+
 \begin{remark}[The second endpoint condition: width at least one]\label{rem:v14}
 The convexity reduction of Remark~\ref{rem:v6} needs \emph{both} sweep endpoints in $C_2$,
 and the inner one is $X(\theta)-\mu_\theta$. That point lies in $C_2$ only if $C_2$ has width
@@ -2080,9 +2182,12 @@ which at $\theta=\pi/2$ reads $1+1-1=1$ under the gauge: exactly tight, at the s
 every other contact in this analysis. Measured for $\Sig$ on a $200000$-point grid the
 minimum is $1$, attained only there.
 
-This is a hypothesis of Proposition~\ref{prop:V} that was not stated, and it is recorded here
-rather than assumed silently. Rule~0: \verb|width_at_half_pi| and
-\verb|width_needed_for_endpoint| are \textsc{verified}; that $\Sig$ satisfies the condition
+This is a \emph{necessary} condition for hypothesis (iv) of Proposition~\ref{prop:V} that was
+not stated, and it is recorded here rather than assumed silently; it is not sufficient, and
+the retraction of the claim that it was is Remark~\ref{rem:v30}. Rule~0:
+\verb|width_at_half_pi| is \textsc{verified}; \verb|width_needed_for_endpoint| is
+\textsc{verified} as an algebraic rewrite only and does not state the support inequality of
+the paragraph above (Remark~\ref{rem:v30}); that $\Sig$ satisfies the condition
 with equality only at $\pi/2$ is \textsc{heuristic}.
 \end{remark}
 
@@ -2403,11 +2508,34 @@ $t=\arcsin\tfrac14$.
 The conclusion is unaffected: the front-loaded computation above is the one that closes
 \eqref{eq:bathtub}.
 
-Also, the stadium family is excluded from $\mathcal D$ outright: hypothesis (c),
-$c_y\le\tfrac12$, forces $L\le\sqrt2/2$ on it, well below the escape threshold
-$(1+\sqrt2)/2$. The counterexample of Remark~\ref{rem:v6} therefore never entered the class,
-which is why it could not have been a counterexample to Theorem~\ref{thm:final} itself, only
-to Proposition~\ref{prop:V} stated without containment.
+\emph{Correction: the stadium family is not excluded from $\mathcal D$ outright.} A previous
+version of this paragraph said it was, on the ground that hypothesis (c) forces
+$L\le\sqrt2/2$. The bound is right and the conclusion is not. After the horizontal
+translation by $\tfrac12-L$ the stadium satisfies (a), and it satisfies (b) for every $L>0$
+(Remark~\ref{rem:v34}); the two remaining hypotheses cut the family from both ends, and what
+is left is not empty. From $c_y=\tfrac12+L\sin2t-\tfrac12(\sin t+\cos t)$ one gets
+$\max c_y=\tfrac12+L-\tfrac{\sqrt2}2$ for $L\ge\tfrac14$, so
+\[
+  \text{(c)}\iff L\le\tfrac{\sqrt2}2 .
+\]
+From $\alpha_1=2L\sin t-\tfrac12$ and $\alpha_2=2L\cos t-\tfrac12$, hypothesis (d) asks for a
+fixed $T$ with $T\ge\arcsin\tfrac1{4L}$ and $T<\arccos\tfrac1{4L}$, which exists exactly when
+$\arcsin\tfrac1{4L}<\pi/4$, that is
+\[
+  \text{(d)}\iff L>\tfrac1{2\sqrt2} .
+\]
+So $\mathcal D$ contains the gauged stadium precisely for
+\[
+  L\in\bigl(\tfrac1{2\sqrt2},\,\tfrac{\sqrt2}2\bigr]=(0.35355\ldots,\,0.70711\ldots],
+\]
+(d) cutting from below and (c) from above, and at the lower endpoint (d) fails because
+$\arcsin\tfrac1{4L}=\arccos\tfrac1{4L}=\pi/4$ leaves no admissible $T$. What is true, and is
+all that was needed, is that the \emph{rows of Remark~\ref{rem:v6}'s table} are excluded:
+every $L$ there is at least $1.10>\sqrt2/2$. So the counterexample never entered the class
+and is not a counterexample to Theorem~\ref{thm:final}, only to Proposition~\ref{prop:V}
+stated without (iv) and to Proposition~\ref{prop:convex} and Theorem~\ref{thm:cross} as they
+formerly stood. Consistently, $V=|N|$ to six places on the whole admissible window
+(Remark~\ref{rem:v34}): nothing in $\mathcal D$ contradicts Proposition~\ref{prop:V}.
 
 Rule~0: \textsc{proved} on $\mathcal D$, from (a), (b) and (d) and with no phase
 decomposition. The ingredients are \textsc{verified}
@@ -2688,8 +2816,17 @@ The Scope paragraph of Remark~\ref{rem:v29} asserted that the second endpoint co
 $X(\theta)-\mu_\theta\in C_2$ \emph{is} the width condition of Remark~\ref{rem:v14}. That is
 withdrawn. Membership in $C_2$ is the whole family $\langle X(\theta)-\mu_\theta,\mu_\varphi
 \rangle\le h_2(\varphi)$ over all $\varphi$, and the width condition is that family at the
-single direction $\varphi=\theta+\pi$. Remark~\ref{rem:v14} and the Lean statement
-\verb|width_needed_for_endpoint| both say ``only if'', correctly; the prose upgraded it.
+single direction $\varphi=\theta+\pi$. Remark~\ref{rem:v14} says ``only if'', correctly, and
+the prose upgraded it. A previous version of this sentence added that the Lean statement
+\verb|width_needed_for_endpoint| ``says only if, correctly''. That is a second
+misdescription and is withdrawn: that lemma is
+\[
+  \verb|(hw : w = hth + hpi) (hcond : 1 <= w) : 1 <= hth + hpi| ,
+\]
+a rewrite of a hypothesis along an equation. No sweep endpoint, and no cap, occurs in it, so
+it says neither ``if'' nor ``only if'' about any endpoint; what carries the necessity is
+Remark~\ref{rem:v14}'s support inequality, which is not formalised. The Lean name is
+misleading and the honest label for it is \textsc{verified} as an algebraic step only.
 
 The gap is not cosmetic. A triangle with vertices $(0,0)$, $(0.1,-10)$, $(5,-0.1)$ has width
 $10$ in the vertical direction and does not contain $X(\pi/2)-\mu_{\pi/2}$. For $\Sig$ the two
@@ -2717,8 +2854,9 @@ on $\mathcal D$ by Proposition~\ref{prop:seghyp}; Remark~\ref{rem:v24} is reprov
 phase decomposition that the old (d) supplied; the concavity step now cites
 Corollary~\ref{cor:anchored}, which applies by Proposition~\ref{prop:dcell}, in place of the
 superseded Remark~\ref{thm:concave}; and the $V=|N|$ sentence cites
-Proposition~\ref{prop:V} with all four of its hypotheses named rather than
-Proposition~\ref{prop:convex}.
+Proposition~\ref{prop:V} with all five of its hypotheses named rather than
+Proposition~\ref{prop:convex} --- five, because Remark~\ref{rem:v34} found a fifth,
+sweep $\subseteq U$, that the earlier count omitted.
 \end{remark}
 
 \begin{remark}[The rectangle argument, written out]\label{rem:v31}
@@ -2803,21 +2941,108 @@ which are what bound $c_x$.
 $c(t)-\alpha_1^+\nu_t$ --- which is $X(t)-\mu_t$ where $\alpha_1\ge0$ and $c(t)$ where
 $\alpha_1<0$ --- and $c(t)-\sigma\nu_t=(x(t),0)$ for face~1, the window being a genuine
 interval by Proposition~\ref{prop:seghyp}. The claim above covers the two of the form
-$X-\mu$; $c(t)$ is the previous paragraph; and for the floor endpoint,
-$F-1=A\cos t+A_2\sin t$ gives $x=(F-1)\sec t=A+A_2\tan t\ge0$ while
-$\kappa-x=\sec t\int_t^{\pi/2}\rho_1(s)\sin(s-t)\,ds\ge0$, both from (b) alone, so
-$x(t)\in[0,\kappa]\subseteq[-\alpha_2(0),\kappa]$, again by $\alpha_2(0)\ge0$, and the floor
-endpoint lies in the floor facet. Since $C_2$ is convex, a sweep segment lies in
+$X-\mu$; $c(t)$ is the previous paragraph; and the floor endpoint is the next paragraph.
+Since $C_2$ is convex, a sweep segment lies in
 $C_2$ as soon as its two endpoints do. Containment on $\mathcal D$ therefore reduces to
 Remark~\ref{rem:v29}, and to nothing else.
 
+\emph{The floor endpoint.} Both bounds come from the same two brackets, read at
+$\theta=t$. The identity $F-1=A\cos t+A_2\sin t$ --- which is
+$\cos^2t+\sin^2t=1$ and nothing else --- gives $x=(F-1)\sec t=A+A_2\tan t$, so on
+$[0,\pi/2)$
+\[
+  x\ \ge\ 0\quad\text{from } A\ge0 \text{ and } A_2\ge0,\qquad
+  \kappa-x\ =\ \sec t\int_t^{\pi/2}\!\rho_1(s)\sin(s-t)\,ds\ \ge\ 0 ,
+\]
+the second because $\kappa-A(t)=\int_t^{\pi/2}\rho_1\sin$ and $A_2(t)=\int_t^{\pi/2}\rho_1\cos$
+combine through $\sin s\cos t-\cos s\sin t=\sin(s-t)$. Both use (a) and (b) only: (b) for
+$\rho_1\ge0$, hence for $A$ nondecreasing and $A_2$ nonincreasing; (a) at $0$ for $A(0)=0$ and
+at $\pi/2$ for $A_2(\pi/2)=H(\pi/2)-1=0$. So $x(t)\in[0,\kappa]\subseteq[-\alpha_2(0),\kappa]$,
+the widening being $\alpha_2(0)\ge0$, which is (d) at $t=0$; and the floor endpoint lies in
+the floor facet. Equivalently and as the note first put it,
+$\cos^2t\;x'=A_2=\int_t^{\pi/2}\rho_1\cos\ \ge0$, so $x$ is nondecreasing, and
+$x(0)=H(0)-1=0$: the same lower end by the derivative rather than by the identity.
+
+At $t=\pi/2$ the quotient $(F-1)\sec t$ has a removable singularity, and it is removable
+exactly because of the gauge: $F(\pi/2)-1=0$. Nothing above divides by $\cos t$ --- the
+statements proved are $0\le F-1$ and $F-1\le\kappa\cos t$ --- and the value at $\pi/2$ is
+recovered as a limit, from the two-sided bound
+\[
+  0\ \le\ \kappa-x(t)\ \le\ \frac{1-\sin t}{\cos t}\ =\ \frac{\cos t}{1+\sin t}
+  \ \xrightarrow[t\to\pi/2]{}\ 0 ,
+\]
+whose upper half is $\rho_1\le1$ run through the same two brackets. So $x$ extends
+continuously with $x(\pi/2)=\kappa$, the right end of the shadow, and the endpoint condition
+holds on the closed interval.
+
 Rule~0: the claim is \textsc{proved} on $\mathcal D$ and \textsc{verified}
 (\verb|endpoint_coords|, \verb|facet_left_from_arm|, \verb|rectangle_of_facets|,
-\verb|bracket_monotoneOn|, \verb|moment_bracket_antitoneOn|,
-\verb|moment_bracket_monotoneOn|, \verb|endpoint_range_lower|, \verb|endpoint_range_upper|,
+\verb|endpoint_range_lower|, \verb|endpoint_range_upper|,
 \verb|endpoint_mem_rectangle_lower|, \verb|endpoint_mem_rectangle_upper|,
-\verb|alpha1_half_pi_bounds_x|, \verb|endpoint_in_cap|).
-The last paragraph is a \textsc{reduction} and is recorded as one. The reason previously given
+\verb|alpha1_half_pi_bounds_x|, \verb|endpoint_in_cap|, and the two packaged assemblies
+\verb|endpoint_in_cap_lower|, \verb|endpoint_in_cap_upper|, which consume the monotonicity of
+the two brackets and nothing else).
+
+\emph{Correction to the previous version of this line.} It also listed
+\verb|bracket_monotoneOn|, \verb|moment_bracket_antitoneOn| and
+\verb|moment_bracket_monotoneOn| as \textsc{verified} support for Step~2. Those three carried
+\verb|(h1 : forall s, HasDerivAt F (F' s) s)| and
+\verb|(h2 : forall s, HasDerivAt F' (F'' s) s)|,
+quantified over all of $\R$, and \emph{no member of $\mathcal D$ satisfies that}: (b) gives
+only $H'$ Lipschitz with $H''\in L^\infty$ a.e.; $H'$ jumps at $\pi/2$, so \verb|h2| fails
+there outright; and $\Sig$'s own $r$ jumps at $\beta$, inside $(0,\pi/2)$, so it fails at an
+interior point as well. That is the regression Remark~\ref{rem:v5b} diagnosed for
+\verb|pos_between| and \verb|wronskian_strictAntiOn|, in the same shape, and the repair is
+the one it used. Two forms now stand in their place, neither asking for a second derivative
+where $\mathcal D$ has none.
+\begin{itemize}
+\item \emph{Localised}: \verb|bracket_monotoneOn_Ioo|, \verb|moment_bracket_antitoneOn_Ioo|,
+\verb|moment_bracket_monotoneOn_Ioo| ask for the two derivatives only on the \emph{open}
+interval and for $H,H'$ only continuous on the closed one. These instantiate at $\Sig$ phase
+by phase --- the jump of $r$ at $\beta$ and the atom at $\pi/2$ are endpoints of phases,
+never interior --- and \verb|monotoneOn_glue|, \verb|antitoneOn_glue| chain the phases.
+\item \emph{Measure}: \verb|bracket_monotoneOn_of_deficit|,
+\verb|moment_bracket_antitoneOn_of_deficit|, \verb|moment_bracket_monotoneOn_of_deficit| use
+no derivative at all. Their input is the increment representation
+$A(v)-A(u)=\int_u^v\rho\sin$, $A_2(v)-A_2(u)=-\int_u^v\rho\cos$ with $\rho=1-r_{ac}\ge0$,
+which is the inequality between measures that (b) states, and they instantiate at
+\emph{every} member of $\mathcal D$, phase structure or none. The two generic steps are
+\verb|monotoneOn_of_integral_increment| and \verb|antitoneOn_of_integral_increment|.
+\end{itemize}
+The full measure form is therefore reachable in Lean, with one step short of it: the passage
+from (b) to the increment representation is not formalised and enters the Lean statements as
+a hypothesis, exactly as \eqref{eq:dG} does in Remark~\ref{rem:v5b}. The honest label is
+\textsc{verified} for the monotonicity-to-endpoint chain and for both monotonicity forms
+given the representation, and \textsc{proved} here, not \textsc{verified}, for the
+representation itself --- the same split, and the only gap in this chain. The three
+globally quantified lemmas are retained under their old names as the $C^2$ special case, with
+the caveat recorded in their doc strings; they are not what $\mathcal D$ instantiates.
+
+The floor endpoint of the previous
+paragraph is likewise \textsc{proved} and \textsc{verified}: the two algebraic identities
+(\verb|face1_bracket_decomp|, \verb|face1_slope_decomp|); the four bracket bounds, two from
+$\rho_1\ge0$ and two from $\rho_1\le1$ (\verb|bracket_nonneg_quarter|,
+\verb|moment_bracket_nonneg_quarter|, \verb|bracket_le_kappa_quarter|,
+\verb|kappa_sub_bracket_le_cos|, \verb|moment_bracket_le_one_sub_sin|, with the two new
+monotonicities \verb|bracket_add_cos_antitoneOn| and
+\verb|moment_bracket_add_sin_monotoneOn| derived from \verb|bracket_deriv| and
+\verb|moment_bracket_deriv| through Mathlib's mean-value machinery, as the three older ones
+were); the gap bounds (\verb|face1_slope_bounds|, \verb|face1_gap_bounds|); the two ends
+(\verb|face1_x_nonneg|, \verb|face1_x_le_kappa|) and their conjunction
+(\verb|face1_x_mem_shadow|); the derivative route (\verb|face1_x_hasDerivAt|,
+\verb|face1_x_monotoneOn|, \verb|face1_x_at_zero|); and the removable singularity
+(\verb|face1_x_gap_le|, \verb|face1_x_tendsto|). Not formalised there: the integral
+representations $\kappa-A(t)=\int_t^{\pi/2}\rho_1\sin$ and $A_2(t)=\int_t^{\pi/2}\rho_1\cos$,
+hence the displayed $\sin(s-t)$ form; each is replaced in Lean by the monotonicity that is
+its sign, so the conclusions are the same and the kernel identity is not. The floor-endpoint
+lemmas of this paragraph carry the same globally quantified derivative hypotheses that the
+three of Step~2 carried, and inherit the same caveat: they are the $C^2$ special case and do
+not instantiate at a general member of $\mathcal D$. The repair there is the same two forms
+and has not been applied to them in this version; until it is, their honest label is
+\textsc{verified} for $C^2$ data and \textsc{proved} on $\mathcal D$.
+The four-endpoint bookkeeping of the ``Consequence'' paragraph remains a
+\textsc{reduction} and is recorded as one, even though each of its four memberships is now
+\textsc{proved}. The reason previously given
 for keeping containment as a standing hypothesis of Theorem~\ref{thm:final} --- that the
 bang-bang step of Remark~\ref{rem:v29} was a sketch and was not written out --- no longer
 holds: that step is now written out there, with the extremal re-derived, the constant
@@ -2830,7 +3055,7 @@ Remark~\ref{rem:v13}, which is where the hypothesis was introduced.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
-is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
+is what hypotheses (i)--(iii) of Proposition~\ref{prop:V} assert, and which is why
 $V(\Sig)=|N(\Sig)|$. Perturbing $H$ by a smooth bump $\eta$ supported where
 $H+H''\ge\tfrac12$ (so convexity survives) and measuring $|N|$ with a polygon oracle
 against $V$ from the same $H$, the excess $V-|N|$, corrected for the oracle's known
@@ -2993,8 +3218,17 @@ together with the analogous condition for $\ell_2(t)\cap\ell_1(t')$.
 \end{definition}
 
 \begin{proposition}\label{prop:convex}
-$\mathcal K'$ is convex, and on $\mathcal K'$ the combined sweep is injective, hence
-$V=|N|$ and $Q=|C_2|-2|N|\ge|T|$ for every ambidextrous sofa $T$ with cap data $H$.
+$\mathcal K'$ is convex, and on $\mathcal K'$ the combined sweep is injective, so the two
+truncated sweeps satisfy hypotheses (i) and (ii) of Proposition~\ref{prop:V}. They satisfy
+(iii) and (v) as well: they cover the niche, and they lie in $U$. Consequently
+\[
+  V\ \ge\ |N| ,\qquad V-|N|=\bigl|S\setminus C_2\bigr| ,
+\]
+$S$ being the union of the two sweep images, so equality holds precisely on hypothesis
+(iv). Injectivity by itself does \emph{not} give $V=|N|$, and the earlier version of this
+proposition, which asserted it together with $Q=|C_2|-2|N|\ge|T|$, is withdrawn: the stadium
+of Remark~\ref{rem:v6} lies in $\mathcal K'$ for every $L$ and has $V-|N|=0.0469$ at
+$L=1.30$ (Remark~\ref{rem:v34}).
 \end{proposition}
 
 \begin{proof}
@@ -3008,13 +3242,19 @@ contributes no double cover; \eqref{eq:C11} does the same for face~1 with the in
 reversed because the relevant endpoint is the near one. With the cross condition, no point
 is swept twice.
 
-For $V=|N|$: every point of $N$ has a first capture time $\tau(p)$, at which
-$\partial Q_{\tau(p)}$ is advancing at $p$ (otherwise $p$ would have been captured
-earlier), so by Lemma~\ref{lem:normvel} it lies on face~2 with $s\le\alpha_2$ or on face~1
-with $s\ge\alpha_1$. Hence $N$ is covered by the two sweeps, and the sweeps lie in $N$
-because an advancing face point belongs to $Q_{t+\varepsilon}$. Injectivity turns each
-$\int|\det|$ into the area of its image, and the two images are disjoint, so the sum is
-$|N|$.
+Two further steps, and it is worth keeping them apart. \emph{First capture.} Every point of
+$N$ has a first capture time $\tau(p)$, at which $\partial Q_{\tau(p)}$ is advancing at $p$
+(otherwise $p$ would have been captured earlier), so by Lemma~\ref{lem:normvel} it lies on
+face~2 with $s\le\alpha_2$ or on face~1 with $s\ge\alpha_1$; hence $N$ is covered by the two
+sweeps, which is (iii). \emph{Advancing face.} An advancing face point belongs to
+$Q_{t+\varepsilon}\subseteq U$, so the sweeps lie in $U$, which is (v). That is all the
+second step gives. It does \emph{not} place the sweeps in $U\cap C_2=N$, because nothing here
+keeps $Q_{t+\varepsilon}$ inside $C_2$; the earlier version of this proof wrote ``the sweeps
+lie in $N$'' at this point, and that is the error Remark~\ref{rem:v13} located.
+
+Injectivity turns each $\int|\det|$ into the area of its image and the two images are
+disjoint, so $V=|S|$ for $S$ the union of the images. With $N\subseteq S$ from (iii) and
+$S\subseteq U$ from (v), $V-|N|=|S\setminus N|=|S\setminus(U\cap C_2)|=|S\setminus C_2|\ge0$.
 \end{proof}
 
 \begin{remark}[$\Sig\in\mathcal K'$, and $\mathcal K'$ has nonempty interior]
@@ -3048,8 +3288,11 @@ pattern;
 \item[(ii)] the three conditions of Definition~\ref{def:kprime} hold on
 $\mathcal K'\cap\mathcal C$;
 \item[(iii)] competitors satisfy the niche separation $M<\tfrac12$ of
-Corollary~\ref{cor:sep}.
+Corollary~\ref{cor:sep};
+\item[(iv)] the truncated sweeps lie in $C_2$.
 \end{enumerate}
+Hypothesis~(iv) was not listed in an earlier version; it is hypothesis (iv) of
+Proposition~\ref{prop:V} and is not implied by (ii) (Remark~\ref{rem:v13}).
 Then $\lvert T\rvert\le A_R^\ast$ for every ambidextrous sofa $T$ whose cap data lies in
 $\mathcal K'\cap\mathcal C$.
 
@@ -3066,7 +3309,9 @@ $\mathcal C$ is convex because $\alpha_1,\alpha_2$ are affine in $H$, so each po
 sign condition is a half-space; $\mathcal K'$ is convex by
 Proposition~\ref{prop:convex}; hence so is the intersection. By (i), $Q$ is a concave
 function on that convex set with a critical point at $\Sig$, so
-$Q(H)\le Q(\Sig)=A_R^\ast$ throughout. By (ii) and Proposition~\ref{prop:convex},
+$Q(H)\le Q(\Sig)=A_R^\ast$ throughout. By (ii) and Proposition~\ref{prop:convex} the combined
+sweep is injective and hypotheses (i), (ii), (iii), (v) of Proposition~\ref{prop:V} hold;
+with (iv) here supplying its (iv), Proposition~\ref{prop:V} gives $V=|N|$ and hence
 $Q(H)\ge|T|$ there, using (iii) to get the factor $2$ in $|T|\le|C_2|-2|N|$.
 \end{proof}
 
@@ -3207,8 +3452,12 @@ SOL1, SOL5, SOL6 phase by phase, and is not carried out here.
 \begin{theorem}\label{thm:cross}
 (RC) implies the cross condition: for all $t,t'$ the point
 $\ell_2(t)\cap\ell_1(t')$ is not interior to both sweep segments. Consequently, under
-(RC) the combined sweep is injective and $V=|N|$, so
-$Q=|C_2|-2|N|\ge|T|$.
+(RC) the combined sweep is injective and $H\in\mathcal K'$, so $V\ge|N|$ by
+Proposition~\ref{prop:convex}. It does \emph{not} follow that $V=|N|$, nor that
+$Q=|C_2|-2|N|\ge|T|$; the earlier version of this theorem asserted both and is withdrawn.
+Both need hypothesis (iv) of Proposition~\ref{prop:V}, containment, which (RC) does not
+supply: the stadium of Remark~\ref{rem:v6} satisfies (RC) for every $L$ and has
+$V-|N|=0.0469$ at $L=1.30$ (Remarks~\ref{rem:v13}, \ref{rem:v34}).
 \end{theorem}
 
 \begin{proof}
@@ -3463,9 +3712,10 @@ Assume the truncated sweeps for $\Sig$ lie in $C_2$. Then $Q(\Sig)=A_R^\ast$.
 \begin{proof}
 $\Sig$ satisfies (RC) by Proposition~\ref{prop:rcsigma}, so the combined sweep is injective
 by Theorems~\ref{thm:rc} and~\ref{thm:cross}; the two sweeps are disjoint and cover $N$ by
-Remarks~\ref{rem:v4} and~\ref{rem:v5}; \eqref{eq:seghyp} holds by
-Proposition~\ref{prop:seghyp}; and containment is the standing hypothesis. With the four,
-$V(\Sig)=|N(\Sig)|$ by Proposition~\ref{prop:V}. The niches are disjoint by
+Remarks~\ref{rem:v4} and~\ref{rem:v5}; they lie in $U$, which is (v), by the advancing-face
+step of Proposition~\ref{prop:convex} (Remark~\ref{rem:Vfifth}); \eqref{eq:seghyp} holds by
+Proposition~\ref{prop:seghyp}; and containment, (iv), is the standing hypothesis. With the
+five, $V(\Sig)=|N(\Sig)|$ by Proposition~\ref{prop:V}. The niches are disjoint by
 Theorem~\ref{thm:main}, and $C_2$ is $\rho$-invariant, so
 $|\Sig|=|C_2|-|N|-|\rho N|=|C_2|-2|N|$. Hence
 $Q(\Sig)=|C_2|-2V(\Sig)=|C_2|-2|N|=|\Sig|=A_R^\ast$.
@@ -3475,10 +3725,12 @@ $Q(\Sig)=|C_2|-2V(\Sig)=|C_2|-2|N|=|\Sig|=A_R^\ast$.
 The proof above previously read ``$\Sig$ satisfies (RC), so $V(\Sig)=|N(\Sig)|$ by
 Theorems~\ref{thm:rc} and~\ref{thm:cross}''. That is the inference Remark~\ref{rem:v13}
 found unsupported: those two theorems give injectivity of the combined sweep and nothing
-else, whereas $V=|N|$ is Proposition~\ref{prop:V} and needs four hypotheses. Three of the
-four are available for $\Sig$ --- disjointness and covering from Remarks~\ref{rem:v4}
-and~\ref{rem:v5}, \eqref{eq:seghyp} from Proposition~\ref{prop:seghyp} --- and the fourth,
-containment of the truncated sweeps in $C_2$, is not proved here. So $Q(\Sig)=A_R^\ast$
+else, whereas $V=|N|$ is Proposition~\ref{prop:V} and needs five hypotheses. Four of the
+five are available for $\Sig$ --- disjointness and covering from Remarks~\ref{rem:v4}
+and~\ref{rem:v5}, sweep $\subseteq U$ from the advancing-face step of
+Proposition~\ref{prop:convex}, and \eqref{eq:seghyp} from Proposition~\ref{prop:seghyp} ---
+and the remaining one, (iv), containment of the truncated sweeps in $C_2$, is not proved
+here. So $Q(\Sig)=A_R^\ast$
 carries exactly the hypothesis Theorem~\ref{thm:final} carries and is not independent
 evidence for it. Rule~0: Theorem~\ref{thm:QA} is \textsc{conditional on containment}, not
 \textsc{proved}. The $50$-digit numerical agreement below does not use
@@ -4102,8 +4354,13 @@ to exclude.
 \end{proof}
 
 \begin{theorem}[conditional on containment]\label{thm:final}
-Assume the truncated sweeps lie in $C_2$, which by Remarks~\ref{rem:v6} and~\ref{rem:v13} is
-not implied by the other hypotheses and is open for $\Sig$. Let $\mathcal D$ be the set of
+Assume the truncated sweeps lie in $C_2$ --- hypothesis (iv) of Proposition~\ref{prop:V},
+which by Remarks~\ref{rem:v6} and~\ref{rem:v13} is not implied by the other four and is open
+for $\Sig$. It is not removed here even though Remark~\ref{rem:v31} proves each of the four
+sweep endpoints lies in $C_2$, and the reason is stated there: the passage from four endpoint
+memberships to containment of the two segments is that remark's own four-endpoint
+bookkeeping, which it records as a \textsc{reduction} and which has not been audited against
+Remark~\ref{rem:v13}, where the hypothesis was introduced. Let $\mathcal D$ be the set of
 support functions $H$ on $[0,\pi]$ of admissible caps such
 that
 \begin{enumerate}
@@ -4131,19 +4388,28 @@ Lemma~\ref{lem:corner} and \eqref{eq:arm1}--\eqref{eq:sig}, so $\mathcal D$ is c
 $\Sig$ satisfies (b) by Proposition~\ref{prop:rcsigma}, (c) with margin
 $\tfrac12-M=0.1121\ldots$ by Theorem~\ref{thm:main}, and (d) by definition of $\beta$.
 
-Proposition~\ref{prop:V} is applied with all four of its hypotheses named. By (a) and (b)
+Proposition~\ref{prop:V} is applied with all five of its hypotheses named. By (a) and (b)
 alone, Proposition~\ref{prop:oneentry} gives that each truncated sweep is injective and that
 the two are disjoint, so hypotheses (i) and (ii) hold; Theorems~\ref{thm:rc}
 and~\ref{thm:cross} reach the same conclusion under the same (b) and are retained, but are
 not used here, and with them go the $401$-point grid and the $305$-box covering of
-Remark~\ref{rem:kprime}. The covering argument inside the proof of Proposition~\ref{prop:convex} gives
-that the two truncated sweeps cover $N$; \eqref{eq:seghyp}, which Proposition~\ref{prop:V}
-needs for its face-1 window to be the interval $[\alpha_1^+,\sigma]$, holds by
-Proposition~\ref{prop:seghyp}; and containment of the truncated sweeps in $C_2$ is the
-standing hypothesis of this theorem. With the four, $V=|N|$ by Proposition~\ref{prop:V}.
-Proposition~\ref{prop:convex} is \emph{not} cited for containment: its argument places an
-advancing face point in $Q_{t+\varepsilon}$, which gives sweep $\subseteq U$ and not
-sweep $\subseteq U\cap C_2=N$, as Remark~\ref{rem:v13} records. By (c) and Lemma~\ref{lem:ceiling},
+Remark~\ref{rem:kprime}.
+
+The proof of Proposition~\ref{prop:convex} is cited twice, and the two citations are for
+different steps of it. The \emph{first-capture} step --- every point of $N$ has a first
+capture time, at which the boundary is advancing there --- gives that the two truncated
+sweeps cover $N$, which is hypothesis (iii). The \emph{advancing-face} step --- an advancing
+face point belongs to $Q_{t+\varepsilon}$ --- gives sweep $\subseteq U$, which is hypothesis
+(v). Neither is a citation for containment, and the distinction is worth spelling out,
+because the two steps are adjacent in that proof and were conflated once already: what the
+advancing-face step yields is sweep $\subseteq U$, \emph{not} sweep $\subseteq U\cap C_2=N$,
+and that gap is what Remark~\ref{rem:v13} records.
+
+\eqref{eq:seghyp}, which Proposition~\ref{prop:V} needs for its face-1 window to be the
+interval $[\alpha_1^+,\sigma]$, holds by Proposition~\ref{prop:seghyp}; and hypothesis (iv),
+containment of the truncated sweeps in $C_2$, is the standing hypothesis of this theorem and
+is proved nowhere in it. With the five, $V=|N|$ by Proposition~\ref{prop:V}.
+By (c) and Lemma~\ref{lem:ceiling},
 $U\subseteq\{y\le\tfrac12\}$ and $\rho U\subseteq\{y\ge\tfrac12\}$, so
 $|U\cap\rho U|=0$; with $C_2$ $\rho$-invariant this gives
 $|T|\le|C_2|-|N|-|\rho N|=|C_2|-2|N|=Q$. (Corollary~\ref{cor:sep} states the strict form
@@ -4606,12 +4872,14 @@ $\{\alpha_1<0\}$ need not be an interval.
 \end{corollary}
 
 Corollary~\ref{cor:anchored} is the non-strict statement, and uniqueness needs definiteness.
-The next proposition supplies it where Theorem~\ref{thm:diag}'s three ranges do, and names
-the one range where the printed proof does not.
+The next proposition supplies it on all three of Theorem~\ref{thm:diag}'s ranges. In two of
+them the printed collection has to be re-run with a term it discards retained; that is the
+only change, and it is the same change in both.
 
-\begin{proposition}[The diagonal form is definite, and where]\label{prop:dstrict}
-For every $\tau\in(0,1.5153]$ and every admissible $\eta$, $D_\tau[\eta]<0$ unless
-$\eta\equiv0$.
+\begin{proposition}[The diagonal form is definite]\label{prop:dstrict}
+For every $\tau\in(0,\pi/2)$ and every admissible $\eta$, $D_\tau[\eta]<0$ unless
+$\eta\equiv0$. Both endpoints are genuine exclusions and not artefacts: $D_0$ and
+$D_{\pi/2}$ both annihilate $(p,q)=(0,\sin t)$.
 \end{proposition}
 
 \begin{proof}
@@ -4634,14 +4902,76 @@ $c=0$, so $q\equiv0$. With $q\equiv0$, \eqref{eq:Dtau} reduces to
   \int_0^\tau(p^2-p'^2)+2\!\int_\tau^{\pi/2}\!(p^2-p'^2)
   \ \le\ 2\!\int_0^{\pi/2}\!p^2-\int_0^{\pi/2}\!p'^2\ \le\ -2\!\int_0^{\pi/2}\!p^2 ,
 \]
-by the Dirichlet--Dirichlet constant $4$, so $p\equiv0$ as well. The two ranges overlap and
-cover $(0,1.5153]$.
+by the Dirichlet--Dirichlet constant $4$, so $p\equiv0$ as well.
+
+For $\tau>1.5153$, run range~(b) and retain the term \emph{it} discards. Its $p$ estimate is
+\[
+  \int_0^\tau(p^2-p'^2)+2\!\int_\tau^{\pi/2}\!(p^2-p'^2)
+  \ \le\ -\tfrac34\int_0^{\pi/2}p'^2-\bigl(1-\tfrac1{400}\bigr)P^2 ,
+\]
+and the printed collection then replaces $-\tfrac34\int_0^{\pi/2}p'^2$ by $-\tfrac34P^2$,
+discarding $-\tfrac34\int_0^\tau p'^2$. Keeping it, and leaving the other three displays of
+range~(b) exactly as printed, the same collection gives, with $\sigma=\pi/2-\tau$,
+\begin{equation}\label{eq:rangeb4}
+  D_\tau\ \le\ -\tfrac45\sigma\sin^2\!\sigma\;a^2
+   -\Bigl(\tfrac27-\tfrac{25\pi}{16}\sigma\Bigr)D
+   -\tfrac{11}{80}P^2-\tfrac34\int_0^\tau p'^2 .
+\end{equation}
+Two things change, and only two. A fourth summand $-\tfrac34\int_0^\tau p'^2$ appears, which
+is the retained term itself and is what pins $p$ on $[0,\tau]$; and the $a^2$ coefficient,
+printed as $\tfrac45\sigma(\cos^2\sigma-1)\le0$, is read as
+$-\tfrac45\sigma\sin^2\sigma$, which is \emph{strictly} negative as soon as $\sigma>0$. The
+$P^2$ coefficient is $-\tfrac34-\tfrac{399}{400}+\tfrac54+\tfrac9{25}=-\tfrac{11}{80}$, the
+printed $-\tfrac{13}{100}$ with the rounding of $-1.7475$ to $-\tfrac{174}{100}$ undone;
+either value serves. The $D$
+coefficient is untouched and is at most $-\tfrac27+\tfrac{25\pi}{288}=-0.0130\ldots<0$. So on
+$\sigma\in(0,\tfrac1{18}]$ all four coefficients of \eqref{eq:rangeb4} are strictly negative,
+and $D_\tau[\eta]=0$ forces all four quantities to vanish. Then $D=0$ gives $r\equiv0$,
+because $\|r\|^2_{L^2}\le D/8$ by \eqref{eq:spec}; with $a=0$ that is $q\equiv0$. And
+$\int_0^\tau p'^2=P^2=0$ gives $\int_0^{\pi/2}p'^2=0$, so $p$ is constant, and $p(0)=0$ makes
+it $0$. This is the step the printed proof could not deliver: with $-\tfrac34\int_0^\tau p'^2$
+discarded, $P^2=0$ leaves $p$ unconstrained on $[0,\tau]$.
+
+The three ranges overlap and cover $(0,\pi/2)$: $\tau\in(1.5153,\pi/2)$ has
+$\sigma\in(0,0.05550)\subset(0,\tfrac1{18}]$, and $\pi/2-\tfrac1{18}=1.51524\ldots<1.5153$.
+At $\sigma=0$ the $a^2$ coefficient vanishes, which is not a defect of the estimate: it is
+the mode $(0,\sin t)$ that $D_{\pi/2}$ annihilates.
 \end{proof}
 
-The remaining sliver is $\tau\in(1.5153,\pi/2)$, which is range~(b). Its printed collection
-spends the whole of the $p$ estimate on the boundary coupling --- the three coefficients are
-read off after $-\tfrac34\int p'^2$ has been converted to $-\tfrac34P^2$ --- so definiteness
-is not read off the printed proof there, and this note does not supply it.
+So the sliver $\tau\in(1.5153,\pi/2)$ that the previous version left open is closed, by the
+same repair range~(a) received: the printed range~(b) spent its whole $p$ estimate on the
+boundary coupling, and the definiteness was in the term it spent. As a cross-check
+independent of the shooting determinant of range~(c), the first eigenvalue of $-D_\tau$ was
+recomputed by P1 finite elements with inertia bisection (so a count of negative pivots, not a
+Rayleigh quotient, decides the sign), with $\tau$ a mesh node; at $400$ elements, and stable
+to the digits shown against $120$ and $240$:
+\[
+  \begin{array}{r|ccccccc}
+    \tau & \pi/4 & 1.4137 & 1.5140 & 1.5153 & 1.5400 & 1.5600 & \pi/2-10^{-4}\\\hline
+    \lambda_1(-D_\tau) & 0.36986 & 0.09832 & 0.03598 & 0.03516 & 0.01956 & 0.00687
+      & 6.6\cdot10^{-5}
+  \end{array}
+\]
+positive throughout, and going to $0$ at $\pi/2$ as the annihilated mode $(0,\sin t)$
+requires --- roughly linearly in $\sigma$ (at $\tau=1.54$ and $\tau=1.56$,
+$\lambda_1/\sigma=0.635$ and $0.636$), which is the rate Remark~\ref{rem:endcap} fits
+independently. \eqref{eq:rangeb4}'s own $a^2$ coefficient degenerates faster, like
+$\sigma^3$, because the boundary Young step returns $\tfrac45\sigma\cos^2\sigma$ against a
+linear damping $\tfrac45\sigma$ and only the difference survives; so the collection is not
+sharp in that direction, and nothing but the sign of that coefficient is used. The value
+at $\tau=\pi/4$ agrees with the $0.370$ measured for the mirror family at its own
+$\tau=\pi/4$, where the two families coincide, so the two computations cross-check. This is
+\textsc{heuristic}; the proof is \eqref{eq:rangeb4}.
+
+Rule~0: Proposition~\ref{prop:dstrict} is \textsc{proved} on $(0,\pi/2)$. Its scalar steps
+are \textsc{verified}: the range~(a) collection and its forcing (\verb|dstrict_rangea|,
+\verb|dd_forces_zero|), and for range~(b) the four coefficient signs and the forcing
+(\verb|sliver_in_rangeb|, \verb|rangeb_trig|, \verb|rangeb_D_coeff|,
+\verb|rangeb_spec_coeff|, \verb|rangeb_short_poincare|, \verb|rangeb_a_coeff|,
+\verb|rangeb_P_coeff|, \verb|rangeb_definite|, \verb|sliver_definite|). Not formalised: the
+estimates that produce the collections --- the two Poincar\'e inequalities, the spectral
+bounds \eqref{eq:spec}, the Young splittings --- and the ball-arithmetic certificate of
+range~(c).
 
 \begin{theorem}[Uniform constant on the mirror family]\label{thm:mirroruniform}
 For every $\tau\in[0,\pi/4]$ the mirror-anchored cell $(\tau,\pi/2-\tau)$ satisfies
@@ -4669,41 +4999,77 @@ at $\tau=0$ to $0.370$ at $\tau=\pi/4$, with $0.7331$ at $\Sig$'s cell.
 Because $Q$ is exactly quadratic on the cell and $\delta Q(\Sig)=0$, the same ingredients
 give more than a bound.
 
-\begin{theorem}[Stability]\label{thm:stab}
-For every ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in $\mathcal D$,
+\begin{theorem}[Stability on $\Sig$'s sign cell]\label{thm:stab}
+Let $\mathcal C$ be the cell of support functions sharing $\Sig$'s sign pattern. For every
+ambidextrous moving sofa $T$ whose cap data $H=H_\Sig+\eta$ lies in
+$\mathcal D\cap\mathcal C$,
 \begin{equation}\label{eq:stab}
   |T|\ \le\ A_R^\ast-\tfrac{73}{100}\,\|\eta\|_{L^2(0,\pi)}^2 .
 \end{equation}
+The hypothesis $H\in\mathcal C$ is not removable at this constant; see
+Remark~\ref{rem:v33}.
 \end{theorem}
 
 \begin{proof}
-On the cell $\mathcal C$ the functional $Q$ is a quadratic polynomial in $H$, so
+$\mathcal C$ is convex, because $\alpha_1$ and $\alpha_2$ are affine in $H$ and each
+pointwise sign condition is therefore a half-space; and $\Sig\in\mathcal C$ by definition. So
+the segment $[\Sig,H]$ lies in $\mathcal C$, and on $\mathcal C$ the functional $Q$ is a
+quadratic polynomial in $H$, so
 $Q(H_\Sig+\eta)=Q(\Sig)+\delta Q(\Sig)[\eta]+\tfrac12\delta^2Q[\eta]$ exactly. The first
 variation vanishes by Theorem~\ref{thm:el} and $Q(\Sig)=A_R^\ast$ by
-Theorem~\ref{thm:QA}, while Theorem~\ref{thm:system} bounds the second variation. Combining
+Theorem~\ref{thm:QA}, while Theorem~\ref{thm:system} bounds the second variation \emph{on
+that cell} by $-\tfrac{73}{100}\|\eta\|^2$. Combining
 with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
-
-\emph{Scope, flagged.} Both steps of that argument are statements about $\mathcal C$: the
-expansion is exact only while the segment $[\Sig,H]$ stays in that cell, and
-$\tfrac{73}{100}$ is the constant of that cell, not of the others $\mathcal D$ contains.
-Write $T_\ast$ for the constant of (d), freeing $T$ for the sofa. Where the segment leaves
-$\mathcal C$ the cell changes along the way and the input available is
-$\delta^2Q\le2D_{T_\ast}$, by \eqref{eq:BleD} below; Taylor with integral remainder then
-gives $|T|\le Q(H)\le A_R^\ast+D_{T_\ast}[\eta]$, which is $<A_R^\ast$ for $\eta\ne0$ by
-Proposition~\ref{prop:dstrict}, but with no rate, since the first eigenvalue of
-$D_{T_\ast}$ is certified positive rather than bounded below and degenerates as
-$T_\ast\to\pi/2$. Rule~0: \eqref{eq:stab} is \textsc{proved} with the constant
-$\tfrac{73}{100}$ for competitors whose segment to $\Sig$ stays in $\mathcal C$, and off
-$\mathcal C$ only in the unrated form $|T|<A_R^\ast$; the uniform-constant statement on all
-of $\mathcal D$ would need a lower bound on the first eigenvalue of $D_{T_\ast}$, which this
-note does not have. Corollary~\ref{cor:uniq} below is proved without \eqref{eq:stab}, so it
-is unaffected.
 \end{proof}
 
+\begin{remark}[Off $\mathcal C$ the bound is strict but unrated]\label{rem:v33}
+Earlier versions stated Theorem~\ref{thm:stab} for all of $\mathcal D$. That overclaimed:
+both steps of the proof are statements about $\mathcal C$. The expansion is exact only while
+the segment $[\Sig,H]$ stays in one cell, and $\tfrac{73}{100}$ is the first eigenvalue of
+$\Sig$'s \emph{own} cell (Theorem~\ref{thm:system}), not of the other cells that
+$\mathcal D$ contains. Neither defect is repaired by taking more care; they are the reason
+the hypothesis is there.
+
+What survives on the rest of $\mathcal D$ is the unrated form. Write $T_\ast$ for the
+constant of (d). Where the segment leaves $\mathcal C$ the cell changes along the way, and
+the input available is $\delta^2Q\le2D_{T_\ast}$ by \eqref{eq:BleD}; Taylor with integral
+remainder gives
+\[
+  |T|\ \le\ Q(H)\ \le\ A_R^\ast+D_{T_\ast}[\eta]\ <\ A_R^\ast\qquad(\eta\ne0),
+\]
+the strict inequality by Proposition~\ref{prop:dstrict}, which now applies on the whole of
+$T_\ast\in(0,\pi/2)$. There is no rate: Proposition~\ref{prop:dstrict} certifies the first
+eigenvalue of $D_{T_\ast}$ positive without bounding it below uniformly, and the measurements
+after Proposition~\ref{prop:dstrict} show that it really does degenerate as
+$T_\ast\to\pi/2$, at a rate that reads as linear in $\pi/2-T_\ast$ over that table, which is
+what Remark~\ref{rem:endcap} predicts. So no constant can be uniform in $T_\ast$, and the
+uniform-constant statement on all of $\mathcal D$ is not merely unproved here: for it one
+would have to fix $T_\ast$ away from $\pi/2$ first, and then the constant would be that of
+$D_{T_\ast}$, not $\tfrac{73}{100}$.
+
+\emph{What cites this, and whether those citations survive the restriction.} Four places, and
+all four do. Corollary~\ref{cor:uniq} is proved without \eqref{eq:stab} --- it runs on
+Proposition~\ref{prop:dstrict} directly --- and its own quantitative sentence already said
+``on $\mathcal C$'', so it is unaffected. Theorem~\ref{thm:budget} takes the coercivity
+constant $c$ as a hypothesis on a convex $\mathcal D'$, so its $\theta=0$ specialisation is
+Theorem~\ref{thm:stab} with $\mathcal D'=\mathcal D\cap\mathcal C$ and $c=\tfrac{73}{100}$,
+which is exactly the restricted statement; nothing there used the wider domain, and the
+$\theta$-table is measured along a segment in $\Sig$'s own cell. The comparison of
+$\tfrac{73}{100}$ with $c^\ast=0.7309566\ldots$ after Proposition~\ref{prop:beyond} is a
+statement about the constant of $\Sig$'s cell and is where it belongs. The introduction's
+summary is the one that had to be corrected, and now names the cell.
+Theorem~\ref{thm:mirrorstab} does not cite \eqref{eq:stab} at all: it has its own hypothesis
+and its own constant $\tfrac3{10}$ from Theorem~\ref{thm:mirroruniform}.
+
+Rule~0: \eqref{eq:stab} is \textsc{proved} on $\mathcal D\cap\mathcal C$; on
+$\mathcal D\setminus\mathcal C$ what is \textsc{proved} is $|T|<A_R^\ast$ for $\eta\ne0$, with
+no rate, and this note claims nothing stronger there.
+\end{remark}
+
 \begin{corollary}[Uniqueness]\label{cor:uniq}
-Let the constant of (d), written $T_\ast$ here to free $T$ for the sofa, satisfy
-$T_\ast\le1.5153$; $\Sig$'s own admissible range $[\beta,\pi/2-\beta]$, which ends at
-$1.2812\ldots$, lies inside that. Then $\Sig$ is the unique ambidextrous moving sofa of area
+Write $T_\ast$ for the constant of (d), freeing $T$ for the sofa. Hypothesis (d) puts
+$T_\ast$ in $(0,\pi/2)$, and that is the only thing about it that is used. Then $\Sig$ is the
+unique ambidextrous moving sofa of area
 $A_R^\ast$ whose cap
 data lies in $\mathcal D$ --- unique up to a null set, with cap datum exactly $H_\Sig$ ---
 and every other cap datum in $\mathcal D$ has $Q(H)<A_R^\ast$, hence strictly smaller area.
@@ -4736,8 +5102,9 @@ the $E_1$ term added, so replacing both sets by $[0,T_\ast)$ can only raise the 
 This is Lemma~\ref{lem:mono} with both sets moved to the same $[0,T_\ast)$, and unlike that
 lemma it lands on a form that does not depend on $H$. With $D_{T_\ast}\le0$
 (Theorem~\ref{thm:diag}) the previous paragraph gives $D_{T_\ast}[\eta]=0$, and
-Proposition~\ref{prop:dstrict} applies because $T_\ast\le1.5153$, so $\eta\equiv0$ and
-$H=H_\Sig$.
+Proposition~\ref{prop:dstrict} applies because $T_\ast\in(0,\pi/2)$ by (d), so $\eta\equiv0$
+and $H=H_\Sig$. In the previous version this step carried the extra hypothesis
+$T_\ast\le1.5153$, which the sliver of Proposition~\ref{prop:dstrict} has removed.
 
 Finally the chain of Theorem~\ref{thm:final} is an equality throughout, so
 $T\subseteq C_2\setminus(N\cup\rho N)$ has the same area as that set and therefore agrees
@@ -4780,13 +5147,29 @@ $[\pi/2,\pi]$, from (d) alone, with no phase decomposition and no appeal to $\Si
 pattern.
 
 Rule~0: the strictness step is \textsc{proved} on the whole range $[\pi/2,\pi]$, and its
-scalar assembly is \textsc{verified} (\verb|cell_le_window|, \verb|dn_constant_gt_one|,
-\verb|gap_nonpos_of_poincare|, \verb|gap_zero_forces_zero|, \verb|cell_zero_splits|,
-\verb|first_mode_vanishes|, \verb|dd_absorb|); the two Poincaré inequalities and the
-identification of their equality cases are inputs and are not formalised.
-Corollary~\ref{cor:uniq} reaches exactly as far as Proposition~\ref{prop:dstrict} does,
-$T_\ast\le1.5153$; the sliver $T_\ast\in(1.5153,\pi/2)$ is the one place it does not close,
-and the reason is range~(b) of Theorem~\ref{thm:diag}, not anything in this remark.
+scalar core is \textsc{verified}. The individual steps are \verb|cell_le_window| (the two
+inclusions), \verb|dn_constant_gt_one| (that the short interval's Poincar\'e constant
+$(\pi/2T_\ast)^2$ exceeds $1$), \verb|gap_nonpos_of_poincare| (that a Poincar\'e constant at
+least $1$ makes a bracket nonpositive), \verb|cell_zero_splits| (that a nonnegative total
+dominated by two nonpositive brackets forces both to vanish), \verb|gap_zero_forces_zero|
+(that a constant strictly above $1$ makes the short bracket vanish only at $q\equiv0$),
+\verb|first_mode_vanishes| (the first-mode step, $c\sin T_\ast=0$ with $T_\ast\in(0,\pi/2]$
+forcing $c=0$) and \verb|dd_absorb| (the $p$ residue). The chain from the inclusions to
+$q\equiv0$ is assembled in \verb|window_bound| and \verb|strictness_of_window|, so the
+argument is checked as a whole and not only step by step; the corresponding assemblies for
+Proposition~\ref{prop:dstrict} are \verb|dstrict_rangea| and \verb|dd_forces_zero|.
+
+What is \emph{not} formalised, and is carried as a hypothesis in each of those assemblies:
+the two Dirichlet--Neumann Poincar\'e inequalities themselves --- $\int_0^Lq'^2\ge(\pi/2L)^2
+\int_0^Lq^2$ for $q(0)=0$, at $L=\pi/2$ and $L=T_\ast$ --- and the identification of the
+equality case of the first with the first mode $q=c\sin$. Both enter the Lean statements as
+named hypotheses (\verb|hPf|, \verb|hPs|, \verb|hmode|), so nothing that depends on them is
+mislabelled.
+
+Corollary~\ref{cor:uniq} now reaches all of $T_\ast\in(0,\pi/2)$, which is the whole of what
+(d) allows: Proposition~\ref{prop:dstrict} has closed the sliver $T_\ast\in(1.5153,\pi/2)$ by
+re-running range~(b) of Theorem~\ref{thm:diag} with the term it discarded retained. The
+previous version's hypothesis $T_\ast\le1.5153$ is gone.
 \end{remark}
 
 The domain $\mathcal D$ is cut out in part by (RC), and (RC) enters at exactly one
@@ -4832,7 +5215,10 @@ Concavity of $Q$ with $\delta Q(\Sig)=0$ gives $Q(H)\le A_R^\ast-c\|\eta\|^2$. A
 $|T|=Q+2E\le A_R^\ast-c\|\eta\|^2+\theta c\|\eta\|^2$.
 \end{proof}
 
-At $\theta=0$ this is Theorem~\ref{thm:stab}. For $\theta>0$ it admits $E>0$, so
+At $\theta=0$, with $\mathcal D'=\mathcal D\cap\mathcal C$ and $c=\tfrac{73}{100}$, this is
+Theorem~\ref{thm:stab}; the coercivity constant is a hypothesis here, so the restriction of
+that theorem to $\Sig$'s cell (Remark~\ref{rem:v33}) costs this theorem nothing but the
+name of the domain. For $\theta>0$ it admits $E>0$, so
 Proposition~\ref{prop:nogo} is evaded, and the room available is proportional to $c$: the
 constant $c^\ast=0.7309566$ of Theorem~\ref{thm:system} is what makes \eqref{eq:EB}
 usable. Measured along $H_\Sig+\varepsilon\phi$ with $\phi$ the bump at $\theta_0=1$ of
@@ -4847,11 +5233,13 @@ so $\theta<1$ holds out to $\varepsilon\approx0.031$, against $\varepsilon_c=0.0
 (RC): the admissible radius grows by a factor of about $4.8$ in that direction. This is a
 measurement, not a proof.
 
-\begin{theorem}[Stability on the mirror class]\label{thm:mirrorstab}
-Let $T$ be a connected ambidextrous moving sofa whose cap data $H$ satisfies the gauge,
-the mirror condition \eqref{eq:mirror}, and (RC), and suppose that along the segment
-$H_s=(1-s)H_\Sig+sH$ the set $\{\alpha_1(\cdot;H_s)<0\}$ is an interval $[0,\tau_1(s))$
-with $\tau_1(s)\le\pi/4$ for every $s$. Then
+\begin{theorem}[Stability on the mirror class, conditional on containment]\label{thm:mirrorstab}
+Assume the truncated sweeps lie in $C_2$, hypothesis (iv) of Proposition~\ref{prop:V} and the
+standing hypothesis of Theorem~\ref{thm:final}. Let $T$ be a connected ambidextrous moving
+sofa whose cap data $H$ satisfies the gauge, the mirror condition \eqref{eq:mirror}, and
+(RC), and suppose that along the segment $H_s=(1-s)H_\Sig+sH$ the set
+$\{\alpha_1(\cdot;H_s)<0\}$ is an interval $[0,\tau_1(s))$ with $\tau_1(s)\le\pi/4$ for every
+$s$, and $\tau_1(1)<\pi/4$. Then
 \[
   |T|\ \le\ A_R^\ast-\tfrac3{10}\,\|H-H_\Sig\|^2_{L^2(0,\pi)} ,
 \]
@@ -4864,10 +5252,46 @@ Lemma~\ref{lem:mirror} each cell met by the segment is mirror-anchored with para
 $\tau_1(s)\le\pi/4$. By Theorem~\ref{thm:mirroruniform}, $g(s):=Q(H_s)$ has
 $g''(s)\le-\tfrac35\|H-H_\Sig\|^2$ on each cell, $g$ is $C^1$ across cell boundaries as in
 Proposition~\ref{prop:beyond}, $g(0)=A_R^\ast$ and $g'(0)=0$; integrating,
-$Q(H)\le A_R^\ast-\tfrac3{10}\|H-H_\Sig\|^2$. Connectedness gives $M\le\tfrac12$
-(Theorem~\ref{thm:ceiling}), and (RC) gives $V=|N|$, so
-$|T|=|C_2|-2|N|=Q(H)$.
+$Q(H)\le A_R^\ast-\tfrac3{10}\|H-H_\Sig\|^2$.
+
+It remains to pass from $Q(H)$ to $|T|$, and this is where the earlier version of this proof
+wrote ``and (RC) gives $V=|N|$''. That is the inference Remark~\ref{rem:v13} retracted: (RC)
+gives injectivity and disjointness and nothing further (Theorems~\ref{thm:rc},
+\ref{thm:cross}, Remark~\ref{rem:v34}). The passage runs instead through $\mathcal D$, and
+the class of this theorem does sit inside it.
+
+Hypothesis (a) is the gauge, assumed. Hypothesis (b) is (RC), assumed, together with
+$(H+H'')_{\mathrm{ac}}\ge0$, which is convexity of the cap, and with $H'(0)=\tfrac12$ and
+$H'(\pi)=-\tfrac12$, which (RC) forces by Lemma~\ref{lem:bdry}. Hypothesis (c) is
+$c_y\le\tfrac12$, and it is supplied by the competitor rather than assumed: $T$ is a
+\emph{connected} ambidextrous moving sofa, so by Theorem~\ref{thm:ceiling} a corner point
+with $c_y(t_0)>\tfrac12$ would make $T$ omit an open vertical strip and lie entirely on one
+side of it, which it cannot, since it meets both arms of the hallway at $t_0$. Hypothesis (d)
+is the sign condition, and it is Lemma~\ref{lem:mirror}: on the mirror class
+$\tau_1+\tau_2=\tfrac\pi2$, so $\tau_1(1)<\pi/4$ gives $\tau_1<\tau_2$, and any fixed
+$T_\ast\in[\tau_1,\tau_2)$ has $\alpha_2>0$ on $[0,T_\ast]$ and $\alpha_1\ge0$ on
+$[T_\ast,\pi/2]$; that interval is nonempty precisely under the strict inequality, which is
+why $\tau_1(1)=\pi/4$ is excluded and $\tau_1(1)\le\pi/4$ would not do.
+
+So $H\in\mathcal D$ and the chain of Theorem~\ref{thm:final} applies verbatim:
+Proposition~\ref{prop:oneentry} gives (i) and (ii) of Proposition~\ref{prop:V} from (a) and
+(b); the first-capture step of Proposition~\ref{prop:convex} gives (iii) and its
+advancing-face step gives (v); \eqref{eq:seghyp} holds by Proposition~\ref{prop:seghyp}; and
+(iv) is the standing containment hypothesis of this theorem. Hence $V=|N|$. Finally (c) with
+Lemma~\ref{lem:ceiling} gives $U\subseteq\{y\le\tfrac12\}$ and $\rho U\subseteq\{y\ge\tfrac12\}$,
+so $|U\cap\rho U|=0$ and $|T|\le|C_2|-2|N|=|C_2|-2V=Q(H)$.
 \end{proof}
+
+\begin{remark}[What the reroute costs]\label{rem:v35}
+Two things, and they are worth stating rather than absorbing. Theorem~\ref{thm:mirrorstab} is
+now \textsc{conditional on containment}, the same label Theorems~\ref{thm:final}
+and~\ref{thm:QA} carry; its non-perturbative character --- no smallness of $H-H_\Sig$ --- is
+untouched, and so is every constant in it. And the boundary value $\tau_1=\pi/4$ leaves the
+class: at $\tau_1=\pi/4$ one has $\tau_2=\pi/4$ as well, so no $T_\ast$ meets (d), whose
+first clause is the strict $\alpha_2>0$. The gauged stadium at $L=1/(2\sqrt2)$ is exactly
+that case (Remark~\ref{rem:v24}), so the exclusion is not vacuous. Proposition~\ref{prop:ball}
+is unaffected: its proof gives $\tau_1<\beta+d=0.4397<\pi/4$, strictly.
+\end{remark}
 
 \begin{lemma}[The arm sandwich]\label{lem:sandwich}
 Suppose $0\le(H+H'')_{\mathrm{ac}}\le1$ on $(0,\pi)$, with atoms only at $\pi/2$. Then on
@@ -4990,8 +5414,10 @@ Rule~0: \textsc{proved}, with the assembly \textsc{verified}
 Let $r_0=\tfrac1{20}$. Every $\eta$ with $\eta(0)=\eta(\pi/2)=0$, satisfying the mirror
 condition, and with $\max(\|\eta\|_\infty,\|\eta'\|_\infty,\|\eta''\|_\infty)\le r_0$,
 gives $H=H_\Sig+\eta$ satisfying (RC), $M(H)<\tfrac12$, and the sign hypothesis of
-Theorem~\ref{thm:mirrorstab} along the entire segment $[H_\Sig,H]$. In particular the
-stability bound applies to every connected ambidextrous sofa with such cap data.
+Theorem~\ref{thm:mirrorstab} along the entire segment $[H_\Sig,H]$, with
+$\tau_1<\beta+d=0.4397<\pi/4$ strictly, as that theorem's endpoint clause requires. In
+particular the stability bound applies to every connected ambidextrous sofa with such cap
+data, on that theorem's containment hypothesis.
 \end{proposition}
 
 \begin{proof}
@@ -5028,8 +5454,10 @@ $\sin(2k\theta)$ shrinks like $k^{-2}$) remains a measurement.
 
 The hypotheses of Theorem~\ref{thm:mirrorstab} are non-perturbative: no smallness of
 $H-H_\Sig$ is assumed, and the class contains data as far from $\Sig$ as the mirror caps
-with $\tau_1$ anywhere in $[0,\pi/4]$. The binding smallness constraint that remains in
-$\mathcal D$ is (RC) alone.
+with $\tau_1$ anywhere in $[0,\pi/4)$ --- half-open, the endpoint $\tau_1=\pi/4$ being where
+hypothesis (d) has no admissible $T$ (Remark~\ref{rem:v35}). The binding smallness constraint
+that remains in $\mathcal D$ is (RC) alone, and the binding \emph{unproved} constraint is
+containment.
 
 The sign cell is the least structural part of $\mathcal D$. On a natural linear
 subclass it collapses to a single scalar inequality.
@@ -6216,7 +6644,42 @@ sense end to end: the two bracket monotonicities are derived from
 machinery rather than assumed (\verb|bracket_monotoneOn|,
 \verb|moment_bracket_antitoneOn|, \verb|moment_bracket_monotoneOn|), and
 \verb|rectangle_of_facets| carries the convexity step that turns the two facets into the
-rectangle. The near case of the bathtub inequality of Remark~\ref{rem:v24} is likewise
+rectangle.
+
+The fourth endpoint, the floor endpoint $x(t)$ of Remark~\ref{rem:v31}, is verified in the
+same sense, and the whole of it is monotonicity: the two identities behind
+$x=A+A_2\tan t$ are one line each over the Pythagorean relation
+(\verb|face1_bracket_decomp|, \verb|face1_slope_decomp|), and the four bracket bounds come
+from four applications of the mean-value machinery, two using the upper half of (b)
+($\rho_1\ge0$, the two monotonicities already present) and two the lower half
+($\rho_1\le1$, giving \verb|bracket_add_cos_antitoneOn| and
+\verb|moment_bracket_add_sin_monotoneOn|). Nothing is divided by $\cos t$ before $\cos t>0$
+is in hand: the bounds proved are $0\le H-1$ and $H-1\le\kappa\cos t$
+(\verb|face1_gap_bounds|), and the quotient appears only in \verb|face1_x_nonneg| and
+\verb|face1_x_le_kappa|, whose conjunction \verb|face1_x_mem_shadow| is the statement
+$x(t)\in[-\alpha_2(0),\kappa]$ that Remark~\ref{rem:v31} consumes. The removable singularity
+at $\pi/2$ is discharged rather than assumed away: \verb|face1_x_gap_le| gives
+$0\le\kappa-x(t)\le\cos t/(1+\sin t)$ and \verb|face1_x_tendsto| squeezes the limit, so the
+continuous extension takes the value $\kappa$. The note's integral form
+$\kappa-x=\sec t\int_t^{\pi/2}\rho_1\sin(s-t)$ is \emph{not} formalised; each of its signs is
+replaced by the monotonicity that carries it.
+
+The definiteness of $D_\tau$ (Proposition~\ref{prop:dstrict}) and the strictness step of
+Corollary~\ref{cor:uniq} are verified at the level of their scalar collections. The
+individual steps sit in \verb|Anchor.lean| and the assemblies in \verb|Proved.lean|:
+\verb|window_bound| and \verb|strictness_of_window| run the chain from the two inclusions
+$E_1\subseteq[0,T_\ast)\subseteq E_2$ to $q\equiv0$; \verb|dstrict_rangea| and
+\verb|dd_forces_zero| do the same for range~(a); and the sliver that range~(b) now covers is
+\verb|sliver_in_rangeb| (that $(1.5153,\pi/2)$ lies inside $\sigma\le\tfrac1{18}$),
+\verb|rangeb_trig|, \verb|rangeb_D_coeff|, \verb|rangeb_spec_coeff|,
+\verb|rangeb_short_poincare|, \verb|rangeb_a_coeff| and \verb|rangeb_P_coeff| for the four
+coefficients, and \verb|rangeb_definite|, \verb|sliver_definite| for the forcing. The two
+Poincar\'e inequalities and the identification of the equality case of the
+Dirichlet--Neumann one with the first mode are inputs throughout and enter as named
+hypotheses; the ball-arithmetic certificate of range~(c) is outside Lean, as is that of
+Theorem~\ref{thm:system}.
+
+The near case of the bathtub inequality of Remark~\ref{rem:v24} is likewise
 verified from its derivative (\verb|Lam_hasDerivAt|, \verb|Lam_nonneg_near|); what is
 \emph{not} formalised there is the bathtub optimisation itself, which is stated and proved
 only in the note. The second variation is partially formalised. Both decoupling inequalities of
