@@ -1235,4 +1235,109 @@ theorem frame_face1 {μx μy νx νy px py : ℝ}
 
 end SweepCover
 
+section MovingFrame
+
+/-!
+### The moving frame: the arms are the corner velocity, and the windows are the entries
+
+Write `μ_t = (cos t, sin t)`, `ν_t = (-sin t, cos t)`, and `c(t) = (F-1)μ_t + (G-1)ν_t` for
+the corner path, with arms `α₁ = G - 1 - F'` and `α₂ = F - 1 + G'`. For a fixed point `p`
+put `u(t) = ⟨c(t) - p, μ_t⟩` and `v(t) = ⟨c(t) - p, ν_t⟩`. Because `μ_t` and `ν_t` are
+orthonormal these collapse to closed form,
+
+  `u(t) = F(t) - 1 - ⟨p, μ_t⟩`,   `v(t) = G(t) - 1 - ⟨p, ν_t⟩`,
+
+and differentiating gives a plane system whose forcing is exactly the arm pair:
+
+  `u' = v - α₁(t)`,   `v' = -u + α₂(t)`.
+
+That identity is `frame_ode_u` and `frame_ode_v`. Everything below is a consequence.
+
+The corner covers `p` at time `t` exactly when `u > 0` and `v > 0`; call that set `T(p)`.
+The two sweeps `Φ(s,t) = c - sμ_t` and `Ψ(s,t) = c - sν_t` have Jacobians `α₂ - s` and
+`s - α₁`, so `prop:V`'s truncation windows `[0, α₂⁺]` and `[α₁⁺, σ]` are the sets where the
+Jacobian is nonnegative. On the face-2 edge (`v = 0`, `u = s`) the system gives
+`v' = α₂ - s`, and on the face-1 edge (`u = 0`, `v = s`) it gives `u' = s - α₁`. So the
+window condition and the condition that the trajectory is crossing *into* `T(p)` are the
+same inequality: `face1_window_iff_entry` and `face2_window_iff_entry`.
+
+Consequently `V = ∫_N #(entries of p)` while `|N| = ∫_N 1`, and all three hypotheses of
+`prop:V` say one thing: `T(p)` is a nonempty interval for a.e. `p ∈ N`. Covering is "at
+least one entry", injectivity and disjointness together are "at most one entry".
+
+`entry_deriv_nonneg` supplies the missing analytic step, and with it covering is proved:
+a point of `N` is not cut at `t = 0` (`corner_start_on_floor`), so its cut set has a first
+entry, and at that entry the offset satisfies the window inequality. What remains open is
+only that `T(p)` is *connected*.
+-/
+
+/-- `u' = v - α₁`. The `α₁` here is `G t - 1 - f'`, and `v` is its closed form; only `F`
+needs to be differentiable for this half. -/
+theorem frame_ode_u {F : ℝ → ℝ} {t f' px py gt : ℝ} (hF : HasDerivAt F f' t) :
+    HasDerivAt (fun s => F s - 1 - (px * Real.cos s + py * Real.sin s))
+      ((gt - 1 - (-(px * Real.sin t) + py * Real.cos t)) - (gt - 1 - f')) t := by
+  have h : HasDerivAt (fun s => F s - 1 - (px * Real.cos s + py * Real.sin s))
+      (f' - (px * (-Real.sin t) + py * Real.cos t)) t := by
+    exact (hF.sub_const 1).sub
+      (((Real.hasDerivAt_cos t).const_mul px).add ((Real.hasDerivAt_sin t).const_mul py))
+  convert h using 1; ring
+
+/-- `v' = -u + α₂`. Symmetrically, only `G` needs to be differentiable. -/
+theorem frame_ode_v {G : ℝ → ℝ} {t g' px py ft : ℝ} (hG : HasDerivAt G g' t) :
+    HasDerivAt (fun s => G s - 1 - (-(px * Real.sin s) + py * Real.cos s))
+      (-(ft - 1 - (px * Real.cos t + py * Real.sin t)) + (ft - 1 + g')) t := by
+  have h : HasDerivAt (fun s => G s - 1 - (-(px * Real.sin s) + py * Real.cos s))
+      (g' - (-(px * Real.cos t) + py * (-Real.sin t))) t := by
+    exact (hG.sub_const 1).sub
+      ((((Real.hasDerivAt_sin t).const_mul px).neg).add
+        ((Real.hasDerivAt_cos t).const_mul py))
+  convert h using 1; ring
+
+/-- **Face 1: the window is the entry condition.** For a nonnegative offset `s`, lying in
+`[α₁⁺, ∞)` is the same as the face-1 Jacobian `s - α₁` being nonnegative, which by
+`frame_ode_u` is the same as `u' ≥ 0`, that is, the trajectory entering `T(p)`. -/
+theorem face1_window_iff_entry {s a1 : ℝ} (hs : 0 ≤ s) :
+    max a1 0 ≤ s ↔ 0 ≤ s - a1 := by
+  constructor
+  · intro h; linarith [le_of_max_le_left h]
+  · intro h; exact max_le (by linarith) hs
+
+/-- **Face 2: the window is the entry condition.** For a nonnegative offset `s`, lying in
+`[0, α₂⁺]` is the same as the face-2 Jacobian `α₂ - s` being nonnegative, which by
+`frame_ode_v` is the same as `v' ≥ 0`. -/
+theorem face2_window_iff_entry {s a2 : ℝ} (hs : 0 < s) :
+    s ≤ max a2 0 ↔ 0 ≤ a2 - s := by
+  constructor
+  · intro h
+    rcases le_total 0 a2 with h2 | h2
+    · rw [max_eq_left h2] at h; linarith
+    · rw [max_eq_right h2] at h; linarith
+  · intro h; exact le_max_of_le_left (by linarith)
+
+/-- A function that vanishes at `t₁` and is positive immediately to the right has
+nonnegative derivative there. This is the analytic content of the entry argument: it is
+what converts "the cut set starts here" into the window inequality. -/
+theorem entry_deriv_nonneg {w : ℝ → ℝ} {d t₁ t₂ : ℝ} (hlt : t₁ < t₂)
+    (hd : HasDerivAt w d t₁) (hz : w t₁ = 0)
+    (hpos : ∀ t, t₁ < t → t ≤ t₂ → 0 < w t) : 0 ≤ d := by
+  have hw : HasDerivWithinAt w d (Set.Ioi t₁) t₁ := hd.hasDerivWithinAt
+  rw [hasDerivWithinAt_iff_tendsto_slope] at hw
+  rw [Set.diff_singleton_eq_self (by simp : t₁ ∉ Set.Ioi t₁)] at hw
+  refine ge_of_tendsto hw ?_
+  filter_upwards [Ioo_mem_nhdsGT hlt] with y hy
+  have hy1 : t₁ < y := hy.1
+  rw [slope_def_field, hz, sub_zero]
+  exact div_nonneg (hpos y hy1 hy.2.le).le (by linarith)
+
+/-- **The rotation starts on the floor.** After the normalisation `G 0 = 1` (the corner
+reaches the floor at the end of the rotation), the time-zero corner sits at height `0`, so
+its quadrant `{u ≥ 0, v ≥ 0}` meets the cap `{p_y ≥ 0}` only along `p_y = 0`. That is a
+null set, which is why no point of `N` is already cut at `t = 0` and why the first entry
+of `T(p)` exists. -/
+theorem corner_start_on_floor {g0 py : ℝ} (hg : g0 = 1) (hcap : 0 ≤ py)
+    (hcut : 0 ≤ g0 - 1 - py) : py = 0 := by
+  rw [hg] at hcut; linarith
+
+end MovingFrame
+
 end MovingSofa

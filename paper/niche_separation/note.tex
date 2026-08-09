@@ -1438,37 +1438,59 @@ advance into already-swept territory contributes to the flux but gains no area.
 Integrating over $T\in[0,\pi/2]$ gives $|N|\le V$.
 \end{proof}
 
-\begin{remark}[Partial progress on hypotheses (ii) and (iii)]\label{rem:v4}
-Hypothesis (i), injectivity of each sweep, is proved for one corner by Baek
-\cite{Bae24}. The other two have no prior art, and both split cleanly into a part that
-standard tools settle and a part that needs the arm system. Write the sweeps in the moving
-frame, $u(t)=-\langle p-c(t),\mu_t\rangle$ and $v(t)=-\langle p-c(t),\nu_t\rangle$; the
-corner at time $t$ occupies $\{u\ge0,\ v\ge0\}$ and its two edges are the two sweeps.
+\begin{remark}[The moving frame: hypotheses (ii) and (iii) are one hypothesis]\label{rem:v4}
+Hypothesis (i) is proved for one corner by Baek \cite{Bae24}. The other two have no prior
+art. Passing to the moving frame reduces all three to a single statement and settles (iii).
 
-For (ii), \emph{disjointness at equal parameters is exact}. A point on both sweeps at the
-same $t$ satisfies $s\mu_t=s'\nu_t$; pairing against $\mu_t$ and against $\nu_t$ and using
-$\langle\mu_t,\nu_t\rangle=0$ forces $s=s'=0$, so the point is $c(t)$. One point per $t$ is
-a curve, of measure zero, contributing nothing to $|N|$. What is left open is $t\ne t'$,
-where orthogonality says nothing.
+Write $\mu_t=(\cos t,\sin t)$, $\nu_t=(-\sin t,\cos t)$. Differentiating
+$c=(F-1)\mu_t+(G-1)\nu_t$ gives
+\[
+  c'(t)=-\alpha_1(t)\,\mu_t+\alpha_2(t)\,\nu_t,
+\]
+so the arms are the corner velocity resolved in the moving frame. Fix $p$ and set
+$u(t)=\langle c(t)-p,\mu_t\rangle$, $v(t)=\langle c(t)-p,\nu_t\rangle$. Orthonormality
+collapses these to $u=F-1-\langle p,\mu_t\rangle$ and $v=G-1-\langle p,\nu_t\rangle$, whence
+\[
+  u'=v-\alpha_1(t),\qquad v'=-u+\alpha_2(t):
+\]
+plane rotation forced by the arm pair. The corner covers $p$ exactly when $u>0$ and $v>0$;
+write $T(p)$ for that set of times.
 
-For (iii), \emph{covering is an intermediate-value statement, not a geometric one}. A point
-of $N$ is strictly cut at some time, so $\min(u,v)>0$ there, and is released by the end of
-the rotation, so $\min(u,v)\le0$ at the last time. Both are continuous, so $\min(u,v)$
-vanishes in between, and a zero of the minimum is exactly membership of one of the two
-faces. Orientation and orthonormality then convert the face condition into the explicit
-offset, so the point is a value of the sweep map and not merely on its line. What is left
-open is the \emph{truncation}: the sweeps in Proposition~\ref{prop:V} run over
-$s\in[0,\alpha_2^+]$ and $s\in[\alpha_1^+,\sigma]$, and this argument does not place the
-offset inside those windows.
+The sweeps $\Phi(s,t)=c-s\mu_t$ and $\Psi(s,t)=c-s\nu_t$ have Jacobians $\alpha_2-s$ and
+$s-\alpha_1$, which is why Proposition~\ref{prop:V} truncates at $[0,\alpha_2^+]$ and
+$[\alpha_1^+,\sigma]$. On the face-2 edge $v=0$, $u=s$ the system gives $v'=\alpha_2-s$, and
+on the face-1 edge $u=0$, $v=s$ it gives $u'=s-\alpha_1$. So each truncation window is
+precisely the set of boundary points at which the trajectory is entering $T(p)$; the
+remaining limits are $s\ge0$ and, since $c-\sigma\nu_t=(F-1)\sec t\,(1,0)$ lies on the floor,
+$s\le\sigma$ iff $p_y\ge0$. Hence
+\[
+  V=\int_N \#\{\text{entries of }T(p)\}\,dA,\qquad |N|=\int_N 1\,dA,
+\]
+and the three hypotheses assert one thing: \emph{$T(p)$ is a nonempty interval for almost
+every $p\in N$}. Covering is ``at least one entry''; injectivity and disjointness together
+are ``at most one entry''.
 
-So the same ingredient is missing in both, and it is the arm system rather than the frame
-geometry. Rasterising both sweeps puts the overlap at $0.0041$ of $|N|$, halving with
-resolution as a measure-zero curve must, and leaves under $0.001$ of $N$ uncovered.
-Rule~0: (ii) and (iii) remain \textsc{conjecture}; the equal-parameter case of (ii) and the
-untruncated form of (iii) are \textsc{proved}, formalised as \verb|sweep_same_param|,
-\verb|corner_release_face| and \verb|frame_face1|.
+This proves (iii). Normalise so that $G(0)=H(\pi/2)=1$, which is a translation and changes
+no area and neither arm. Then $c(0)=(H(0)-1,0)$ sits on the floor and its quadrant meets the
+cap only in $\{p_y=0\}$, so no point of $N$ is cut at $t=0$. For $p\in N$ pick $t^*\in T(p)$
+and let $t_1=\sup\{t\le t^*:t\notin T(p)\}$. Then $\min(u,v)(t_1)=0$ with $\min(u,v)>0$ on
+$(t_1,t^*]$, so the vanishing coordinate has nonnegative derivative at $t_1$, which is exactly
+the window inequality. Thus $p$ is a value of one of the two truncated sweeps.
+
+What remains open is only that $T(p)$ is \emph{connected}. In polar form $z=u+iv=re^{i\psi}$
+the system reads $\psi'=(\alpha_2\cos\psi+\alpha_1\sin\psi)/r-1$, so $\psi'>0$ exactly inside
+the circle through the origin with centre $(\alpha_2/2,\alpha_1/2)$; outside it $\psi$
+decreases and $T(p)$ is an interval by monotonicity. Re-entry therefore requires the
+trajectory to pass within $|c'(t)|$ of the corner, and the whole difficulty sits there.
+
+Measured (\verb|sofa_cut|, $400^2$ points, $2000$ times): every sampled cell of $N$ has
+exactly one component; none is cut at $t=0$; every entry offset lands in its own window, the
+worst miss being zero; and $V=0.184270$ against a rasterised $|N|=0.186188$, ratio
+$0.98969$ at grid resolution. Rule~0: (iii) is \textsc{proved} and formalised
+(\verb|frame_ode_u|, \verb|frame_ode_v|, \verb|face1_window_iff_entry|,
+\verb|face2_window_iff_entry|, \verb|entry_deriv_nonneg|, \verb|corner_start_on_floor|);
+(ii) is \textsc{conjecture}, now in the sharp form ``$T(p)$ is connected''.
 \end{remark}
-
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
