@@ -154,6 +154,44 @@ fn main() {
         println!("{:>6.2} {:>10.5} {:>10.5} {:>12.5} {:>12.5} {:>10.5} {:>7}",
                  l, v_int, n_cells as f64 * cell, sw_in as f64 * cell,
                  sw_out as f64 * cell, v_int - n_cells as f64 * cell, multi);
+
+        // ---- WHICH ENDPOINT ESCAPES ----------------------------------------------------
+        // Both sweeps end at X(th) - mu_th, the cap boundary point pulled one unit along
+        // its own normal: face 2 at s = alpha_2 with th = t + pi/2, face 1 at s = alpha_1
+        // with th = t.  The other ends are c(t) and the floor.  C2 is convex, so the whole
+        // sweep is contained as soon as its two endpoints are.  Report the worst excursion
+        // of each, as distance outside the cap, plus the identity error.
+        let mut worst_c = -1.0f64;      // c(t) outside the cap
+        let mut worst_x = -1.0f64;      // X(th) - mu_th outside the cap
+        let mut ident = 0.0f64;
+        let outside = |px: f64, py: f64| -> f64 {
+            let dx = (px.abs() - l).max(0.0);
+            let dy = py - 0.5;
+            (dx * dx + dy * dy).sqrt() - 0.5
+        };
+        for q in 0..nt {
+            let t = (q as f64 + 0.5) * dt;
+            let (mu, nu) = ((t.cos(), t.sin()), (-t.sin(), t.cos()));
+            let c = ((h(t, l) - 1.0) * mu.0 + (h(t + P2, l) - 1.0) * nu.0,
+                     (h(t, l) - 1.0) * mu.1 + (h(t + P2, l) - 1.0) * nu.1);
+            worst_c = worst_c.max(outside(c.0, c.1));
+            for &th in [t, t + P2].iter() {
+                let (mx, my) = (th.cos(), th.sin());
+                let (nx, ny) = (-th.sin(), th.cos());
+                let xx = h(th, l) * mx + hp(th, l) * nx - mx;
+                let xy = h(th, l) * my + hp(th, l) * ny - my;
+                worst_x = worst_x.max(outside(xx, xy));
+            }
+            // identity: Phi(alpha_2, t) = X(t + pi/2) - mu_{t + pi/2}
+            let a2 = 2.0 * l * t.cos() - 0.5;
+            let (px, py) = (c.0 - a2 * mu.0, c.1 - a2 * mu.1);
+            let ps = t + P2;
+            let (qx, qy) = (h(ps, l) * ps.cos() + hp(ps, l) * (-ps.sin()) - ps.cos(),
+                            h(ps, l) * ps.sin() + hp(ps, l) * ps.cos() - ps.sin());
+            ident = ident.max((px - qx).abs().max((py - qy).abs()));
+        }
+        println!("       endpoint test: worst c(t) outside {:+.5}, worst X-mu outside {:+.5}, identity err {:.1e}",
+                 worst_c, worst_x, ident);
     }
 
     println!("\n  A nonzero 'sweep out' column with V - |N| tracking it is the refutation:");

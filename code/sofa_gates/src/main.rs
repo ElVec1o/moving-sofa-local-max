@@ -42,7 +42,7 @@ const RUST_BINS: &[(&str, &[&str])] = &[
     ("sofa_cert", &["1024"]),
     ("tail_schur", &["256", "32"]),
     ("sofa_sweep", &[]),
-    ("sofa_cut", &["400", "2000"]),
+    ("sofa_cut", &["1400", "3000"]),
     ("sofa_stadium", &["700", "2500"]),
 ];
 

@@ -1726,4 +1726,126 @@ theorem sweep1_jacobian (a1 a2 s t : ℝ) :
 
 end CurvatureBound
 
+
+section Containment
+
+/-!
+### Where the sweeps end, and what containment really needs
+
+`prop:V` needs the truncated sweeps to lie in `C₂`; `rem:v6` shows that does not follow from
+its three hypotheses. This section locates the obstruction exactly.
+
+Both sweeps end, at the truncation limit that the Jacobian sign picks out, at the *same kind
+of point*. On face 2 at `s = α₂`, using `μ_t = -ν_ψ` and `ν_t = μ_ψ` with `ψ = t + π/2`,
+
+  `Φ(α₂,t) = -H'(ψ)μ_t + (H(ψ)-1)ν_t = (H(ψ)-1)μ_ψ + H'(ψ)ν_ψ = X(ψ) - μ_ψ`,
+
+where `X(θ) = H(θ)μ_θ + H'(θ)ν_θ` is the boundary point of the cap with outer normal `μ_θ`.
+So the inner end of the sweep is the boundary point pulled one unit along its own normal: a
+point of the inner parallel body. Face 1 at `s = α₁` gives `X(t) - μ_t`, the same form.
+`face2_endpoint` and `face1_endpoint` are those identities.
+
+The other ends are `c(t)` on face 2 (`s = 0`) and the floor on face 1 (`s = σ`). Since `C₂`
+is convex, a sweep segment lies in `C₂` as soon as both its endpoints do
+(`sweep_subset_of_endpoints`). Measurement (`sofa_stadium`) says `X(θ) - μ_θ` never leaves
+the cap, on the counterexample family as well as on `Σ`, while `c(t)` does leave it exactly
+when the counterexample bites. So the missing hypothesis is not about sweeps at all:
+
+  **the corner path `c(t)` stays in `C₂`.**
+
+That is a statement about one curve rather than two two-parameter families, and it is open.
+-/
+
+/-- **Face-2 inner endpoint.** `Φ(α₂,t) = X(t+π/2) - μ_{t+π/2}`, componentwise, where `g`
+and `gp` are `H` and `H'` at `t + π/2`. The `f`-dependence cancels: the endpoint does not
+see `H(t)` at all. -/
+theorem face2_endpoint (f g gp t : ℝ) :
+    ((f - 1) * Real.cos t - (g - 1) * Real.sin t - (f - 1 + gp) * Real.cos t
+      = g * Real.cos (t + Real.pi / 2) - gp * Real.sin (t + Real.pi / 2)
+        - Real.cos (t + Real.pi / 2))
+    ∧ ((f - 1) * Real.sin t + (g - 1) * Real.cos t - (f - 1 + gp) * Real.sin t
+      = g * Real.sin (t + Real.pi / 2) + gp * Real.cos (t + Real.pi / 2)
+        - Real.sin (t + Real.pi / 2)) := by
+  rw [Real.cos_add, Real.sin_add, Real.cos_pi_div_two, Real.sin_pi_div_two]
+  constructor <;> ring
+
+/-- **Face-1 inner endpoint.** `Ψ(α₁,t) = X(t) - μ_t`, the same form one quarter turn back:
+here the `g`-dependence is what cancels. -/
+theorem face1_endpoint (f g fp t : ℝ) :
+    ((f - 1) * Real.cos t - (g - 1) * Real.sin t + (g - 1 - fp) * Real.sin t
+      = f * Real.cos t - fp * Real.sin t - Real.cos t)
+    ∧ ((f - 1) * Real.sin t + (g - 1) * Real.cos t - (g - 1 - fp) * Real.cos t
+      = f * Real.sin t + fp * Real.cos t - Real.sin t) := by
+  constructor <;> ring
+
+/-- **The convexity reduction.** A sweep segment lies in the cap as soon as its two endpoints
+do. This is what turns containment of two two-parameter families into a statement about the
+corner path and the inner parallel body. -/
+theorem sweep_subset_of_endpoints {C : Set (ℝ × ℝ)} (hC : Convex ℝ C) {p q : ℝ × ℝ}
+    (hp : p ∈ C) (hq : q ∈ C) : segment ℝ p q ⊆ C := hC.segment_subset hp hq
+
+end Containment
+
+section Piecewise
+
+/-!
+### Repairing the regression: the Sturm step across a jump in `r`
+
+`pos_between` assumes `W''` exists pointwise on the open window. `Σ` fails that: `r` jumps
+at `β`, inside `[0, π/2)`, so the lemma applies to a `C²` surrogate and never to `Σ`'s own
+`W`. The discarded route through `∫(r-1)W` tolerated jumps, an integral being indifferent to
+them, so moving to a pointwise Sturm argument was a regression in applicability.
+
+The repair keeps the Wronskian and drops the pointwise hypothesis. Only one consequence of
+`W'' + W = q < 0` is used: that `G = W'·sin(θ-x) - W·cos(θ-x)` is strictly decreasing. That
+survives a jump, because `G` stays continuous there (only `W''` jumps, not `W'`), and strict
+antitonicity glues across a shared endpoint (`strictAntiOn_glue`). So `Σ`'s window is handled
+by proving `G` decreasing on each smooth phase and gluing, and
+`pos_between_of_strictAnti` takes the glued statement as its hypothesis.
+-/
+
+/-- Strict antitonicity glues across a shared endpoint. Applied at the jumps of `r`, this is
+what lets the Sturm step run on a window that is only piecewise smooth. -/
+theorem strictAntiOn_glue {f : ℝ → ℝ} {a b c : ℝ}
+    (h1 : StrictAntiOn f (Set.Icc a b)) (h2 : StrictAntiOn f (Set.Icc b c)) :
+    StrictAntiOn f (Set.Icc a c) := by
+  intro p hp r hr hpr
+  rcases le_total r b with hrb | hrb
+  · exact h1 ⟨hp.1, le_trans hpr.le hrb⟩ ⟨hr.1, hrb⟩ hpr
+  · rcases le_total b p with hbp | hbp
+    · exact h2 ⟨hbp, hp.2⟩ ⟨le_trans hbp hpr.le, hr.2⟩ hpr
+    · rcases eq_or_lt_of_le hbp with hb | hb
+      · exact hb ▸ h2 ⟨le_rfl, le_trans hrb hr.2⟩ ⟨hrb, hr.2⟩ (hb ▸ hpr)
+      · have e1 : f b < f p := h1 ⟨hp.1, hbp⟩ ⟨le_trans hp.1 hbp, le_rfl⟩ hb
+        rcases eq_or_lt_of_le hrb with hc | hc
+        · rw [← hc]; exact e1
+        · have e2 : f r < f b := h2 ⟨le_rfl, le_trans hrb hr.2⟩ ⟨hrb, hr.2⟩ hc
+          linarith
+
+/-- **The Sturm step, with the pointwise hypothesis removed.** Only strict antitonicity of
+the Wronskian is used, and that glues across jumps of `r`. `W` need be differentiable only
+on the window, and continuous globally, both of which `Σ` satisfies on `[0, π/2)`. -/
+theorem pos_between_of_strictAnti {W W1 : ℝ → ℝ} {x z : ℝ} (hxz : x < z)
+    (hlen : z - x < Real.pi) (hWc : Continuous W)
+    (hW : ∀ t ∈ Set.Icc x z, HasDerivAt W (W1 t) t)
+    (hanti : StrictAntiOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+      (Set.Icc x z))
+    (hx : 0 < W x) (hz : 0 < W z) : ∀ t ∈ Set.Ioo x z, 0 < W t := by
+  intro y hy
+  by_contra hcon
+  push_neg at hcon
+  obtain ⟨t₁, h1, h2, hz1, hp⟩ := exists_first_entry hy.2 hWc hcon hz
+  have hxt : x < t₁ := lt_of_lt_of_le hy.1 h1
+  have hmem : t₁ ∈ Set.Icc x z := ⟨hxt.le, h2.le⟩
+  have hh := hanti ⟨le_rfl, hxz.le⟩ hmem hxt
+  simp only [sub_self, Real.sin_zero, Real.cos_zero, mul_zero, mul_one, zero_sub,
+    hz1, zero_mul, sub_zero] at hh
+  have hsb : 0 < Real.sin (t₁ - x) :=
+    Real.sin_pos_of_pos_of_lt_pi (by linarith) (by linarith)
+  have hnegd : W1 t₁ < 0 := by nlinarith [hh, hsb, hx]
+  have hge := entry_deriv_nonneg h2 (hW t₁ hmem) hz1 hp
+  linarith
+
+end Piecewise
+
 end MovingSofa

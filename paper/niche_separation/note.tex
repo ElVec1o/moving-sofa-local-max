@@ -1500,8 +1500,12 @@ trajectory to pass within $|c'(t)|$ of the corner, and the whole difficulty sits
 
 Measured (\verb|sofa_cut|, $400^2$ points, $2000$ times): every sampled cell of $N$ has
 exactly one component; none is cut at $t=0$; every entry offset lands in its own window, the
-worst miss being zero; and $V=0.184270$ against a rasterised $|N|=0.186188$, ratio
-$0.98969$ at grid resolution. Rule~0: (iii) is \textsc{verified}
+worst miss being zero; and a rasterised $|N|=0.184506$ against $V=0.184616$ from the same
+run, consistent with Proposition~\ref{prop:reynolds} and approaching the accurate
+$V=0.1841931\ldots$ of Remark~\ref{rem:V} from above. The raster converges to $|N|$ from
+above, so coarser grids invert $V\ge|N|$; \verb|sofa_cut| now halts on that rather than
+quoting a ratio, since a measured violation of a proved inequality is always an instrument
+error. Rule~0: (iii) is \textsc{verified}
 (\verb|frame_ode_u|, \verb|frame_ode_v|, \verb|face1_window_iff_entry|,
 \verb|face2_window_iff_entry|, \verb|entry_deriv_nonneg|, \verb|corner_start_on_floor|);
 (ii) is \textsc{conjecture}, now in the sharp form ``$T(p)$ is connected''.
@@ -1609,13 +1613,29 @@ orders of magnitude smaller. The degenerate version is the disc of radius $\tfra
 which $N=\emptyset$ and all three hypotheses hold vacuously while $\eqref{eq:V}$ returns
 $(2-\pi)/8=-0.1427$, a negative area.
 
-So the missing ingredient is containment of the truncated sweeps in $C_2$, which the note
-supplies for face~1 at $\Sig$ (Remark~\ref{rem:cap}, Propositions~\ref{prop:mono}
-and~\ref{prop:W}) and nowhere for face~2. For $\Sig$ itself the escaping mass measures $0$,
-so $V(\Sig)=|N(\Sig)|$ is unaffected; what is refuted is the generality. Rule~0: the claim
-that the three hypotheses discharge Proposition~\ref{prop:V} for every cap with $r<1$ is
-\textsc{false}, and the containment statement is \textsc{conjecture} for $\Sig$ pending a
-proof for face~2.
+The missing ingredient is containment of the truncated sweeps in $C_2$, and it localises to a
+single curve. Both sweeps end, at the truncation limit the Jacobian sign picks out, at the
+same kind of point: writing $X(\theta)=H\mu_\theta+H'\nu_\theta$ for the boundary point of
+the cap with outer normal $\mu_\theta$, and using $\mu_t=-\nu_\psi$, $\nu_t=\mu_\psi$ with
+$\psi=t+\pi/2$,
+\[
+  \Phi(\alpha_2,t)=-H'(\psi)\mu_t+(H(\psi)-1)\nu_t=X(\psi)-\mu_\psi ,
+  \qquad \Psi(\alpha_1,t)=X(t)-\mu_t .
+\]
+So each sweep runs from a point of the inner parallel body to either $c(t)$ (face~2, $s=0$)
+or the floor (face~1, $s=\sigma$). Since $C_2$ is convex, a sweep lies in $C_2$ as soon as
+its two endpoints do. Measured on the family above, $X(\theta)-\mu_\theta$ never leaves the
+cap at any $L$, while $c(t)$ leaves it by $0.09289$ at $L=1.30$ and by $0.29289$ at $L=1.50$,
+and stays inside at $L=1.10$ where the discrepancy vanishes. The escaping endpoint is the
+corner path itself, so the hypothesis to add is
+\[
+  c(t)\in C_2 \quad\text{for all } t\in[0,\pi/2],
+\]
+a statement about one curve rather than two two-parameter families. Rule~0: the claim that
+the three hypotheses discharge Proposition~\ref{prop:V} for every cap with $r<1$ is
+\textsc{false}; the endpoint identities are \textsc{verified}
+(\verb|face2_endpoint|, \verb|face1_endpoint|, \verb|sweep_subset_of_endpoints|); and
+$c(t)\in C_2$ is \textsc{conjecture} for $\Sig$.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which

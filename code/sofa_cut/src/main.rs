@@ -66,10 +66,15 @@ fn r_ac(x: f64) -> f64 {
 }
 
 /// H and H' on [0, pi], by quadrature of the closed-form radius plus the atom at pi/2.
-fn support(n: usize) -> (Vec<f64>, Vec<f64>, Vec<f64>) {
+fn support(n: usize) -> (Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>) {
     let mut x = Vec::with_capacity(n);
     let mut h = vec![0.0f64; n];
     let mut hp = vec![0.0f64; n];
+    // H' is two-sided at the atom.  alpha_1 uses H'(t) with t running UP TO pi/2, so it
+    // needs the LEFT derivative there; alpha_2 uses H'(t+pi/2) with the argument running
+    // DOWN TO pi/2, so it needs the RIGHT one.  Carrying only the right-hand array put the
+    // atom mass into alpha_1(pi/2) and shifted V by 7.7e-5.
+    let mut hpl = vec![0.0f64; n];
     let dx = std::f64::consts::PI / (n - 1) as f64;
     for i in 0..n { x.push(i as f64 * dx); }
     let (mut cs, mut cc_) = (0.0f64, 0.0f64);
@@ -85,8 +90,9 @@ fn support(n: usize) -> (Vec<f64>, Vec<f64>, Vec<f64>) {
         let base_hp = -xi.sin() + 0.5 * xi.cos() + (xi.cos() * cc_ + xi.sin() * cs);
         h[i] = base_h + if xi > p2() { ATOM * (xi - p2()).sin() } else { 0.0 };
         hp[i] = base_hp + if xi >= p2() { ATOM * (xi - p2()).cos() } else { 0.0 };
+        hpl[i] = base_hp + if xi > p2() { ATOM * (xi - p2()).cos() } else { 0.0 };
     }
-    (x, h, hp)
+    (x, h, hp, hpl)
 }
 
 fn interp(x: &[f64], y: &[f64], t: f64) -> f64 {
@@ -111,7 +117,7 @@ fn main() {
     println!("points of T(p) = {{t : u>0, v>0}}, so V = int_N #entries while |N| = int_N 1.");
     println!("All three hypotheses reduce to: T(p) is a nonempty interval.\n");
 
-    let (x, mut h, mut hp) = support(20001);
+    let (x, mut h, mut hp, mut hpl) = support(20001);
 
     // NORMALISATION.  sigma(t) = (F-1) tan t + G - 1 is the distance from the corner down to
     // the floor, so it stays finite only if the corner reaches the floor at t = pi/2, that is
@@ -121,7 +127,8 @@ fn main() {
     // changes no area and leaves BOTH arms untouched (alpha_1 and alpha_2 are the corner
     // velocity, hence translation invariant); only sigma moves, by -eps/cos t.
     let eps = interp(&x, &h, p2()) - 1.0;
-    for i in 0..x.len() { h[i] -= eps * x[i].sin(); hp[i] -= eps * x[i].cos(); }
+    for i in 0..x.len() { h[i] -= eps * x[i].sin(); hp[i] -= eps * x[i].cos();
+                          hpl[i] -= eps * x[i].cos(); }
     println!("  H(pi/2) - 1 before normalising   {:.3e}", eps);
 
     // ---- the frames, and V from prop:V's own integrand ------------------------------------
@@ -134,7 +141,7 @@ fn main() {
         let t = q as f64 * dt;
         let f = interp(&x, &h, t);
         let g = interp(&x, &h, t + p2());
-        let fp = interp(&x, &hp, t);
+        let fp = interp(&x, &hpl, t);
         let gp = interp(&x, &hp, t + p2());
         let a1 = g - 1.0 - fp;
         let a2 = f - 1.0 + gp;
@@ -180,8 +187,14 @@ fn main() {
         let th = k as f64 / (ncap - 1) as f64 * std::f64::consts::PI;
         (th.cos(), th.sin(), interp(&x, &h, th))
     }).collect();
+    // C2 = C n rho C with rho(x,y) = (x, 1-y).  Testing only the upper-half constraints
+    // gives C n {y >= 0}, which is a strictly larger region: for Sigma it over-counts by
+    // 0.156 of area.  No cut cell of Sigma falls in the difference, so |N| was unaffected,
+    // but the test was wrong and would bite on any perturbed cap.  The rho constraints
+    // imply py >= 0 on their own, via the theta = pi/2 one.
     let in_cap = |px: f64, py: f64| -> bool {
-        py >= 0.0 && cap.iter().all(|&(ex, ey, hh)| px * ex + py * ey <= hh)
+        cap.iter().all(|&(ex, ey, hh)| px * ex + py * ey <= hh
+                                    && px * ex + (1.0 - py) * ey <= hh)
     };
 
     // ---- the W picture ---------------------------------------------------------------------
@@ -287,6 +300,14 @@ fn main() {
 
     let area_n = n_cells as f64 * cell;
     println!("\n  |N| rasterised                   {:.6}", area_n);
+    // prop:reynolds proves V >= |N| for every admissible H, so a measurement the other way
+    // is an instrument error and never a result.  It was printed once without being
+    // flagged: the raster converges to |N| FROM ABOVE, so a coarse grid inverts the
+    // inequality.  Halt on it rather than quote the ratio.
+    if area_n > v_int {
+        println!("  INSTRUMENT ERROR: |N| exceeds V, which prop:reynolds forbids.  The");
+        println!("  raster is too coarse; refine before reading any ratio below.");
+    }
     println!("  cells with T(p) nonempty         {}", n_cells);
     println!("\n  components of T(p)   cells        fraction");
     let mut mean = 0.0f64;
