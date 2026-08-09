@@ -1836,7 +1836,7 @@ and below $\pi/2$ needs it nonpositive. The atom supplies both. Its mass makes t
 cap a segment rather than a point, so the support inequality at $\psi=\pi/2$ holds with each
 one-sided derivative, and
 \[
-  H'(\pi/2^-)=-0.416457\le0\le0.750593=H'(\pi/2^+)
+  H'(\pi/2^-)=-\bigl(1-\tfrac23a_1\bigr)\le0\le 2a_1-1=H'(\pi/2^+)
 \]
 gives one comparison for each side, the two differing by exactly the atom mass.
 
@@ -2135,6 +2135,54 @@ So one of the three constants is closed in exact form. What remains are the Lips
 of the constraint family in $\eta$ and $\Sig$'s far margin, both still measurements.
 
 Rule~0: \verb|degeneration_rate|, \verb|sigma_rate| and \verb|rate_pos| are \textsc{verified}.
+\end{remark}
+
+\begin{remark}[Retraction: the affine margin is a reformulation, not a weakening]\label{rem:v23}
+Remark~\ref{rem:v17} is withdrawn in its stated form, for two independent reasons.
+
+First, the shrinks are prescribed at the wrong end. The face-2 window is $[0,\alpha_2^+]$, and
+by Remark~\ref{rem:v6} the sweep is at $c(t)$ when $s=0$ and at $X(t+\pi/2)-\mu$ when
+$s=\alpha_2$. Shrinking to $[0,\alpha_2-\delta]$ removes the second endpoint, which
+Remark~\ref{rem:v6} measures as never leaving the cap, and retains the first, which is the one
+that escapes. Rasterising the shrunken sweep on the stadium with $\delta$ set to the exact
+excursion returns the escaping mass unchanged. The correct cut is $[\delta,\alpha_2^+]$, and
+the formula $\tfrac12((\alpha_2-\delta)^+)^2$ printed in that remark is in fact the integral
+over $[\delta,\alpha_2]$: the arithmetic was right and the prose described the opposite
+construction.
+
+Second, and fatally for the intended use, no nontrivial affine $\delta$ exists. The excursion
+$E$ is nonnegative everywhere on the admissible class, because the gauge contacts of
+Remark~\ref{rem:v19} are identically active, and $E(\Sig)=0$. An affine $\delta$ with
+$\delta\ge E$ and $\delta(\Sig)=0$ restricts on any two-sided line through $\Sig$ to
+$\delta(s)=ms$ with $ms\ge0$ for both signs of $s$, forcing $m=0$, hence $\delta\equiv0$ and
+$E\equiv0$. So an affine margin exists exactly when containment already holds, and the claim
+that the bound ``degrades gracefully where containment fails'' is false.
+
+Rule~0: Remark~\ref{rem:v17} is \textsc{false} as stated; the construction is a
+\textsc{reformulation} of containment rather than a weakening of it. Remarks~\ref{rem:v18}
+and~\ref{rem:v19} are arguments about a $\delta$ that cannot be nonzero, so their role is
+reduced to the contact computation itself, which stands. Remark~\ref{rem:v16}, the inner
+functional, is unaffected: it needs no $\delta$.
+\end{remark}
+
+\begin{remark}[The floor direction is closed on $\mathcal D$]\label{rem:v24}
+A referee check supplies more than the note claimed. On $\mathcal D$ the corner never dips
+below the floor, and this is proved rather than measured. On $[0,\beta)$ one has
+$c_y'=-\alpha_1\sin t+\alpha_2\cos t>0$; on $[\beta,\pi/2-\beta]$ the identity
+$\sigma-\alpha_1=-\sec t\int_t^{\pi/2}(r-1)\cos s\,ds$ together with $r\le1$ gives
+$\sigma\ge\alpha_1\ge0$; and on the last phase $c_y'\le0$ with $c_y(\pi/2)=0$. So $c_y\ge0$
+throughout, and the direction $\psi=-\pi/2$, which Remark~\ref{rem:v10} identified as the
+binding one, is closed on the whole class.
+
+Also, the stadium family is excluded from $\mathcal D$ outright: hypothesis (c),
+$c_y\le\tfrac12$, forces $L\le\sqrt2/2$ on it, well below the escape threshold
+$(1+\sqrt2)/2$. The counterexample of Remark~\ref{rem:v6} therefore never entered the class,
+which is why it could not have been a counterexample to Theorem~\ref{thm:final} itself, only
+to Proposition~\ref{prop:V} stated without containment.
+
+Rule~0: \textsc{proved}, subject to the phase decomposition of $\Sig$'s class. What remains
+open is the reflected directions other than $\psi=-\pi/2$, still supported only by a
+$1440$-point scan.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
