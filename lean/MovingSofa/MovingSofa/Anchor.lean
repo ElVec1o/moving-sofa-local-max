@@ -2899,4 +2899,83 @@ theorem density_ge_moment {I M : ℝ} (h : M ≤ I) (hM : M = 1/2) : 1/2 ≤ I :
 
 end ReflectedHalf
 
+
+section BracketIdentities
+
+/-!
+### The two exact identities behind the reflected half
+
+The proof of `rem:v29` rests on two identities for `c_x`. Both come from one bracket whose
+derivative is the curvature deficit against a trig factor.
+
+Put `A(t) = (F(t) - 1)cos t - F'(t) sin t`. Differentiating and using `F + F'' = r`,
+
+  `A'(t) = -(F - 1 + F'')sin t = (1 - r(t))·sin t = ρ₁(t) sin t`,
+
+so `A` increases wherever the deficit is positive (`bracket_deriv`). The corner's abscissa is
+this bracket corrected by one arm, `c_x = A - α₁ sin t` (`cx_from_bracket`), which is pure
+algebra once `α₁ = G - 1 - F'` is substituted. The fundamental theorem then gives
+
+  `κ - c_x(t) = α₁(t) sin t + ∫_t^{π/2} ρ₁ sin`,   `κ = A(π/2) = -H'(π/2⁻)`,
+
+and the mirror bracket gives the companion identity for `c_x + α₂(0)`. Both are exact; no
+inequality has been used yet, which is why the same identities serve both branches of the
+argument.
+
+The moment identity comes from the other bracket. `A₂(t) = (F - 1)sin t + F' cos t` has
+`A₂' = -ρ₁ cos t`, with `A₂(0) = H'(0)` and `A₂(π/2) = H(π/2) - 1 = 0`, so
+`∫_0^{π/2} ρ₁ cos = H'(0)`, which is `1/2` under hypothesis (b) (`moment_from_bracket`).
+-/
+
+/-- The bracket's derivative is the curvature deficit times `sin`. This is the identity the
+whole reflected-half argument is built on. -/
+theorem bracket_deriv {F F' F'' : ℝ → ℝ} {t r : ℝ}
+    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+    (hr : r = F t + F'' t) :
+    HasDerivAt (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s)
+      ((1 - r) * Real.sin t) t := by
+  have hc : HasDerivAt (fun s => (F s - 1) * Real.cos s)
+      (F' t * Real.cos t + (F t - 1) * (-Real.sin t)) t :=
+    ((h1 t).sub_const 1).mul (Real.hasDerivAt_cos t)
+  have hs : HasDerivAt (fun s => F' s * Real.sin s)
+      (F'' t * Real.sin t + F' t * Real.cos t) t :=
+    (h2 t).mul (Real.hasDerivAt_sin t)
+  have h := hc.sub hs
+  have e : (1 - r) * Real.sin t
+      = F' t * Real.cos t + (F t - 1) * (-Real.sin t)
+        - (F'' t * Real.sin t + F' t * Real.cos t) := by rw [hr]; ring
+  rw [e]; exact h
+
+/-- The corner's abscissa is the bracket corrected by the first arm. Pure algebra. -/
+theorem cx_from_bracket (f g fp t : ℝ) :
+    (f - 1) * Real.cos t - (g - 1) * Real.sin t
+      = ((f - 1) * Real.cos t - fp * Real.sin t) - (g - 1 - fp) * Real.sin t := by ring
+
+/-- The companion bracket, whose endpoints give the moment identity: its derivative is minus
+the deficit times `cos`, it equals `H'(0)` at `0` and `H(π/2) - 1` at `π/2`. -/
+theorem moment_bracket_deriv {F F' F'' : ℝ → ℝ} {t r : ℝ}
+    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+    (hr : r = F t + F'' t) :
+    HasDerivAt (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
+      (-((1 - r) * Real.cos t)) t := by
+  have hs : HasDerivAt (fun s => (F s - 1) * Real.sin s)
+      (F' t * Real.sin t + (F t - 1) * Real.cos t) t :=
+    ((h1 t).sub_const 1).mul (Real.hasDerivAt_sin t)
+  have hc : HasDerivAt (fun s => F' s * Real.cos s)
+      (F'' t * Real.cos t + F' t * (-Real.sin t)) t :=
+    (h2 t).mul (Real.hasDerivAt_cos t)
+  have h := hs.add hc
+  have e : -((1 - r) * Real.cos t)
+      = F' t * Real.sin t + (F t - 1) * Real.cos t
+        + (F'' t * Real.cos t + F' t * (-Real.sin t)) := by rw [hr]; ring
+  rw [e]; exact h
+
+/-- The moment identity, from the endpoint values of the companion bracket: the integral of
+the deficit against `cos` is `H'(0)`, hence `1/2` under the boundary hypothesis. -/
+theorem moment_from_bracket {A0 Ahalf mom : ℝ} (hend : Ahalf - A0 = -mom)
+    (h0 : A0 = 1/2) (hhalf : Ahalf = 0) : mom = 1/2 := by
+  rw [h0, hhalf] at hend; linarith
+
+end BracketIdentities
+
 end MovingSofa
