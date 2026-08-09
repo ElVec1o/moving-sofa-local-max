@@ -781,14 +781,18 @@ $C_2=C\cap\rho C$, so \eqref{eq:V} needs the condition for \emph{two} sweeps at 
 with their disjointness and their covering $N$. Neither of the latter is a one-corner
 statement, and a literature sweep found no prior art for either. The honest split is
 therefore: injectivity of each sweep is \textsc{proved} elsewhere and needs only a transfer
-argument, while disjointness and covering are settled in Remarks~\ref{rem:v4}
-and~\ref{rem:v5} for any cap whose curvature radius stays below $1$ away from the atom.
-Proposition~\ref{prop:V} is therefore no longer taken on faith for $\Sig$.
+argument; disjointness and covering are settled in Remarks~\ref{rem:v4} and~\ref{rem:v5} for
+any cap whose curvature radius stays below $1$ away from the atom, but the three hypotheses
+are not sufficient for $\eqref{eq:V}$: a fourth, containment of the truncated sweeps in
+$C_2$, is needed and is open for face~2 (Remark~\ref{rem:v6}). That containment is the part
+of Proposition~\ref{prop:V} this note takes on faith.
 \end{remark}
 
 \begin{remark}[What is measured, and what it gives]\label{rem:V}
 For $\Sig$ the three hypotheses of Proposition~\ref{prop:V} are confirmed
-numerically and sharply, and are proved in Remarks~\ref{rem:v4} and~\ref{rem:v5}: the two sweeps have intersection area $0$ and leave
+numerically and sharply, and are proved in Remarks~\ref{rem:v4} and~\ref{rem:v5}, though
+they do not by themselves give \eqref{eq:V} (Remark~\ref{rem:v6}): the two sweeps have
+intersection area $0$ and leave
 $0$ of the niche uncovered, to the printing precision of the polygon oracle. The
 right-hand side of \eqref{eq:V}, evaluated with exact derivatives of
 SOL1/SOL5/SOL6 and Gauss--Legendre quadrature on each phase separately, is
@@ -852,10 +856,12 @@ one-corner argument must itself control, and it is localised on the phase where
 $\Sig$ degenerates. Establishing or refuting concavity of
 $|C_2|-2V$ is a Hessian computation on the space of support-function
 perturbations, and is not attempted here. The second half of the argument, that
-the three hypotheses of Proposition~\ref{prop:V} hold for competitors and not
-only for $\Sig$, now reduces to the single open condition $r<1$ away from the
-atom, which $\Sig$ satisfies with margin $0.161429$ and which therefore persists
-under small perturbations. So
+Proposition~\ref{prop:V} applies to competitors and not only to $\Sig$, splits
+in two. Its three stated hypotheses reduce, by Remarks~\ref{rem:v4}
+and~\ref{rem:v5}, to the open condition $r<1$ away from the atom, which $\Sig$
+satisfies with margin $0.161429$ and which therefore persists under small
+perturbations. The containment of Remark~\ref{rem:v6} does not follow from them
+and is open even for $\Sig$ on face~2. So
 \emph{optimality of $\Sig$ remains open}; what is new is that the upper bound is
 now tight and expressed entirely in convex-linear data, with a single explicitly
 computed term of the wrong sign.
@@ -1465,13 +1471,19 @@ $[\alpha_1^+,\sigma]$. On the face-2 edge $v=0$, $u=s$ the system gives $v'=\alp
 on the face-1 edge $u=0$, $v=s$ it gives $u'=s-\alpha_1$. So each truncation window is
 precisely the set of boundary points at which the trajectory is entering $T(p)$; the
 remaining limits are $s\ge0$ and, since $c-\sigma\nu_t=(F-1)\sec t\,(1,0)$ lies on the floor,
-$s\le\sigma$ iff $p_y\ge0$. Hence
+$s\le\sigma$ iff $p_y\ge0$. The area formula applied to the two truncated sweeps therefore
+gives
 \[
-  V=\int_N \#\{\text{entries of }T(p)\}\,dA,\qquad |N|=\int_N 1\,dA,
+  V=\int_{\R^2} \#\{\text{entries of }T(p)\}\,dA
+   =\int_N \#\{\text{entries}\}\,dA+\int_{\R^2\setminus C_2} \#\{\text{entries}\}\,dA ,
 \]
-and the three hypotheses assert one thing: \emph{$T(p)$ is a nonempty interval for almost
-every $p\in N$}. Covering is ``at least one entry''; injectivity and disjointness together
-are ``at most one entry''.
+while $|N|=\int_N 1\,dA$. So \emph{$T(p)$ is a nonempty interval for almost every $p\in N$}
+controls the first term only: it says covering is ``at least one entry'' and that
+injectivity and disjointness together are ``at most one entry''. It says nothing about the
+second term, which is the sweep mass that leaves the cap. Equality $V=|N|$ needs, in
+addition, a containment statement: \emph{the truncated sweeps lie in $C_2$}. That statement
+is not among the three hypotheses of Proposition~\ref{prop:V}, and Remark~\ref{rem:v6} shows
+it is not implied by them.
 
 This proves (iii). Normalise so that $G(0)=H(\pi/2)=1$, which is a translation and changes
 no area and neither arm. Then $c(0)=(H(0)-1,0)$ sits on the floor and its quadrant meets the
@@ -1523,8 +1535,9 @@ If $b-a\le\pi$, Wirtinger's inequality makes the right side nonpositive. If $r<1
 the left side is an integral of a product of two negative functions, hence positive. So
 every negative hump of $W$ has length exceeding $\pi$. A gap between two components of
 $\{W>0\}$ inside $[0,\pi/2)$ would be such a hump, of length below $\pi/2$; there is none.
-The same argument runs on $(\pi/2,\pi]$. Hence $T(p)$ is an interval and, with
-Remark~\ref{rem:v4}, all three hypotheses of Proposition~\ref{prop:V} hold.
+The same argument runs on $(\pi/2,\pi]$. Hence $T(p)$ is an interval, which by
+Remark~\ref{rem:v4} is hypothesis (ii) together with the injectivity half of (i). It is not
+enough for $V=|N|$: see Remark~\ref{rem:v6}.
 
 The hypothesis is $r<1$ away from the atom, and it holds for $\Sig$ with room:
 $\max r=0.838571$, a margin of $0.161429$ to the threshold (\verb|sofa_cut|). It is an open
@@ -1548,19 +1561,61 @@ phase is the constant $\tfrac12$ and the end phases vanish. The measured $0.8385
 sharper estimate of a quantity already known to lie below the threshold, not the reason it
 does.
 
-Rule~0: hypotheses (ii) and (iii) are \textsc{verified}, as are the steps to them
+Rule~0: hypothesis (ii) is \textsc{proved}, and (iii) in the form ``every point of $N$ is a
+value of one of the truncated sweeps'' is \textsc{proved}; the conclusion $V=|N|$ of
+Proposition~\ref{prop:V} does \emph{not} follow from them, by Remark~\ref{rem:v6}. The
+supporting steps are \textsc{verified}
 (\verb|arm_shift|, \verb|point_part_harmonic|, \verb|cut_set_ordConnected|,
 \verb|exists_first_entry|, \verb|covering_first_entry|, \verb|exit_deriv_nonneg|,
 \verb|negative_hump_impossible|, \verb|pos_between|, \verb|pos_set_ordConnected|), the
 curvature bound (\verb|curvature_lt_one|, \verb|curvature_lt_one'|) and the two sweep
 Jacobians that define the truncation windows (\verb|sweep2_jacobian|,
-\verb|sweep1_jacobian|). The one remaining \textsc{proved}-not-\textsc{verified} link is the
-instantiation of the area formula behind $V=\int_N\#\{\text{entries}\}$: its two
-problem-specific inputs, the Jacobian determinants and the injectivity that follows from
-$T(p)$ being an interval, are \textsc{verified}, and the formula itself is standard, but
-wiring them together needs a Lean definition of the cap and niche that this project does not
-yet have. What this settles is a hypothesis the note previously
-assumed; it is not a statement about the moving sofa problem itself.
+\verb|sweep1_jacobian|). Two caveats on those. The connectivity lemmas assume $W''$ exists
+pointwise on the open window, which $\Sig$ fails: $r$ jumps at $\beta$, inside $[0,\pi/2)$,
+so the lemmas apply to a $C^2$ surrogate and not to $\Sig$'s own $W$. The discarded route
+through $\int_a^b(r-1)W$ tolerates those jumps, an integral being indifferent to them, so
+the change to a pointwise Sturm argument was a regression in applicability. Restating the
+lemmas with $q$ a measure and $G$ monotone in the sense of bounded variation is the repair,
+and it is not done here.
+\end{remark}
+
+\begin{remark}[The containment gap, with a counterexample]\label{rem:v6}
+Proposition~\ref{prop:V} is false as stated: its three hypotheses do not imply
+$V=|N|$. Take the stadium cap
+\[
+  H(\theta)=\tfrac12+\tfrac12\sin\theta+L|\cos\theta|,\qquad \theta\in[0,\pi],
+\]
+the Minkowski sum of the disc of radius $\tfrac12$ centred $(0,\tfrac12)$ with the segment
+$[-L,L]\times\{0\}$. Then $r=H+H''=\tfrac12$ identically off $\theta=\pi/2$, where a single
+atom of mass $2L$ sits; $H(\pi/2)=1$, so the corner starts on the floor; the body is convex,
+symmetric about $y=\tfrac12$ and contained in the unit strip; and the arms are $\Sig$'s own
+forms $\alpha_1=2L\sin t-\tfrac12$, $\alpha_2=2L\cos t-\tfrac12$. Every hypothesis imposed in
+Remarks~\ref{rem:v4} and~\ref{rem:v5} holds, with $r$ far below the threshold.
+
+Rasterised (\verb|sofa_stadium|, $700^2$ points, $2500$ times), no sampled cell of $N$
+carries more than one component of $T(p)$ at any $L$ tested, so hypothesis (ii) holds and
+covering holds with multiplicity one. Nevertheless
+\[
+  \begin{array}{r|ccccc}
+    L & 1.10 & 1.20 & 1.30 & 1.40 & 1.50\\\hline
+    V & 1.03167 & 1.29455 & 1.58859 & 1.91386 & 2.27038\\
+    |N| & 1.03086 & 1.29407 & 1.54144 & 1.76743 & 1.98514\\
+    \text{sweep outside }C_2 & 0.00111 & 0.00116 & 0.05076 & 0.15221 & 0.29207
+  \end{array}
+\]
+At $L=1.30$ the discrepancy $V-|N|=0.04715$ is $3\%$ and is tracked by the sweep mass
+leaving the cap, $0.05076$; the raster noise, visible in the $L\le1.20$ columns, is two
+orders of magnitude smaller. The degenerate version is the disc of radius $\tfrac12$, for
+which $N=\emptyset$ and all three hypotheses hold vacuously while $\eqref{eq:V}$ returns
+$(2-\pi)/8=-0.1427$, a negative area.
+
+So the missing ingredient is containment of the truncated sweeps in $C_2$, which the note
+supplies for face~1 at $\Sig$ (Remark~\ref{rem:cap}, Propositions~\ref{prop:mono}
+and~\ref{prop:W}) and nowhere for face~2. For $\Sig$ itself the escaping mass measures $0$,
+so $V(\Sig)=|N(\Sig)|$ is unaffected; what is refuted is the generality. Rule~0: the claim
+that the three hypotheses discharge Proposition~\ref{prop:V} for every cap with $r<1$ is
+\textsc{false}, and the containment statement is \textsc{conjecture} for $\Sig$ pending a
+proof for face~2.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
@@ -4049,14 +4104,11 @@ and Cauchy--Schwarz would then require $\kappa^2+C^2\le1$, impossible for every 
 (\texttt{young\_route\_fails}). The cross term $-2\int_{E_1^-}Su$ has to be kept rather than
 bounded.
 
-Rule~0: the left half is \textsc{proved}, and so is the assembly, with the two
-semidefiniteness statements entering as hypotheses at the labels they carry. The
-qualification ``modulo Proposition~\ref{prop:V}'' that this line previously carried is
-discharged by Remarks~\ref{rem:v4} and~\ref{rem:v5}, at the cost of the standing hypothesis
-$r<1$ away from the atom. That hypothesis is now the weakest link in the chain, so by
-Rule~0 it is the label every statement downstream of Proposition~\ref{prop:V} inherits: each
-such statement holds for caps satisfying it, which includes $\Sig$ and a neighbourhood of
-$\Sig$, and is not asserted beyond that. The niche form's positive semidefiniteness for $\eta_K\ne0$ is \textsc{heuristic}: a
+Rule~0: the left half is \textsc{proved} modulo Proposition~\ref{prop:V}, and so is the
+assembly, with the two semidefiniteness statements entering as hypotheses at the labels they
+carry. Remarks~\ref{rem:v4} and~\ref{rem:v5} discharge hypotheses (ii) and (iii) but not
+Proposition~\ref{prop:V} itself, which by Remark~\ref{rem:v6} needs a containment statement
+those hypotheses do not supply. The qualification therefore stands. The niche form's positive semidefiniteness for $\eta_K\ne0$ is \textsc{heuristic}: a
 floating-point eigenvalue on a $32$-mode truncation, not a proof. A
 report that $D$ can be negative was issued from a computation using two of the three terms
 of Proposition~\ref{prop:V} and is withdrawn: the omitted term is the reach, positive and
