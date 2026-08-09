@@ -50,7 +50,8 @@ therefore assumed, and Theorem~\ref{thm:final} is conditional on it.
 (RC) is classical: by the dual of Blaschke's rolling theorem it says the cap slides
 freely inside a unit ball, up to the corridor facets. What is new is its use.
 
-For the functional $Q=|C_2|-2V$ we prove $Q(\Sig)=A_R^\ast$; that $\delta Q(\Sig)=0$, so
+For the functional $Q=|C_2|-2V$ we prove $Q(\Sig)=A_R^\ast$ on the same containment
+hypothesis (Theorem~\ref{thm:QA}, Remark~\ref{rem:QAgap}); that $\delta Q(\Sig)=0$, so
 Romik's ODE families are exactly the critical-point equations of $Q$, identically in his
 constants; and that $\delta^2Q<0$, with an explicit constant. Two Cauchy--Schwarz steps
 decouple the two halves of $[0,\pi]$ and reduce the second variation to a pair of
@@ -131,10 +132,13 @@ which is linear in $H$ and hence convex. It is classical, being the sliding-ball
 dual to Blaschke's rolling theorem (Remark~\ref{rem:rcclassical}); what is new is its use.
 Theorem~\ref{thm:rc} shows that (RC) implies all three injectivity conditions of the
 sweep, by reducing each to a forced harmonic oscillator whose kernel is non-negative
-precisely because the rotation angle is $\pi/2$; consequently $V=|N|$ and $Q$ is tight.
+precisely because the rotation angle is $\pi/2$. That is three of the four hypotheses of
+Proposition~\ref{prop:V}; the fourth, containment, is assumed, and with it $V=|N|$ and $Q$
+is tight.
 
 At $\Sig$ the three hypotheses of the concavity method hold exactly:
-$Q(\Sig)=A_R^\ast$ structurally, with no integral evaluated (Theorem~\ref{thm:QA});
+$Q(\Sig)=A_R^\ast$ structurally, with no integral evaluated, on that same containment
+hypothesis (Theorem~\ref{thm:QA}, Remark~\ref{rem:QAgap}), and to $50$ digits without it;
 $\delta Q(\Sig)=0$ identically in Romik's constants, so his ODE families \emph{are} the
 critical-point equations of $Q$ (Theorem~\ref{thm:el}); and $\delta^2Q<0$.
 
@@ -2166,13 +2170,68 @@ functional, is unaffected: it needs no $\delta$.
 \end{remark}
 
 \begin{remark}[The floor direction is closed on $\mathcal D$]\label{rem:v24}
-A referee check supplies more than the note claimed. On $\mathcal D$ the corner never dips
-below the floor, and this is proved rather than measured. On $[0,\beta)$ one has
-$c_y'=-\alpha_1\sin t+\alpha_2\cos t>0$; on $[\beta,\pi/2-\beta]$ the identity
-$\sigma-\alpha_1=-\sec t\int_t^{\pi/2}(r-1)\cos s\,ds$ together with $r\le1$ gives
-$\sigma\ge\alpha_1\ge0$; and on the last phase $c_y'\le0$ with $c_y(\pi/2)=0$. So $c_y\ge0$
-throughout, and the direction $\psi=-\pi/2$, which Remark~\ref{rem:v10} identified as the
-binding one, is closed on the whole class.
+On $\mathcal D$ the corner never dips below the floor: $c_y\ge0$ on $[0,\pi/2]$. The
+argument below replaces the one previously printed here, which split $[0,\pi/2]$ into
+$\Sig$'s three phases at $\beta$ and $\pi/2-\beta$ and therefore did not survive the repair
+of hypothesis (d) to its fixed-$T$ form (Remark~\ref{rem:v28}): on $\mathcal D$ there is no
+phase decomposition to appeal to, only the one crossing point $T$.
+
+Everything comes from the companion bracket $A_2(t)=(F-1)\sin t+F'\cos t$, the one behind
+the moment identity that Remark~\ref{rem:v29} uses. Its derivative is
+$A_2'=-\rho_1\cos t$ with $\rho_1=1-r_{ac}$, and
+$0\le\rho_1\le1$ by (b). Since $c_y=(F-1)\sin t+(G-1)\cos t$ and $\alpha_1=G-1-F'$ one has
+$c_y=\alpha_1\cos t+A_2$ identically, so with $A_2(\pi/2)=H(\pi/2)-1=0$, which is the gauge,
+\begin{equation}\label{eq:cybracket}
+  c_y(t)=\alpha_1(t)\cos t+\int_t^{\pi/2}\rho_1(s)\cos s\,ds ,
+\end{equation}
+and the same bracket at $t=0$ gives the moment identity
+\begin{equation}\label{eq:mom1}
+  \int_0^{\pi/2}\rho_1\cos\ =\ A_2(0)\ =\ H'(0)\ =\ \tfrac12
+\end{equation}
+by (a) and (b). Both are exact; no inequality has been used yet.
+
+\emph{On $[T,\pi/2]$}, (d) gives $\alpha_1\ge0$ and (b) gives $\rho_1\ge0$, so
+\eqref{eq:cybracket} is a sum of two nonnegative terms.
+
+\emph{On $[0,T]$}, (d) gives $\alpha_2>0$, so $\alpha_1'=\alpha_2+\rho_1\ge\rho_1$ by
+Proposition~\ref{prop:armsys}; with $\alpha_1(0)=-\tfrac12$ this integrates to
+$\alpha_1(t)\ge-\tfrac12+\int_0^t\rho_1$. Substituting into \eqref{eq:cybracket} and
+eliminating the tail by \eqref{eq:mom1}, $c_y(t)\ge0$ reduces to
+\begin{equation}\label{eq:bathtub}
+  \tfrac12\bigl(1-\cos t\bigr)\ \ge\ \int_0^t\rho_1(s)\bigl(\cos s-\cos t\bigr)\,ds .
+\end{equation}
+
+The right-hand side is linear in $\rho_1$ with a nonnegative kernel, and the only
+constraints left on $\rho_1|_{[0,t]}$ are $0\le\rho_1\le1$ from (b) and
+$\int_0^t\rho_1\cos\le\tfrac12$ from \eqref{eq:mom1}. Per unit of the constraint the
+objective returns $1-\cos t\,\sec s$, which \emph{decreases} in $s$, so the bathtub maximiser
+is the front-loaded profile $\rho_1=\mathbf 1_{[0,a]}$ with $a=\min(t,\pi/6)$, the cap
+binding where $\sin a=\tfrac12$. Its value is $\min(\sin t,\tfrac12)-\min(t,\pi/6)\cos t$,
+and \eqref{eq:bathtub} splits into two cases.
+
+For $t\ge\pi/6$ it reads $\tfrac12(1-\cos t)\ge\tfrac12-\tfrac\pi6\cos t$, that is
+$\bigl(\tfrac\pi6-\tfrac12\bigr)\cos t\ge0$. For $t\le\pi/6$ it reads $\Lambda(t)\ge0$ with
+$\Lambda(t)=\tfrac12(1-\cos t)-\sin t+t\cos t$; here $\Lambda(0)=0$ and
+$\Lambda'(t)=\bigl(\tfrac12-t\bigr)\sin t$, so $\Lambda$ increases on $[0,\tfrac12]$ and
+decreases on $[\tfrac12,\pi/6]$, whence its minimum over $[0,\pi/6]$ is
+$\min\{\Lambda(0),\Lambda(\pi/6)\}$ and
+$\Lambda(\pi/6)=\tfrac{\sqrt3}{12}(\pi-3)>0$. Both cases are the single fact $\pi>3$, and
+equality in \eqref{eq:bathtub} occurs only at the two ends $t=0$ and $t=\pi/2$.
+
+\emph{Correction to the referee's form of the last step.} The inequality
+$t-\arcsin(\sin t-\tfrac12)\ge\tfrac12$, offered as the outcome of the bathtub step, is
+\eqref{eq:bathtub} evaluated at the \emph{back}-loaded profile
+$\rho_1=\mathbf 1_{[\arcsin(\sin t-1/2),\,t]}$, which \emph{maximises} $\int_0^t\rho_1$ where
+the objective wants it minimised. It is therefore a test against one admissible profile and
+not the extremum; it is defined only for $t\ge\pi/6$, so it leaves $[0,\pi/6)$ untreated; and
+where it is defined it is weaker than the front-loaded condition, since
+$t-\arcsin(\sin t-\tfrac12)\ge\pi/6>\tfrac12$ there. Its stated minimum $\pi/6$ at $t=\pi/6$
+is correct on $[\pi/6,\pi/2]$, where the function increases, because
+$\sin^2t\ge(\sin t-\tfrac12)^2$ makes its derivative nonnegative; read as a formula on all
+of $[0,\pi/2]$ its minimum is instead $2\arcsin\tfrac14$, at
+$t=\arcsin\tfrac14$.
+The conclusion is unaffected: the front-loaded computation above is the one that closes
+\eqref{eq:bathtub}.
 
 Also, the stadium family is excluded from $\mathcal D$ outright: hypothesis (c),
 $c_y\le\tfrac12$, forces $L\le\sqrt2/2$ on it, well below the escape threshold
@@ -2180,9 +2239,13 @@ $(1+\sqrt2)/2$. The counterexample of Remark~\ref{rem:v6} therefore never entere
 which is why it could not have been a counterexample to Theorem~\ref{thm:final} itself, only
 to Proposition~\ref{prop:V} stated without containment.
 
-Rule~0: \textsc{proved}, subject to the phase decomposition of $\Sig$'s class. What remains
-open is the reflected directions other than $\psi=-\pi/2$, still supported only by a
-$1440$-point scan.
+Rule~0: \textsc{proved} on $\mathcal D$, from (a), (b) and (d) and with no phase
+decomposition. The ingredients are \textsc{verified}
+(\verb|cy_from_bracket|, \verb|moment_bracket_deriv|, \verb|moment_from_bracket|,
+\verb|bathtub_far_case|, \verb|Lam_hasDerivAt|, \verb|Lam_at_pi_six|,
+\verb|Lam_nonneg_near|). The remaining
+reflected directions are Remark~\ref{rem:v29}, which imports exactly this statement for its
+own degenerate direction $\omega=\pi/2$.
 \end{remark}
 
 \begin{remark}[The inner functional, with its content stated]\label{rem:v25}
@@ -2320,26 +2383,125 @@ because $\varphi=\theta+\pi$ is never the binding direction except at $\theta=\p
 coincides with the floor.
 
 The required statement is nevertheless true on $\mathcal D$, by a shorter argument that uses
-the brackets already established. Both facets have the same $x$-shadow $[-\alpha_2(0),\kappa]$,
-so $C_2$ contains the rectangle $R=[-\alpha_2(0),\kappa]\times[0,1]$. For $\theta\in[0,\pi/2]$,
-$X(\theta)-\mu_\theta=(A(\theta),A_2(\theta))$ with $A=(H-1)\cos\theta-H'\sin\theta$ and
-$A_2=(H-1)\sin\theta+H'\cos\theta$; by the bracket identities $A'=\rho_1\sin\ge0$ with $A(0)=0$,
-$A(\pi/2)=\kappa$, and $A_2'=-\rho_1\cos\le0$ with $A_2(0)=\tfrac12$, $A_2(\pi/2)=0$. Hence the
-point lies in $[0,\kappa]\times[0,\tfrac12]\subset R$. The reflected range is symmetric, and
-there the endpoint of the $x$-range is $1-H(\pi)\le\kappa$, which is $\alpha_1(\pi/2)\ge0$.
-
-So the endpoint condition consumes (d) at \emph{both} $t=0$ and $t=\pi/2$, not at $t=0$ alone.
-The same rectangle argument reproves Remark~\ref{rem:v29}'s corner containment, and subsumes
-Remarks~\ref{rem:v7} through~\ref{rem:v12}.
+the brackets already established: both facets have the same $x$-shadow
+$[-\alpha_2(0),\kappa]$, so $C_2$ contains the rectangle
+$R=[-\alpha_2(0),\kappa]\times[0,1]$, and the two brackets confine
+$X(\theta)-\mu_\theta$ to $R$. This is written out and formalised in
+Remark~\ref{rem:v31}. It consumes (d) at \emph{both} $t=0$ and $t=\pi/2$, not at $t=0$
+alone.
 
 Rule~0: the identification of the endpoint condition with the width condition is
 \textsc{false}; Remark~\ref{rem:v29}'s theorem about $D$ stands; the endpoint condition itself
-is \textsc{proved} by the rectangle argument, which is not yet written out or formalised.
-Theorem~\ref{thm:final} remains \textsc{conjecture}: besides this, \eqref{eq:seghyp} is
-undischarged in its proof, Remark~\ref{rem:v24}'s argument was written for the old (d) and needs
-the replacement given by the referee, its concavity step cites a superseded remark where
-\verb|cor:anchored| is the live result, and its $V=|N|$ sentence still cites the proposition
-whose proof Remark~\ref{rem:v13} found unsupported.
+is \textsc{proved} by the rectangle argument of Remark~\ref{rem:v31}, and \textsc{verified}
+there. Theorem~\ref{thm:final} remains conditional on containment, but the other four defects
+listed in the previous version of this paragraph are repaired: \eqref{eq:seghyp} is discharged
+on $\mathcal D$ by Proposition~\ref{prop:seghyp}; Remark~\ref{rem:v24} is reproved without the
+phase decomposition that the old (d) supplied; the concavity step now cites
+Corollary~\ref{cor:anchored}, which applies by Proposition~\ref{prop:dcell}, in place of the
+superseded Remark~\ref{thm:concave}; and the $V=|N|$ sentence cites
+Proposition~\ref{prop:V} with all four of its hypotheses named rather than
+Proposition~\ref{prop:convex}.
+\end{remark}
+
+\begin{remark}[The rectangle argument, written out]\label{rem:v31}
+This supplies the second endpoint condition that Remark~\ref{rem:v30} retracted and left
+open. Write $X(\theta)=H(\theta)\mu_\theta+H'(\theta)\nu_\theta$ for the boundary point of
+$C_2$ with outer normal $\mu_\theta$, and put $\rho(\theta)=1-r_{ac}(\theta)$ on $(0,\pi)$, so
+that $\rho=\rho_1$ on $(0,\pi/2)$ and $\rho(\cdot+\pi/2)=\rho_2$ on $(\pi/2,\pi)$; by (b),
+$0\le\rho\le1$ and $\rho$ carries no atom on either piece.
+
+\textbf{Claim.} For every $H\in\mathcal D$ and every $\theta\in[0,\pi]$,
+$X(\theta)-\mu_\theta\in C_2$.
+
+\emph{Step 1: the two facets have the same $x$-shadow, so $R\subseteq C_2$.} Since
+$H(\pi/2)=1$, $X(\pi/2^\pm)=\bigl(-H'(\pi/2^\pm),\,1\bigr)$, so the ceiling of $C_2$ is the
+horizontal segment $[-H'(\pi/2^+),-H'(\pi/2^-)]\times\{1\}$, of length the atom mass
+$m=H'(\pi/2^+)-H'(\pi/2^-)$. Its right end is $\kappa=-H'(\pi/2^-)$ by definition, and its
+left end is $-\alpha_2(0)$, because the gauge $H(0)=1$ makes
+$\alpha_2(0)=H(0)-1+H'(\pi/2^+)=H'(\pi/2^+)$. So the ceiling facet is
+$[-\alpha_2(0),\kappa]\times\{1\}$. Because $C_2$ is $\rho$-invariant its image under
+$(x,y)\mapsto(x,1-y)$ is again a facet of $C_2$, namely $[-\alpha_2(0),\kappa]\times\{0\}$:
+the \emph{same} $x$-shadow, which is the step the argument turns on. Both segments lie in
+$C_2$, and the convex hull of two parallel segments with a common shadow at heights $0$ and
+$1$ is the full rectangle, so by convexity
+\[
+  R:=[-\alpha_2(0),\kappa]\times[0,1]\ \subseteq\ C_2 .
+\]
+
+\emph{Step 2: the endpoint in coordinates.} $X(\theta)-\mu_\theta=(H-1)\mu_\theta+H'\nu_\theta
+=\bigl(A(\theta),A_2(\theta)\bigr)$ with
+\[
+  A=(H-1)\cos\theta-H'\sin\theta ,\qquad A_2=(H-1)\sin\theta+H'\cos\theta ,
+\]
+which are the bracket behind Remark~\ref{rem:v29}'s first identity and the companion bracket
+of Remark~\ref{rem:v24}, read at the angle $\theta$ rather than at the time $t$: at
+$\theta=t$ the pair $\kappa-A(t)=\int_t^{\pi/2}\rho_1\sin$ and $c_x=A(t)-\alpha_1(t)\sin t$
+is that identity. Hence on $(0,\pi/2)$ and on $(\pi/2,\pi)$
+\[
+  A'=\rho\,\sin\theta ,\qquad A_2'=-\rho\,\cos\theta ,
+\]
+and the endpoint values are forced by (a) and (b):
+\[
+  \begin{array}{llll}
+    A(0)=0, & A(\pi/2^-)=\kappa, & A(\pi/2^+)=-\alpha_2(0), & A(\pi)=1-H(\pi),\\[2pt]
+    A_2(0)=\tfrac12, & A_2(\pi/2^\pm)=0, & & A_2(\pi)=\tfrac12 ,
+  \end{array}
+\]
+using $H(0)=H(\pi/2)=1$, $H'(0)=\tfrac12$ and $H'(\pi)=-\tfrac12$. The only discontinuity is
+the drop of $A$ by $m$ at $\pi/2$, which is Step~1's facet again.
+
+\emph{Step 3: $\theta\in[0,\pi/2]$.} There $\sin\theta\ge0$ and $\cos\theta\ge0$, so $A'\ge0$
+and $A_2'\le0$: $A$ is nondecreasing, from $0$ to $\kappa$, and $A_2$ nonincreasing, from
+$\tfrac12$ to $0$.
+So $X(\theta)-\mu_\theta\in[0,\kappa]\times[0,\tfrac12]$, and this lies in $R$ as soon as
+$-\alpha_2(0)\le0$, that is $\alpha_2(0)\ge0$ --- hypothesis (d) at $t=0$.
+
+\emph{Step 4: $\theta\in[\pi/2,\pi]$.} There $\sin\theta\ge0$ and $\cos\theta\le0$, so
+$A'\ge0$ and $A_2'\ge0$: both are nondecreasing, $A$ from $-\alpha_2(0)$ to $1-H(\pi)$ and
+$A_2$ from $0$ to $\tfrac12$. So the point lies in
+$[-\alpha_2(0),1-H(\pi)]\times[0,\tfrac12]$, and
+this is inside $R$ exactly when $1-H(\pi)\le\kappa$. Since
+$\alpha_1(\pi/2)=H(\pi)-1-H'(\pi/2^-)=H(\pi)-1+\kappa$, that inequality \emph{is}
+$\alpha_1(\pi/2)\ge0$, which is hypothesis (d) at $t=\pi/2$, available because $T<\pi/2$.
+This proves the claim.
+
+\emph{Exactly what is used.} (a) at $0$ and at $\pi/2$; (b) for $\rho\ge0$, for
+$H'(0)=\tfrac12$ and $H'(\pi)=-\tfrac12$, and for the absence of atoms away from $\pi/2$;
+(d) at the two endpoints $t=0$ and $t=\pi/2$. Hypothesis (c) is not used, and neither is the
+upper bound $\rho\le1$. Two byproducts: $\kappa=A(\pi/2^-)\ge A(0)=0$, and then
+$m=\kappa+\alpha_2(0)>0$, so on all of $\mathcal D$ the ceiling is a genuine facet rather
+than one by assumption.
+
+\emph{What it replaces.} With $R\subseteq C_2$ in hand, $c(t)\in C_2$ follows from
+$-\alpha_2(0)\le c_x\le\kappa$ together with $0\le c_y\le\tfrac12$, that is from
+Remark~\ref{rem:v29}'s two identities, Remark~\ref{rem:v24} and (c). So the rectangle
+replaces the support-function reduction of Remark~\ref{rem:v29} --- including its degenerate
+direction $\omega=\pi/2$, which no longer has to be imported --- and the comparisons of
+Remarks~\ref{rem:v7} through~\ref{rem:v12}. It does \emph{not} replace those two identities,
+which are what bound $c_x$.
+
+\emph{Consequence, with its inputs named.} The two truncated sweeps have four endpoints
+(Remark~\ref{rem:v6}): $c(t)$ and $X(t+\pi/2)-\mu_{t+\pi/2}$ for face~2, and
+$c(t)-\alpha_1^+\nu_t$ --- which is $X(t)-\mu_t$ where $\alpha_1\ge0$ and $c(t)$ where
+$\alpha_1<0$ --- and $c(t)-\sigma\nu_t=(x(t),0)$ for face~1, the window being a genuine
+interval by Proposition~\ref{prop:seghyp}. The claim above covers the two of the form
+$X-\mu$; $c(t)$ is the previous paragraph; and for the floor endpoint,
+$F-1=A\cos t+A_2\sin t$ gives $x=(F-1)\sec t=A+A_2\tan t\ge0$ while
+$\kappa-x=\sec t\int_t^{\pi/2}\rho_1(s)\sin(s-t)\,ds\ge0$, both from (b) alone, so
+$x(t)\in[0,\kappa]\subseteq[-\alpha_2(0),\kappa]$, again by $\alpha_2(0)\ge0$, and the floor
+endpoint lies in the floor facet. Since $C_2$ is convex, a sweep segment lies in
+$C_2$ as soon as its two endpoints do. Containment on $\mathcal D$ therefore reduces to
+Remark~\ref{rem:v29}, and to nothing else.
+
+Rule~0: the claim is \textsc{proved} on $\mathcal D$ and \textsc{verified}
+(\verb|endpoint_coords|, \verb|facet_left_from_arm|, \verb|rectangle_of_facets|,
+\verb|bracket_monotoneOn|, \verb|moment_bracket_antitoneOn|,
+\verb|moment_bracket_monotoneOn|, \verb|endpoint_range_lower|, \verb|endpoint_range_upper|,
+\verb|endpoint_mem_rectangle_lower|, \verb|endpoint_mem_rectangle_upper|,
+\verb|alpha1_half_pi_bounds_x|, \verb|endpoint_in_cap|).
+The last paragraph is a \textsc{reduction} and is recorded as one: Theorem~\ref{thm:final}
+keeps containment as a standing hypothesis in this version, because the bang-bang step of
+Remark~\ref{rem:v29} is stated there as a sketch and is not written out.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
@@ -2969,17 +3131,35 @@ Criterion~\eqref{eq:rccrit} is strictly stronger than the separation criterion
 $f_1^2<(2+\sqrt2)/2=1.7071\ldots$ of Theorem~\ref{thm:main}: within the family in which
 $f_1$ is the free parameter, (RC) implies $M<\tfrac12$.
 
-\begin{theorem}\label{thm:QA}
-$Q(\Sig)=A_R^\ast$.
+\begin{theorem}[conditional on containment]\label{thm:QA}
+Assume the truncated sweeps for $\Sig$ lie in $C_2$. Then $Q(\Sig)=A_R^\ast$.
 \end{theorem}
 
 \begin{proof}
-$\Sig$ satisfies (RC) by Proposition~\ref{prop:rcsigma}, so $V(\Sig)=|N(\Sig)|$ by
-Theorems~\ref{thm:rc} and~\ref{thm:cross}. The niches are disjoint by
+$\Sig$ satisfies (RC) by Proposition~\ref{prop:rcsigma}, so the combined sweep is injective
+by Theorems~\ref{thm:rc} and~\ref{thm:cross}; the two sweeps are disjoint and cover $N$ by
+Remarks~\ref{rem:v4} and~\ref{rem:v5}; \eqref{eq:seghyp} holds by
+Proposition~\ref{prop:seghyp}; and containment is the standing hypothesis. With the four,
+$V(\Sig)=|N(\Sig)|$ by Proposition~\ref{prop:V}. The niches are disjoint by
 Theorem~\ref{thm:main}, and $C_2$ is $\rho$-invariant, so
 $|\Sig|=|C_2|-|N|-|\rho N|=|C_2|-2|N|$. Hence
 $Q(\Sig)=|C_2|-2V(\Sig)=|C_2|-2|N|=|\Sig|=A_R^\ast$.
 \end{proof}
+
+\begin{remark}[The gap this theorem inherits, stated]\label{rem:QAgap}
+The proof above previously read ``$\Sig$ satisfies (RC), so $V(\Sig)=|N(\Sig)|$ by
+Theorems~\ref{thm:rc} and~\ref{thm:cross}''. That is the inference Remark~\ref{rem:v13}
+found unsupported: those two theorems give injectivity of the combined sweep and nothing
+else, whereas $V=|N|$ is Proposition~\ref{prop:V} and needs four hypotheses. Three of the
+four are available for $\Sig$ --- disjointness and covering from Remarks~\ref{rem:v4}
+and~\ref{rem:v5}, \eqref{eq:seghyp} from Proposition~\ref{prop:seghyp} --- and the fourth,
+containment of the truncated sweeps in $C_2$, is not proved here. So $Q(\Sig)=A_R^\ast$
+carries exactly the hypothesis Theorem~\ref{thm:final} carries and is not independent
+evidence for it. Rule~0: Theorem~\ref{thm:QA} is \textsc{conditional on containment}, not
+\textsc{proved}. The $50$-digit numerical agreement below does not use
+Proposition~\ref{prop:V} for $\Sig$ and is unaffected; it remains the independent evidence
+for the value.
+\end{remark}
 
 No integral is evaluated. Independently, with $A_R^\ast=1+4\tan^2\beta+\beta$ and the
 integrands made elementary by Proposition~\ref{prop:sigx}, the two sides agree to
@@ -3571,6 +3751,31 @@ against the wider literature.
 
 \section{The main theorem}\label{sec:main}
 
+The concavity input is stated below for the fixed-$T$ form of (d). The point is that (d)
+does not merely make the two sign sets ordered; together with (b) it makes the larger one
+anchored, which is what Corollary~\ref{cor:anchored} asks for.
+
+\begin{proposition}[(b) and (d) put every competitor on an ordered anchored cell]
+\label{prop:dcell}
+Let $H$ satisfy (b) and (d). Then $E_1:=\{\alpha_1<0\}\subseteq[0,T)$ and
+$E_2:=\{\alpha_2>0\}$ is an initial segment of $[0,\pi/2]$ containing $[0,T]$. In particular
+$E_1\subseteq E_2$ with $E_2$ anchored, which is the hypothesis of
+Corollary~\ref{cor:anchored}.
+\end{proposition}
+
+\begin{proof}
+By (d), $\alpha_1\ge0$ on $[T,\pi/2]$, so $E_1\subseteq[0,T)$; and $\alpha_2>0$ on $[0,T]$,
+so $[0,T]\subseteq E_2$ and hence $E_1\subseteq E_2$. On $[T,\pi/2]$ the arm sandwich
+(Lemma~\ref{lem:sandwich}) and $\alpha_1\ge0$ give $\alpha_2'\le-\alpha_1\le0$, so $\alpha_2$
+is non-increasing there; therefore $E_2\cap[T,\pi/2]$ is an interval with left endpoint $T$,
+and $E_2$ is $[0,\tau)$ or $[0,\tau]$ for some $\tau\in[T,\pi/2]$. The two differ in one
+point, which the cell form \eqref{eq:cellform} does not see.
+
+Note that no non-degeneracy hypothesis is needed, unlike in Proposition~\ref{prop:anchor}:
+(d) supplies the strict sign $\alpha_2>0$ on $[0,T]$ outright, so there is no touching point
+to exclude.
+\end{proof}
+
 \begin{theorem}[conditional on containment]\label{thm:final}
 Assume the truncated sweeps lie in $C_2$, which by Remarks~\ref{rem:v6} and~\ref{rem:v13} is
 not implied by the other hypotheses and is open for $\Sig$. Let $\mathcal D$ be the set of
@@ -3601,17 +3806,27 @@ Lemma~\ref{lem:corner} and \eqref{eq:arm1}--\eqref{eq:sig}, so $\mathcal D$ is c
 $\Sig$ satisfies (b) by Proposition~\ref{prop:rcsigma}, (c) with margin
 $\tfrac12-M=0.1121\ldots$ by Theorem~\ref{thm:main}, and (d) by definition of $\beta$.
 
-By (b) and Theorems~\ref{thm:rc} and \ref{thm:cross} the combined sweep is injective, so
-$V=|N|$ by Proposition~\ref{prop:convex}, whose proof supplies the covering that
-Proposition~\ref{prop:V} assumes. It does \emph{not} supply the containment: its argument
-places an advancing face point in $Q_{t+\varepsilon}$, which gives sweep $\subseteq U$ and
-not sweep $\subseteq U\cap C_2=N$. Containment is the standing hypothesis of this theorem. By (c) and Lemma~\ref{lem:ceiling},
+Proposition~\ref{prop:V} is applied with all four of its hypotheses named. By (b) and
+Theorems~\ref{thm:rc} and~\ref{thm:cross} the combined sweep is injective and the two sweeps
+are disjoint; the covering argument inside the proof of Proposition~\ref{prop:convex} gives
+that the two truncated sweeps cover $N$; \eqref{eq:seghyp}, which Proposition~\ref{prop:V}
+needs for its face-1 window to be the interval $[\alpha_1^+,\sigma]$, holds by
+Proposition~\ref{prop:seghyp}; and containment of the truncated sweeps in $C_2$ is the
+standing hypothesis of this theorem. With the four, $V=|N|$ by Proposition~\ref{prop:V}.
+Proposition~\ref{prop:convex} is \emph{not} cited for containment: its argument places an
+advancing face point in $Q_{t+\varepsilon}$, which gives sweep $\subseteq U$ and not
+sweep $\subseteq U\cap C_2=N$, as Remark~\ref{rem:v13} records. By (c) and Lemma~\ref{lem:ceiling},
 $U\subseteq\{y\le\tfrac12\}$ and $\rho U\subseteq\{y\ge\tfrac12\}$, so
 $|U\cap\rho U|=0$; with $C_2$ $\rho$-invariant this gives
 $|T|\le|C_2|-|N|-|\rho N|=|C_2|-2|N|=Q$. (Corollary~\ref{cor:sep} states the strict form
 $M<\tfrac12$, which is what $\Sig$ satisfies; the null-set form used here is what the
-hypothesis $\le$ delivers.) By (d) and
-Theorem~\ref{thm:concave}, $\delta^2Q\le0$ on $\mathcal D$; by Theorem~\ref{thm:el},
+hypothesis $\le$ delivers.) By (b), (d) and
+Proposition~\ref{prop:dcell} every $H\in\mathcal D$ sits on an ordered anchored cell, so
+$\delta^2Q\le0$ on $\mathcal D$ by Corollary~\ref{cor:anchored}. (Earlier versions cited
+Remark~\ref{thm:concave} here. That is superseded, and it covers only the single cell of
+$\Sig$'s own sign pattern, so it cannot serve a statement about all of $\mathcal D$;
+Corollary~\ref{cor:anchored} is the live result, and Proposition~\ref{prop:dcell} is what
+checks that the fixed-$T$ form of (d) meets its hypothesis.) By Theorem~\ref{thm:el},
 $\delta Q(\Sig)=0$. A concave function with a critical point on a convex set attains its
 maximum there, so $Q(H)\le Q(\Sig)$, and $Q(\Sig)=A_R^\ast$ by Theorem~\ref{thm:QA}.
 Combining, $|T|\le Q(H)\le A_R^\ast$.
@@ -4277,8 +4492,41 @@ disappears. For $\Sig$, \eqref{eq:seghyp} holds: $\sigma-\alpha_1=\cos t\,x'(t)$
 Proposition~\ref{prop:sigx} and $x$ is strictly increasing by
 Proposition~\ref{prop:mono}, while $\sigma\ge0$ throughout; the computed minimum of
 $\sigma-\alpha_1^+$ is $+2.5\cdot10^{-7}$, attained as $t\to\pi/2$. All uses of
-\eqref{eq:V} in this note are on data satisfying \eqref{eq:seghyp}.
+\eqref{eq:V} in this note are on data satisfying \eqref{eq:seghyp}, and on $\mathcal D$ that
+is now a theorem rather than a hypothesis.
 \end{remark}
+
+\begin{proposition}[\eqref{eq:seghyp} holds on $\mathcal D$]\label{prop:seghyp}
+Let $H$ satisfy (a), (b) and (d). Then $\sigma\ge\max(\alpha_1,0)=\alpha_1^+$ on
+$[0,\pi/2]$. In particular \eqref{eq:seghyp} is not an extra hypothesis of
+Theorem~\ref{thm:final}.
+\end{proposition}
+
+\begin{proof}
+Two inequalities, one from (b) alone and one from Remark~\ref{rem:v24}.
+
+First, the companion bracket $A_2(t)=(F-1)\sin t+F'\cos t$ of Remark~\ref{rem:v24} has
+$A_2'=-\rho_1\cos t$ and $A_2(\pi/2)=H(\pi/2)-1=0$, so
+$A_2(t)=\int_t^{\pi/2}\rho_1\cos\ge0$ by (a) and (b). By \eqref{eq:arm1} and \eqref{eq:sig},
+$\sigma-\alpha_1=(F-1)\tan t+F'=A_2(t)\sec t$, whence
+\[
+  \sigma-\alpha_1\ =\ \sec t\int_t^{\pi/2}\rho_1(s)\cos s\,ds\ \ge\ 0
+  \qquad\text{on }[0,\pi/2) .
+\]
+Numerator and denominator vanish to matched order at $\pi/2$, and the quotient tends to $0$,
+so $\sigma(\pi/2)=\alpha_1(\pi/2)$ and the inequality persists at the endpoint. This step
+uses (b) only; it is the identity already used in Remark~\ref{rem:v4} to stabilise the
+quadrature, and it is what makes $\sigma-\alpha_1$ the right variable.
+
+Second, $c_y=\sigma\cos t$ by \eqref{eq:sig}, and $c_y\ge0$ on $\mathcal D$ by
+Remark~\ref{rem:v24}, so $\sigma\ge0$ on $[0,\pi/2)$; at $t=\pi/2$,
+$\sigma=\alpha_1(\pi/2)\ge0$ by (d), since $T<\pi/2$.
+
+Taking the maximum of $\sigma\ge\alpha_1$ and $\sigma\ge0$ gives $\sigma\ge\alpha_1^+$.
+\end{proof}
+
+Rule~0: \textsc{proved}, with the assembly \textsc{verified}
+(\verb|sigma_sub_alpha1_nonneg|, \verb|sigma_nonneg_of_cy|, \verb|seghyp_from_both|).
 
 \begin{proposition}[An explicit ball inside the domain]\label{prop:ball}
 Let $r_0=\tfrac1{20}$. Every $\eta$ with $\eta(0)=\eta(\pi/2)=0$, satisfying the mirror
@@ -5504,7 +5752,16 @@ Hammersley's $2\sqrt2$.
 
 \verb|lake build| is clean with no \verb|sorry| across the development, and
 \verb|#print axioms| reports nothing beyond \verb|propext|, \verb|Quot.sound| and
-\verb|Classical.choice|. The second variation is partially formalised. Both decoupling inequalities of
+\verb|Classical.choice|. The rectangle argument of Remark~\ref{rem:v31} is verified in that
+sense end to end: the two bracket monotonicities are derived from
+\verb|bracket_deriv| and \verb|moment_bracket_deriv| through Mathlib's mean-value
+machinery rather than assumed (\verb|bracket_monotoneOn|,
+\verb|moment_bracket_antitoneOn|, \verb|moment_bracket_monotoneOn|), and
+\verb|rectangle_of_facets| carries the convexity step that turns the two facets into the
+rectangle. The near case of the bathtub inequality of Remark~\ref{rem:v24} is likewise
+verified from its derivative (\verb|Lam_hasDerivAt|, \verb|Lam_nonneg_near|); what is
+\emph{not} formalised there is the bathtub optimisation itself, which is stated and proved
+only in the note. The second variation is partially formalised. Both decoupling inequalities of
 Theorem~\ref{thm:sharp} are verified outright, each as an exact square over the field
 (\verb|decouple_E2|, \verb|decouple_E1|), and the assembly of
 Proposition~\ref{prop:elem} from its analytic inputs to the constant $\tfrac1{12}$ is

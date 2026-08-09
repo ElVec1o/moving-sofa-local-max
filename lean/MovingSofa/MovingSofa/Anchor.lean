@@ -2976,6 +2976,356 @@ theorem moment_from_bracket {A0 Ahalf mom : ℝ} (hend : Ahalf - A0 = -mom)
     (h0 : A0 = 1/2) (hhalf : Ahalf = 0) : mom = 1/2 := by
   rw [h0, hhalf] at hend; linarith
 
+/-- **The bracket is nondecreasing.** `A(θ) = (F-1)cos θ - F' sin θ` has `A' = (1-r) sin θ`,
+so `A` increases wherever the curvature deficit and `sin` are both nonnegative. On `[0,π]`
+the second is automatic, so this is hypothesis (b) and nothing else. -/
+theorem bracket_monotoneOn {F F' F'' : ℝ → ℝ} {a b : ℝ}
+    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+    (hcurv : ∀ s ∈ Set.Icc a b, F s + F'' s ≤ 1)
+    (hsin : ∀ s ∈ Set.Icc a b, 0 ≤ Real.sin s) :
+    MonotoneOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s) (Set.Icc a b) := by
+  have hFd : Differentiable ℝ F := fun x => (h1 x).differentiableAt
+  have hF'd : Differentiable ℝ F' := fun x => (h2 x).differentiableAt
+  have hcont : ContinuousOn (fun s => (F s - 1) * Real.cos s - F' s * Real.sin s)
+      (Set.Icc a b) :=
+    (((hFd.continuous.sub continuous_const).mul Real.continuous_cos).sub
+      (hF'd.continuous.mul Real.continuous_sin)).continuousOn
+  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc a b) hcont
+    (f' := fun s => (1 - (F s + F'' s)) * Real.sin s)
+    (fun x _ => (bracket_deriv h1 h2 rfl).hasDerivWithinAt) ?_
+  intro x hx
+  rw [interior_Icc] at hx
+  have hx' : x ∈ Set.Icc a b := Set.Ioo_subset_Icc_self hx
+  exact mul_nonneg (by linarith [hcurv x hx']) (hsin x hx')
+
+/-- **The companion bracket is nonincreasing where `cos ≥ 0`.** `A₂' = -(1-r) cos θ`. -/
+theorem moment_bracket_antitoneOn {F F' F'' : ℝ → ℝ} {a b : ℝ}
+    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+    (hcurv : ∀ s ∈ Set.Icc a b, F s + F'' s ≤ 1)
+    (hcos : ∀ s ∈ Set.Icc a b, 0 ≤ Real.cos s) :
+    AntitoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) := by
+  have hFd : Differentiable ℝ F := fun x => (h1 x).differentiableAt
+  have hF'd : Differentiable ℝ F' := fun x => (h2 x).differentiableAt
+  have hcont : ContinuousOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
+      (Set.Icc a b) :=
+    (((hFd.continuous.sub continuous_const).mul Real.continuous_sin).add
+      (hF'd.continuous.mul Real.continuous_cos)).continuousOn
+  refine antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc a b) hcont
+    (f' := fun s => -((1 - (F s + F'' s)) * Real.cos s))
+    (fun x _ => (moment_bracket_deriv h1 h2 rfl).hasDerivWithinAt) ?_
+  intro x hx
+  rw [interior_Icc] at hx
+  have hx' : x ∈ Set.Icc a b := Set.Ioo_subset_Icc_self hx
+  have : 0 ≤ (1 - (F x + F'' x)) * Real.cos x :=
+    mul_nonneg (by linarith [hcurv x hx']) (hcos x hx')
+  linarith
+
+/-- **And nondecreasing where `cos ≤ 0`**, which is the `[π/2,π]` half. Same identity, other
+sign of the trigonometric factor. -/
+theorem moment_bracket_monotoneOn {F F' F'' : ℝ → ℝ} {a b : ℝ}
+    (h1 : ∀ s, HasDerivAt F (F' s) s) (h2 : ∀ s, HasDerivAt F' (F'' s) s)
+    (hcurv : ∀ s ∈ Set.Icc a b, F s + F'' s ≤ 1)
+    (hcos : ∀ s ∈ Set.Icc a b, Real.cos s ≤ 0) :
+    MonotoneOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s) (Set.Icc a b) := by
+  have hFd : Differentiable ℝ F := fun x => (h1 x).differentiableAt
+  have hF'd : Differentiable ℝ F' := fun x => (h2 x).differentiableAt
+  have hcont : ContinuousOn (fun s => (F s - 1) * Real.sin s + F' s * Real.cos s)
+      (Set.Icc a b) :=
+    (((hFd.continuous.sub continuous_const).mul Real.continuous_sin).add
+      (hF'd.continuous.mul Real.continuous_cos)).continuousOn
+  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc a b) hcont
+    (f' := fun s => -((1 - (F s + F'' s)) * Real.cos s))
+    (fun x _ => (moment_bracket_deriv h1 h2 rfl).hasDerivWithinAt) ?_
+  intro x hx
+  rw [interior_Icc] at hx
+  have hx' : x ∈ Set.Icc a b := Set.Ioo_subset_Icc_self hx
+  have : 0 ≤ (1 - (F x + F'' x)) * (-Real.cos x) :=
+    mul_nonneg (by linarith [hcurv x hx']) (by linarith [hcos x hx'])
+  nlinarith [this]
+
 end BracketIdentities
+
+
+section Rectangle
+
+/-!
+### The rectangle argument: the second sweep endpoint lies in the cap
+
+`rem:v30` retracted the identification of the endpoint condition `X(θ) - μ_θ ∈ C₂` with the
+width condition `H(θ) + H(π-θ) - sin θ ≥ 1`, which is only a necessary condition, and left
+the endpoint condition open. This section is the proof of it on `D`, written as `rem:v31`.
+
+With `X(θ) = H(θ)μ_θ + H'(θ)ν_θ`,
+
+  `X(θ) - μ_θ = ((H-1)cos θ - H' sin θ, (H-1)sin θ + H' cos θ) = (A(θ), A₂(θ))`
+
+(`endpoint_coords`), the two brackets of `BracketIdentities` read at the angle `θ` instead of
+at the time `t`.
+
+STEP 1 (the rectangle). `H(π/2) = 1` puts the two ends of the ceiling facet at
+`(-H'(π/2^±), 1)`, so its `x`-shadow is `[-α₂(0), κ]`: the right end is `κ = -H'(π/2⁻)` by
+definition, and the left end is `-α₂(0)` because the gauge `H(0) = 1` makes
+`α₂(0) = H(0) - 1 + H'(π/2⁺) = H'(π/2⁺)` (`facet_left_from_arm`); its length is the atom
+mass. `C₂` is `ρ`-invariant, so the floor facet is the image of the ceiling facet under
+`(x,y) ↦ (x, 1-y)` and has the SAME shadow. Convexity then gives the whole rectangle
+(`rectangle_of_facets`), which is the only place `ρ`-invariance and the atom are used.
+
+STEP 2 (the brackets). `A' = (1-r) sin θ` and `A₂' = -(1-r) cos θ` with `1 - r ≥ 0` from (b),
+so on `[0,π/2]` `A` increases from `A(0) = 0` to `A(π/2⁻) = κ` and `A₂` decreases from
+`A₂(0) = H'(0) = 1/2` to `A₂(π/2) = H(π/2) - 1 = 0`; on `[π/2,π]` both increase, `A` from
+`A(π/2⁺) = -α₂(0)` to `A(π) = 1 - H(π)` and `A₂` from `0` to `A₂(π) = -H'(π) = 1/2`
+(`bracket_monotoneOn`, `moment_bracket_antitoneOn`, `moment_bracket_monotoneOn`, then
+`endpoint_range_lower` and `endpoint_range_upper`).
+
+STEP 3 (the two ends of (d)). `[0,κ] ⊆ [-α₂(0),κ]` is `α₂(0) ≥ 0`, hypothesis (d) at `t = 0`;
+and `1 - H(π) ≤ κ` is `α₁(π/2) = H(π) - 1 + κ ≥ 0`, hypothesis (d) at `t = π/2`
+(`alpha1_half_pi_bounds_x`). Both `A₂`-ranges sit in `[0,1/2] ⊆ [0,1]`. So the endpoint
+condition consumes (d) at BOTH ends, not at `t = 0` alone.
+
+Hypothesis (c) is never used here, and neither is the upper bound `r ≥ 0`.
+-/
+
+/-- The inner sweep endpoint `X(θ) - μ_θ` in coordinates: it is the pair of brackets. -/
+theorem endpoint_coords (h hp θ : ℝ) :
+    (h * Real.cos θ + hp * (-Real.sin θ) - Real.cos θ,
+      h * Real.sin θ + hp * Real.cos θ - Real.sin θ)
+      = ((h - 1) * Real.cos θ - hp * Real.sin θ,
+         (h - 1) * Real.sin θ + hp * Real.cos θ) := by
+  simp only [Prod.mk.injEq]
+  constructor <;> ring
+
+/-- **The left end of the ceiling facet is `-α₂(0)`.** Under the gauge `H(0) = 1` the second
+arm at time `0` is exactly `H'(π/2⁺)`, so the facet `[-H'(π/2⁺), -H'(π/2⁻)]` is
+`[-α₂(0), κ]` and its length is the atom mass `H'(π/2⁺) - H'(π/2⁻)`. -/
+theorem facet_left_from_arm {f0 hl hr : ℝ} (hf : f0 = 1) :
+    -(f0 - 1 + hr) = -hl - (hr - hl) := by rw [hf]; ring
+
+/-- **`R ⊆ C₂`.** A convex set containing two horizontal segments with the SAME `x`-shadow, at
+heights `0` and `1`, contains the rectangle between them: each point is the obvious convex
+combination of the two points above and below it. The `ρ`-invariance of `C₂` is what supplies
+the second segment from the first, with the same shadow. -/
+theorem rectangle_of_facets {C : Set (ℝ × ℝ)} (hC : Convex ℝ C) {l r : ℝ}
+    (hfloor : ∀ p ∈ Set.Icc l r, ((p, 0) : ℝ × ℝ) ∈ C)
+    (hceil : ∀ p ∈ Set.Icc l r, ((p, 1) : ℝ × ℝ) ∈ C)
+    {x y : ℝ} (hx : x ∈ Set.Icc l r) (hy : y ∈ Set.Icc (0 : ℝ) 1) :
+    ((x, y) : ℝ × ℝ) ∈ C := by
+  have hrw : ((x, y) : ℝ × ℝ) = (1 - y) • ((x, 0) : ℝ × ℝ) + y • ((x, 1) : ℝ × ℝ) := by
+    simp only [Prod.smul_mk, smul_eq_mul, Prod.mk_add_mk, Prod.mk.injEq]
+    constructor <;> ring
+  rw [hrw]
+  exact hC (hfloor x hx) (hceil x hx) (by linarith [hy.2]) hy.1 (by ring)
+
+/-- The endpoint's range on `[0,π/2]`: `A` climbs from `0` to `κ`, `A₂` falls from `1/2` to
+`0`. -/
+theorem endpoint_range_lower {A A2 : ℝ → ℝ} {κ θ : ℝ}
+    (hA : MonotoneOn A (Set.Icc 0 (Real.pi / 2))) (hA0 : A 0 = 0)
+    (hAh : A (Real.pi / 2) = κ)
+    (hB : AntitoneOn A2 (Set.Icc 0 (Real.pi / 2))) (hB0 : A2 0 = 1 / 2)
+    (hBh : A2 (Real.pi / 2) = 0)
+    (hθ : θ ∈ Set.Icc 0 (Real.pi / 2)) :
+    A θ ∈ Set.Icc (0 : ℝ) κ ∧ A2 θ ∈ Set.Icc (0 : ℝ) (1 / 2) := by
+  have hpi : (0 : ℝ) ≤ Real.pi / 2 := by linarith [Real.pi_pos]
+  have h0 : (0 : ℝ) ∈ Set.Icc (0 : ℝ) (Real.pi / 2) := ⟨le_refl 0, hpi⟩
+  have hh : (Real.pi / 2) ∈ Set.Icc (0 : ℝ) (Real.pi / 2) := ⟨hpi, le_refl _⟩
+  refine ⟨⟨?_, ?_⟩, ⟨?_, ?_⟩⟩
+  · have h := hA h0 hθ hθ.1; rw [hA0] at h; exact h
+  · have h := hA hθ hh hθ.2; rw [hAh] at h; exact h
+  · have h := hB hθ hh hθ.2; rw [hBh] at h; exact h
+  · have h := hB h0 hθ hθ.1; rw [hB0] at h; exact h
+
+/-- The endpoint's range on `[π/2,π]`: both brackets climb, `A` from `-α₂(0)` to `1 - H(π)`
+and `A₂` from `0` to `1/2`. -/
+theorem endpoint_range_upper {A A2 : ℝ → ℝ} {lo hi θ : ℝ}
+    (hA : MonotoneOn A (Set.Icc (Real.pi / 2) Real.pi)) (hA0 : A (Real.pi / 2) = lo)
+    (hAh : A Real.pi = hi)
+    (hB : MonotoneOn A2 (Set.Icc (Real.pi / 2) Real.pi)) (hB0 : A2 (Real.pi / 2) = 0)
+    (hBh : A2 Real.pi = 1 / 2)
+    (hθ : θ ∈ Set.Icc (Real.pi / 2) Real.pi) :
+    A θ ∈ Set.Icc lo hi ∧ A2 θ ∈ Set.Icc (0 : ℝ) (1 / 2) := by
+  have hpi : Real.pi / 2 ≤ Real.pi := by linarith [Real.pi_pos]
+  have h0 : (Real.pi / 2) ∈ Set.Icc (Real.pi / 2) Real.pi := ⟨le_refl _, hpi⟩
+  have hh : Real.pi ∈ Set.Icc (Real.pi / 2) Real.pi := ⟨hpi, le_refl _⟩
+  refine ⟨⟨?_, ?_⟩, ⟨?_, ?_⟩⟩
+  · have h := hA h0 hθ hθ.1; rw [hA0] at h; exact h
+  · have h := hA hθ hh hθ.2; rw [hAh] at h; exact h
+  · have h := hB h0 hθ hθ.1; rw [hB0] at h; exact h
+  · have h := hB hθ hh hθ.2; rw [hBh] at h; exact h
+
+/-- **(d) at `t = 0`.** `[0,κ] ⊆ [-α₂(0),κ]` is exactly `α₂(0) ≥ 0`. -/
+theorem endpoint_mem_rectangle_lower {A A2 a20 κ : ℝ} (ha : 0 ≤ a20)
+    (hA : A ∈ Set.Icc (0 : ℝ) κ) (hB : A2 ∈ Set.Icc (0 : ℝ) (1 / 2)) :
+    A ∈ Set.Icc (-a20) κ ∧ A2 ∈ Set.Icc (0 : ℝ) 1 :=
+  ⟨⟨by linarith [hA.1], hA.2⟩, ⟨hB.1, by linarith [hB.2]⟩⟩
+
+/-- **(d) at `t = π/2`.** `α₁(π/2) = H(π) - 1 - H'(π/2⁻) = H(π) - 1 + κ`, so the sign of that
+arm is precisely the statement that the reflected `x`-range ends inside the facet. -/
+theorem alpha1_half_pi_bounds_x {hpi κ : ℝ} (harm : 0 ≤ hpi - 1 + κ) : 1 - hpi ≤ κ := by
+  linarith
+
+/-- The reflected half of the endpoint range sits in the rectangle, given (d) at `t = π/2`. -/
+theorem endpoint_mem_rectangle_upper {A A2 a20 κ hpi : ℝ} (harm : 0 ≤ hpi - 1 + κ)
+    (hA : A ∈ Set.Icc (-a20) (1 - hpi)) (hB : A2 ∈ Set.Icc (0 : ℝ) (1 / 2)) :
+    A ∈ Set.Icc (-a20) κ ∧ A2 ∈ Set.Icc (0 : ℝ) 1 :=
+  ⟨⟨hA.1, le_trans hA.2 (alpha1_half_pi_bounds_x harm)⟩, ⟨hB.1, by linarith [hB.2]⟩⟩
+
+/-- **The second endpoint condition.** The assembly: the endpoint lies in the rectangle's
+shadow at a height in `[0,1]`, and the rectangle lies in the cap. -/
+theorem endpoint_in_cap {C : Set (ℝ × ℝ)} (hC : Convex ℝ C) {l r : ℝ}
+    (hfloor : ∀ p ∈ Set.Icc l r, ((p, 0) : ℝ × ℝ) ∈ C)
+    (hceil : ∀ p ∈ Set.Icc l r, ((p, 1) : ℝ × ℝ) ∈ C)
+    {A A2 : ℝ} (hA : A ∈ Set.Icc l r) (hB : A2 ∈ Set.Icc (0 : ℝ) 1) :
+    ((A, A2) : ℝ × ℝ) ∈ C :=
+  rectangle_of_facets hC hfloor hceil hA hB
+
+end Rectangle
+
+
+section FloorDirection
+
+/-!
+### `c_y ≥ 0` on `D`, with the bathtub step
+
+`rem:v24`'s old proof split `[0,π/2]` at `β` and `π/2-β`, so it did not survive the repair of
+(d) to fixed-`T` form. The replacement uses the companion bracket only.
+
+`c_y = α₁ cos t + A₂(t)` is algebra (`cy_from_bracket`), and `A₂(π/2) = H(π/2) - 1 = 0` turns
+it into `c_y = α₁ cos t + ∫_t^{π/2} ρ₁ cos`, while `A₂(0) = H'(0)` is the moment identity
+`∫_0^{π/2} ρ₁ cos = 1/2` (`moment_bracket_deriv`, `moment_from_bracket`).
+
+On `[T,π/2]`, (d) gives `α₁ ≥ 0` and both terms are nonnegative. On `[0,T]`, (d) gives
+`α₂ > 0`, so `α₁' = α₂ + ρ₁ ≥ ρ₁` and `α₁(t) ≥ -1/2 + ∫_0^t ρ₁`; eliminating the tail with
+the moment identity reduces `c_y ≥ 0` to
+
+  `½(1 - cos t) ≥ ∫_0^t ρ₁(s)(cos s - cos t) ds`.
+
+The right side is linear in `ρ₁` with a nonnegative kernel; per unit of the constraint
+`∫_0^t ρ₁ cos ≤ 1/2` the objective returns `1 - cos t sec s`, which DECREASES in `s`, so the
+bathtub maximiser is the FRONT-loaded `ρ₁ = 1_[0,a]` with `a = min(t, π/6)`. Its value is
+`min(sin t, 1/2) - min(t, π/6) cos t`, giving two cases: `(π/6 - 1/2)cos t ≥ 0` for
+`t ≥ π/6` (`bathtub_far_case`), and `Λ(t) ≥ 0` for `t ≤ π/6` (`Lam_nonneg_near`). Both are
+the single fact `π > 3`.
+
+The back-loaded profile, which is what the inequality `t - arcsin(sin t - 1/2) ≥ 1/2`
+encodes, MAXIMISES `∫_0^t ρ₁` where the objective wants it minimised; it is a test against
+one admissible profile and not the extremum, and it says nothing on `[0, π/6)`.
+-/
+
+/-- `c_y = α₁ cos t + A₂(t)`, pure algebra once `α₁ = G - 1 - F'` is substituted. -/
+theorem cy_from_bracket (f g fp t : ℝ) :
+    (f - 1) * Real.sin t + (g - 1) * Real.cos t
+      = (g - 1 - fp) * Real.cos t + ((f - 1) * Real.sin t + fp * Real.cos t) := by ring
+
+/-- The far case of the bathtub split: for `t ≥ π/6` the front-loaded maximiser makes the
+condition `π/6 ≥ 1/2`, which is `π > 3`. -/
+theorem bathtub_far_case {t : ℝ} (hc : 0 ≤ Real.cos t) :
+    0 ≤ (Real.pi / 6 - 1 / 2) * Real.cos t :=
+  mul_nonneg (by linarith [Real.pi_gt_three]) hc
+
+/-- The near case's function, `Λ(t) = ½(1 - cos t) - sin t + t cos t`. -/
+noncomputable def Lam (t : ℝ) : ℝ :=
+  (1 / 2) * (1 - Real.cos t) - Real.sin t + t * Real.cos t
+
+/-- `Λ' = (½ - t) sin t`, so `Λ` rises to `t = 1/2` and falls after it. -/
+theorem Lam_hasDerivAt (t : ℝ) : HasDerivAt Lam ((1 / 2 - t) * Real.sin t) t := by
+  have hcos : HasDerivAt Real.cos (-Real.sin t) t := Real.hasDerivAt_cos t
+  have hsin : HasDerivAt Real.sin (Real.cos t) t := Real.hasDerivAt_sin t
+  have hid : HasDerivAt (fun s : ℝ => s) 1 t := hasDerivAt_id t
+  have hmul : HasDerivAt (fun s : ℝ => s * Real.cos s)
+      (1 * Real.cos t + t * -Real.sin t) t := hid.mul hcos
+  have h1 : HasDerivAt (fun s : ℝ => (1 / 2 : ℝ) * (1 - Real.cos s))
+      ((1 / 2 : ℝ) * (0 - -Real.sin t)) t :=
+    ((hasDerivAt_const t (1 : ℝ)).sub hcos).const_mul (1 / 2 : ℝ)
+  have h : HasDerivAt Lam ((1 / 2 : ℝ) * (0 - -Real.sin t) - Real.cos t
+      + (1 * Real.cos t + t * -Real.sin t)) t := (h1.sub hsin).add hmul
+  convert h using 1
+  ring
+
+theorem Lam_zero : Lam 0 = 0 := by
+  unfold Lam; simp
+
+/-- `Λ(π/6) = (√3/12)(π - 3)`. -/
+theorem Lam_at_pi_six : Lam (Real.pi / 6) = Real.sqrt 3 / 12 * (Real.pi - 3) := by
+  unfold Lam
+  rw [Real.cos_pi_div_six, Real.sin_pi_div_six]
+  ring
+
+theorem Lam_pi_six_pos : 0 < Lam (Real.pi / 6) := by
+  rw [Lam_at_pi_six]
+  have h3 : (0 : ℝ) < Real.sqrt 3 := Real.sqrt_pos.mpr (by norm_num)
+  nlinarith [Real.pi_gt_three]
+
+/-- **The near case.** `Λ ≥ 0` on `[0, π/6]`: it increases on `[0,1/2]` from `Λ(0) = 0` and
+decreases on `[1/2, π/6]` to `Λ(π/6) = (√3/12)(π-3) > 0`, so the minimum is at an endpoint
+and both endpoint values are nonnegative. Note `1/2 < π/6`, again `π > 3`. -/
+theorem Lam_nonneg_near {t : ℝ} (h0 : 0 ≤ t) (h : t ≤ Real.pi / 6) : 0 ≤ Lam t := by
+  have hpi6 : (1 / 2 : ℝ) ≤ Real.pi / 6 := by linarith [Real.pi_gt_three]
+  have hle : Real.pi / 6 ≤ Real.pi := by linarith [Real.pi_pos]
+  rcases le_total t (1 / 2 : ℝ) with hc | hc
+  · have hm : MonotoneOn Lam (Set.Icc 0 (1 / 2 : ℝ)) := by
+      refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc _ _)
+        (fun x _ => (Lam_hasDerivAt x).continuousAt.continuousWithinAt)
+        (f' := fun s => (1 / 2 - s) * Real.sin s)
+        (fun x _ => (Lam_hasDerivAt x).hasDerivWithinAt) ?_
+      intro x hx
+      rw [interior_Icc] at hx
+      have hs : 0 ≤ Real.sin x :=
+        Real.sin_nonneg_of_nonneg_of_le_pi (le_of_lt hx.1) (by linarith [Real.pi_gt_three, hx.2])
+      exact mul_nonneg (by linarith [hx.2]) hs
+    have hstep := hm (Set.left_mem_Icc.mpr (by norm_num)) ⟨h0, hc⟩ h0
+    rw [Lam_zero] at hstep; exact hstep
+  · have ha : AntitoneOn Lam (Set.Icc (1 / 2 : ℝ) (Real.pi / 6)) := by
+      refine antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc _ _)
+        (fun x _ => (Lam_hasDerivAt x).continuousAt.continuousWithinAt)
+        (f' := fun s => (1 / 2 - s) * Real.sin s)
+        (fun x _ => (Lam_hasDerivAt x).hasDerivWithinAt) ?_
+      intro x hx
+      rw [interior_Icc] at hx
+      have hs : 0 ≤ Real.sin x :=
+        Real.sin_nonneg_of_nonneg_of_le_pi (by linarith [hx.1]) (by linarith [hx.2])
+      nlinarith [mul_nonneg (by linarith [hx.1] : (0 : ℝ) ≤ x - 1 / 2) hs]
+    have hstep := ha ⟨hc, h⟩ (Set.right_mem_Icc.mpr hpi6) h
+    linarith [Lam_pi_six_pos]
+
+end FloorDirection
+
+
+section SegmentHypothesis
+
+/-!
+### `eq:seghyp` on `D`
+
+`σ ≥ α₁⁺` is what makes the face-1 window of `prop:V` the interval `[α₁⁺, σ]`; `rem:seghyp`
+recorded it as an unstated hypothesis and `rem:v30` listed it as undischarged in `thm:final`.
+It splits into two halves, and both are now available.
+
+`σ - α₁ = (F-1)tan t + F' = A₂(t) sec t = sec t ∫_t^{π/2} ρ₁ cos ≥ 0` uses (b) alone
+(`sigma_sub_alpha1_nonneg`); `σ ≥ 0` follows from `c_y = σ cos t` and `c_y ≥ 0`
+(`sigma_nonneg_of_cy`), which is the previous section. The maximum of the two is `α₁⁺`
+(`seghyp_from_both`).
+-/
+
+/-- The first half: `(σ - α₁)cos t` is a nonnegative integral, so `σ ≥ α₁` off `t = π/2`. -/
+theorem sigma_sub_alpha1_nonneg {σ a1 c I : ℝ} (hc : 0 < c) (hid : (σ - a1) * c = I)
+    (hI : 0 ≤ I) : a1 ≤ σ := by
+  have h : 0 ≤ (σ - a1) * c := by rw [hid]; exact hI
+  by_contra hcon
+  push_neg at hcon
+  have hp : 0 < (a1 - σ) * c := mul_pos (sub_pos.mpr hcon) hc
+  linarith
+
+/-- The second half: `c_y = σ cos t` with `c_y ≥ 0` gives `σ ≥ 0`. -/
+theorem sigma_nonneg_of_cy {cy σ c : ℝ} (hc : 0 < c) (hcy : cy = σ * c) (h : 0 ≤ cy) :
+    0 ≤ σ := by
+  by_contra hcon
+  push_neg at hcon
+  have hneg : σ * c < 0 := mul_neg_of_neg_of_pos hcon hc
+  rw [hcy] at h
+  linarith
+
+/-- `σ ≥ max(α₁, 0) = α₁⁺`. -/
+theorem seghyp_from_both {σ a1 : ℝ} (h1 : a1 ≤ σ) (h2 : 0 ≤ σ) : max a1 0 ≤ σ :=
+  max_le h1 h2
+
+end SegmentHypothesis
 
 end MovingSofa
