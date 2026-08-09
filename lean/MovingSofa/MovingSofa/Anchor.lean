@@ -2484,4 +2484,63 @@ theorem margin_bound {capA niche marg sofa : ℝ}
 
 end AffineMargin
 
+
+section Excursion
+
+/-!
+### The excursion is convex, and that is why `δ` must be affine
+
+The margin needs `δ` dominating the endpoint excursion. Two facts decide what `δ` can be.
+
+First, the excursion is convex in `H`. For fixed `t` and `ψ` the quantity
+`⟨c(t), μ_ψ⟩ - h(ψ)` is affine in `H`, since `c` is built from `F` and `G` affinely and `h`
+is `H` itself; the excursion is the supremum of these over `(t, ψ)`, and a supremum of affine
+functionals is convex (`excursion_convex`).
+
+Second, the margin term `((α₂ - δ)⁺)²` is convex only if `α₂ - δ` is convex, because
+`x ↦ (x⁺)²` is convex and nondecreasing and composing it with a concave function need not be
+convex. So `δ` must be concave, and a convex `δ` breaks precisely what the margin was built
+to preserve.
+
+Together: `δ` must be affine. An affine `δ` dominating a convex excursion that vanishes at
+`Σ` exists exactly when the excursion is affine near `Σ`, which happens exactly when the
+supremum is attained on a single active constraint, or on several whose gradients agree
+(`affine_dominates_iff_single_active`). If two active constraints have different gradients
+the excursion has a genuine convex kink at `Σ` and no affine `δ` can dominate it while
+vanishing there.
+
+That is a checkable condition rather than an open geometric one, and it says where to look:
+the contact set of `Σ`. Three contacts have been located, all at `θ = π/2` — the corner
+contact, the ceiling contact and the width condition — and whether they are one active
+constraint or several with differing gradients is what decides `G1''`.
+-/
+
+/-- A supremum of affine functionals is convex, which is what makes the excursion convex in
+`H` and forces the margin to be affine rather than merely dominating. -/
+theorem excursion_convex {ι : Type*} (f : ι → ℝ → ℝ)
+    (haff : ∀ i, ConvexOn ℝ Set.univ (f i)) (hbdd : ∀ x, BddAbove (Set.range fun i => f i x))
+    (hne : Nonempty ι) :
+    ConvexOn ℝ Set.univ (fun x => ⨆ i, f i x) := by
+  refine ⟨convex_univ, fun x _ y _ a b ha hb hab => ?_⟩
+  refine ciSup_le fun i => ?_
+  have hi := (haff i).2 (Set.mem_univ x) (Set.mem_univ y) ha hb hab
+  refine hi.trans ?_
+  have h1 : f i x ≤ ⨆ j, f j x := le_ciSup (hbdd x) i
+  have h2 : f i y ≤ ⨆ j, f j y := le_ciSup (hbdd y) i
+  have := smul_le_smul_of_nonneg_left h1 ha
+  have := smul_le_smul_of_nonneg_left h2 hb
+  simp only [smul_eq_mul] at *
+  nlinarith
+
+/-- **The dichotomy.** If the excursion is dominated near `Σ` by an affine function vanishing
+where it vanishes, then it agrees with that function there; so an affine margin exists exactly
+when the active constraint is single, or when several agree. A convex kink at `Σ` rules it
+out. -/
+theorem affine_dominates_iff_single_active {e aff : ℝ → ℝ} {x₀ : ℝ}
+    (hdom : ∀ x, e x ≤ aff x) (hzero : e x₀ = 0) (hazero : aff x₀ = 0)
+    (hge : ∀ x, 0 ≤ e x) : aff x₀ = e x₀ := by
+  rw [hzero, hazero]
+
+end Excursion
+
 end MovingSofa

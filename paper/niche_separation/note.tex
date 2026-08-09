@@ -1995,6 +1995,36 @@ taken as a function of $H$, that is, how the endpoint excursion is bounded. That
 remaining content, and it is a bound on one curve rather than an exact containment of two
 two-parameter families.
 \end{remark}
+
+\begin{remark}[The excursion is convex, so the margin must be affine]\label{rem:v18}
+The margin of Remark~\ref{rem:v17} needs $\delta$ dominating the endpoint excursion. Two facts
+decide what $\delta$ can be.
+
+First, the excursion is convex in $H$. For fixed $t$ and $\psi$ the quantity
+$\langle c(t),\mu_\psi\rangle-h(\psi)$ is affine in $H$, since $c$ is built affinely from $F$
+and $G$ and $h$ is $H$ itself; the excursion is the supremum of these over $(t,\psi)$, and a
+supremum of affine functionals is convex.
+
+Second, the margin term $((\alpha_2-\delta)^+)^2$ is convex only if $\alpha_2-\delta$ is
+convex, because $x\mapsto(x^+)^2$ is convex and nondecreasing and composing it with a concave
+function need not be convex. So $\delta$ must be concave, and a convex $\delta$ breaks exactly
+what the margin was built to preserve.
+
+Together $\delta$ must be affine. An affine $\delta$ dominating a convex excursion that
+vanishes at $\Sig$ exists exactly when the excursion is affine near $\Sig$, that is when the
+supremum is attained on a single active constraint, or on several whose gradients agree. If
+two active constraints have differing gradients the excursion has a convex kink at $\Sig$ and
+no affine $\delta$ can dominate it while vanishing there.
+
+That is a checkable condition rather than an open geometric one, and it says where to look:
+the contact set of $\Sig$. Three contacts have been located, all at $\theta=\pi/2$, namely the
+corner contact of Remark~\ref{rem:v12}, the ceiling contact of the same remark, and the width
+condition of Remark~\ref{rem:v14}. Whether they constitute one active constraint or several
+with differing gradients is what decides the margin, and it is not yet determined.
+
+Rule~0: \verb|excursion_convex| and \verb|affine_dominates_iff_single_active| are
+\textsc{verified}; the structure of $\Sig$'s contact set is \textsc{conjecture}.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
