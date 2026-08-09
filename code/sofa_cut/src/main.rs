@@ -456,6 +456,34 @@ fn main() {
         println!("  (negative means the reflected half is covered everywhere)");
     }
 
+    // G1n: the SECOND-largest constraint value, excluding a neighbourhood of the gauge
+    // contact at (t, psi) = (0, -pi/2).  The gauge is identically tight by normalisation and
+    // contributes equality, never violation.  What decides the local argument is whether
+    // every OTHER constraint is strictly slack.  The stadium satisfies the gauge too, yet
+    // fails containment at (t, psi) = (pi/4, +pi/2), so this margin is exactly what
+    // separates Sigma from it.
+    {
+        let (mut worst, mut bt, mut bps) = (-1e9f64, 0.0f64, 0.0f64);
+        for f in fr.iter() {
+            let t = f.my.atan2(f.mx);
+            for k in 0..=1440 {
+                let ps = -std::f64::consts::PI + k as f64 / 1440.0 * 2.0 * std::f64::consts::PI;
+                // skip a neighbourhood of the gauge contact
+                // The gauge constraint c_y >= 0 is active at BOTH ends of the rotation, since
+                // c_y(0) = c_y(pi/2) = H(pi/2) - 1 = 0.  Exclude both.
+                if (t < 0.02 || t > p2() - 0.02) && (ps + p2()).abs() < 0.02 { continue; }
+                let hps = if ps >= 0.0 { interp(&x, &h, ps) }
+                          else { interp(&x, &h, -ps) + ps.sin() };
+                let val = f.cx * ps.cos() + f.cy * ps.sin() - hps;
+                if val > worst { worst = val; bt = t; bps = ps; }
+            }
+        }
+        println!("  non-gauge constraint worst value {:+.6} at t = {:.5}, psi = {:.5}",
+                 worst, bt, bps);
+        println!("  exclusion radius {:.3}; scan it before reading this as a margin, since it", 0.02);
+        println!("  scales linearly with the radius and so degenerates to zero at the contact");
+    }
+
     // WHICH lower-half direction binds?  Scan psi in [-pi, 0) using h(psi) = H(-psi) - sin(-psi)
     // = H(|psi|) + sin(psi), the rho-invariance relation.  If the argmin is psi = -pi/2 the
     // whole mirror condition is c_y(t) >= 0: the corner never dips below the floor.
