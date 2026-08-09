@@ -2598,4 +2598,56 @@ theorem gauge_no_escape {g0 : ℝ} (hg : g0 = 1) : g0 - 1 = 0 ∧ 2 - g0 - g0 = 
 
 end ContactSet
 
+
+section DegenerateSlack
+
+/-!
+### A degenerating slack is not fatal when the perturbation degenerates with it
+
+The measured slack at `Σ` vanishes linearly as the contact is approached, so there is no
+margin bounded away from zero and the naive neighbourhood argument fails. It is recoverable,
+because the perturbation vanishes at the contact too.
+
+The gauge constraint is an IDENTITY on the normalised class: `c_y(0) = c_y(π/2) = H(π/2) - 1
+= 0` for every admissible `H`, since the normalisation is imposed by a translation. So a
+perturbation cannot move the constraint value at the contact; it is `0` before and after.
+Therefore the perturbation's effect on constraints NEAR the contact vanishes there as well,
+and to first order it is `O(d·‖η‖)` at distance `d` rather than `O(‖η‖)`.
+
+Both the slack and the perturbation are then linear in `d` and the comparison is uniform:
+if the unperturbed value is at most `-a·d` with `a > 0` and the perturbation is at most
+`K‖η‖·d`, the perturbed value is at most `(-a + K‖η‖)·d`, which is nonpositive for
+`‖η‖ ≤ a/K`, for EVERY `d` at once (`degenerate_slack_stable`). The neighbourhood is
+uniform in the constraint index even though the margin is not bounded below.
+
+What this does not supply is the constants. `a` is the rate at which the slack degenerates,
+measured near `0.46` per unit of angular distance, and `K` is the Lipschitz constant of the
+constraint family in `η`. Neither is established here, so the argument is structural and the
+neighbourhood is not yet explicit.
+-/
+
+/-- **Uniform stability under a degenerating perturbation.** If the unperturbed value decays
+at least linearly in the distance to the contact, and the perturbation grows at most linearly
+in the same distance, the perturbed value stays nonpositive for every distance at once, with
+a threshold on the perturbation size that does not depend on the distance. -/
+theorem degenerate_slack_stable {a K nrm d val pert : ℝ}
+    (ha : 0 < a) (hd : 0 ≤ d) (hn : 0 ≤ nrm)
+    (hval : val ≤ -a * d) (hpert : pert ≤ K * nrm * d)
+    (hsmall : K * nrm ≤ a) : val + pert ≤ 0 := by
+  nlinarith
+
+/-- At the contact itself the value is exactly zero both before and after, because the gauge
+is an identity on the normalised class rather than an inequality that could be violated. -/
+theorem gauge_identity_unmoved {g0 pert : ℝ} (hg : g0 = 1) (hp : pert = 0) :
+    (g0 - 1) + pert = 0 := by rw [hg, hp]; ring
+
+/-- The threshold is uniform in the constraint index: one bound on the perturbation serves
+every distance, which is what replaces a margin bounded away from zero. -/
+theorem uniform_threshold {a K nrm : ℝ} (ha : 0 < a) (hn : 0 ≤ nrm) (hK : 0 ≤ K)
+    (hsmall : K * nrm ≤ a) : ∀ d : ℝ, 0 ≤ d → -a * d + K * nrm * d ≤ 0 := by
+  intro d hd
+  nlinarith
+
+end DegenerateSlack
+
 end MovingSofa

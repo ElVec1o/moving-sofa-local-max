@@ -2055,6 +2055,33 @@ Rule~0: \verb|contact_corner|, \verb|contact_ceiling|, \verb|contact_width|,
 constraints have strict slack at $\Sig$ is \textsc{heuristic}, resting on the measurement
 above, and it is the last numerical input in the chain.
 \end{remark}
+
+\begin{remark}[A degenerating slack is not fatal]\label{rem:v20}
+The slack at $\Sig$ vanishes linearly as the contact is approached, so there is no margin
+bounded away from zero and the naive neighbourhood argument fails. It is recoverable, because
+the perturbation vanishes at the contact too.
+
+The gauge constraint is an \emph{identity} on the normalised class: $c_y(0)=c_y(\pi/2)
+=H(\pi/2)-1=0$ for every admissible $H$, the normalisation being imposed by a translation. A
+perturbation therefore cannot move the constraint value at the contact; it is $0$ before and
+after. So the perturbation's effect on constraints \emph{near} the contact vanishes there as
+well, and to first order is $O(d\|\eta\|)$ at angular distance $d$ rather than $O(\|\eta\|)$.
+
+Both the slack and the perturbation are then linear in $d$, and the comparison is uniform: if
+the unperturbed value is at most $-ad$ with $a>0$ and the perturbation at most $K\|\eta\|d$,
+the perturbed value is at most $(-a+K\|\eta\|)d$, nonpositive for $\|\eta\|\le a/K$ and for
+every $d$ at once. The neighbourhood is uniform in the constraint index even though the
+margin is not bounded below.
+
+What this does not supply is the constants: $a$ is the rate at which the slack degenerates,
+measured near $0.46$ per unit angular distance, and $K$ is the Lipschitz constant of the
+constraint family in $\eta$. Neither is established, so the argument is structural and the
+neighbourhood is not explicit.
+
+Rule~0: \verb|degenerate_slack_stable|, \verb|gauge_identity_unmoved| and
+\verb|uniform_threshold| are \textsc{verified}; the two constants are \textsc{conjecture}, and
+with them the existence of an explicit neighbourhood.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
