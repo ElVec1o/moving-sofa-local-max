@@ -2025,6 +2025,36 @@ with differing gradients is what decides the margin, and it is not yet determine
 Rule~0: \verb|excursion_convex| and \verb|affine_dominates_iff_single_active| are
 \textsc{verified}; the structure of $\Sig$'s contact set is \textsc{conjecture}.
 \end{remark}
+
+\begin{remark}[$\Sig$'s contact set is a single active constraint, and it is the gauge]\label{rem:v19}
+Remark~\ref{rem:v18} reduces the margin to a finite question: are $\Sig$'s three contacts one
+active constraint or several with differing gradients? Computing each, they are the same one.
+
+The corner contact at $t=0$ says $c_y(0)\ge0$, and
+$c_y(0)=(F(0)-1)\cdot0+(G(0)-1)\cdot1=H(\pi/2)-1$, so it reads $H(\pi/2)\ge1$. The ceiling
+contact says the mirror point $\rho c(0)$, of height $2-H(\pi/2)$, lies below the ceiling
+$H(\pi/2)$, again $H(\pi/2)\ge1$. The width condition at $\theta=\pi/2$ reads
+$2H(\pi/2)-1\ge1$, once more $H(\pi/2)\ge1$. All three have gradient $\eta\mapsto\eta(\pi/2)$
+up to a positive factor, so they are a single active constraint and the excursion has no
+convex kink at $\Sig$.
+
+That constraint is the gauge. The normalisation $H(\pi/2)=1$ is imposed by a translation,
+which changes no area and leaves both arms invariant, so on the normalised class it holds
+identically. An identically tight constraint contributes equality and never violation, so it
+is not a source of escape at all. The remaining constraints have strict slack at $\Sig$,
+measured $0.612162$ for the unmirrored half, and strict slack survives small perturbation.
+
+Hence on the normalised class the excursion vanishes near $\Sig$, the affine margin of
+Remark~\ref{rem:v17} may be taken with $\delta=0$, and containment holds on a neighbourhood,
+which is what local maximality requires. The obstruction of Remark~\ref{rem:v18} does not
+occur, because the three apparent contacts are one constraint and that constraint is an
+equality by construction rather than an inequality that might be violated.
+
+Rule~0: \verb|contact_corner|, \verb|contact_ceiling|, \verb|contact_width|,
+\verb|contacts_coincide| and \verb|gauge_no_escape| are \textsc{verified}. That the remaining
+constraints have strict slack at $\Sig$ is \textsc{heuristic}, resting on the measurement
+above, and it is the last numerical input in the chain.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

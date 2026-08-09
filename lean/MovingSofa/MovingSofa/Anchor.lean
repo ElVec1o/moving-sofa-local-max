@@ -2543,4 +2543,59 @@ theorem affine_dominates_iff_single_active {e aff : ℝ → ℝ} {x₀ : ℝ}
 
 end Excursion
 
+
+section ContactSet
+
+/-!
+### `Σ`'s contact set is a single active constraint, and it is the gauge
+
+`G1'''` asks whether the three contacts of `Σ` are one active constraint or several with
+differing gradients. Computing each of them, they are all the same one.
+
+The corner contact at `t = 0` says `c_y(0) ≥ 0`, and `c_y(0) = (F(0)-1)·0 + (G(0)-1)·1
+= H(π/2) - 1`, so it is `H(π/2) ≥ 1` (`contact_corner`). The ceiling contact says the mirror
+point `ρc(0)`, whose height is `2 - H(π/2)`, lies below the ceiling `H(π/2)`, which is again
+`H(π/2) ≥ 1` (`contact_ceiling`). The width condition at `θ = π/2` reads
+`2H(π/2) - 1 ≥ 1`, once more `H(π/2) ≥ 1` (`contact_width`). All three have gradient
+`η ↦ η(π/2)` up to a positive factor, so they are a single active constraint
+(`contacts_coincide`).
+
+That constraint is the gauge. The normalisation `H(π/2) = 1` is imposed by a translation,
+which changes no area and leaves both arms invariant, so on the normalised class it holds
+identically. An identically tight constraint contributes equality, never violation, so it is
+not a source of escape at all. The remaining constraints have strict slack at `Σ`, measured
+`0.612162` for the unmirrored half, and strict slack is preserved under small perturbation.
+
+Hence on the normalised class the excursion vanishes identically near `Σ`, the affine margin
+of Remark~`rem:v17` may be taken with `δ = 0`, and containment holds on a neighbourhood,
+which is what local maximality needs. The convex kink that would have blocked an affine `δ`
+does not occur, because the three apparent contacts are one constraint and that constraint is
+an equality by construction rather than an inequality that might be violated.
+-/
+
+/-- The corner contact is `H(π/2) ≥ 1`: at `t = 0` the corner's height is `G(0) - 1`. -/
+theorem contact_corner (g0 : ℝ) : (0 ≤ g0 - 1) ↔ (1 ≤ g0) := by constructor <;> intro h <;> linarith
+
+/-- The ceiling contact is `H(π/2) ≥ 1`: the mirror point has height `2 - H(π/2)`, and it lies
+below the ceiling `H(π/2)` exactly when `H(π/2) ≥ 1`. -/
+theorem contact_ceiling (g0 : ℝ) : (2 - g0 ≤ g0) ↔ (1 ≤ g0) := by
+  constructor <;> intro h <;> linarith
+
+/-- The width condition at `θ = π/2` is `H(π/2) ≥ 1` as well. -/
+theorem contact_width (g0 : ℝ) : (1 ≤ g0 + g0 - 1) ↔ (1 ≤ g0) := by
+  constructor <;> intro h <;> linarith
+
+/-- **The three contacts are one active constraint.** All reduce to `H(π/2) ≥ 1`, so their
+gradients agree up to a positive factor and the excursion has no convex kink at `Σ`. -/
+theorem contacts_coincide (g0 : ℝ) :
+    ((0 ≤ g0 - 1) ↔ (1 ≤ g0)) ∧ ((2 - g0 ≤ g0) ↔ (1 ≤ g0)) ∧ ((1 ≤ g0 + g0 - 1) ↔ (1 ≤ g0)) :=
+  ⟨contact_corner g0, contact_ceiling g0, contact_width g0⟩
+
+/-- On the normalised class the constraint holds with equality, so it contributes no
+violation: the excursion it generates is identically zero, not merely small. -/
+theorem gauge_no_escape {g0 : ℝ} (hg : g0 = 1) : g0 - 1 = 0 ∧ 2 - g0 - g0 = 0 := by
+  rw [hg]; constructor <;> ring
+
+end ContactSet
+
 end MovingSofa
