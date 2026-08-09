@@ -1640,4 +1640,90 @@ theorem pos_set_ordConnected {W W1 q : ℝ → ℝ} {lo hi : ℝ} (hlen : hi - l
 
 end Connectivity
 
+
+section CurvatureBound
+
+/-!
+### `r < 1` exactly, and the sweep Jacobians
+
+Two things were still resting on floating point or on prose.
+
+First the standing hypothesis `r < 1` off the atom. It was measured at `0.838571` in `f64`,
+which under Rule 7 is evidence and not proof. It has an exact closed form. On the two
+absolutely continuous phases `Σ`'s curvature radius is `0.75·(A cos u + B sin u)` with
+`B = (1-√2)A` and `A = F₁ = 1.20293…`; the two phases differ only by swapping `A` and `B`,
+which leaves `A² + B²` unchanged. Since `A cos u + B sin u ≤ √(A²+B²)` and
+`A² + B² = A²(4 - 2√2)`, the bound is `0.75·A·√(4-2√2)`, and `A ≤ 1.21` makes it under `1`
+with room. The middle phase is the constant `0.5` and the end phases are `0`, both under `1`.
+So `r < 1` is a theorem, not a measurement, and the numerical value is only a sharper
+estimate of a quantity already known to be below the threshold.
+
+Second the sweep Jacobians, which the truncation windows of `prop:V` are defined by. With
+`c' = -α₁μ_t + α₂ν_t` these are pure trigonometric identities, recorded here so that the
+window-equals-entry identification rests on a checked computation rather than on a
+hand-differentiation.
+-/
+
+/-- Cauchy-Schwarz on the circle: `(A cos u + B sin u)² ≤ A² + B²`. -/
+theorem trig_combo_sq_le (A B u : ℝ) :
+    (A * Real.cos u + B * Real.sin u) ^ 2 ≤ A ^ 2 + B ^ 2 := by
+  nlinarith [Real.sin_sq_add_cos_sq u, sq_nonneg (A * Real.sin u - B * Real.cos u)]
+
+theorem sqrt_two_ge : (1.414 : ℝ) ≤ Real.sqrt 2 := by
+  nlinarith [Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2), Real.sqrt_nonneg 2]
+
+/-- **The curvature radius stays below `1` on the absolutely continuous phases.** This is
+the standing hypothesis of the Sturm argument, proved rather than measured. `A` is `F₁`,
+and `A ≤ 1.21` is a wide margin around its value `1.20293…`. -/
+theorem curvature_lt_one {A u : ℝ} (hA0 : 0 ≤ A) (hA : A ≤ 1.21) :
+    0.75 * (A * Real.cos u + (1 - Real.sqrt 2) * A * Real.sin u) < 1 := by
+  have hs := sqrt_two_ge
+  have hs2 : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have hcs := trig_combo_sq_le A ((1 - Real.sqrt 2) * A) u
+  have hkey : A ^ 2 + ((1 - Real.sqrt 2) * A) ^ 2 = A ^ 2 * (4 - 2 * Real.sqrt 2) := by
+    linear_combination A ^ 2 * hs2
+  have h4 : 4 - 2 * Real.sqrt 2 ≤ 1.172 := by linarith
+  have hpos : 0 ≤ 4 - 2 * Real.sqrt 2 := by nlinarith [Real.sqrt_nonneg 2]
+  have hA2 : A ^ 2 ≤ 1.4641 := by nlinarith
+  have hprod : A ^ 2 * (4 - 2 * Real.sqrt 2) ≤ 1.4641 * 1.172 :=
+    mul_le_mul hA2 h4 hpos (by norm_num)
+  rw [hkey] at hcs
+  nlinarith [hcs, hprod]
+
+/-- The other absolutely continuous phase swaps the two coefficients, which leaves
+`A² + B²` unchanged, so the same bound applies. -/
+theorem curvature_lt_one' {A u : ℝ} (hA0 : 0 ≤ A) (hA : A ≤ 1.21) :
+    0.75 * (-((1 - Real.sqrt 2) * A) * Real.cos u + A * Real.sin u) < 1 := by
+  have hs := sqrt_two_ge
+  have hs2 : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have hcs := trig_combo_sq_le (-((1 - Real.sqrt 2) * A)) A u
+  have hkey : (-((1 - Real.sqrt 2) * A)) ^ 2 + A ^ 2 = A ^ 2 * (4 - 2 * Real.sqrt 2) := by
+    linear_combination A ^ 2 * hs2
+  have h4 : 4 - 2 * Real.sqrt 2 ≤ 1.172 := by linarith
+  have hpos : 0 ≤ 4 - 2 * Real.sqrt 2 := by nlinarith [Real.sqrt_nonneg 2]
+  have hA2 : A ^ 2 ≤ 1.4641 := by nlinarith
+  have hprod : A ^ 2 * (4 - 2 * Real.sqrt 2) ≤ 1.4641 * 1.172 :=
+    mul_le_mul hA2 h4 hpos (by norm_num)
+  rw [hkey] at hcs
+  nlinarith [hcs, hprod]
+
+/-- **Face-2 sweep Jacobian.** For `Φ(s,t) = c(t) - s·μ_t` with `c' = -α₁μ + α₂ν`, the
+determinant of `[∂Φ/∂s, ∂Φ/∂t]` is `s - α₂`. Its sign change at `s = α₂` is exactly the
+upper truncation limit `α₂⁺` of `prop:V`. -/
+theorem sweep2_jacobian (a1 a2 s t : ℝ) :
+    (-Real.cos t) * (-(a1 * Real.sin t) + a2 * Real.cos t - s * Real.cos t)
+      - (-Real.sin t) * (-(a1 * Real.cos t) - a2 * Real.sin t + s * Real.sin t)
+    = s - a2 := by
+  linear_combination (s - a2) * Real.sin_sq_add_cos_sq t
+
+/-- **Face-1 sweep Jacobian.** For `Ψ(s,t) = c(t) - s·ν_t` the determinant is `s - α₁`, and
+its sign change at `s = α₁` is the lower truncation limit `α₁⁺`. -/
+theorem sweep1_jacobian (a1 a2 s t : ℝ) :
+    (Real.sin t) * (-(a1 * Real.sin t) + a2 * Real.cos t + s * Real.sin t)
+      - (-Real.cos t) * (-(a1 * Real.cos t) - a2 * Real.sin t + s * Real.cos t)
+    = s - a1 := by
+  linear_combination (s - a1) * Real.sin_sq_add_cos_sq t
+
+end CurvatureBound
+
 end MovingSofa

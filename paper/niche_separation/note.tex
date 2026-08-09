@@ -1489,7 +1489,7 @@ trajectory to pass within $|c'(t)|$ of the corner, and the whole difficulty sits
 Measured (\verb|sofa_cut|, $400^2$ points, $2000$ times): every sampled cell of $N$ has
 exactly one component; none is cut at $t=0$; every entry offset lands in its own window, the
 worst miss being zero; and $V=0.184270$ against a rasterised $|N|=0.186188$, ratio
-$0.98969$ at grid resolution. Rule~0: (iii) is \textsc{proved} and formalised
+$0.98969$ at grid resolution. Rule~0: (iii) is \textsc{verified}
 (\verb|frame_ode_u|, \verb|frame_ode_v|, \verb|face1_window_iff_entry|,
 \verb|face2_window_iff_entry|, \verb|entry_deriv_nonneg|, \verb|corner_start_on_floor|);
 (ii) is \textsc{conjecture}, now in the sharp form ``$T(p)$ is connected''.
@@ -1539,12 +1539,27 @@ $\sin(t_1-x)>0$, forcing $W'(t_1)<0$, while $W$ rising to $W(t_1)=0$ forces
 $W'(t_1)\ge0$. Strict monotonicity of $G$ is the only analytic input, and it follows from
 the sign of its derivative.
 
+The hypothesis $r<1$ is itself a theorem and not a measurement. On the two absolutely
+continuous phases the radius is $\tfrac34(A\cos u+B\sin u)$ with $B=(1-\sqrt2)A$ and
+$A=F_1$, the phases differing only by a swap of $A$ and $B$, which leaves $A^2+B^2$ fixed.
+Since $A\cos u+B\sin u\le\sqrt{A^2+B^2}$ and $A^2+B^2=A^2(4-2\sqrt2)$, the radius is at most
+$\tfrac34 A\sqrt{4-2\sqrt2}$, and $A\le\tfrac{121}{100}$ puts that below $1$. The middle
+phase is the constant $\tfrac12$ and the end phases vanish. The measured $0.838571$ is a
+sharper estimate of a quantity already known to lie below the threshold, not the reason it
+does.
+
 Rule~0: hypotheses (ii) and (iii) are \textsc{verified}, as are the steps to them
 (\verb|arm_shift|, \verb|point_part_harmonic|, \verb|cut_set_ordConnected|,
 \verb|exists_first_entry|, \verb|covering_first_entry|, \verb|exit_deriv_nonneg|,
-\verb|negative_hump_impossible|, \verb|pos_between|, \verb|pos_set_ordConnected|). The one
-remaining \textsc{proved}-not-\textsc{verified} link is the area formula behind
-$V=\int_N\#\{\text{entries}\}$. What this settles is a hypothesis the note previously
+\verb|negative_hump_impossible|, \verb|pos_between|, \verb|pos_set_ordConnected|), the
+curvature bound (\verb|curvature_lt_one|, \verb|curvature_lt_one'|) and the two sweep
+Jacobians that define the truncation windows (\verb|sweep2_jacobian|,
+\verb|sweep1_jacobian|). The one remaining \textsc{proved}-not-\textsc{verified} link is the
+instantiation of the area formula behind $V=\int_N\#\{\text{entries}\}$: its two
+problem-specific inputs, the Jacobian determinants and the injectivity that follows from
+$T(p)$ being an interval, are \textsc{verified}, and the formula itself is standard, but
+wiring them together needs a Lean definition of the cap and niche that this project does not
+yet have. What this settles is a hypothesis the note previously
 assumed; it is not a statement about the moving sofa problem itself.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
