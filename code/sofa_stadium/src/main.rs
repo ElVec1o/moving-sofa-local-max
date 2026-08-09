@@ -194,7 +194,35 @@ fn main() {
                  worst_c, worst_x, ident);
     }
 
+    println!("\n  eq:seghyp on the stadium family (referee objection 1):");
+    for &l in &ls {
+        let (ms, mc, me) = seghyp_check(l, 20000);
+        println!("    L = {:.4}   min(sigma - alpha_1^+) = {:+.6}   min c_y = {:+.6}   |sigma-a1 - (1-sin)/(2cos)| = {:.1e}",
+                 l, ms, mc, me);
+    }
+    println!("  If min(sigma - alpha_1^+) >= 0 where V != |N|, eq:seghyp is NOT the cause.\n");
+
     println!("\n  A nonzero 'sweep out' column with V - |N| tracking it is the refutation:");
     println!("  the hypotheses hold, T(p) stays an interval (multi = 0), and eq:V still");
     println!("  overstates |N| by exactly the sweep mass that leaves the cap.");
+}
+
+// Appended check: does the stadium satisfy eq:seghyp?  The referee claims sigma - alpha_1 =
+// (1 - sin t)/(2 cos t) independently of L, so eq:seghyp holds on the whole family and the
+// note's diagnosis of its own counterexample is wrong.
+#[allow(dead_code)]
+fn seghyp_check(l: f64, nt: usize) -> (f64, f64, f64) {
+    let (mut minseg, mut mincy, mut maxerr) = (1e9f64, 1e9f64, 0.0f64);
+    for q in 0..nt {
+        let t = (q as f64 + 0.5) / nt as f64 * P2;
+        let a1 = 2.0 * l * t.sin() - 0.5;
+        let f = h(t, l);
+        let g = h(t + P2, l);
+        let sig = (f - 1.0) * t.tan() + g - 1.0;
+        let cy = (f - 1.0) * t.sin() + (g - 1.0) * t.cos();
+        minseg = minseg.min(sig - a1.max(0.0));
+        mincy = mincy.min(cy);
+        maxerr = maxerr.max(((sig - a1) - (1.0 - t.sin()) / (2.0 * t.cos())).abs());
+    }
+    (minseg, mincy, maxerr)
 }

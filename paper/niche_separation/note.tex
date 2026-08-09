@@ -743,8 +743,8 @@ direction $-\nu_t=(\sin t,-\cos t)$ points downward, and the floor is reached at
 distance exactly $\sigma(t)$, which is why \eqref{eq:sig} is the relevant reach.
 
 \begin{proposition}[Niche area in convex-linear data]\label{prop:V}
-Assume \eqref{eq:seghyp}, that is $\sigma\ge\alpha_1^+$ on $[0,\pi/2]$. If in addition the
-two sweeps are disjoint, injective and cover the niche, then
+Assume the two truncated sweeps lie in $C_2$. If in addition they are disjoint, injective
+and cover the niche, then
 \begin{equation}\label{eq:V}
   |N|=\int_0^{\pi/2}\Bigl[\tfrac12\bigl(\alpha_2^+\bigr)^2
       +\tfrac12\bigl(\sigma-\alpha_1\bigr)^2
@@ -1484,9 +1484,10 @@ injectivity and disjointness together are ``at most one entry''. It says nothing
 second term, which is the sweep mass that leaves the cap. Equality $V=|N|$ needs, in
 addition, a containment statement: \emph{the truncated sweeps lie in $C_2$}. That statement
 is not implied by the disjointness, injectivity and covering hypotheses alone, as
-Remark~\ref{rem:v6} shows by counterexample. It is implied by \eqref{eq:seghyp}, which
-Proposition~\ref{prop:V} now assumes: Remarks~\ref{rem:v10} and~\ref{rem:v11} reduce the
-containment to $\sigma\ge0$ at the binding direction and cover the remaining ones.
+Remark~\ref{rem:v6} shows by counterexample, and it is \emph{not} implied by
+\eqref{eq:seghyp} either (Remark~\ref{rem:v13}). Proposition~\ref{prop:V} therefore assumes
+it outright. What Remark~\ref{rem:v7} supplies is a sufficient condition for the half of it
+that concerns $C$, namely $\alpha_1\alpha_2\le1$ with the two end conditions.
 
 This proves (iii). Normalise so that $G(0)=H(\pi/2)=1$, which is a translation and changes
 no area and neither arm. Then $c(0)=(H(0)-1,0)$ sits on the floor and its quadrant meets the
@@ -1840,6 +1841,46 @@ Rule~0: \verb|ceiling_slack_form|, \verb|ceiling_slack_at_zero|, \verb|ceiling_t
 \verb|contact_on_ceiling| are \textsc{verified}. The contact time is therefore covered for
 every $x$. What remains \textsc{heuristic} is the coverage at $t>0$, where $Q\ne0$ and the
 three slacks must be compared as functions of two parameters.
+\end{remark}
+
+\begin{remark}[Correction: \eqref{eq:seghyp} is not the missing hypothesis]\label{rem:v13}
+An earlier version of Remarks~\ref{rem:v4} and~\ref{rem:v10} asserted that the containment of
+the truncated sweeps in $C_2$ follows from \eqref{eq:seghyp}, and that the stadium of
+Remark~\ref{rem:v6} fails containment because it fails \eqref{eq:seghyp}. Both are false and
+are withdrawn.
+
+For the stadium $H(\theta)=\tfrac12+\tfrac12\sin\theta+L|\cos\theta|$ the curvature radius is
+$r\equiv\tfrac12$ off the atom, so the identity
+$\sigma-\alpha_1=-\sec t\int_t^{\pi/2}(r-1)\cos s\,ds$ evaluates in closed form to
+\[
+  \sigma-\alpha_1=\frac{1-\sin t}{2\cos t}\ \ge\ 0 ,
+\]
+\emph{independently of $L$}; and $c_y=\tfrac12+L\sin2t-\tfrac12(\sin t+\cos t)$ is
+nonnegative for every $L\ge\tfrac14$, so $\sigma\ge0$ as well. Hence
+$\sigma\ge\alpha_1^+$ holds on the whole family, including the rows where
+$V-|N|$ is $0.047$, $0.146$ and $0.285$. Measured at $20000$ time points, $\min(\sigma-\alpha_1^+)$
+is nonnegative at $L=1.10$, at $L=\tfrac{1+\sqrt2}{2}$, and at $L=1.30$ and $1.50$ alike,
+and the closed form above
+agrees with the quadrature to $3\cdot10^{-12}$.
+
+The true threshold is $\max c_y=L-\tfrac{\sqrt2-1}{2}>1=H(\pi/2)$, that is
+$L>\tfrac{1+\sqrt2}{2}$, and the escaping direction is $\theta=+\pi/2$, the ceiling, which is
+a constraint of $C$ and not of $\rho C$. What the stadium violates is
+$\alpha_1\alpha_2\le1$: at $t=\pi/4$ both arms equal $L\sqrt2-\tfrac12$, whose square exceeds
+$1$ for every $L$ past $\tfrac{1}{\sqrt2}\bigl(\tfrac32\bigr)$, well below the containment
+threshold. That is the hypothesis of Remark~\ref{rem:v7}, and $\Sig$ satisfies it with
+$\alpha_1\alpha_2\le(2a_1-1)^2<1$.
+
+Consequences. Proposition~\ref{prop:V} assumes containment outright rather than
+\eqref{eq:seghyp}. Remark~\ref{rem:v10}'s reduction of the mirror half to the floor stands as
+a statement about $\rho C$, but it does not discharge containment, because the binding
+direction for the counterexample family is in the other half. And the proof of
+Proposition~\ref{prop:convex} establishes only that the sweeps lie in $U$, not in
+$U\cap C_2=N$; Theorem~\ref{thm:final} cites it for containment, so that citation is
+unsupported and the theorem's stated proof has a gap at exactly the point
+Remark~\ref{rem:v6} identifies. Rule~0: Theorem~\ref{thm:final} reverts to
+\textsc{conjecture} pending a containment argument, and everything downstream of it inherits
+that label.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
@@ -3900,7 +3941,7 @@ is \textsc{heuristic}, a rasterised measurement over $55$ caps, and it is not a 
 no disconnected competitor beats $A_R^\ast$.
 \end{remark}
 
-\begin{proposition}[The ordered class is convex]\label{prop:convex}
+\begin{proposition}[The ordered class is convex]\label{prop:ordconvex}
 In the cap data $(r,a)$, the set of admissible caps with $\alpha_2(0)\ge\sqrt3-1$ is
 convex.
 \end{proposition}
@@ -3921,7 +3962,7 @@ boundary data, and $\alpha_2(0)\ge\sqrt3-1$. Then $|T|\le A_R^\ast$.
 By Theorem~\ref{thm:ordopt}'s hypothesis and Corollary~\ref{cor:floor} with the argument
 after Lemma~\ref{lem:imw}, the cap is ordered; by Proposition~\ref{prop:anchor} it is
 anchored. The segment from $H_\Sig$ to $H$ lies in the ordered class by
-Proposition~\ref{prop:convex}, and $\Sig$ itself lies in it since
+Proposition~\ref{prop:ordconvex}, and $\Sig$ itself lies in it since
 $\alpha_2(0)=2a_1-1>\sqrt3-1$. Every cap on the segment is therefore ordered and anchored,
 so $\delta^2Q\le0$ along it by Theorem~\ref{thm:diag}, and $Q$ is concave there. With
 $\delta Q(\Sig)=0$ and $Q(\Sig)=A_R^\ast$, concavity gives $Q(H)\le A_R^\ast$. Finally
