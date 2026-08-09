@@ -1491,6 +1491,51 @@ $0.98969$ at grid resolution. Rule~0: (iii) is \textsc{proved} and formalised
 \verb|face2_window_iff_entry|, \verb|entry_deriv_nonneg|, \verb|corner_start_on_floor|);
 (ii) is \textsc{conjecture}, now in the sharp form ``$T(p)$ is connected''.
 \end{remark}
+
+\begin{remark}[The two arms are one function, and (ii) closes for $r<1$]\label{rem:v5}
+Since $\nu_t=\mu_{t+\pi/2}$, the closed forms of Remark~\ref{rem:v4} read
+$u(t)=W(t)$ and $v(t)=W(t+\pi/2)$ for the single function
+\[
+  W(\theta)=H(\theta)-1-\langle p,\mu_\theta\rangle ,\qquad \theta\in[0,\pi].
+\]
+The two arms are one function at a quarter-period shift, so
+$T(p)=\{W>0\}\cap(\{W>0\}-\pi/2)$, an intersection of two sets. An intersection of intervals
+is an interval, so hypothesis (ii) follows once $\{W>0\}$ meets each of $[0,\pi/2)$ and
+$(\pi/2,\pi]$ in an interval. It cannot be an interval across all of $[0,\pi]$: after the
+normalisation $H(\pi/2)=1$ one has $W(\pi/2)=-p_y<0$ for every $p$ off the floor, so the
+atom of $H''$ at $\pi/2$ lies in the negative set and splits $\{W>0\}$ in two. The split is
+forced.
+
+Because $\langle p,\mu_\theta\rangle''=-\langle p,\mu_\theta\rangle$, the point drops out of
+the second-order part and $W$ solves a Hill equation whose forcing is the cap alone,
+\[
+  W''+W=r(\theta)-1,\qquad r=H+H'' .
+\]
+Let $(a,b)\subset(0,\pi/2)$ be a maximal interval on which $W<0$, so $W(a)=W(b)=0$. Pairing
+the equation with $W$ and integrating by parts, the boundary terms vanish and
+\[
+  \int_a^b (r-1)W=\int_a^b W^2-\int_a^b (W')^2 .
+\]
+If $b-a\le\pi$, Wirtinger's inequality makes the right side nonpositive. If $r<1$ on $(a,b)$
+the left side is an integral of a product of two negative functions, hence positive. So
+every negative hump of $W$ has length exceeding $\pi$. A gap between two components of
+$\{W>0\}$ inside $[0,\pi/2)$ would be such a hump, of length below $\pi/2$; there is none.
+The same argument runs on $(\pi/2,\pi]$. Hence $T(p)$ is an interval and, with
+Remark~\ref{rem:v4}, all three hypotheses of Proposition~\ref{prop:V} hold.
+
+The hypothesis is $r<1$ away from the atom, and it holds for $\Sig$ with room:
+$\max r=0.838571$, a margin of $0.161429$ to the threshold (\verb|sofa_cut|). It is an open
+condition, so it survives the perturbations $H+\varepsilon\eta$ of the second-variation
+analysis for $\varepsilon$ small, provided the atom stays at $\pi/2$.
+
+Rule~0: the Sturm step is \textsc{proved}, not \textsc{verified}; its two analytic inputs,
+integration by parts and Wirtinger, are carried as explicit hypotheses of
+\verb|negative_hump_contradiction| rather than formalised. The structural steps are
+\textsc{verified}: \verb|arm_shift|, \verb|point_part_harmonic|,
+\verb|cut_set_ordConnected|, \verb|exists_first_entry|, \verb|covering_first_entry|. What
+this settles is a hypothesis the note previously assumed; it is not a statement about the
+moving sofa problem itself.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

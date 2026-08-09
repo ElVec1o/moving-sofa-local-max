@@ -1340,4 +1340,157 @@ theorem corner_start_on_floor {g0 py : ℝ} (hg : g0 = 1) (hcap : 0 ≤ py)
 
 end MovingFrame
 
+section OneFunction
+
+/-!
+### The two arms are one function, and connectivity becomes a Sturm statement
+
+`ν_t = μ_{t+π/2}`, so with `W(θ) = H(θ) - 1 - ⟨p, μ_θ⟩` the closed forms of the previous
+section read
+
+  `u(t) = W(t)`,   `v(t) = W(t + π/2)`.
+
+The two arms are the same function at a quarter-period shift (`arm_shift`), and therefore
+
+  `T(p) = {t : W(t) > 0} ∩ {t : W(t + π/2) > 0}`.
+
+An intersection of order-connected sets is order-connected (`cut_set_ordConnected`), so
+connectivity of `T(p)` follows once `{W > 0}` meets each of `[0, π/2)` and `(π/2, π]` in an
+interval. Note it cannot be an interval across all of `[0,π]`: after the normalisation
+`H(π/2) = 1` one has `W(π/2) = -p_y < 0` for every `p` off the floor, so the atom sits in the
+negative set and splits `{W > 0}` in two. That split is forced, not a defect.
+
+Since `⟨p, μ_θ⟩'' = -⟨p, μ_θ⟩` (`point_part_harmonic`), `p` drops out of the second-order
+part and `W` satisfies a Hill equation whose forcing is the cap alone:
+
+  `W'' + W = r(θ) - 1`,  `r = H + H''` the curvature radius.
+
+Now the Sturm step. On a hump where `W` has constant sign and vanishes at both ends, pairing
+the equation with `W` itself gives `∫(W''+W)W = ∫W² - ∫W'²`, and Wirtinger on an interval of
+length at most `π` says the right side is nonpositive. If `r < 1` the left side is `∫(r-1)W`,
+which on a NEGATIVE hump is an integral of a positive function. Contradiction: negative humps
+are longer than `π` (`negative_hump_contradiction`). A gap between two components of
+`{W > 0}` inside `[0, π/2)` would be exactly such a hump, of length below `π/2`. So there is
+no gap.
+
+For `Σ` the hypothesis is met with room: `sofa_cut` measures `max r = 0.838571` off the atom,
+margin `0.161429` to the threshold `1`. The two analytic inputs are carried as explicit
+hypotheses here rather than proved, so this section is auditable but the Sturm lemma is
+`PROVED`, not `VERIFIED`: `henergy` is integration by parts and `hwirt` is Wirtinger.
+-/
+
+/-- `ν_t = μ_{t+π/2}`, so the second arm is the first evaluated a quarter period later. -/
+theorem arm_shift (H : ℝ → ℝ) (px py t : ℝ) :
+    H (t + Real.pi / 2) - 1
+        - (px * Real.cos (t + Real.pi / 2) + py * Real.sin (t + Real.pi / 2))
+      = H (t + Real.pi / 2) - 1 - (-(px * Real.sin t) + py * Real.cos t) := by
+  rw [Real.cos_add, Real.sin_add, Real.cos_pi_div_two, Real.sin_pi_div_two]; ring
+
+/-- `⟨p, μ_θ⟩` is annihilated by `d²/dθ² + 1`. This is why `p` does not appear in the Hill
+equation `W'' + W = r - 1`: it enters only through initial conditions. -/
+theorem point_part_harmonic (px py t : ℝ) :
+    HasDerivAt (fun s => px * Real.cos s + py * Real.sin s)
+        (-(px * Real.sin t) + py * Real.cos t) t ∧
+    HasDerivAt (fun s => -(px * Real.sin s) + py * Real.cos s)
+        (-(px * Real.cos t + py * Real.sin t)) t := by
+  constructor
+  · have h := ((Real.hasDerivAt_cos t).const_mul px).add ((Real.hasDerivAt_sin t).const_mul py)
+    have e : -(px * Real.sin t) + py * Real.cos t
+        = px * (-Real.sin t) + py * Real.cos t := by ring
+    rw [e]; exact h
+  · have h := (((Real.hasDerivAt_sin t).const_mul px).neg).add
+      ((Real.hasDerivAt_cos t).const_mul py)
+    have e : -(px * Real.cos t + py * Real.sin t)
+        = -(px * Real.cos t) + py * (-Real.sin t) := by ring
+    rw [e]; exact h
+
+/-- `T(p)` is the intersection of two order-connected sets, hence order-connected. This is
+the step that turns "one interval on each side of the atom" into connectivity of the cut
+set, and it is the whole reason the quarter-period shift matters. -/
+theorem cut_set_ordConnected {P Q : Set ℝ} (hP : P.OrdConnected) (hQ : Q.OrdConnected) :
+    (P ∩ Q).OrdConnected := hP.inter hQ
+
+/-- **Negative humps are long.** If `W < 0` on `(a,b)` with `W` vanishing at both ends, the
+forcing `q = r - 1` is negative there, and Wirtinger holds on `(a,b)` (which needs
+`b - a ≤ π`), the three are contradictory. So a negative hump has length exceeding `π`, and
+a gap between two components of `{W > 0}` inside an interval of length `π/2` is impossible.
+
+The two analytic inputs are explicit: `henergy` is integration by parts against `W`, whose
+boundary terms vanish because `W(a) = W(b) = 0`, and `hwirt` is Wirtinger's inequality. -/
+theorem negative_hump_contradiction {W q : ℝ → ℝ} {a b : ℝ} (hab : a < b)
+    (hWneg : ∀ t ∈ Set.Ioo a b, W t < 0) (hqneg : ∀ t ∈ Set.Ioo a b, q t < 0)
+    (hint : IntervalIntegrable (fun t => q t * W t) MeasureTheory.volume a b)
+    (henergy : (∫ t in a..b, q t * W t)
+        = (∫ t in a..b, (W t) ^ 2) - (∫ t in a..b, (deriv W t) ^ 2))
+    (hwirt : (∫ t in a..b, (W t) ^ 2) ≤ (∫ t in a..b, (deriv W t) ^ 2)) : False := by
+  have hpos : 0 < ∫ t in a..b, q t * W t := by
+    refine intervalIntegral.intervalIntegral_pos_of_pos_on hint (fun t ht => ?_) hab
+    exact mul_pos_of_neg_of_neg (hqneg t ht) (hWneg t ht)
+  linarith
+
+end OneFunction
+
+section CoveringAssembly
+
+/-!
+### The first entry exists, and covering assembles
+
+`exists_first_entry` is the step left in prose last round: the cut set of a point of `N` has
+a first entry, obtained as the supremum of the closed set of earlier times at which the
+point is not cut. `covering_first_entry` then combines it with `entry_deriv_nonneg` and the
+frame ODE to put the offset on the correct side of its window.
+-/
+
+/-- The supremum of the times before `ts` at which `w` is nonpositive is a first entry: `w`
+vanishes there and is positive on the whole stretch up to `ts`. -/
+theorem exists_first_entry {w : ℝ → ℝ} {a ts : ℝ} (hat : a < ts) (hc : Continuous w)
+    (h0 : w a ≤ 0) (hts : 0 < w ts) :
+    ∃ t₁, a ≤ t₁ ∧ t₁ < ts ∧ w t₁ = 0 ∧ ∀ y, t₁ < y → y ≤ ts → 0 < w y := by
+  set S : Set ℝ := Set.Icc a ts ∩ w ⁻¹' Set.Iic 0 with hSdef
+  have hSc : IsClosed S := isClosed_Icc.inter (isClosed_Iic.preimage hc)
+  have hSne : S.Nonempty := ⟨a, ⟨le_rfl, hat.le⟩, h0⟩
+  have hSb : BddAbove S := ⟨ts, fun y hy => hy.1.2⟩
+  have hmem : sSup S ∈ S := hSc.csSup_mem hSne hSb
+  have h1 : a ≤ sSup S := hmem.1.1
+  have h2 : sSup S ≤ ts := hmem.1.2
+  have hw1 : w (sSup S) ≤ 0 := hmem.2
+  have hlt : sSup S < ts := lt_of_le_of_ne h2 (by intro h; rw [h] at hw1; linarith)
+  have hpos : ∀ y, sSup S < y → y ≤ ts → 0 < w y := by
+    intro y hy1 hy2
+    by_contra hcon
+    push_neg at hcon
+    exact absurd (le_csSup hSb ⟨⟨le_trans h1 hy1.le, hy2⟩, hcon⟩) (not_le.mpr hy1)
+  refine ⟨sSup S, h1, hlt, le_antisymm hw1 ?_, hpos⟩
+  have htend : Filter.Tendsto w (nhdsWithin (sSup S) (Set.Ioi (sSup S))) (nhds (w (sSup S))) :=
+    hc.continuousAt.mono_left nhdsWithin_le_nhds
+  refine ge_of_tendsto htend ?_
+  filter_upwards [Ioo_mem_nhdsGT hlt] with y hy
+  exact (hpos y hy.1 hy.2.le).le
+
+/-- **Covering, assembled.** A point cut at `ts` but not at `a` has a first entry, and at
+that entry it lies on one of the two faces with the Jacobian nonnegative, which by
+`face1_window_iff_entry` and `face2_window_iff_entry` is exactly membership of the
+corresponding truncation window of `prop:V`. -/
+theorem covering_first_entry {u v A1 A2 : ℝ → ℝ} {a ts : ℝ} (hat : a < ts)
+    (hu : Continuous u) (hv : Continuous v)
+    (hdu : ∀ s, HasDerivAt u (v s - A1 s) s)
+    (hdv : ∀ s, HasDerivAt v (-u s + A2 s) s)
+    (h0 : min (u a) (v a) ≤ 0) (hts : 0 < min (u ts) (v ts)) :
+    ∃ t₁, a ≤ t₁ ∧ t₁ < ts ∧
+      ((u t₁ = 0 ∧ 0 ≤ v t₁ ∧ 0 ≤ v t₁ - A1 t₁) ∨
+       (v t₁ = 0 ∧ 0 ≤ u t₁ ∧ 0 ≤ A2 t₁ - u t₁)) := by
+  obtain ⟨t₁, h1, h2, hz, hp⟩ := exists_first_entry hat (hu.min hv) h0 hts
+  refine ⟨t₁, h1, h2, ?_⟩
+  have hpu : ∀ y, t₁ < y → y ≤ ts → 0 < u y :=
+    fun y hy1 hy2 => lt_of_lt_of_le (hp y hy1 hy2) (min_le_left _ _)
+  have hpv : ∀ y, t₁ < y → y ≤ ts → 0 < v y :=
+    fun y hy1 hy2 => lt_of_lt_of_le (hp y hy1 hy2) (min_le_right _ _)
+  rcases min_eq_zero_cases hz with ⟨hu0, hv0⟩ | ⟨hv0, hu0⟩
+  · exact Or.inl ⟨hu0, hv0, entry_deriv_nonneg h2 (hdu t₁) hu0 hpu⟩
+  · refine Or.inr ⟨hv0, hu0, ?_⟩
+    have := entry_deriv_nonneg h2 (hdv t₁) hv0 hpv
+    linarith
+
+end CoveringAssembly
+
 end MovingSofa

@@ -184,6 +184,33 @@ fn main() {
         py >= 0.0 && cap.iter().all(|&(ex, ey, hh)| px * ex + py * ey <= hh)
     };
 
+    // ---- the W picture ---------------------------------------------------------------------
+    // u(t) = W(t) and v(t) = W(t + pi/2) for W(th) = H(th) - 1 - <p, mu_th>, because
+    // nu_t = mu_{t+pi/2}.  The two arms are ONE function at a quarter-period shift.  Since
+    // <p, mu_th>'' = -<p, mu_th>, W'' + W = r(th) - 1 with r = H + H'' the curvature radius,
+    // and p enters only through initial conditions.  Sturm: on a positive hump of W the
+    // test-function identity gives (1 - lambda) int W phi = int (r-1) phi with
+    // lambda = (pi/len)^2, so r < 1 forces every NEGATIVE hump to be longer than pi.  A gap
+    // between two components of {W>0} inside an interval of length pi/2 is such a hump, so
+    // there can be no gap: {W>0} meets [0,pi/2) and (pi/2,pi] each in an interval.
+    let nth = 2 * nt;
+    let dth = std::f64::consts::PI / (nth - 1) as f64;
+    let hth: Vec<f64> = (0..nth).map(|k| interp(&x, &h, k as f64 * dth) - 1.0).collect();
+    let mut rmax = 0.0f64;
+    let mut rarg = 0.0f64;
+    for k in 1..nth - 1 {
+        let th = k as f64 * dth;
+        if (th - p2()).abs() < 3.0 * dth { continue; }   // skip the atom at pi/2
+        let rr = (hth[k] + 1.0) + (hth[k + 1] - 2.0 * hth[k] + hth[k - 1]) / (dth * dth);
+        if rr > rmax { rmax = rr; rarg = th; }
+    }
+    println!("  max curvature radius r off atom  {:.6} at theta = {:.6}", rmax, rarg);
+    println!("  margin to the Sturm threshold 1  {:.6}", 1.0 - rmax);
+
+    let mut ident_max = 0.0f64;      // max |u(t) - W(t)| and |v(t) - W(t+pi/2)|
+    let mut worst_lo = 0usize;       // max components of {W>0} in [0, pi/2)
+    let mut worst_hi = 0usize;       // max components of {W>0} in (pi/2, pi]
+
     for jy in 0..pg {
         if jy % (pg / 10).max(1) == 0 {
             let done = jy as f64 / pg as f64;
@@ -228,6 +255,32 @@ fn main() {
                 n_cells += 1;
                 hist[comps.min(7)] += 1;
                 if zero_cut { cut_at_zero += 1; }
+                // Components of {W > 0} on each side of the atom, and the identity
+                // u(t) = W(t), v(t) = W(t + pi/2) that makes the two arms one function.
+                let (mut clo, mut chi) = (0usize, 0usize);
+                let (mut plo, mut phi_) = (false, false);
+                for k in 0..nth {
+                    let th = k as f64 * dth;
+                    let w = hth[k] - (px * th.cos() + py * th.sin());
+                    if th < p2() {
+                        if w > 0.0 && !plo { clo += 1; }
+                        plo = w > 0.0;
+                    } else if th > p2() {
+                        if w > 0.0 && !phi_ { chi += 1; }
+                        phi_ = w > 0.0;
+                    }
+                }
+                if clo > worst_lo { worst_lo = clo; }
+                if chi > worst_hi { worst_hi = chi; }
+                for f in fr.iter().step_by((nt / 40).max(1)) {
+                    let t = f.my.atan2(f.mx);
+                    let u = (f.cx - px) * f.mx + (f.cy - py) * f.my;
+                    let v = (f.cx - px) * f.nx + (f.cy - py) * f.ny;
+                    let wt = interp(&x, &h, t) - 1.0 - (px * t.cos() + py * t.sin());
+                    let wt2 = interp(&x, &h, t + p2()) - 1.0
+                            - (px * (t + p2()).cos() + py * (t + p2()).sin());
+                    ident_max = ident_max.max((u - wt).abs()).max((v - wt2).abs());
+                }
             }
         }
     }
@@ -253,6 +306,9 @@ fn main() {
              entries_in_window, entries_total, wfrac);
     println!("  worst out-of-window miss         {:.6}", worst_window_miss);
     println!("  elapsed                          {:.1}s", t0.elapsed().as_secs_f64());
+    println!("\n  max |u - W(t)| and |v - W(t+pi/2)|  {:.3e}", ident_max);
+    println!("  max components of {{W>0}} on [0,pi/2)  {}", worst_lo);
+    println!("  max components of {{W>0}} on (pi/2,pi] {}", worst_hi);
 
     println!();
     let multi = hist[2..].iter().sum::<usize>();
