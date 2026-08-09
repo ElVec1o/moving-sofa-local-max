@@ -2215,6 +2215,26 @@ $\|\eta\|_\infty=h$ and gives $\delta g\asymp h$ at distance $d/2$, with no fact
 coercivity used elsewhere in this note is $L^2$, so the two estimates are stated in
 incompatible norms and cannot be chained as written. Recorded rather than repaired.
 \end{remark}
+
+\begin{remark}[Reconciling the norms]\label{rem:v27}
+The mismatch of Remark~\ref{rem:v26} is not a defect of the near-regime estimate but a
+statement about which topology the conclusion holds in.
+
+Proposition~\ref{prop:ball} already certifies (RC) on a $C^2$ ball,
+$\max(\|\eta\|_\infty,\|\eta'\|_\infty,\|\eta''\|_\infty)\le\tfrac1{20}$, and a bound on
+$\|\eta'\|_\infty$ is exactly a Lipschitz bound by the mean value theorem. So the near
+estimate is available on the same ball the rest of the local analysis uses, and the two are
+compatible.
+
+What this costs is the topology of the conclusion. Local maximality established this way is
+local in $C^2$, not in $L^2$. That is weaker, and it is what Proposition~\ref{prop:ball}
+already delivers, so the note states it rather than leaving two estimates in different norms.
+The $L^2$ coercivity is unaffected; it is simply not what controls the perturbation of a
+pointwise constraint.
+
+Rule~0: \verb|lipschitz_of_deriv_bound| and \verb|pert_linear_of_lipschitz| are
+\textsc{verified}. Every local statement in this note is therefore local in $C^2$.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

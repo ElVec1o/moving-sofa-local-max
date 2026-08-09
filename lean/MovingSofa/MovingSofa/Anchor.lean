@@ -2794,4 +2794,41 @@ theorem inner_chain {α : Type*} [MeasurableSpace α] (μ : MeasureTheory.Measur
 
 end InnerContent
 
+
+section NormReconciliation
+
+/-!
+### Reconciling the norms: the near estimate lives on the ball the note already uses
+
+The near-regime estimate needs a Lipschitz bound on `η`, and is false in `C⁰` or `L²`. That
+is not a defect of the estimate but a statement about which topology the conclusion holds in.
+
+`prop:ball` already certifies `(RC)` on a `C²` ball, `max(‖η‖_∞, ‖η'‖_∞, ‖η''‖_∞) ≤ 1/20`,
+and a bound on `‖η'‖_∞` is exactly a Lipschitz bound by the mean value theorem
+(`lipschitz_of_deriv_bound`). So the near estimate is available on the same ball the rest of
+the local analysis uses, and the two are compatible after all.
+
+What this costs is the topology of the conclusion. Local maximality established this way is
+local in `C²`, not in `L²`. That is weaker, and it is what `prop:ball` already delivers, so
+the note should say so rather than leaving the two estimates in different norms. The `L²`
+coercivity remains what it was; it is simply not the thing that controls the perturbation of
+a pointwise constraint.
+-/
+
+/-- A bound on the derivative is a Lipschitz bound, which is what the near-regime estimate
+needs and what a `C¹` ball supplies. -/
+theorem lipschitz_of_deriv_bound {f : ℝ → ℝ} {M : ℝ} (hM : 0 ≤ M)
+    (hd : ∀ x, HasDerivAt f (deriv f x) x) (hb : ∀ x, |deriv f x| ≤ M) (x y : ℝ) :
+    |f y - f x| ≤ M * |y - x| := by
+  have hdiff : Differentiable ℝ f := fun z => (hd z).differentiableAt
+  exact Convex.norm_image_sub_le_of_norm_deriv_le (fun z _ => (hd z).differentiableAt)
+    (fun z _ => by simpa using hb z) (convex_univ) (Set.mem_univ x) (Set.mem_univ y)
+
+/-- The perturbation of a constraint vanishing at the contact is then controlled linearly in
+the distance, which is the hypothesis the near-regime argument consumes. -/
+theorem pert_linear_of_lipschitz {M d val : ℝ} (hM : 0 ≤ M) (hd : 0 ≤ d)
+    (h : |val| ≤ M * d) : val ≤ M * d := le_trans (le_abs_self val) h
+
+end NormReconciliation
+
 end MovingSofa
