@@ -44,6 +44,7 @@ const RUST_BINS: &[(&str, &[&str])] = &[
     ("sofa_sweep", &[]),
     ("sofa_cut", &["1400", "3000"]),
     ("sofa_stadium", &["700", "2500"]),
+    ("rc_one", &[]),
 ];
 
 /// Captured stdout of not-yet-ported producers.  Every entry here is migration debt.

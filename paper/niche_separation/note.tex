@@ -134,7 +134,10 @@ Theorem~\ref{thm:rc} shows that (RC) implies all three injectivity conditions of
 sweep, by reducing each to a forced harmonic oscillator whose kernel is non-negative
 precisely because the rotation angle is $\pi/2$. That is three of the four hypotheses of
 Proposition~\ref{prop:V}; the fourth, containment, is assumed, and with it $V=|N|$ and $Q$
-is tight.
+is tight. Two of the three --- injectivity of each sweep, and disjointness of the two ---
+have a second and shorter proof from the same (RC), through connectedness of the cut set
+rather than through pairwise line intersections (Proposition~\ref{prop:oneentry}); it is
+that route Theorem~\ref{thm:final} uses, and it needs no grid.
 
 At $\Sig$ the three hypotheses of the concavity method hold exactly:
 $Q(\Sig)=A_R^\ast$ structurally, with no integral evaluated, on that same containment
@@ -1529,7 +1532,8 @@ bias on boundary cells and not a violation of Proposition~\ref{prop:reynolds};
 \verb|sofa_cut| says so rather than quoting the ratio as a convergence check. Rule~0: (iii) is \textsc{verified}
 (\verb|frame_ode_u|, \verb|frame_ode_v|, \verb|face1_window_iff_entry|,
 \verb|face2_window_iff_entry|, \verb|entry_deriv_nonneg|, \verb|corner_start_on_floor|);
-(ii) is \textsc{conjecture}, now in the sharp form ``$T(p)$ is connected''.
+(ii) in the sharp form ``$T(p)$ is connected'' is \textsc{proved} on $\mathcal D$ by
+Proposition~\ref{prop:oneentry}.
 \end{remark}
 
 \begin{remark}[The two arms are one function, and (ii) closes for $r<1$]\label{rem:v5}
@@ -1598,13 +1602,179 @@ supporting steps are \textsc{verified}
 \verb|negative_hump_impossible|, \verb|pos_between|, \verb|pos_set_ordConnected|), the
 curvature bound (\verb|curvature_lt_one|, \verb|curvature_lt_one'|) and the two sweep
 Jacobians that define the truncation windows (\verb|sweep2_jacobian|,
-\verb|sweep1_jacobian|). Two caveats on those. The connectivity lemmas assume $W''$ exists
+\verb|sweep1_jacobian|). Two caveats on those, both now removed by
+Proposition~\ref{prop:oneentry}. The connectivity lemmas as first written assume $W''$ exists
 pointwise on the open window, which $\Sig$ fails: $r$ jumps at $\beta$, inside $[0,\pi/2)$,
-so the lemmas apply to a $C^2$ surrogate and not to $\Sig$'s own $W$. The discarded route
+so those lemmas apply to a $C^2$ surrogate and not to $\Sig$'s own $W$. The discarded route
 through $\int_a^b(r-1)W$ tolerates those jumps, an integral being indifferent to them, so
-the change to a pointwise Sturm argument was a regression in applicability. Restating the
-lemmas with $q$ a measure and $G$ monotone in the sense of bounded variation is the repair,
-and it is not done here.
+the change to a pointwise Sturm argument was a regression in applicability. And the
+hypothesis used here is the strict $r<1$, whereas (b) supplies only $r\le1$.
+Proposition~\ref{prop:oneentry} restates the argument with $q$ a measure and $G_x$ merely
+non-increasing, which repairs both.
+\end{remark}
+
+\begin{proposition}[(i) and (ii) on $\mathcal D$, from the gauge and (RC) alone]
+\label{prop:oneentry}
+Let $H$ satisfy (a) and (b) of Theorem~\ref{thm:final}. Then
+\begin{enumerate}
+\item[(1)] for every $p$ with $p_y>0$ the cut set $T(p)$ is an interval; and
+\item[(2)] for almost every $p$ the union of the two truncated sweeps has at most one
+preimage over $p$.
+\end{enumerate}
+In particular hypotheses (i) and (ii) of Proposition~\ref{prop:V} --- injectivity of each
+truncated sweep, and disjointness of the two --- hold on $\mathcal D$. Neither (c) nor (d) is
+used, and neither Theorem~\ref{thm:rc} nor Theorem~\ref{thm:cross} is used.
+\end{proposition}
+
+\begin{proof}
+\emph{Regularity.} By (b) the surface measure satisfies $r\le\lambda$ on $(0,\pi/2)$ and on
+$(\pi/2,\pi)$, where $\lambda$ is Lebesgue measure; in particular $H''=r-H\,d\theta$ is
+absolutely continuous there with $|H''|\le1+\max H$, so $H'$ is Lipschitz on each of
+$[0,\pi/2]$ and $[\pi/2,\pi]$, taking at $\pi/2$ the corresponding one-sided value. This is
+the only use made of (b) beyond the inequality itself, and it is what the phrase
+``absolutely continuous with density at most $1$'' in (b) asserts: a singular continuous part
+would be compatible with $(H+H'')_{\mathrm{ac}}\le1$ and would break the argument below, so
+(b) is read, as stated, as an inequality between measures.
+
+Write $W(\theta)=H(\theta)-1-\langle p,\mu_\theta\rangle$. By Remark~\ref{rem:v5},
+$u(t)=W(t)$, $v(t)=W(t+\pi/2)$ and $W''+W=r-1$ in the sense of measures.
+
+\emph{The atom is never cut.} By the gauge (a), $W(\pi/2)=H(\pi/2)-1-p_y=-p_y<0$. So
+$\pi/2\notin\{W>0\}$, and the point where $W'$ jumps is not merely an endpoint of each window
+but lies in the open negative set. Every anchor and every hump endpoint used below therefore
+sits strictly inside $(0,\pi/2)$ or $(\pi/2,\pi)$, where $H'$ is absolutely continuous. The
+same remark disposes of the derivatives needed in the last step: a face-1 preimage has
+$u(t_0)=0$, so $t_0\ne\pi/2$ since $u(\pi/2)=-p_y<0$, and a face-2 preimage has $v(t_0)=0$,
+so $t_0\ne0$ since $v(0)=W(\pi/2)=-p_y<0$. The atom is an endpoint of each window and is
+never evaluated at; that it is an endpoint rather than an interior point is what makes the
+argument work, and the gauge is what puts it there.
+
+\emph{The Wronskian is non-increasing.} Fix $x$ and put
+\[
+  G_x(\theta)=W'(\theta)\sin(\theta-x)-W(\theta)\cos(\theta-x).
+\]
+Since $W'$ is absolutely continuous on the window and $dW'+W\,d\theta=r(d\theta)-d\theta$,
+the product rule for absolutely continuous functions gives the exact identity
+\begin{equation}\label{eq:dG}
+  dG_x=\sin(\theta-x)\,\bigl(r(d\theta)-d\theta\bigr).
+\end{equation}
+On a window of length at most $\pi/2$ anchored at its left endpoint one has
+$\sin(\theta-x)\ge0$, and $r\le\lambda$ by (b); hence $dG_x\le0$ and $G_x$ is
+non-increasing.
+
+Two features of \eqref{eq:dG} are the whole point. It is an identity between measures, so no
+decomposition of the window into phases occurs and the number of phases is never counted: a
+member of $\mathcal D$ need not have finitely many, and the earlier repair by
+\verb|strictAntiOn_glue|, which chains finitely many, is not needed. And the conclusion is
+non-strict. Where $r_{\mathrm{ac}}=1$ on a set of positive measure --- which (b) permits, and
+which the gauge permits on a set of measure up to $\pi/3$ --- the function $G_x$ is
+\emph{flat}, so it is not strictly decreasing and the strict form of the Sturm step has a
+false hypothesis there.
+
+\emph{No dip.} Let $x<z$ lie in one window with $W(x)>0$ and $W(z)>0$, and suppose
+$W(y)\le0$ for some $y\in(x,z)$. Let $t_1\in[y,z)$ be the largest zero of $W$ below $z$, so
+$W(t_1)=0$ and $W>0$ on $(t_1,z]$; then $W'(t_1)\ge0$. On the other hand $G_x(x)=-W(x)<0$,
+so $G_x(t_1)\le G_x(x)<0$ by the previous step, while $W(t_1)=0$ gives
+$G_x(t_1)=W'(t_1)\sin(t_1-x)$ with $\sin(t_1-x)>0$ because $0<t_1-x<z-x\le\pi/2<\pi$. Hence
+$W'(t_1)<0$, a contradiction. Note where strictness enters: only through $W(x)>0$, which is
+a hypothesis on the anchor and not on $r$. This is why the non-strict $r\le1$ suffices.
+
+\emph{$T(p)$ is an interval.} By the previous step $\{W>0\}$ meets each of $[0,\pi/2]$ and
+$[\pi/2,\pi]$ --- windows of length $\pi/2<\pi$ --- in an order-connected set. Since
+$\nu_t=\mu_{t+\pi/2}$,
+\[
+  T(p)=\Bigl(\{W>0\}\cap[0,\tfrac\pi2]\Bigr)\ \cap\
+       \Bigl(\bigl(\{W>0\}\cap[\tfrac\pi2,\pi]\bigr)-\tfrac\pi2\Bigr) ,
+\]
+an intersection of an order-connected set with the preimage of one under a monotone map,
+hence order-connected. This is (1).
+
+\emph{From one interval to one preimage.} A point $p$ is a value of the face-1 sweep at time
+$t$ exactly when $u(t)=0$ and $s:=v(t)\in[\alpha_1^+,\sigma]$, and of the face-2 sweep exactly
+when $v(t)=0$ and $s:=u(t)\in[0,\alpha_2^+]$; in both cases the offset $s$ is determined by
+$t$, so the number of preimages of $p$ is the number of such times $t$. The Jacobians are
+$s-\alpha_1$ and $\alpha_2-s$.
+
+Discard three null sets. A preimage with $u(t)=v(t)=0$ has $p=c(t)$; a face-1 preimage with
+vanishing Jacobian has $s=\alpha_1(t)$, hence $p=X(t)-\mu_t$ by \verb|face1_endpoint|; a
+face-2 preimage with vanishing Jacobian has $s=\alpha_2(t)$, hence
+$p=X(t+\pi/2)-\mu_{t+\pi/2}$ by \verb|face2_endpoint|. Here $X(\theta)=H\mu_\theta+H'\nu_\theta$
+is the boundary point with outer normal $\mu_\theta$, and by the regularity step $H$ and $H'$
+are Lipschitz on each of $[0,\pi/2]$ and $[\pi/2,\pi]$, so all three are Lipschitz images of
+$[0,\pi/2]$ and therefore Lebesgue-null in $\R^2$. Add the floor $\{p_y=0\}$, which carries
+$s=\sigma$ and is null as well.
+
+Let $p$ avoid those four sets. Then at every preimage $t_0$ the vanishing coordinate has
+strictly positive derivative and the other is strictly positive, so $t_0\notin T(p)$ while
+$(t_0,t_0+\varepsilon)\subseteq T(p)$ for some $\varepsilon>0$. If $t_0<t_1$ were two such
+times, pick $a\in(t_0,\min(t_0+\varepsilon,t_1))\subseteq T(p)$ and $b\in(t_1,t_1+\varepsilon')
+\subseteq T(p)$; then $a<t_1<b$ with $a,b\in T(p)$, so $t_1\in T(p)$ by (1), contradicting
+$t_1\notin T(p)$. Hence at most one preimage, which is (2).
+\end{proof}
+
+\begin{remark}[What Proposition~\ref{prop:oneentry} changes, and how sharp it is]
+\label{rem:v5b}
+Three things. First, the hypothesis drops from the strict $r<1$ of Remark~\ref{rem:v5} to
+the non-strict $r\le1$ of (b), so nothing has to be added to $\mathcal D$; in particular
+(b) is not strengthened, only read as the inequality between measures that its own wording
+states. Second, no phase structure is used, so the statement is available at every member of
+$\mathcal D$ and not only at piecewise-analytic ones. Third, (i) and (ii) no longer depend on
+Theorems~\ref{thm:rc} and~\ref{thm:cross}, hence not on the $401$-point grid and the
+$305$-box covering that certified Definition~\ref{def:kprime}: the two theorems remain in the
+note, and remain the route to Definition~\ref{def:kprime} itself, but Theorem~\ref{thm:final}
+no longer routes injectivity and disjointness through them.
+
+The threshold $r\le1$ is sharp, and the margin at $r=1$ is exactly zero rather than small.
+Connectivity of $\{W>0\}$ on a window \emph{for every $p$} is equivalent to the three-point
+inequality
+\[
+  \Delta(\theta_1,\theta_2,\theta_3):=g_2\sin(\theta_3-\theta_1)-g_1\sin(\theta_3-\theta_2)
+    -g_3\sin(\theta_2-\theta_1)\ \ge\ 0,
+  \qquad g=H-1,
+\]
+for all $\theta_1<\theta_2<\theta_3$ in the window, because $p$ enters $W$ only through
+$\operatorname{span}\{\cos,\sin\}$ and $\Delta$, divided by $\sin(\theta_3-\theta_1)>0$, is
+the value of $W$ at $\theta_2$ for the unique $p$ making $W(\theta_1)=W(\theta_3)=0$. So this
+is not a sampling statement about $p$. Evaluating $\Delta$ over all triples from a $900$-point
+grid on each window (\verb|rc_one|), on caps built from prescribed $r_{\mathrm{ac}}$:
+\[
+  \begin{array}{l|cc}
+    r_{\mathrm{ac}} & \min\Delta\ \text{on }[0,\pi/2] & |\{r_{\mathrm{ac}}=1\}| \\\hline
+    \mathbf 1_{[0,\pi/6]} & -2.4\cdot10^{-16} & 0.5236 \\
+    \mathbf 1_{[\pi/6,\pi/2]}\ \text{(up to the atom)} & -4.8\cdot10^{-16} & 1.0472 \\
+    \text{$40$ alternating slabs} & -1.0\cdot10^{-17} & 0.7203 \\
+    \mathbf 1\{\sin(1/(\theta-\pi/4))>0\}\cup[c,\pi/2] & -3.1\cdot10^{-15} & 1.0407 \\
+    \tfrac12\ \text{(the stadium)} & +2.7\cdot10^{-9} & 0 \\
+    1.05\ \text{on a block} & -6.5\cdot10^{-3} & 1.0195
+  \end{array}
+\]
+Every cap in the list satisfies (a), and the first five satisfy (b); the fourth has
+infinitely many phases accumulating at $\pi/4$, the second has $r_{\mathrm{ac}}=1$ on a set of
+measure $\pi/3$, which the gauge constraint $\int_0^{\pi/2}r_{\mathrm{ac}}\cos=\tfrac12$ makes
+the largest possible. At $r_{\mathrm{ac}}\le1$ the margin is $0$ to roundoff; at
+$r_{\mathrm{ac}}=1.05$, five per cent over, it is negative and connectivity genuinely fails
+for some $p$. Only the sign of $\min\Delta$ is being read. The positive entry for the stadium
+is attained at three adjacent grid points and falls like the cube of the spacing
+($1.6\cdot10^{-8}$ at $500$ points, $2.7\cdot10^{-9}$ at $900$), as it must, since $\Delta$
+vanishes to third order on the diagonal; it is not a margin. The negative entry for
+$r_{\mathrm{ac}}=1.05$ is grid-independent to four digits and is attained at a spread triple. The same run measures the anchored Wronskian directly: at $r_{\mathrm{ac}}=1/2$
+its largest forward increment is $-1.2\cdot10^{-11}$ and it is flat nowhere, while on each of
+the five $r_{\mathrm{ac}}\le1$ caps the largest forward increment is $+7\cdot10^{-16}$ and it
+is flat on a set of length up to $1.05$ out of $1.37$. So \verb|wronskian_strictAntiOn| does
+not instantiate at these caps, and \verb|wronskian_antitoneOn| does: the obstruction is real
+at the level of the lemma, and non-strictness is the whole of the repair.
+
+Rule~0: Proposition~\ref{prop:oneentry} is \textsc{proved}. Its combinatorial and analytic
+core is \textsc{verified} (\verb|pos_between_of_antitone|, \verb|wronskian_antitoneOn|,
+\verb|antitoneOn_glue|, \verb|pos_set_ordConnected_of_antitone|, \verb|atom_not_cut|,
+\verb|cut_set_interval|, \verb|pos_right_of_deriv_pos|, \verb|entry_eventually_cut|,
+\verb|entry_not_cut|, \verb|at_most_one_entry|, \verb|at_most_one_preimage|), and the
+measurements are \verb|rc_one|. One step is \emph{not} formalised and is stated as a
+hypothesis in Lean rather than derived: \eqref{eq:dG}, the passage from $r\le\lambda$ to
+$G_x$ non-increasing. The Lean lemmas take the antitonicity of $G_x$ as an input;
+\verb|wronskian_antitoneOn| derives it in the pointwise case, and the measure case is carried
+here. That is the same split the note already uses for integration by parts elsewhere, and it
+is the only gap in the chain.
 \end{remark}
 
 \begin{remark}[The containment gap, with a counterexample]\label{rem:v6}
@@ -3961,9 +4131,12 @@ Lemma~\ref{lem:corner} and \eqref{eq:arm1}--\eqref{eq:sig}, so $\mathcal D$ is c
 $\Sig$ satisfies (b) by Proposition~\ref{prop:rcsigma}, (c) with margin
 $\tfrac12-M=0.1121\ldots$ by Theorem~\ref{thm:main}, and (d) by definition of $\beta$.
 
-Proposition~\ref{prop:V} is applied with all four of its hypotheses named. By (b) and
-Theorems~\ref{thm:rc} and~\ref{thm:cross} the combined sweep is injective and the two sweeps
-are disjoint; the covering argument inside the proof of Proposition~\ref{prop:convex} gives
+Proposition~\ref{prop:V} is applied with all four of its hypotheses named. By (a) and (b)
+alone, Proposition~\ref{prop:oneentry} gives that each truncated sweep is injective and that
+the two are disjoint, so hypotheses (i) and (ii) hold; Theorems~\ref{thm:rc}
+and~\ref{thm:cross} reach the same conclusion under the same (b) and are retained, but are
+not used here, and with them go the $401$-point grid and the $305$-box covering of
+Remark~\ref{rem:kprime}. The covering argument inside the proof of Proposition~\ref{prop:convex} gives
 that the two truncated sweeps cover $N$; \eqref{eq:seghyp}, which Proposition~\ref{prop:V}
 needs for its face-1 window to be the interval $[\alpha_1^+,\sigma]$, holds by
 Proposition~\ref{prop:seghyp}; and containment of the truncated sweeps in $C_2$ is the

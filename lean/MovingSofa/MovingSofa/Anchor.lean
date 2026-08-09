@@ -3733,11 +3733,12 @@ theorem antitoneOn_glue {f : ℝ → ℝ} {a b c : ℝ}
 Wronskian is consumed. This is what makes the step available on `{r_ac = 1}`, where the
 Wronskian is flat and `pos_between_of_strictAnti` has a false hypothesis.
 
-`W` is required to be differentiable only on `Set.Ico x z`: the right endpoint is excluded,
-which is what lets the window abut the atom at `π/2`. -/
+`W` is required to be differentiable only on the OPEN window `Set.Ioo x z`. Both endpoints are
+excluded, which is what lets a window abut the atom at `π/2` from either side: on `[0, π/2]`
+the atom is the right endpoint and on `[π/2, π]` the left one, and `W'` exists at neither. -/
 theorem pos_between_of_antitone {W W1 : ℝ → ℝ} {x z : ℝ} (hxz : x < z)
     (hlen : z - x < Real.pi) (hWc : Continuous W)
-    (hW : ∀ t ∈ Set.Ico x z, HasDerivAt W (W1 t) t)
+    (hW : ∀ t ∈ Set.Ioo x z, HasDerivAt W (W1 t) t)
     (hanti : AntitoneOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
       (Set.Ico x z))
     (hx : 0 < W x) (hz : 0 < W z) : ∀ t ∈ Set.Ioo x z, 0 < W t := by
@@ -3746,8 +3747,8 @@ theorem pos_between_of_antitone {W W1 : ℝ → ℝ} {x z : ℝ} (hxz : x < z)
   push_neg at hcon
   obtain ⟨t₁, h1, h2, hz1, hp⟩ := exists_first_entry hy.2 hWc hcon hz
   have hxt : x < t₁ := lt_of_lt_of_le hy.1 h1
-  have hmem : t₁ ∈ Set.Ico x z := ⟨hxt.le, h2⟩
-  have hh := hanti ⟨le_rfl, hxz⟩ hmem hxt.le
+  have hmem : t₁ ∈ Set.Ioo x z := ⟨hxt, h2⟩
+  have hh := hanti ⟨le_rfl, hxz⟩ ⟨hxt.le, h2⟩ hxt.le
   simp only [sub_self, Real.sin_zero, Real.cos_zero, mul_zero, mul_one, zero_sub,
     hz1, zero_mul, sub_zero] at hh
   have hsb : 0 < Real.sin (t₁ - x) :=
@@ -3798,13 +3799,12 @@ theorem wronskian_antitoneOn {W W1 q : ℝ → ℝ} {x a b : ℝ}
     nlinarith [hq w hw, hpos w hw]
 
 /-- **`{W > 0}` is order-connected on a window shorter than `π`.** The `AntitoneOn` twin of
-`pos_set_ordConnected`, with the derivative of `W` needed only on `Set.Ico lo hi`.
-
-On `[0, π/2]` the excluded right endpoint is the atom, and on `[π/2, π]` the excluded point
-is never an anchor either, because `W(π/2) < 0` there by `atom_not_cut`. -/
+`pos_set_ordConnected`, with the derivative of `W` needed only on the OPEN window
+`Set.Ioo lo hi`. Both `[0, π/2]` and `[π/2, π]` therefore qualify: the atom sits at an endpoint
+of each and `W'` is never asked for there. -/
 theorem pos_set_ordConnected_of_antitone {W W1 : ℝ → ℝ} {lo hi : ℝ} (hlen : hi - lo < Real.pi)
     (hWc : Continuous W)
-    (hW : ∀ t ∈ Set.Ico lo hi, HasDerivAt W (W1 t) t)
+    (hW : ∀ t ∈ Set.Ioo lo hi, HasDerivAt W (W1 t) t)
     (hanti : ∀ x ∈ Set.Ico lo hi,
       AntitoneOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x)) (Set.Ico x hi)) :
     {t | t ∈ Set.Icc lo hi ∧ 0 < W t}.OrdConnected := by
@@ -3819,7 +3819,7 @@ theorem pos_set_ordConnected_of_antitone {W W1 : ℝ → ℝ} {lo hi : ℝ} (hle
   have hzhi : z ≤ hi := hz.1.2
   refine ⟨⟨le_trans hxlo hxy.le, le_trans hyz.le hzhi⟩, ?_⟩
   refine pos_between_of_antitone hxz (by linarith) hWc
-    (fun t ht => hW t ⟨le_trans hxlo ht.1, lt_of_lt_of_le ht.2 hzhi⟩)
+    (fun t ht => hW t ⟨lt_of_le_of_lt hxlo ht.1, lt_of_lt_of_le ht.2 hzhi⟩)
     ((hanti x ⟨hxlo, lt_of_lt_of_le hxz hzhi⟩).mono
       (fun t ht => ⟨ht.1, lt_of_lt_of_le ht.2 hzhi⟩))
     hx.2 hz.2 y ⟨hxy, hyz⟩
