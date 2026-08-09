@@ -119,7 +119,16 @@ fn main() {
 
     let (x, mut h, mut hp, mut hpl) = support(20001);
 
-    // NORMALISATION.  sigma(t) = (F-1) tan t + G - 1 is the distance from the corner down to
+    // DRIFT CORRECTION, NOT A GAUGE TRANSLATION.  H(pi/2) = 1 is NOT a free normalisation:
+    // subtracting eps sin(theta) translates the cap by (0, -eps), and
+    // rho(K - (0,eps)) = rho K + (0,eps), so a y-translation BREAKS rho-invariance about
+    // y = 1/2.  H(pi/2) = 1 is the substantive statement that the cap spans the corridor,
+    // equivalently h(-pi/2) = 0.  What is subtracted here is quadrature DRIFT, the true
+    // Sigma satisfying the condition exactly; the residual is visible as min Theta = 2 eps
+    // instead of exactly 0 at the structural contact.  Do not read this as a normalisation
+    // that may be applied to an arbitrary cap.
+    //
+    // Why it is needed: sigma(t) = (F-1) tan t + G - 1 is the distance from the corner down to
     // the floor, so it stays finite only if the corner reaches the floor at t = pi/2, that is
     // only if H(pi/2) = 1.  Quadrature of r_ac leaves a small drift there, and tan t then
     // magnifies it without bound: with the drift left in, the face-1 term reads 1.076 against

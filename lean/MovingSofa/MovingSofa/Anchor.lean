@@ -2831,4 +2831,72 @@ theorem pert_linear_of_lipschitz {M d val : ℝ} (hM : 0 ≤ M) (hd : 0 ≤ d)
 
 end NormReconciliation
 
+
+section ReflectedHalf
+
+/-!
+### The reflected half, formalised
+
+`Θ(t,ω) = H(ω) - sin ω - c_x cos ω + c_y sin ω` and the claim is `Θ ≥ 0` on `[0,π]`.
+
+The support inequality at `ψ = π/2` holds with either one-sided derivative, because the atom
+makes the top of the cap a facet whose two endpoints both lie in the body. Subtracting it
+leaves `-(H'(π/2^±) + c_x)cos ω + c_y sin ω` (`refl_slack`), and the point of working in `ω`
+rather than in `ω + t` is that this splits: the `ω`-dependence is a fixed `cos`/`sin` of known
+sign on each half, and the `t`-dependence sits entirely in `(c_x, c_y)`.
+
+So with `c_y ≥ 0` the whole reflected half reduces to `c_x` lying in the horizontal shadow of
+the ceiling facet, `-α₂(0) ≤ c_x ≤ κ` with `κ = -H'(π/2⁻)` (`refl_lower_half`,
+`refl_upper_half`). Each bound comes from an exact identity, immediate where the relevant arm
+is nonnegative (`claim_easy`) and closed by a moment identity where it is negative
+(`claim_hard`). The moment step is the observation that a nonnegative density dominates its
+own cosine moment (`density_ge_moment`).
+
+At `ω = π/2` the bound degenerates to `Θ ≥ c_y`, so that direction is not covered here and is
+imported. This replaces two of the three comparisons, not three.
+-/
+
+/-- Subtracting the ceiling support inequality from `Θ` leaves this slack. -/
+theorem refl_slack (Hw cx cy hp ω : ℝ)
+    (hsupp : Real.sin ω - hp * Real.cos ω ≤ Hw) :
+    -(hp + cx) * Real.cos ω + cy * Real.sin ω
+      ≤ Hw - Real.sin ω - cx * Real.cos ω + cy * Real.sin ω := by
+  nlinarith [hsupp]
+
+/-- On `[0,π/2]` the left derivative is the right choice: `cos ω ≥ 0` and `c_x ≤ κ` make the
+slack nonnegative, given `c_y ≥ 0`. -/
+theorem refl_lower_half {cx cy κ ω : ℝ} (hc : 0 ≤ Real.cos ω) (hs : 0 ≤ Real.sin ω)
+    (hy : 0 ≤ cy) (hx : cx ≤ κ) :
+    0 ≤ -(-κ + cx) * Real.cos ω + cy * Real.sin ω := by
+  have h1 : 0 ≤ (κ - cx) * Real.cos ω := mul_nonneg (by linarith) hc
+  have h2 : 0 ≤ cy * Real.sin ω := mul_nonneg hy hs
+  nlinarith
+
+/-- On `[π/2,π]` the right derivative is the right choice: `cos ω ≤ 0` and `c_x ≥ -α₂(0)`. -/
+theorem refl_upper_half {cx cy a20 ω : ℝ} (hc : Real.cos ω ≤ 0) (hs : 0 ≤ Real.sin ω)
+    (hy : 0 ≤ cy) (hx : -a20 ≤ cx) :
+    0 ≤ -(a20 + cx) * Real.cos ω + cy * Real.sin ω := by
+  have h1 : 0 ≤ -((a20 + cx) * Real.cos ω) := by nlinarith
+  have h2 : 0 ≤ cy * Real.sin ω := mul_nonneg hy hs
+  nlinarith
+
+/-- Where the relevant arm is nonnegative, the identity gives the bound with no further work:
+the remaining integral has a nonnegative integrand. -/
+theorem claim_easy {arm trig integ : ℝ} (harm : 0 ≤ arm) (htrig : 0 ≤ trig)
+    (hint : 0 ≤ integ) : 0 ≤ arm * trig + integ := by positivity
+
+/-- Where the arm is negative, the moment identity closes it. With `-arm ≤ 1/2 - I₀` and the
+tail dominated below by `trig · I₁`, the total is `trig · (I₀ + I₁ - 1/2)`, nonnegative once
+the full integral is at least `1/2`. -/
+theorem claim_hard {arm trig I0 I1 tail : ℝ} (htrig : 0 ≤ trig)
+    (harm : -arm ≤ 1/2 - I0) (htail : trig * I1 ≤ tail) (hfull : 1/2 ≤ I0 + I1) :
+    0 ≤ arm * trig + tail := by nlinarith
+
+/-- A nonnegative density dominates its own cosine moment, which is what makes the full
+integral at least `1/2` once the moment is exactly `1/2`. -/
+theorem density_ge_moment {I M : ℝ} (h : M ≤ I) (hM : M = 1/2) : 1/2 ≤ I := by
+  rw [← hM]; exact h
+
+end ReflectedHalf
+
 end MovingSofa
