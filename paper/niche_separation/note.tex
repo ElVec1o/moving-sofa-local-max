@@ -865,7 +865,7 @@ perturbations, and is not attempted here. The second half of the argument, that
 Proposition~\ref{prop:V} applies to competitors and not only to $\Sig$, splits
 in two. Its three stated hypotheses reduce, by Remarks~\ref{rem:v4}
 and~\ref{rem:v5}, to the open condition $r<1$ away from the atom, which $\Sig$
-satisfies with margin $0.161429$ and which therefore persists under small
+satisfies with margin $0.1611747$ and which therefore persists under small
 perturbations. The containment of Remark~\ref{rem:v6} does not follow from them
 and is open even for $\Sig$ on face~2. So
 \emph{optimality of $\Sig$ remains open}; what is new is that the upper bound is
@@ -1561,7 +1561,8 @@ Remark~\ref{rem:v4} is hypothesis (ii) together with the injectivity half of (i)
 enough for $V=|N|$: see Remark~\ref{rem:v6}.
 
 The hypothesis is $r<1$ away from the atom, and it holds for $\Sig$ with room:
-$\max r=0.838571$, a margin of $0.161429$ to the threshold (\verb|sofa_cut|). It is an open
+$\max r=0.8388253$, a margin of $0.1611747$, matching the closed form of
+Remark~\ref{rem:rcnum} exactly. It is an open
 condition, so it survives the perturbations $H+\varepsilon\eta$ of the second-variation
 analysis for $\varepsilon$ small, provided the atom stays at $\pi/2$.
 
@@ -1578,9 +1579,11 @@ continuous phases the radius is $\tfrac34(A\cos u+B\sin u)$ with $B=(1-\sqrt2)A$
 $A=F_1$, the phases differing only by a swap of $A$ and $B$, which leaves $A^2+B^2$ fixed.
 Since $A\cos u+B\sin u\le\sqrt{A^2+B^2}$ and $A^2+B^2=A^2(4-2\sqrt2)$, the radius is at most
 $\tfrac34 A\sqrt{4-2\sqrt2}$, and $A\le\tfrac{121}{100}$ puts that below $1$. The middle
-phase is the constant $\tfrac12$ and the end phases vanish. The measured $0.838571$ is a
+phase is the constant $\tfrac12$ and the end phases vanish. The value $0.8388253$ is a
 sharper estimate of a quantity already known to lie below the threshold, not the reason it
-does.
+does. It is obtained by evaluating the closed form of $r$ directly; an earlier version took
+second differences of an interpolant sampled below its own source grid, which diverges with
+the time resolution and at the finest grid tried overshot the threshold.
 
 Rule~0: hypothesis (ii) is \textsc{proved}, and (iii) in the form ``every point of $N$ is a
 value of one of the truncated sweeps'' is \textsc{proved}; the conclusion $V=|N|$ of
@@ -1683,7 +1686,7 @@ a bound on how fast the corner moves.
 For $\Sig$ the margins are wide: $\max\alpha_1\alpha_2=0.145187$ against the threshold $1$,
 and $\max|c'|^2=0.813328$ against $2$. The disjunction is also checked directly over the
 $(t,\theta)$ grid and fails nowhere, its worst margin being $0.437739$; the corner path sits
-inside $C_2$ with worst excursion $0.000911$ inward (\verb|sofa_cut|).
+on the boundary of $\rho C$, with excursion exactly $0$ (\verb|sofa_cut|).
 
 The sign restriction is removable. Redoing the argument without assuming the arms
 nonnegative, the worst $\phi$ sits at the two ends of the range $[-t,\pi-t]$, and the
@@ -1703,8 +1706,10 @@ $\alpha_2(0)=2a_1-1=0.750574724825464$, so $\alpha_1\alpha_2\le(2a_1-1)^2<1$ wit
 to floating point.
 
 What remains is the mirror, and it is the binding constraint rather than a formality. With
-$C_2=C\cap\rho C$, the corner path clears $C$ by $0.613436$ but clears $\rho C$ by only
-$0.000911$, a factor of $670$. The reason is structural: $\rho$-invariance of $C_2$ gives
+$C_2=C\cap\rho C$, the corner path clears $C$ by $0.612162$ but touches $\rho C$, its
+excursion there being exactly $0$. An earlier version reported a small positive clearance
+instead; it came from a direction list whose spacing missed $\theta=\pi/2$, the unique
+binding direction, and is withdrawn. The reason for the contact is structural: $\rho$-invariance of $C_2$ gives
 $H(-\theta)=H(\theta)-\sin\theta$, so membership in $\rho C$ is the same family of
 inequalities at directions $\psi\in[-\pi,0]$, where $\phi=\psi-t$ ranges over
 $[-3\pi/2,0]$ and meets the third quadrant that the argument above excludes. So the

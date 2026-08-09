@@ -206,7 +206,12 @@ fn main() {
     // The niche is what the corner removes FROM THE CAP, so p must lie in C_2: above the
     // floor and inside every supporting half-plane.  Without this the quadrant runs off to
     // the edge of the box and |N| comes out an order of magnitude too large.
-    let ncap = 720usize;
+    // ncap must make theta = pi/2 a grid point: with th = k/(ncap-1)*pi and k in 0..ncap-1,
+    // pi/2 needs k = (ncap-1)/2, so ncap-1 must be EVEN.  At ncap = 720 it was 719, odd, so
+    // the single binding direction was missed and the rho-C margin read 0.000911 instead of
+    // its true 0.  in_cap used the same list, so the exact ceiling and floor constraints were
+    // absent from the membership test too.
+    let ncap = 721usize;
     let cap: Vec<(f64, f64, f64)> = (0..ncap).map(|k| {
         let th = k as f64 / (ncap - 1) as f64 * std::f64::consts::PI;
         (th.cos(), th.sin(), interp(&x, &h, th))
@@ -233,12 +238,16 @@ fn main() {
     let nth = 2 * nt;
     let dth = std::f64::consts::PI / (nth - 1) as f64;
     let hth: Vec<f64> = (0..nth).map(|k| interp(&x, &h, k as f64 * dth) - 1.0).collect();
+    // r is available in CLOSED FORM as r_ac.  The previous estimator took second differences
+    // of a linear interpolant sampled below its own source grid, so it DIVERGED with nt
+    // (0.8382, 0.8386, 0.8443, 0.8619 at nt = 1000, 2000, 3000, 6000) and the quoted value
+    // was one term of a divergent sequence that happened to land near the truth.  Evaluate
+    // r_ac directly instead; the atom at pi/2 is not part of the a.c. density.
     let mut rmax = 0.0f64;
     let mut rarg = 0.0f64;
-    for k in 1..nth - 1 {
-        let th = k as f64 * dth;
-        if (th - p2()).abs() < 3.0 * dth { continue; }   // skip the atom at pi/2
-        let rr = (hth[k] + 1.0) + (hth[k + 1] - 2.0 * hth[k] + hth[k - 1]) / (dth * dth);
+    for k in 0..2_000_001usize {
+        let th = k as f64 / 2_000_000.0 * std::f64::consts::PI;
+        let rr = r_ac(th);
         if rr > rmax { rmax = rr; rarg = th; }
     }
     println!("  max curvature radius r off atom  {:.6} at theta = {:.6}", rmax, rarg);
