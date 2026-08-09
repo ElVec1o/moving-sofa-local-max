@@ -383,6 +383,21 @@ fn main() {
     println!("  min (alpha_2 + tan t)            {:+.6}  (needed >= 0)", m2);
     println!("  max |alpha_1|, max |alpha_2|     {:.6}  {:.6}", ma1, ma2);
     println!("  worst c(t) outside C, outside rC {:+.6}  {:+.6}", cout, rout);
+    // Is the rho-C margin real or a discretisation artifact?  Refine the direction grid and
+    // report the argmin.  A margin collapsing to 0 means the corner path TOUCHES the mirror
+    // cap, so containment is exactly tight and only a sharp argument can prove it.
+    for &nd in [720usize, 5760, 46080].iter() {
+        let (mut best, mut bt, mut bth) = (1e9f64, 0.0f64, 0.0f64);
+        for f in fr.iter() {
+            for k in 0..=nd {
+                let th = k as f64 / nd as f64 * std::f64::consts::PI;
+                let sl = interp(&x, &h, th) - (f.cx * th.cos() + (1.0 - f.cy) * th.sin());
+                if sl < best { best = sl; bt = f.my.atan2(f.mx); bth = th; }
+            }
+        }
+        println!("  rho-C margin at {:>5} dirs      {:+.8}  at t = {:.5}, theta = {:.5}",
+                 nd, best, bt, bth);
+    }
 
     println!("\n  |N| rasterised                   {:.6}", area_n);
     // prop:reynolds proves V >= |N| for every admissible H, so a measurement the other way

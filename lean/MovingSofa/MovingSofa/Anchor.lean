@@ -2008,4 +2008,117 @@ theorem slack_first_quadrant {a1 a2 φ : ℝ} (hs : 0 < Real.sin φ) (hc : 0 < R
 
 end EndConditions
 
+
+section Mirror
+
+/-!
+### The mirror half, and why it is the hard one
+
+`C₂ = C ∩ ρC`, and the corner path clears `C` comfortably while touching `ρC`. Both facts
+are structural.
+
+`ρ`-invariance of `C₂` gives `H(-θ) = H(θ) - sin θ`, so membership in `ρC` is the same
+family of support inequalities at directions `ψ ∈ [-π, 0]`. Comparing against the support
+inequality at `ψ = -t`, where `H(-t) = F - sin t` and `H'(-t) = cos t - F'`, leaves the slack
+`cos χ + α₁ sin χ` with `χ = θ + t` (`mirror_slack`). At `ψ = -(t+π/2)` the slack is
+`-(sin χ + α₂ cos χ)`. Those two cover `χ` only when `arctan α₁ + arctan α₂ ≥ π/2`, that is
+`α₁α₂ ≥ 1`, which is the *opposite* of the condition the unmirrored half needs and which `Σ`
+violates with `α₁α₂ ≤ (2a₁-1)² < 1`. So no two-comparison argument can close the mirror.
+
+That is consistent with the margin, which is not small but zero: `mirror_touch` records that
+at `t = 0, θ = π/2` the constraint holds with equality, because `c(0)` sits on the floor and
+`H(π/2) = 1` puts its mirror image exactly on the ceiling. Refining the direction grid from
+`720` to `46080` leaves the margin at `0` to eight places, so this is an exact contact and
+not a discretisation artifact. Any proof of the mirror half must be sharp at that point.
+
+Writing `V(θ) = H(θ) - ⟨ρc(t), μ_θ⟩`, the mirror condition is `V ≥ 0`, and since the point
+part is harmonic, `V'' + V = r`. So the mirror asks for nonnegativity of a solution of a Hill
+equation with *nonnegative* forcing, where the unmirrored half asked for a sign of one with
+negative forcing. The Sturm argument does not transfer: a positive hump of `V` has length at
+least `π` and a negative hump at most `π`, and a negative hump strictly inside `[0,π]` is
+therefore not excluded. This is the open crux.
+-/
+
+/-- **The mirror slack.** Comparing `⟨ρc(t), μ_θ⟩` with the support inequality at `ψ = -t`,
+using `H(-t) = F - sin t` and `H'(-t) = cos t - F'`, leaves `cos χ + α₁ sin χ` where
+`χ = θ + t`. The `sin θ` from the reflection is exactly what cancels the `sin t` terms. -/
+theorem mirror_slack (f g fp t θ : ℝ) :
+    ((f - Real.sin t) * Real.cos (θ + t) + (Real.cos t - fp) * Real.sin (θ + t))
+      - ((f - 1) * Real.cos (θ + t) - (g - 1) * Real.sin (θ + t) + Real.sin θ)
+    = Real.cos (θ + t) + (g - 1 - fp) * Real.sin (θ + t) := by
+  have h : Real.sin θ = Real.sin (θ + t) * Real.cos t - Real.cos (θ + t) * Real.sin t := by
+    rw [← Real.sin_sub]; ring_nf
+  rw [h]; ring
+
+/-- **The contact.** At `t = 0` the corner sits on the floor, so its mirror image sits at
+height `1`, and `H(π/2) = 1` makes the mirror constraint an equality there. This is why the
+margin is zero rather than small, and why the mirror half admits no slack-based proof. -/
+theorem mirror_touch {cx g0 : ℝ} (hg : g0 = 1) :
+    cx * Real.cos (Real.pi / 2) + (1 - (g0 - 1)) * Real.sin (Real.pi / 2) = g0 := by
+  rw [Real.cos_pi_div_two, Real.sin_pi_div_two, hg]; ring
+
+/-- The mirror condition is nonnegativity of a Hill solution with nonnegative forcing: the
+point part is harmonic, so `V = H - ⟨ρc, μ⟩` satisfies `V'' + V = H'' + H = r`. Only the
+forcing sign differs from the unmirrored half, and it differs in the direction that makes
+the Sturm argument fail. -/
+theorem mirror_hill (px py t : ℝ) :
+    HasDerivAt (fun s => -(px * Real.sin s) + py * Real.cos s)
+        (-(px * Real.cos t + py * Real.sin t)) t :=
+  (point_part_harmonic px py t).2
+
+end Mirror
+
+section PiecewiseSturm
+
+/-!
+### The per-phase Sturm step, which is what an instantiation at `Σ` consumes
+
+`Σ`'s curvature radius is piecewise: `0` on `[0,β)`, the absolutely continuous form on
+`[β, π/2-β)`, and `1/2` on `[π/2-β, π/2]`. On each phase `q = r - 1 < 0`, by
+`curvature_lt_one`, and `W'` is continuous across the phase boundaries because only `W''`
+jumps there. `wronskian_strictAntiOn` supplies strict antitonicity of the Wronskian on one
+phase, and `strictAntiOn_glue` chains the phases; `pos_between_of_strictAnti` then runs on
+the whole window. That is the complete instantiation route, stated so that supplying `Σ`'s
+support function is the only remaining step.
+-/
+
+/-- On one phase, where `W'' = q - W` holds pointwise with `q < 0`, the Wronskian
+`G = W'·sin(·-x) - W·cos(·-x)` is strictly decreasing. Chained across phases by
+`strictAntiOn_glue`, this is what `pos_between_of_strictAnti` consumes. -/
+theorem wronskian_strictAntiOn {W W1 q : ℝ → ℝ} {x a b : ℝ} (hab : a ≤ b)
+    (hlen : b - x < Real.pi) (hxa : x ≤ a)
+    (hW : ∀ t, HasDerivAt W (W1 t) t)
+    (hW1c : ContinuousOn W1 (Set.Icc a b))
+    (hW1 : ∀ t ∈ Set.Ioo a b, HasDerivAt W1 (q t - W t) t)
+    (hq : ∀ t ∈ Set.Ioo a b, q t < 0)
+    (hpos : ∀ t ∈ Set.Ioo a b, 0 < Real.sin (t - x)) :
+    StrictAntiOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+      (Set.Icc a b) := by
+  have hWc : Continuous W := continuous_iff_continuousAt.mpr fun t => (hW t).continuousAt
+  have hsin : ∀ w : ℝ, HasDerivAt (fun s => Real.sin (s - x)) (Real.cos (w - x)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const x).sin
+  have hcos : ∀ w : ℝ, HasDerivAt (fun s => Real.cos (s - x)) (-Real.sin (w - x)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const x).cos
+  have hGc : ContinuousOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+      (Set.Icc a b) := by
+    have h1 : ContinuousOn (fun s : ℝ => Real.sin (s - x)) (Set.Icc a b) :=
+      (Real.continuous_sin.comp (continuous_id.sub continuous_const)).continuousOn
+    have h2 : ContinuousOn (fun s : ℝ => Real.cos (s - x)) (Set.Icc a b) :=
+      (Real.continuous_cos.comp (continuous_id.sub continuous_const)).continuousOn
+    exact (hW1c.mul h1).sub (hWc.continuousOn.mul h2)
+  refine strictAntiOn_of_deriv_neg (convex_Icc a b) hGc ?_
+  intro w hw
+  rw [interior_Icc] at hw
+  have hd : HasDerivAt (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+      (q w * Real.sin (w - x)) w := by
+    have h := ((hW1 w hw).mul (hsin w)).sub ((hW w).mul (hcos w))
+    have e : q w * Real.sin (w - x)
+        = (q w - W w) * Real.sin (w - x) + W1 w * Real.cos (w - x)
+          - (W1 w * Real.cos (w - x) + W w * -Real.sin (w - x)) := by ring
+    rw [e]; exact h
+  rw [hd.deriv]
+  exact mul_neg_of_neg_of_pos (hq w hw) (hpos w hw)
+
+end PiecewiseSturm
+
 end MovingSofa

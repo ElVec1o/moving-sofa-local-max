@@ -1708,6 +1708,51 @@ Rule~0: \verb|corner_slack_one|, \verb|corner_slack_two|, \verb|corner_disjuncti
 $c(t)\in\rho C$ is \textsc{heuristic}, so Proposition~\ref{prop:V} for $\Sig$ inherits
 \textsc{heuristic} until the mirror closes.
 \end{remark}
+
+\begin{remark}[The mirror half is exactly tight, and is the crux]\label{rem:v8}
+Remark~\ref{rem:v7} leaves $c(t)\in\rho C$. Three facts locate it.
+
+First, the mirror is the same family of inequalities at reflected directions. $\rho$-invariance
+of $C_2$ gives $H(-\theta)=H(\theta)-\sin\theta$, hence $H(-t)=F-\sin t$ and
+$H'(-t)=\cos t-F'$. Comparing $\langle\rho c(t),\mu_\theta\rangle$ with the support inequality
+at $\psi=-t$ leaves, with $\chi=\theta+t$, the slack $\cos\chi+\alpha_1\sin\chi$; at
+$\psi=-(t+\pi/2)$ it leaves $-(\sin\chi+\alpha_2\cos\chi)$. The $\sin\theta$ produced by the
+reflection is exactly what cancels the $\sin t$ terms.
+
+Second, those two do not suffice, and cannot be made to. Their union covers $\chi$ only when
+$\arctan\alpha_1+\arctan\alpha_2\ge\pi/2$, that is $\alpha_1\alpha_2\ge1$, which is the
+opposite of the condition the unmirrored half needs and which $\Sig$ violates with
+$\alpha_1\alpha_2\le(2a_1-1)^2<1$. So no two-comparison argument closes the mirror.
+
+Third, the margin is not small but zero. At $t=0$ the corner sits on the floor, so its mirror
+image sits at height $1$, and $H(\pi/2)=1$ makes the constraint at $\theta=\pi/2$ an equality.
+Refining the direction grid from $720$ to $46080$ leaves the margin at $0$ to eight places, so
+this is exact contact. Any proof must be sharp there.
+
+Writing $V(\theta)=H(\theta)-\langle\rho c(t),\mu_\theta\rangle$, the mirror condition is
+$V\ge0$, and since the point part is harmonic, $V''+V=r$. The mirror therefore asks for
+nonnegativity of a Hill solution with \emph{nonnegative} forcing, where the unmirrored half
+asked for a sign of one with negative forcing. The Sturm argument does not transfer: a
+positive hump of $V$ has length at least $\pi$ and a negative hump at most $\pi$, so a
+negative hump strictly inside $[0,\pi]$ is not excluded, and indeed the stadium of
+Remark~\ref{rem:v6} realises one.
+
+Rule~0: \verb|mirror_slack|, \verb|mirror_touch| and \verb|mirror_hill| are \textsc{verified};
+$c(t)\in\rho C$ for $\Sig$ is \textsc{conjecture}, with exact contact at $(t,\theta)=(0,\pi/2)$
+as the obstruction to any slack-based proof. Proposition~\ref{prop:V} for $\Sig$ inherits
+\textsc{conjecture}.
+\end{remark}
+
+\begin{remark}[The per-phase Sturm step]\label{rem:v9}
+$\Sig$'s curvature radius is piecewise: $0$ on $[0,\beta)$, the absolutely continuous form on
+$[\beta,\pi/2-\beta)$, and $\tfrac12$ on $[\pi/2-\beta,\pi/2]$. On each phase $q=r-1<0$ by the
+bound of Remark~\ref{rem:v5}, and $W'$ is continuous across the phase boundaries because only
+$W''$ jumps there. \verb|wronskian_strictAntiOn| gives strict antitonicity of the Wronskian on
+one phase, \verb|strictAntiOn_glue| chains the phases, and \verb|pos_between_of_strictAnti|
+then runs on the whole window. All three are \textsc{verified}, so supplying $\Sig$'s support
+function in Lean is the only remaining step in hypothesis (ii); no further mathematics is
+required for it.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
