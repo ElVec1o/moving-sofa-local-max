@@ -2336,19 +2336,153 @@ atom mass.
 
 Both bounds follow from exact identities. With $\rho_1=1-r_{ac}$ on $[0,\pi/2]$ and
 $\rho_2=1-r_{ac}(\cdot+\pi/2)$, both in $[0,1]$ by (RC),
-\[
+\begin{equation}\label{eq:reflid}
   \kappa-c_x=\alpha_1\sin t+\int_t^{\pi/2}\!\rho_1\sin ,\qquad
-  c_x+\alpha_2(0)=\alpha_2\cos t+\int_0^{t}\!\rho_2\cos .
+  c_x+\alpha_2(0)=\alpha_2\cos t+\int_0^{t}\!\rho_2\cos ,
+\end{equation}
+with the moment identities $\int_0^{\pi/2}\rho_1\cos=\tfrac12$ and
+$\int_0^{\pi/2}\rho_2\sin=\tfrac12$. Both identities are the bracket $A=(H-1)\cos-H'\sin$ read
+at $\theta=t$ and at $\theta=t+\pi/2$: $A'=\rho\sin$ off the atom, $A(0)=0$,
+$A(\pi/2^-)=\kappa$, $A(\pi/2^+)=-\alpha_2(0)$, and $c_x=A(t)-\alpha_1(t)\sin t
+=A(t+\pi/2)+\alpha_2(t)\cos t$. The moments are the companion bracket
+$A_2=(H-1)\sin+H'\cos$, with $A_2'=-\rho\cos$, $A_2(0)=H'(0)=\tfrac12$,
+$A_2(\pi/2^\pm)=0$ and $A_2(\pi)=-H'(\pi)=\tfrac12$.
+
+\emph{The two easy branches.} On $[T,\pi/2]$, (d) gives $\alpha_1\ge0$, so the first identity
+is a sum of two nonnegative terms and $c_x\le\kappa$ there. On $[0,T]$, (d) gives
+$\alpha_2>0$, so the second is a sum of two nonnegative terms and $c_x\ge-\alpha_2(0)$ there.
+Each bound therefore needs an argument on the complementary half only.
+
+\emph{The two hard branches are one scalar problem.} On $[0,T]$, $\alpha_2>0$ and
+Proposition~\ref{prop:armsys} give $\alpha_1'=\alpha_2+\rho_1\ge\rho_1$, while
+$\alpha_1(0)=H(\pi/2)-1-H'(0)=-\tfrac12$ by (a) and (b); integrating,
+$\alpha_1(t)\ge-\tfrac12+\int_0^t\rho_1$. Since $\sin t\ge0$, the first identity gives
+$\kappa-c_x(t)\ge\Phi_{\rho_1}(t)$, where
+\begin{equation}\label{eq:phiform}
+  \Phi_\rho(u)\ :=\ \sin u\Bigl(\int_0^u\rho-\tfrac12\Bigr)+\int_u^{\pi/2}\rho(s)\sin s\,ds .
+\end{equation}
+On $[T,\pi/2]$, $\alpha_1\ge0$ and Proposition~\ref{prop:armsys} give
+$\alpha_2'=-\alpha_1-\rho_2\le-\rho_2$, while $\alpha_2(\pi/2)=H(\pi/2)-1+H'(\pi)=-\tfrac12$
+by (a) and (b); integrating backwards from $\pi/2$,
+$\alpha_2(t)\ge-\tfrac12+\int_t^{\pi/2}\rho_2$. Since $\cos t\ge0$, the second identity gives
+\[
+  c_x(t)+\alpha_2(0)\ \ge\ \cos t\Bigl(\int_t^{\pi/2}\rho_2-\tfrac12\Bigr)+\int_0^t\rho_2\cos .
 \]
-Where the relevant arm is nonnegative the identity gives the bound at once. Where it is
-negative, (d) supplies a sign for the other arm and the moment identities
-$\int_0^{\pi/2}\rho_1\cos=\tfrac12$, $\int_0^{\pi/2}\rho_2\sin=\tfrac12$ close it, since
-$\int\rho_i\ge\int\rho_i\cos=\tfrac12$. Bang-bang optimisation makes the surplus exactly
-$\pi/6-\tfrac12$ in each case.
+The substitution $u=\pi/2-t$, $\tilde\rho(s)=\rho_2(\pi/2-s)$ carries the right-hand side to
+$\Phi_{\tilde\rho}(u)$ and the constraint $\int_0^{\pi/2}\rho_2\sin=\tfrac12$ to
+$\int_0^{\pi/2}\tilde\rho\cos=\tfrac12$. So both hard branches are the single statement
+$\Phi_\rho\ge0$ for measurable $\rho:[0,\pi/2]\to[0,1]$ with $\int_0^{\pi/2}\rho\cos=\tfrac12$,
+the first at $u=t\in[0,T]$ and the second at $u=\pi/2-t\in[0,\pi/2-T]$. The two bounds do
+reduce to the same shape, and this reflection is why.
+
+\emph{The sign, with no optimisation at all.} Since $\sin s\ge\sin u$ on $[u,\pi/2]$,
+$\int_u^{\pi/2}\rho\sin\ge\sin u\int_u^{\pi/2}\rho$, so
+\[
+  \Phi_\rho(u)\ \ge\ \sin u\Bigl(\int_0^{\pi/2}\rho-\tfrac12\Bigr)\ \ge\ 0 ,
+\]
+the last step because $\rho\ge0$ and $\cos\le1$ make
+$\int_0^{\pi/2}\rho\ge\int_0^{\pi/2}\rho\cos=\tfrac12$. This uses only $\rho\ge0$ and the
+moment; the upper bound $\rho\le1$ is not needed and no extremal is involved. It is all that
+the previous version's ``$\int\rho_i\ge\int\rho_i\cos=\tfrac12$'' was doing, and by itself it
+already closes $-\alpha_2(0)\le c_x\le\kappa$. Everything below is about the constant.
+
+\emph{The extremal, re-derived.} Write
+$\Phi_\rho(u)=-\tfrac12\sin u+\int_0^{\pi/2}\rho\,w_u$ with $w_u(s)=\sin(\max(s,u))$: the
+kernel is the constant $\sin u$ on $[0,u]$ and $\sin s$ on $[u,\pi/2]$. Minimising
+$\Phi_\rho(u)$ at fixed $\int_0^{\pi/2}\rho\cos=\tfrac12$ is minimising $\int\rho\,w_u$, so the
+mass goes where the price per unit of the constraint,
+\[
+  \gamma_u(s)=\frac{w_u(s)}{\cos s}=
+  \begin{cases}\sin u\,\sec s,& s\le u,\\[2pt]\tan s,& s\ge u,\end{cases}
+\]
+is \emph{lowest}. Both pieces increase in $s$ and they agree at $s=u$, so $\gamma_u$ increases
+across $[0,\pi/2]$ and the minimiser is \emph{front}-loaded: $\rho_\star=\mathbf 1_{[0,a]}$
+with $\sin a=\int_0^a\cos=\tfrac12$, that is $a=\pi/6$, independently of $u$. This is the same
+direction as the corner-height bathtub of Remark~\ref{rem:v24}, and for the same reason: the
+objective wants $\int_0^u\rho$ \emph{large} while the constraint is cheapest to satisfy near
+$0$. It is the opposite of the back-loaded profile withdrawn there.
+
+The certificate is pointwise and needs no duality theorem. Put
+$\lambda_u=\gamma_u(\pi/6)=\sin(\max(u,\pi/6))/\cos(\pi/6)$ and $k_u=w_u-\lambda_u\cos$. Then
+$k_u\le0$ on $[0,\pi/6]$ and $k_u\ge0$ on $[\pi/6,\pi/2]$, for the single reason that
+$s\mapsto\sin(\max(s,u))$ is nondecreasing while $\cos$ is nonincreasing: for $s\le\pi/6$,
+$\cos(\pi/6)\sin(\max(s,u))\le\cos s\,\sin(\max(\pi/6,u))$, and both comparisons reverse for
+$s\ge\pi/6$. Hence $(\rho-\mathbf 1_{[0,\pi/6]})k_u\ge0$ pointwise --- $\rho\le1$ on the left
+piece, $\rho\ge0$ on the right --- and since $\rho$ and $\mathbf 1_{[0,\pi/6]}$ carry the same
+$\cos$-moment $\tfrac12$,
+\[
+  \int_0^{\pi/2}\rho\,w_u-\int_0^{\pi/6}w_u
+  =\int_0^{\pi/2}\bigl(\rho-\mathbf 1_{[0,\pi/6]}\bigr)k_u\ \ge\ 0 .
+\]
+That is the only place $\rho\le1$ enters.
+
+\emph{The constant, in two cases.} The extremal value is
+$\Phi_\star(u)=\int_0^{\pi/6}\sin(\max(s,u))\,ds-\tfrac12\sin u$. For $u\ge\pi/6$ the kernel is
+the constant $\sin u$ throughout $[0,\pi/6]$, so
+$\Phi_\star(u)=(\tfrac\pi6-\tfrac12)\sin u$, nonnegative by $\pi>3$ and least on
+$[\pi/6,\pi/2]$ at $u=\pi/6$, with value $\tfrac12(\tfrac\pi6-\tfrac12)=0.0117993\ldots$. For
+$u\le\pi/6$ the integral splits at $u$ into $u\sin u$ and $\cos u-\tfrac{\sqrt3}2$, so
+\[
+  \Phi_\star(u)=\Psi(u):=u\sin u+\cos u-\tfrac{\sqrt3}2-\tfrac12\sin u ,\qquad
+  \Psi'(u)=\bigl(u-\tfrac12\bigr)\cos u .
+\]
+Thus $\Psi$ falls on $[0,\tfrac12]$ and rises on $[\tfrac12,\tfrac\pi6]$ --- note
+$\tfrac12<\tfrac\pi6$, again $\pi>3$ --- and its minimum is
+\[
+  \Psi(\tfrac12)=\cos\tfrac12-\tfrac{\sqrt3}2=0.0115571581\ldots ,
+\]
+the two $\sin\tfrac12$ terms cancelling exactly. The branches agree at the switch,
+$\Psi(\pi/6)=\tfrac12(\tfrac\pi6-\tfrac12)$, and $\Psi(\tfrac12)\le\Psi(\pi/6)$ by the same
+monotonicity, so the far branch never goes lower and
+\begin{equation}\label{eq:bbsurplus}
+  \Phi_\rho(u)\ \ge\ \Phi_\star(u)\ \ge\ \cos\tfrac12-\tfrac{\sqrt3}2\ >\ 0
+  \qquad\text{for every }u\in[0,\tfrac\pi2] ,
+\end{equation}
+both inequalities sharp: the first at $\rho=\mathbf 1_{[0,\pi/6]}$, the second at
+$u=\tfrac12$.
+
+\emph{Correction to the constant previously printed here.} The earlier text asserted that
+bang-bang ``makes the surplus exactly $\pi/6-\tfrac12$ in each case''. That number is the
+\emph{coefficient} of $\sin u$ in the far case, equivalently the value $\Phi_\star(\pi/2)$; it
+is not the surplus. The surplus is
+$\min_u\Phi_\star=\cos\tfrac12-\tfrac{\sqrt3}2=0.0115571\ldots$, attained in the interior at
+$u=\tfrac12$ and less than half of $\pi/6-\tfrac12=0.0235987\ldots$. The two are related by
+$\Phi_\star(u)\ge(\tfrac\pi6-\tfrac12)\sin u$, the weaker consequence of
+$\int_0^{\pi/2}\rho\ge\pi/6$ --- the same front-loaded extremal run against $\int\rho$ --- and
+that relation is strict on $[0,\pi/6)$. Numerically: discretising the linear programme at
+$4\cdot10^4$ cells reproduces $\Phi_\star$ to $2\cdot10^{-10}$ at $101$ values of $u$, and
+$2\cdot10^5$ random admissible profiles per $u$ never beat the front-loaded one.
+
+\emph{Where the surplus lives.} The constant bounds $\kappa-c_x$ below on $[0,T]$ and
+$c_x+\alpha_2(0)$ below on $[T,\pi/2]$ --- the two branches the bang-bang serves. On the
+complementary branches there is no uniform surplus and none is claimed:
+$\kappa-c_x(\pi/2)=\alpha_1(\pi/2)$ and $c_x(0)+\alpha_2(0)=\alpha_2(0)$, which (d) makes
+nonnegative and nothing makes bounded away from $0$. So on $\mathcal D$
+\[
+  \kappa-c_x\ \ge\ \Bigl(\cos\tfrac12-\tfrac{\sqrt3}2\Bigr)\mathbf 1_{[0,T]},\qquad
+  c_x+\alpha_2(0)\ \ge\ \Bigl(\cos\tfrac12-\tfrac{\sqrt3}2\Bigr)\mathbf 1_{[T,\pi/2]} ,
+\]
+and both are strict in the interior of their branch, since equality in $\alpha_1'\ge\rho_1$
+would force $\alpha_2\equiv0$, which (d) excludes.
+
+\emph{Exactly what is used.} (a) at $0$: $H(0)=1$, for $A(0)=0$ and for
+$\alpha_2(0)=H'(\pi/2^+)$. (a) at $\pi/2$: $H(\pi/2)=1$, for $A(\pi/2^-)=\kappa$,
+$A_2(\pi/2^\pm)=0$, $\alpha_1(0)=-\tfrac12$ and $\alpha_2(\pi/2)=-\tfrac12$. (b): $\rho_i\ge0$
+for the easy branches and for the sign step; $\rho_i\le1$ at the exchange step and nowhere
+else; the single atom at $\pi/2$, so that $\alpha_1,\alpha_2$ are absolutely continuous on
+$(0,\pi/2)$ and $A$ jumps only at $\pi/2$; $H'(0)=\tfrac12$ and $H'(\pi)=-\tfrac12$, for
+$\alpha_1(0)=\alpha_2(\pi/2)=-\tfrac12$ and for the two moments. (d): $\alpha_2>0$ on $[0,T]$
+twice, and $\alpha_1\ge0$ on $[T,\pi/2]$ twice. Hypothesis (c) is used nowhere in this
+remark; it enters only through Remark~\ref{rem:v31}, which needs $c_y\le1$.
 
 Two byproducts hold on all of $\mathcal D$: $\kappa\ge1-\sqrt3/2$, so the sign condition on
 $H'(\pi/2^-)$ assumed in Remark~\ref{rem:v12} is forced rather than assumed; and the ceiling
-facet has length exceeding $1-\sqrt3/2$, so the atom is quantitatively nondegenerate. A third,
+facet has length exceeding $1-\sqrt3/2$, so the atom is quantitatively nondegenerate. The
+first is the same front-loaded extremal run against a different objective:
+$\kappa=A(\pi/2^-)-A(0)=\int_0^{\pi/2}\rho_1\sin$, and minimising $\int\rho\sin$ at fixed
+$\int\rho\cos=\tfrac12$ has price $\gamma(s)=\tan s$, again increasing, again
+$\rho_\star=\mathbf 1_{[0,\pi/6]}$, with value $\int_0^{\pi/6}\sin=1-\tfrac{\sqrt3}2$; the
+second is then $m=\kappa+\alpha_2(0)$ with $\alpha_2(0)>0$ from (d). A third,
 $\kappa-x(t)=\sec t\int_t^{\pi/2}\rho_1(s)\sin(s-t)\,ds\ge0$, needs neither the moments nor
 (d) and supersedes the monotonicity argument of Remark~\ref{rem:cap}.
 
@@ -2359,10 +2493,24 @@ own binding direction $\omega=\pi/2$, where the bound degenerates to $\Theta\ge 
 is imported from Remark~\ref{rem:v24}. So it replaces two of the three comparisons of
 Remark~\ref{rem:v11}, not all three.
 
-Rule~0: \textsc{proved}, subject to (d) in its repaired form and to
-Remark~\ref{rem:v24}. It does not by itself discharge the containment hypothesis of
-Theorem~\ref{thm:final}, which is about the truncated sweeps and not about the corner path
-alone.
+Rule~0: \textsc{proved}, subject to (d) in its repaired form and to Remark~\ref{rem:v24}.
+\textsc{Verified}: the reduction to the $c_x$ interval (\verb|refl_slack|,
+\verb|refl_lower_half|, \verb|refl_upper_half|); the easy branches and the sign step
+(\verb|claim_easy|, \verb|claim_hard|, \verb|density_ge_moment|); the substitution into
+\eqref{eq:phiform} (\verb|phi_from_arm_lower|); the exchange kernel and its pointwise product
+signs, which are the extremal (\verb|sin_max_mono|, \verb|exKernel_nonpos|,
+\verb|exKernel_nonneg|, \verb|exchange_product_left|, \verb|exchange_product_right|); the
+value of the extremal in both cases (\verb|extremal_value_far|, \verb|extremal_value_near|);
+and the constant \eqref{eq:bbsurplus} (\verb|Psi_hasDerivAt|, \verb|Psi_at_half|,
+\verb|Psi_at_pi_six|, \verb|Psi_min_near|, \verb|cos_half_lower|, \verb|far_ge_surplus|,
+\verb|bangbang_surplus|, \verb|bangbang_surplus_pos|, \verb|ceiling_facet_floor_pos|). Not
+formalised, and marked as such: the passage from the pointwise kernel sign to
+$\int\rho\,w_u\ge\int_0^{\pi/6}w_u$, which is linearity of the integral, the moment
+constraint and $\int(\text{nonnegative})\ge0$; and the assembly of \eqref{eq:reflid} itself,
+whose ingredients are verified separately as \verb|bracket_deriv|, \verb|cx_from_bracket| and
+\verb|moment_from_bracket|. The remark does not by itself discharge the containment
+hypothesis of Theorem~\ref{thm:final}, which is about the truncated sweeps and not about the
+corner path alone.
 \end{remark}
 
 \begin{remark}[Retraction: the width condition is necessary, not sufficient]\label{rem:v30}
@@ -2499,9 +2647,16 @@ Rule~0: the claim is \textsc{proved} on $\mathcal D$ and \textsc{verified}
 \verb|moment_bracket_monotoneOn|, \verb|endpoint_range_lower|, \verb|endpoint_range_upper|,
 \verb|endpoint_mem_rectangle_lower|, \verb|endpoint_mem_rectangle_upper|,
 \verb|alpha1_half_pi_bounds_x|, \verb|endpoint_in_cap|).
-The last paragraph is a \textsc{reduction} and is recorded as one: Theorem~\ref{thm:final}
-keeps containment as a standing hypothesis in this version, because the bang-bang step of
-Remark~\ref{rem:v29} is stated there as a sketch and is not written out.
+The last paragraph is a \textsc{reduction} and is recorded as one. The reason previously given
+for keeping containment as a standing hypothesis of Theorem~\ref{thm:final} --- that the
+bang-bang step of Remark~\ref{rem:v29} was a sketch and was not written out --- no longer
+holds: that step is now written out there, with the extremal re-derived, the constant
+corrected from $\pi/6-\tfrac12$ to $\cos\tfrac12-\tfrac{\sqrt3}2$, and its scalar ingredients
+verified. With it, the four endpoint memberships listed above are all in place.
+Theorem~\ref{thm:final} nevertheless retains containment as a standing hypothesis in this
+version: what would remove it is this paragraph's own bookkeeping over the four endpoints,
+not Remark~\ref{rem:v29}, and that bookkeeping has not been audited here against
+Remark~\ref{rem:v13}, which is where the hypothesis was introduced.
 \end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
@@ -4277,6 +4432,44 @@ $\{\alpha_1<0\}\subseteq\{\alpha_2>0\}$ with $\{\alpha_2>0\}=[0,\tau)$ anchored.
 $\{\alpha_1<0\}$ need not be an interval.
 \end{corollary}
 
+Corollary~\ref{cor:anchored} is the non-strict statement, and uniqueness needs definiteness.
+The next proposition supplies it where Theorem~\ref{thm:diag}'s three ranges do, and names
+the one range where the printed proof does not.
+
+\begin{proposition}[The diagonal form is definite, and where]\label{prop:dstrict}
+For every $\tau\in(0,1.5153]$ and every admissible $\eta$, $D_\tau[\eta]<0$ unless
+$\eta\equiv0$.
+\end{proposition}
+
+\begin{proof}
+For $\tau\in[0.55,1.5153]$ this is range~(c) of Theorem~\ref{thm:diag}, which certifies that
+the first eigenvalue of $D_\tau$ is positive and records the conclusion as ``indeed $<0$''.
+
+For $\tau<0.55$, run range~(a) of that proof and retain the term it discards. There
+$B_{\mathrm{bare}}\le-\tfrac32\int_0^{\pi/2}p'^2+\int_0^{\pi/2}(q^2-q'^2)$, the second summand
+being the Dirichlet--Neumann bracket for $q$ that the printed collection drops; the other
+three estimates of range~(a) are unchanged, and the same collection gives
+\[
+  D_\tau\ \le\ (3\tau^2-1)\int_0^\tau q'^2+\int_0^{\pi/2}(q^2-q'^2) ,
+\]
+both terms nonpositive, since $3\tau^2<1$ for $\tau<0.55$ and since the Dirichlet--Neumann
+Poincaré constant on $[0,\pi/2]$ is $1$. If $D_\tau[\eta]=0$ then both vanish: the first
+forces $q'\equiv0$ on $[0,\tau]$, hence $q\equiv0$ there because $q(0)=0$; the second forces
+$q$ to be the first Dirichlet--Neumann mode $c\sin$ on $[0,\pi/2]$; and $\tau>0$ then gives
+$c=0$, so $q\equiv0$. With $q\equiv0$, \eqref{eq:Dtau} reduces to
+\[
+  \int_0^\tau(p^2-p'^2)+2\!\int_\tau^{\pi/2}\!(p^2-p'^2)
+  \ \le\ 2\!\int_0^{\pi/2}\!p^2-\int_0^{\pi/2}\!p'^2\ \le\ -2\!\int_0^{\pi/2}\!p^2 ,
+\]
+by the Dirichlet--Dirichlet constant $4$, so $p\equiv0$ as well. The two ranges overlap and
+cover $(0,1.5153]$.
+\end{proof}
+
+The remaining sliver is $\tau\in(1.5153,\pi/2)$, which is range~(b). Its printed collection
+spends the whole of the $p$ estimate on the boundary coupling --- the three coefficients are
+read off after $-\tfrac34\int p'^2$ has been converted to $-\tfrac34P^2$ --- so definiteness
+is not read off the printed proof there, and this note does not supply it.
+
 \begin{theorem}[Uniform constant on the mirror family]\label{thm:mirroruniform}
 For every $\tau\in[0,\pi/4]$ the mirror-anchored cell $(\tau,\pi/2-\tau)$ satisfies
 \[
@@ -4316,20 +4509,112 @@ $Q(H_\Sig+\eta)=Q(\Sig)+\delta Q(\Sig)[\eta]+\tfrac12\delta^2Q[\eta]$ exactly. T
 variation vanishes by Theorem~\ref{thm:el} and $Q(\Sig)=A_R^\ast$ by
 Theorem~\ref{thm:QA}, while Theorem~\ref{thm:system} bounds the second variation. Combining
 with $|T|\le Q(H)$ from Theorem~\ref{thm:final} gives \eqref{eq:stab}.
+
+\emph{Scope, flagged.} Both steps of that argument are statements about $\mathcal C$: the
+expansion is exact only while the segment $[\Sig,H]$ stays in that cell, and
+$\tfrac{73}{100}$ is the constant of that cell, not of the others $\mathcal D$ contains.
+Write $T_\ast$ for the constant of (d), freeing $T$ for the sofa. Where the segment leaves
+$\mathcal C$ the cell changes along the way and the input available is
+$\delta^2Q\le2D_{T_\ast}$, by \eqref{eq:BleD} below; Taylor with integral remainder then
+gives $|T|\le Q(H)\le A_R^\ast+D_{T_\ast}[\eta]$, which is $<A_R^\ast$ for $\eta\ne0$ by
+Proposition~\ref{prop:dstrict}, but with no rate, since the first eigenvalue of
+$D_{T_\ast}$ is certified positive rather than bounded below and degenerates as
+$T_\ast\to\pi/2$. Rule~0: \eqref{eq:stab} is \textsc{proved} with the constant
+$\tfrac{73}{100}$ for competitors whose segment to $\Sig$ stays in $\mathcal C$, and off
+$\mathcal C$ only in the unrated form $|T|<A_R^\ast$; the uniform-constant statement on all
+of $\mathcal D$ would need a lower bound on the first eigenvalue of $D_{T_\ast}$, which this
+note does not have. Corollary~\ref{cor:uniq} below is proved without \eqref{eq:stab}, so it
+is unaffected.
 \end{proof}
 
 \begin{corollary}[Uniqueness]\label{cor:uniq}
-$\Sig$ is the unique ambidextrous moving sofa of area $A_R^\ast$ whose cap data lies in
-$\mathcal D$; every other one has strictly smaller area, by the amount \eqref{eq:stab}.
+Let the constant of (d), written $T_\ast$ here to free $T$ for the sofa, satisfy
+$T_\ast\le1.5153$; $\Sig$'s own admissible range $[\beta,\pi/2-\beta]$, which ends at
+$1.2812\ldots$, lies inside that. Then $\Sig$ is the unique ambidextrous moving sofa of area
+$A_R^\ast$ whose cap
+data lies in $\mathcal D$ --- unique up to a null set, with cap datum exactly $H_\Sig$ ---
+and every other cap datum in $\mathcal D$ has $Q(H)<A_R^\ast$, hence strictly smaller area.
+On $\mathcal C$ the deficit is at least the amount \eqref{eq:stab}; off $\mathcal C$ no rate
+is claimed.
 \end{corollary}
 
 \begin{proof}
-Equality in \eqref{eq:stab} forces $\|\eta\|_{L^2(0,\pi/2)}=0$, and then $\eta\equiv0$ on
-$[0,\pi/2]$; Theorem~\ref{thm:concave} shows $\delta^2Q<0$ strictly unless $\eta\equiv0$
-throughout, since with $\eta\equiv0$ on $[0,\pi/2]$ the $E_2$ term of \eqref{eq:Q2}
-contributes $-\int_0^{\pi/2-\beta}\eta'(t+\pi/2)^2dt<0$ unless $\eta$ is constant on
-$[\pi/2,\pi]$, and $\eta(\pi/2)=0$ makes that constant zero.
+Let $T$ be such a sofa, $H=H_\Sig+\eta$ its cap datum, $H_s=H_\Sig+s\eta$ and $g(s)=Q(H_s)$.
+Since $T_\ast$ is a fixed constant of the class, $\mathcal D$ is convex
+(Theorem~\ref{thm:final}) and $H_s\in\mathcal D$ for all $s\in[0,1]$.
+The integrand of \eqref{eq:V} is $C^1$ across $\alpha_1=0$ and $\alpha_2=0$, so $g$ is
+$C^{1,1}$ with $g''(s)=\delta^2Q_{H_s}[\eta]=2B_{E_1(H_s),E_2(H_s)}[\eta]$ for a.e.\ $s$,
+which is $\le0$ by Proposition~\ref{prop:dcell} and Corollary~\ref{cor:anchored}. By
+Theorem~\ref{thm:el}, $g'(0)=0$; and $|T|=A_R^\ast$ together with $|T|\le g(1)\le
+g(0)=A_R^\ast$ (Theorem~\ref{thm:final}) forces $g(1)=g(0)$. Taylor with integral remainder
+gives
+\[
+  0\ =\ g(1)-g(0)-g'(0)\ =\ \int_0^1(1-s)\,g''(s)\,ds ,
+\]
+so $g''=0$ a.e., that is $B_{E_1(H_s),E_2(H_s)}[\eta]=0$ for a.e.\ $s\in[0,1]$.
+
+By Proposition~\ref{prop:dcell}, every $H\in\mathcal D$ has
+$E_1\subseteq[0,T_\ast)\subseteq E_2$. In \eqref{eq:cellform} the $E_2$ term is subtracted and
+the $E_1$ term added, so replacing both sets by $[0,T_\ast)$ can only raise the form:
+\begin{equation}\label{eq:BleD}
+  \tfrac12\,\delta^2Q_H[\eta]\ =\ B_{E_1,E_2}[\eta]\ \le\ B_{[0,T_\ast),[0,T_\ast)}[\eta]
+  \ =\ D_{T_\ast}[\eta]\qquad (H\in\mathcal D).
+\end{equation}
+This is Lemma~\ref{lem:mono} with both sets moved to the same $[0,T_\ast)$, and unlike that
+lemma it lands on a form that does not depend on $H$. With $D_{T_\ast}\le0$
+(Theorem~\ref{thm:diag}) the previous paragraph gives $D_{T_\ast}[\eta]=0$, and
+Proposition~\ref{prop:dstrict} applies because $T_\ast\le1.5153$, so $\eta\equiv0$ and
+$H=H_\Sig$.
+
+Finally the chain of Theorem~\ref{thm:final} is an equality throughout, so
+$T\subseteq C_2\setminus(N\cup\rho N)$ has the same area as that set and therefore agrees
+with it, hence with $\Sig$, up to a null set.
 \end{proof}
+
+\begin{remark}[The strictness step, repaired]\label{rem:v32}
+The proof printed here in earlier versions ran in two steps: equality in \eqref{eq:stab} was
+said to force $\|\eta\|_{L^2(0,\pi/2)}=0$, and then Remark~\ref{thm:concave} was cited to push
+$\eta\equiv0$ across $[\pi/2,\pi]$, with an inline justification written for
+$E_2=[0,\pi/2-\beta)$, $\Sig$'s own sign cell. Both halves are defective.
+
+\emph{The citation.} Remark~\ref{thm:concave} is superseded and is about $\Sig$'s cell only.
+The live concavity input on $\mathcal D$ is Corollary~\ref{cor:anchored} via
+Proposition~\ref{prop:dcell} --- but that gives $\delta^2Q\le0$, not $<0$, and uniqueness
+needs definiteness, so it does not by itself supply what this step asked of it. What
+Proposition~\ref{prop:dcell} does give is \eqref{eq:BleD}, which reduces definiteness on all
+of $\mathcal D$ to definiteness of the single $H$-independent form $D_{T_\ast}$; that is
+Proposition~\ref{prop:dstrict}, and that is the route the proof above takes.
+
+\emph{The inline justification.} Under the fixed-$T$ form of (d) all that is known of $E_2$ is
+$E_2=[0,\tau)$ with $\tau\ge T_\ast$, so the $E_2$ term of \eqref{eq:Q2} controls $\eta'$ on
+$[\pi/2,\pi/2+\tau)$ and makes $\eta$ constant there and nowhere else. Since $\alpha_2(\pi/2)
+=-\tfrac12$ forces $\tau<\pi/2$, the tail $[\pi/2+\tau,\pi]$ is always left untouched; on
+$\Sig$'s own cell, where $\tau=\pi/2-\beta$, that tail is $[\pi-\beta,\pi]$, so the step as
+printed does not close even there.
+
+\emph{The repair.} Keep the cap term, which the printed argument discarded. With
+$\eta\equiv0$ on $[0,\pi/2]$, that is $p\equiv0$, \eqref{eq:cellform} reads
+\[
+  B_{E_1,E_2}[\eta]=\int_0^{\pi/2}(q^2-q'^2)-\int_{E_2}q'^2+\int_{E_1}q^2
+  \ \le\ \int_0^{\pi/2}(q^2-q'^2)+\int_0^{T_\ast}(q^2-q'^2) ,
+\]
+using $E_1\subseteq[0,T_\ast)\subseteq E_2$ once in each direction. Both brackets are
+nonpositive by the Dirichlet--Neumann Poincaré inequality on $[0,L]$, whose first eigenvalue
+is $(\pi/2L)^2$: that is $1$ for $L=\pi/2$ and $(\pi/2T_\ast)^2>1$ for $L=T_\ast<\pi/2$. If
+the total vanishes then both do; the second forces $q\equiv0$ on $[0,T_\ast]$, the first
+forces $q=c\sin$ on $[0,\pi/2]$, and $T_\ast>0$ then forces $c=0$. So $\eta\equiv0$ on all of
+$[\pi/2,\pi]$, from (d) alone, with no phase decomposition and no appeal to $\Sig$'s sign
+pattern.
+
+Rule~0: the strictness step is \textsc{proved} on the whole range $[\pi/2,\pi]$, and its
+scalar assembly is \textsc{verified} (\verb|cell_le_window|, \verb|dn_constant_gt_one|,
+\verb|gap_nonpos_of_poincare|, \verb|gap_zero_forces_zero|, \verb|cell_zero_splits|,
+\verb|first_mode_vanishes|, \verb|dd_absorb|); the two Poincaré inequalities and the
+identification of their equality cases are inputs and are not formalised.
+Corollary~\ref{cor:uniq} reaches exactly as far as Proposition~\ref{prop:dstrict} does,
+$T_\ast\le1.5153$; the sliver $T_\ast\in(1.5153,\pi/2)$ is the one place it does not close,
+and the reason is range~(b) of Theorem~\ref{thm:diag}, not anything in this remark.
+\end{remark}
 
 The domain $\mathcal D$ is cut out in part by (RC), and (RC) enters at exactly one
 point: it forces the flux excess $E:=V-|N|$ to vanish, so that $Q$ is tight. Separation and

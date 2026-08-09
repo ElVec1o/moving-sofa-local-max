@@ -3328,4 +3328,600 @@ theorem seghyp_from_both {σ a1 : ℝ} (h1 : a1 ≤ σ) (h2 : 0 ≤ σ) : max a1
 
 end SegmentHypothesis
 
+
+section BangBang
+
+/-!
+### The bang-bang step of `rem:v29`, written out
+
+Both `c_x` bounds reduce, after the arm estimate that (d) supplies, to one scalar statement.
+With `ρ : [0,π/2] → [0,1]` and `∫₀^{π/2} ρ cos = 1/2`,
+
+  `Φ_ρ(u) = sin u (∫₀^u ρ − 1/2) + ∫_u^{π/2} ρ sin ≥ 0` for every `u ∈ [0,π/2]`.
+
+The `κ` bound is this at `u = t` with `ρ = ρ₁`; the `−α₂(0)` bound is this at `u = π/2 − t`
+with `ρ(s) = ρ₂(π/2 − s)`, the reflection turning `∫ ρ₂ sin = 1/2` into `∫ ρ cos = 1/2`.
+
+*Sign*, with no optimisation at all: `sin s ≥ sin u` on `[u,π/2]` gives
+`Φ_ρ(u) ≥ sin u (∫₀^{π/2} ρ − 1/2)`, and `∫ρ ≥ ∫ρ cos = 1/2` because `ρ ≥ 0` and `cos ≤ 1`.
+That is `claim_hard` together with `density_ge_moment`, and it needs neither `ρ ≤ 1` nor any
+extremal.
+
+*The extremal.* Writing `Φ_ρ(u) = −½ sin u + ∫ ρ w_u` with `w_u(s) = sin(max s u)`, the
+minimiser at fixed `∫ ρ cos = 1/2` places mass where the price `w_u(s)/cos s` per unit of the
+constraint is LOWEST.  That price is `sin u · sec s` on `[0,u]` and `tan s` on `[u,π/2]`, both
+increasing and agreeing at `u`, so it increases across `[0,π/2]` and the minimiser is
+FRONT-loaded: `ρ⋆ = 1_[0,π/6]`, the switch pinned by `∫₀^{π/6} cos = sin(π/6) = 1/2`
+(`floor_moment_u`).  This is the same direction as the corner-height bathtub of `rem:v24`,
+and the opposite of the back-loaded profile withdrawn there.
+
+The certificate is pointwise.  With `λ_u = sin(max u (π/6))/cos(π/6)`, the kernel
+`cos(π/6) w_u − sin(max u (π/6)) cos` is `≤ 0` on `[0,π/6]` and `≥ 0` on `[π/6,π/2]`
+(`exKernel_nonpos`, `exKernel_nonneg`), for the single reason that `s ↦ sin(max s u)` is
+nondecreasing while `cos` is nonincreasing.  Hence `(ρ − 1_[0,π/6])` times that kernel is
+`≥ 0` pointwise (`exchange_product_left`, `exchange_product_right`), which is where `ρ ≤ 1` is
+used and the only place it is used.
+
+*The constant.*  `Φ⋆(u) = ∫₀^{π/6} sin(max s u) ds − ½ sin u` is `(π/6 − 1/2) sin u` for
+`u ≥ π/6` (`extremal_value_far`) and `Ψ(u) = u sin u + cos u − √3/2 − ½ sin u` for `u ≤ π/6`
+(`extremal_value_near`).  `Ψ′ = (u − ½) cos u`, so `Ψ` falls to `u = 1/2` and rises after it,
+and its minimum is `Ψ(1/2) = cos ½ − √3/2 = 0.0115571…`, the two `sin ½` terms cancelling
+exactly.  Since `Ψ(π/6) = ½(π/6 − 1/2) ≥ Ψ(1/2)`, the far branch never goes lower, so
+`cos ½ − √3/2` is the surplus on the whole range (`bangbang_surplus`).
+
+NOT formalised here: the passage from the pointwise kernel sign to
+`∫ ρ w_u ≥ ∫₀^{π/6} w_u`, which is one application of `∫ ≥ 0` for a nonnegative integrand
+together with linearity and the moment constraint.  Everything else in the paragraph is below.
+-/
+
+/-- The exchange kernel at `u`, cleared of the denominator `cos(π/6)`. -/
+noncomputable def exKernel (u s : ℝ) : ℝ :=
+  Real.cos (Real.pi / 6) * Real.sin (max s u) - Real.sin (max u (Real.pi / 6)) * Real.cos s
+
+/-- `s ↦ sin (max s u)` is nondecreasing on `[0,π/2]`. -/
+theorem sin_max_mono {a b u : ℝ} (hab : a ≤ b) (ha0 : 0 ≤ a)
+    (hb : b ≤ Real.pi / 2) (hu : u ≤ Real.pi / 2) :
+    Real.sin (max a u) ≤ Real.sin (max b u) := by
+  have hpi : (0:ℝ) < Real.pi := Real.pi_pos
+  have hma : (0:ℝ) ≤ max a u := le_max_of_le_left ha0
+  have hmb : (0:ℝ) ≤ max b u := le_max_of_le_left (hab.trans' ha0)
+  exact Real.strictMonoOn_sin.monotoneOn
+    ⟨by linarith, max_le (hab.trans hb) hu⟩ ⟨by linarith, max_le hb hu⟩ (max_le_max hab le_rfl)
+
+/-- Left of the switch the kernel is nonpositive: `sin(max s u) ≤ sin(max u (π/6))` and
+`cos(π/6) ≤ cos s`. -/
+theorem exKernel_nonpos {u s : ℝ} (hs0 : 0 ≤ s) (hs : s ≤ Real.pi / 6)
+    (hu0 : 0 ≤ u) (hu : u ≤ Real.pi / 2) : exKernel u s ≤ 0 := by
+  have hpi : (0:ℝ) < Real.pi := Real.pi_pos
+  have h60 : (0:ℝ) ≤ Real.pi / 6 := by positivity
+  have h6 : Real.pi / 6 ≤ Real.pi / 2 := by linarith
+  have hsin : Real.sin (max s u) ≤ Real.sin (max u (Real.pi / 6)) := by
+    rw [max_comm u (Real.pi / 6)]
+    exact sin_max_mono hs hs0 h6 hu
+  have hcos : Real.cos (Real.pi / 6) ≤ Real.cos s :=
+    Real.cos_le_cos_of_nonneg_of_le_pi hs0 (by linarith) hs
+  have hc0 : 0 ≤ Real.cos (Real.pi / 6) := by rw [Real.cos_pi_div_six]; positivity
+  have hsm : 0 ≤ Real.sin (max s u) :=
+    Real.sin_nonneg_of_nonneg_of_le_pi (le_max_of_le_left hs0)
+      (max_le (by linarith) (by linarith))
+  have hmul := mul_le_mul hcos hsin hsm (le_trans hc0 hcos)
+  unfold exKernel
+  nlinarith [hmul]
+
+/-- Right of the switch the kernel is nonnegative: both comparisons reverse. -/
+theorem exKernel_nonneg {u s : ℝ} (hs : Real.pi / 6 ≤ s) (hs2 : s ≤ Real.pi / 2)
+    (hu0 : 0 ≤ u) (hu : u ≤ Real.pi / 2) : 0 ≤ exKernel u s := by
+  have hpi : (0:ℝ) < Real.pi := Real.pi_pos
+  have h60 : (0:ℝ) ≤ Real.pi / 6 := by positivity
+  have h6 : Real.pi / 6 ≤ Real.pi / 2 := by linarith
+  have hsin : Real.sin (max u (Real.pi / 6)) ≤ Real.sin (max s u) := by
+    rw [max_comm u (Real.pi / 6)]
+    exact sin_max_mono hs h60 hs2 hu
+  have hcos : Real.cos s ≤ Real.cos (Real.pi / 6) :=
+    Real.cos_le_cos_of_nonneg_of_le_pi h60 (by linarith) hs
+  have hcs : 0 ≤ Real.cos s := Real.cos_nonneg_of_mem_Icc ⟨by linarith, hs2⟩
+  have hsm : 0 ≤ Real.sin (max u (Real.pi / 6)) :=
+    Real.sin_nonneg_of_nonneg_of_le_pi (le_max_of_le_right h60)
+      (max_le (by linarith) (by linarith))
+  have hmul := mul_le_mul hcos hsin hsm (le_trans hcs hcos)
+  unfold exKernel
+  nlinarith [hmul]
+
+/-- On `[0,π/6]` the competitor is below the extremal (`ρ ≤ 1`) and the kernel is nonpositive,
+so the exchange integrand is nonnegative.  This is the only use of `ρ ≤ 1`. -/
+theorem exchange_product_left {ρ u s : ℝ} (h1 : ρ ≤ 1)
+    (hs0 : 0 ≤ s) (hs : s ≤ Real.pi / 6) (hu0 : 0 ≤ u) (hu : u ≤ Real.pi / 2) :
+    0 ≤ (ρ - 1) * exKernel u s := by
+  have hk := exKernel_nonpos hs0 hs hu0 hu
+  nlinarith
+
+/-- On `[π/6,π/2]` the extremal is `0` and the kernel is nonnegative. -/
+theorem exchange_product_right {ρ u s : ℝ} (h0 : 0 ≤ ρ)
+    (hs : Real.pi / 6 ≤ s) (hs2 : s ≤ Real.pi / 2) (hu0 : 0 ≤ u) (hu : u ≤ Real.pi / 2) :
+    0 ≤ (ρ - 0) * exKernel u s := by
+  have hk := exKernel_nonneg hs hs2 hu0 hu
+  nlinarith
+
+/-- Far case: for `u ≥ π/6` the extremal sits entirely left of `u`, so `w_u ≡ sin u` on it. -/
+theorem extremal_value_far {u : ℝ} (h : Real.pi / 6 ≤ u) :
+    (∫ s in (0:ℝ)..(Real.pi / 6), Real.sin (max s u)) = Real.pi / 6 * Real.sin u := by
+  have h60 : (0:ℝ) ≤ Real.pi / 6 := by positivity
+  have hcongr : (∫ s in (0:ℝ)..(Real.pi / 6), Real.sin (max s u))
+      = ∫ _s in (0:ℝ)..(Real.pi / 6), Real.sin u := by
+    refine intervalIntegral.integral_congr ?_
+    intro s hs
+    rw [Set.uIcc_of_le h60] at hs
+    show Real.sin (max s u) = Real.sin u
+    rw [max_eq_right (le_trans hs.2 h)]
+  rw [hcongr, intervalIntegral.integral_const]
+  simp
+
+/-- Near case: for `u ≤ π/6` the extremal straddles `u`, giving `u sin u + cos u − √3/2`. -/
+theorem extremal_value_near {u : ℝ} (h0 : 0 ≤ u) (h : u ≤ Real.pi / 6) :
+    (∫ s in (0:ℝ)..(Real.pi / 6), Real.sin (max s u))
+      = u * Real.sin u + Real.cos u - Real.sqrt 3 / 2 := by
+  have hcont : Continuous fun s : ℝ => Real.sin (max s u) :=
+    Real.continuous_sin.comp (continuous_id.max continuous_const)
+  have hsplit : (∫ s in (0:ℝ)..u, Real.sin (max s u))
+      + (∫ s in u..(Real.pi / 6), Real.sin (max s u))
+      = ∫ s in (0:ℝ)..(Real.pi / 6), Real.sin (max s u) :=
+    intervalIntegral.integral_add_adjacent_intervals
+      (hcont.intervalIntegrable _ _) (hcont.intervalIntegrable _ _)
+  have h1 : (∫ s in (0:ℝ)..u, Real.sin (max s u)) = u * Real.sin u := by
+    have hc : (∫ s in (0:ℝ)..u, Real.sin (max s u)) = ∫ _s in (0:ℝ)..u, Real.sin u := by
+      refine intervalIntegral.integral_congr ?_
+      intro s hs
+      rw [Set.uIcc_of_le h0] at hs
+      show Real.sin (max s u) = Real.sin u
+      rw [max_eq_right hs.2]
+    rw [hc, intervalIntegral.integral_const]; simp
+  have h2 : (∫ s in u..(Real.pi / 6), Real.sin (max s u)) = Real.cos u - Real.sqrt 3 / 2 := by
+    have hc : (∫ s in u..(Real.pi / 6), Real.sin (max s u))
+        = ∫ s in u..(Real.pi / 6), Real.sin s := by
+      refine intervalIntegral.integral_congr ?_
+      intro s hs
+      rw [Set.uIcc_of_le h] at hs
+      show Real.sin (max s u) = Real.sin s
+      rw [max_eq_left hs.1]
+    rw [hc, integral_sin, Real.cos_pi_div_six]
+  rw [← hsplit, h1, h2]; ring
+
+/-- The near-case profile `Ψ(u) = u sin u + cos u − √3/2 − ½ sin u`. -/
+noncomputable def Psi (u : ℝ) : ℝ :=
+  u * Real.sin u + Real.cos u - Real.sqrt 3 / 2 - (1 / 2) * Real.sin u
+
+/-- `Ψ′ = (u − ½) cos u`, so `Ψ` falls on `[0,1/2]` and rises on `[1/2,π/6]`. -/
+theorem Psi_hasDerivAt (u : ℝ) : HasDerivAt Psi ((u - 1 / 2) * Real.cos u) u := by
+  have hsin : HasDerivAt Real.sin (Real.cos u) u := Real.hasDerivAt_sin u
+  have hcos : HasDerivAt Real.cos (-Real.sin u) u := Real.hasDerivAt_cos u
+  have hid : HasDerivAt (fun s : ℝ => s) 1 u := hasDerivAt_id u
+  have h : HasDerivAt (fun s : ℝ => s * Real.sin s + Real.cos s - Real.sqrt 3 / 2
+      - (1 / 2) * Real.sin s)
+      (1 * Real.sin u + u * Real.cos u + -Real.sin u - 0 - (1 / 2) * Real.cos u) u :=
+    (((hid.mul hsin).add hcos).sub (hasDerivAt_const u (Real.sqrt 3 / 2))).sub
+      (hsin.const_mul (1 / 2 : ℝ))
+  have he : (1 * Real.sin u + u * Real.cos u + -Real.sin u - 0 - (1 / 2) * Real.cos u)
+      = (u - 1 / 2) * Real.cos u := by ring
+  rw [he] at h
+  exact h
+
+/-- At `u = 1/2` the two `sin ½` terms cancel exactly. -/
+theorem Psi_at_half : Psi (1 / 2) = Real.cos (1 / 2) - Real.sqrt 3 / 2 := by
+  unfold Psi; ring
+
+/-- At the switch the two branches agree: `Ψ(π/6) = ½(π/6 − 1/2)`. -/
+theorem Psi_at_pi_six : Psi (Real.pi / 6) = (1 / 2) * (Real.pi / 6 - 1 / 2) := by
+  unfold Psi
+  rw [Real.cos_pi_div_six, Real.sin_pi_div_six]
+  ring
+
+/-- **The near branch.** `Ψ ≥ Ψ(1/2) = cos ½ − √3/2` on `[0,π/6]`, by antitonicity up to
+`1/2` and monotonicity after it.  Note `1/2 < π/6`, which is `π > 3`. -/
+theorem Psi_min_near {u : ℝ} (h0 : 0 ≤ u) (h : u ≤ Real.pi / 6) :
+    Real.cos (1 / 2) - Real.sqrt 3 / 2 ≤ Psi u := by
+  have hpi3 := Real.pi_gt_three
+  have hpi6 : (1 / 2 : ℝ) ≤ Real.pi / 6 := by linarith
+  rw [← Psi_at_half]
+  rcases le_total u (1 / 2 : ℝ) with hc | hc
+  · have ha : AntitoneOn Psi (Set.Icc 0 (1 / 2 : ℝ)) := by
+      refine antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc _ _)
+        (fun x _ => (Psi_hasDerivAt x).continuousAt.continuousWithinAt)
+        (f' := fun s => (s - 1 / 2) * Real.cos s)
+        (fun x _ => (Psi_hasDerivAt x).hasDerivWithinAt) ?_
+      intro x hx
+      rw [interior_Icc] at hx
+      have hcx : 0 ≤ Real.cos x :=
+        Real.cos_nonneg_of_mem_Icc ⟨by linarith [hx.1], by linarith [hx.2]⟩
+      nlinarith [hx.2]
+    exact ha ⟨h0, hc⟩ (Set.right_mem_Icc.mpr (by norm_num)) hc
+  · have hm : MonotoneOn Psi (Set.Icc (1 / 2 : ℝ) (Real.pi / 6)) := by
+      refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc _ _)
+        (fun x _ => (Psi_hasDerivAt x).continuousAt.continuousWithinAt)
+        (f' := fun s => (s - 1 / 2) * Real.cos s)
+        (fun x _ => (Psi_hasDerivAt x).hasDerivWithinAt) ?_
+      intro x hx
+      rw [interior_Icc] at hx
+      have hcx : 0 ≤ Real.cos x :=
+        Real.cos_nonneg_of_mem_Icc ⟨by linarith [hx.1], by linarith [hx.2]⟩
+      exact mul_nonneg (by linarith [hx.1]) hcx
+    exact hm (Set.left_mem_Icc.mpr hpi6) ⟨hc, h⟩ hc
+
+/-- `cos(1/2) ≥ 0.871744`, from the quartic Taylor enclosure. -/
+theorem cos_half_lower : (871744 : ℝ) / 10 ^ 6 ≤ Real.cos (1 / 2) := by
+  have habs : |(1 / 2 : ℝ)| = 1 / 2 := abs_of_nonneg (by norm_num)
+  have hb := Real.cos_bound (x := (1 / 2 : ℝ)) (by rw [habs]; norm_num)
+  rw [habs] at hb
+  have h := (abs_le.mp hb).1
+  norm_num at h ⊢
+  linarith
+
+/-- **The surplus is positive.** `cos ½ − √3/2 = 0.0115571…`, against `√3/2 ≤ 0.8660255`
+(`sqrt3_half_le`). -/
+theorem bangbang_surplus_pos : 0 < Real.cos (1 / 2) - Real.sqrt 3 / 2 := by
+  have h1 := cos_half_lower
+  have h2 := sqrt3_half_le
+  have h3 : (8660255 : ℝ) / 10 ^ 7 < 871744 / 10 ^ 6 := by norm_num
+  linarith
+
+/-- **The far branch never goes below the near minimum.** For `u ≥ π/6` the extremal value is
+`(π/6 − 1/2) sin u ≥ ½(π/6 − 1/2) = Ψ(π/6) ≥ Ψ(1/2)`. -/
+theorem far_ge_surplus {u : ℝ} (h : Real.pi / 6 ≤ u) (h2 : u ≤ Real.pi / 2) :
+    Real.cos (1 / 2) - Real.sqrt 3 / 2 ≤ (Real.pi / 6 - 1 / 2) * Real.sin u := by
+  have hpi3 := Real.pi_gt_three
+  have hpi := Real.pi_pos
+  have hs : Real.sin (Real.pi / 6) ≤ Real.sin u :=
+    Real.strictMonoOn_sin.monotoneOn ⟨by linarith, by linarith⟩ ⟨by linarith, h2⟩ h
+  rw [Real.sin_pi_div_six] at hs
+  have hkey : Real.cos (1 / 2) - Real.sqrt 3 / 2 ≤ (1 / 2) * (Real.pi / 6 - 1 / 2) := by
+    rw [← Psi_at_pi_six]
+    exact Psi_min_near (by positivity) le_rfl
+  nlinarith [hs, hkey]
+
+/-- **The surplus, on the whole range.** The value of the front-loaded extremal never drops
+below `cos ½ − √3/2`, and that value is attained at `u = 1/2`. -/
+theorem bangbang_surplus {u : ℝ} (h0 : 0 ≤ u) (h : u ≤ Real.pi / 2) :
+    Real.cos (1 / 2) - Real.sqrt 3 / 2
+      ≤ (∫ s in (0:ℝ)..(Real.pi / 6), Real.sin (max s u)) - (1 / 2) * Real.sin u := by
+  rcases le_total u (Real.pi / 6) with hc | hc
+  · rw [extremal_value_near h0 hc]
+    have := Psi_min_near h0 hc
+    unfold Psi at this
+    linarith
+  · rw [extremal_value_far hc]
+    have := far_ge_surplus hc h
+    nlinarith [this]
+
+/-- The substitution step: an arm bounded below by `−1/2 + I₀` turns
+`κ − c_x = α₁ sin t + tail` into the `Φ` form `sin t (I₀ − 1/2) + tail`. -/
+theorem phi_from_arm_lower {arm trig I0 tail : ℝ} (htrig : 0 ≤ trig)
+    (harm : -(1 / 2) + I0 ≤ arm) : trig * (I0 - 1 / 2) + tail ≤ arm * trig + tail := by
+  nlinarith
+
+/-- The same extremal, run against `∫ ρ sin`, gives the ceiling-facet floor: `κ ≥ 1 − √3/2`
+by `floor_obj_u`, and `1 − √3/2 > 0`. -/
+theorem ceiling_facet_floor_pos : 0 < 1 - Real.sqrt 3 / 2 := by
+  have h2 := sqrt3_half_le
+  norm_num at h2 ⊢
+  linarith
+
+end BangBang
+
+
+section UniquenessStrictness
+
+/-!
+### The strictness step of `cor:uniq`, repaired
+
+The printed justification used `E₂ = [0, π/2 − β)`, `Σ`'s own sign cell, and the `E₂` term
+alone.  Under the fixed-`T` form of (d) all that is known is `E₁ ⊆ [0,T) ⊆ E₂`, and the `E₂`
+term alone makes `η` constant on `[π/2, π/2 + τ)` only, never on all of `[π/2,π]`.  The
+repair keeps the cap term, which the printed argument discarded.
+
+With `p ≡ 0` on `[0,π/2]` and `q(t) = η(t + π/2)`, `q(0) = 0`, the cell form is
+`∫₀^{π/2}(q² − q′²) − ∫_{E₂} q′² + ∫_{E₁} q²`.  The inclusions `E₁ ⊆ [0,T) ⊆ E₂` push this
+below `∫₀^{π/2}(q² − q′²) + ∫₀^{T}(q² − q′²)` (`cell_le_window`).  Both brackets are `≤ 0` by
+the Dirichlet–Neumann Poincaré inequality, with constants `1` on `[0,π/2]` and `(π/2T)² > 1`
+on `[0,T]` (`dn_constant_gt_one`).  Vanishing of the second forces `q ≡ 0` on `[0,T]`
+(`gap_zero_forces_zero`), vanishing of the first forces `q = c sin`, and the two together
+force `c = 0` (`first_mode_vanishes`).  The conclusion is `η ≡ 0` on all of `[π/2,π]`, and it
+uses only `T > 0`, which is (d).
+
+`cor:anchored` does NOT supply this: it is the non-strict `δ²Q ≤ 0`, and uniqueness needs
+definiteness.  What the same inclusions do give in general is `B_{E₁,E₂} ≤ D_T`
+(`cell_le_window` again, with the two `T`-integrands), so definiteness on all of `D` is
+definiteness of the single form `D_T`.
+-/
+
+/-- Shrinking the subtracted set to `[0,T)` and enlarging the added one to `[0,T)` can only
+raise the cell form.  This is `lem:mono` with both sets moved to the same `[0,T)`. -/
+theorem cell_le_window {bare J1 J2 K1 K2 : ℝ} (h1 : J1 ≤ K1) (h2 : K2 ≤ J2) :
+    bare - J2 + J1 ≤ bare - K2 + K1 := by linarith
+
+/-- The Dirichlet–Neumann Poincaré constant on `[0,T]` exceeds `1` as soon as `T < π/2`. -/
+theorem dn_constant_gt_one {T : ℝ} (h0 : 0 < T) (h : T < Real.pi / 2) :
+    1 < (Real.pi / (2 * T)) ^ 2 := by
+  have h2 : 0 < 2 * T := by linarith
+  have hlt : 1 < Real.pi / (2 * T) := by
+    rw [lt_div_iff₀ h2]; linarith
+  nlinarith
+
+/-- A Poincaré constant at least `1` makes the bracket `∫(q² − q′²)` nonpositive. -/
+theorem gap_nonpos_of_poincare {I J lam : ℝ} (hI : 0 ≤ I) (hlam : 1 ≤ lam) (hP : lam * I ≤ J) :
+    I - J ≤ 0 := by nlinarith
+
+/-- A Poincaré constant strictly above `1` makes the bracket vanish only at `q ≡ 0`. -/
+theorem gap_zero_forces_zero {I J lam : ℝ} (hI : 0 ≤ I) (hlam : 1 < lam) (hP : lam * I ≤ J)
+    (h : 0 ≤ I - J) : I = 0 := by nlinarith
+
+/-- A nonnegative total dominated by a sum of two nonpositive brackets forces both to vanish. -/
+theorem cell_zero_splits {B Gfull Gshort : ℝ} (hB : 0 ≤ B) (hle : B ≤ Gfull + Gshort)
+    (hf : Gfull ≤ 0) (hs : Gshort ≤ 0) : Gfull = 0 ∧ Gshort = 0 :=
+  ⟨by linarith, by linarith⟩
+
+/-- The first Dirichlet–Neumann mode `c sin` vanishing anywhere in `(0,π/2]` forces `c = 0`. -/
+theorem first_mode_vanishes {c T : ℝ} (h0 : 0 < T) (hT : T ≤ Real.pi / 2)
+    (h : c * Real.sin T = 0) : c = 0 := by
+  have hpi := Real.pi_pos
+  have hs : 0 < Real.sin T := Real.sin_pos_of_pos_of_lt_pi h0 (by linarith)
+  rcases mul_eq_zero.mp h with hc | hc
+  · exact hc
+  · exact absurd hc (ne_of_gt hs)
+
+/-- The `q ≡ 0` residue of `D_τ` in range (a): with the Dirichlet–Dirichlet constant `4`,
+`∫₀^τ(p²−p′²) + 2∫_τ^{π/2}(p²−p′²) ≤ 2∫p² − ∫p′² ≤ −2∫p²`, so `p ≡ 0` as well. -/
+theorem dd_absorb {A B : ℝ} (h : 4 * A ≤ B) : 2 * A - B ≤ -(2 * A) := by linarith
+
+end UniquenessStrictness
+
+
+section SingleEntry
+
+/-!
+### `prop:V` (i)+(ii) with no strictness and no partition
+
+Two obstructions stood between the connectivity lemmas and a general `H ∈ D`, and both are
+removed here. Nothing new is assumed: what is used is `H(π/2) = 1` and `r ≤ 1` off the atom,
+which are hypotheses (a) and (b) of `D`. Hypotheses (c) and (d) are not used.
+
+**(a) The strictness.** `wronskian_strictAntiOn` and `pos_between_of_strictAnti` demand
+`q = r - 1 < 0`. Class `D` gives only `r_ac ≤ 1`, and on `{r_ac = 1}` the Wronskian
+`G_x = W'·sin(·-x) - W·cos(·-x)` has `G_x' = 0`: it is flat there, so `StrictAntiOn` is
+*false* and those two lemmas genuinely do not instantiate. But strictness was never used.
+The contradiction in the Sturm step comes from `G_x(x) = -W(x) < 0`, which is strict because
+`W(x) > 0`, not because `G_x` moves. `pos_between_of_antitone` is the same proof with
+`AntitoneOn` in place of `StrictAntiOn`, and `wronskian_antitoneOn` supplies it from `q ≤ 0`.
+The threshold is sharp: `rc_one` builds caps in `D` with `r_ac = 1` on a set of measure up to
+`π/3` (the largest the gauge allows) and finds the three-point margin exactly `0`, while at
+`r_ac = 1.05` it is `-6.5·10⁻³` and connectivity fails.
+
+**(b) The partition.** `strictAntiOn_glue` chains finitely many phases, and a general member
+of `D` has no finite phase structure. No partition is needed. Antitonicity of `G_x` is the
+integral statement `∫_a^b sin(θ-x)·(r(dθ) - dθ) ≤ 0`, which holds whenever `r ≤ λ` as
+measures on the window; the note carries that step. The Lean lemmas take `AntitoneOn` as a
+hypothesis rather than a phase list, so nothing here counts phases. `antitoneOn_glue` remains
+available for the piecewise case but is no longer on the critical path.
+
+**The atom.** `π/2` is an *endpoint* of each window, never interior, and it is never even
+reached: the gauge `H(π/2) = 1` gives `W(π/2) = -p_y < 0` for every `p` off the floor
+(`atom_not_cut`), so no anchor and no dip endpoint can sit at `π/2`. Accordingly
+`pos_set_ordConnected_of_antitone` asks for the derivative of `W` only on `Set.Ico lo hi`,
+which on `[0, π/2]` excludes exactly the point where `W'` jumps.
+
+**The payoff.** A point `p` off a null set has, at each of its preimages, a strictly positive
+sweep Jacobian; `entry_eventually_cut` turns that into "the cut set contains a right
+neighbourhood", and `at_most_one_entry` shows an order-connected set admits at most one such
+point. `at_most_one_preimage` is the assembled statement, which is `prop:V` (i) and (ii)
+together, with no appeal to `thm:rc` or `thm:cross`.
+-/
+
+/-- **Antitonicity glues across a shared endpoint.** The non-strict twin of
+`strictAntiOn_glue`, kept for the piecewise-constant case; the general argument needs no
+gluing at all. -/
+theorem antitoneOn_glue {f : ℝ → ℝ} {a b c : ℝ}
+    (h1 : AntitoneOn f (Set.Icc a b)) (h2 : AntitoneOn f (Set.Icc b c)) :
+    AntitoneOn f (Set.Icc a c) := by
+  intro p hp r hr hpr
+  rcases le_total r b with hrb | hrb
+  · exact h1 ⟨hp.1, le_trans hpr hrb⟩ ⟨hr.1, hrb⟩ hpr
+  · rcases le_total b p with hbp | hbp
+    · exact h2 ⟨hbp, hp.2⟩ ⟨le_trans hbp hpr, hr.2⟩ hpr
+    · have e1 : f b ≤ f p := h1 ⟨hp.1, hbp⟩ ⟨le_trans hp.1 hbp, le_rfl⟩ hbp
+      have e2 : f r ≤ f b := h2 ⟨le_rfl, le_trans hrb hr.2⟩ ⟨hrb, hr.2⟩ hrb
+      linarith
+
+/-- **The Sturm step with the strictness removed.** Only `AntitoneOn` of the anchored
+Wronskian is consumed. This is what makes the step available on `{r_ac = 1}`, where the
+Wronskian is flat and `pos_between_of_strictAnti` has a false hypothesis.
+
+`W` is required to be differentiable only on `Set.Ico x z`: the right endpoint is excluded,
+which is what lets the window abut the atom at `π/2`. -/
+theorem pos_between_of_antitone {W W1 : ℝ → ℝ} {x z : ℝ} (hxz : x < z)
+    (hlen : z - x < Real.pi) (hWc : Continuous W)
+    (hW : ∀ t ∈ Set.Ico x z, HasDerivAt W (W1 t) t)
+    (hanti : AntitoneOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+      (Set.Ico x z))
+    (hx : 0 < W x) (hz : 0 < W z) : ∀ t ∈ Set.Ioo x z, 0 < W t := by
+  intro y hy
+  by_contra hcon
+  push_neg at hcon
+  obtain ⟨t₁, h1, h2, hz1, hp⟩ := exists_first_entry hy.2 hWc hcon hz
+  have hxt : x < t₁ := lt_of_lt_of_le hy.1 h1
+  have hmem : t₁ ∈ Set.Ico x z := ⟨hxt.le, h2⟩
+  have hh := hanti ⟨le_rfl, hxz⟩ hmem hxt.le
+  simp only [sub_self, Real.sin_zero, Real.cos_zero, mul_zero, mul_one, zero_sub,
+    hz1, zero_mul, sub_zero] at hh
+  have hsb : 0 < Real.sin (t₁ - x) :=
+    Real.sin_pos_of_pos_of_lt_pi (by linarith) (by linarith)
+  have hnegd : W1 t₁ < 0 := by nlinarith [hh, hsb, hx]
+  have hge := entry_deriv_nonneg h2 (hW t₁ hmem) hz1 hp
+  linarith
+
+/-- **The Wronskian is antitone under `r ≤ 1`.** The non-strict twin of
+`wronskian_strictAntiOn`: `q ≤ 0` rather than `q < 0`, which is exactly hypothesis (b) of
+`D` and not a strengthening of it. -/
+theorem wronskian_antitoneOn {W W1 q : ℝ → ℝ} {x a b : ℝ}
+    (hWc : Continuous W)
+    (hW : ∀ t ∈ Set.Icc a b, HasDerivAt W (W1 t) t)
+    (hW1c : ContinuousOn W1 (Set.Icc a b))
+    (hW1 : ∀ t ∈ Set.Ioo a b, HasDerivAt W1 (q t - W t) t)
+    (hq : ∀ t ∈ Set.Ioo a b, q t ≤ 0)
+    (hpos : ∀ t ∈ Set.Ioo a b, 0 ≤ Real.sin (t - x)) :
+    AntitoneOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+      (Set.Icc a b) := by
+  have hsin : ∀ w : ℝ, HasDerivAt (fun s => Real.sin (s - x)) (Real.cos (w - x)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const x).sin
+  have hcos : ∀ w : ℝ, HasDerivAt (fun s => Real.cos (s - x)) (-Real.sin (w - x)) w := by
+    intro w; simpa using ((hasDerivAt_id w).sub_const x).cos
+  have hGc : ContinuousOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+      (Set.Icc a b) := by
+    have h1 : ContinuousOn (fun s : ℝ => Real.sin (s - x)) (Set.Icc a b) :=
+      (Real.continuous_sin.comp (continuous_id.sub continuous_const)).continuousOn
+    have h2 : ContinuousOn (fun s : ℝ => Real.cos (s - x)) (Set.Icc a b) :=
+      (Real.continuous_cos.comp (continuous_id.sub continuous_const)).continuousOn
+    exact (hW1c.mul h1).sub (hWc.continuousOn.mul h2)
+  have hd : ∀ w ∈ Set.Ioo a b,
+      HasDerivAt (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x))
+        (q w * Real.sin (w - x)) w := by
+    intro w hw
+    have h := ((hW1 w hw).mul (hsin w)).sub ((hW w (Set.mem_Icc_of_Ioo hw)).mul (hcos w))
+    have e : q w * Real.sin (w - x)
+        = (q w - W w) * Real.sin (w - x) + W1 w * Real.cos (w - x)
+          - (W1 w * Real.cos (w - x) + W w * -Real.sin (w - x)) := by ring
+    rw [e]; exact h
+  refine antitoneOn_of_deriv_nonpos (convex_Icc a b) hGc ?_ ?_
+  · intro w hw
+    rw [interior_Icc] at hw
+    exact (hd w hw).differentiableAt.differentiableWithinAt
+  · intro w hw
+    rw [interior_Icc] at hw
+    rw [(hd w hw).deriv]
+    nlinarith [hq w hw, hpos w hw]
+
+/-- **`{W > 0}` is order-connected on a window shorter than `π`.** The `AntitoneOn` twin of
+`pos_set_ordConnected`, with the derivative of `W` needed only on `Set.Ico lo hi`.
+
+On `[0, π/2]` the excluded right endpoint is the atom, and on `[π/2, π]` the excluded point
+is never an anchor either, because `W(π/2) < 0` there by `atom_not_cut`. -/
+theorem pos_set_ordConnected_of_antitone {W W1 : ℝ → ℝ} {lo hi : ℝ} (hlen : hi - lo < Real.pi)
+    (hWc : Continuous W)
+    (hW : ∀ t ∈ Set.Ico lo hi, HasDerivAt W (W1 t) t)
+    (hanti : ∀ x ∈ Set.Ico lo hi,
+      AntitoneOn (fun s => W1 s * Real.sin (s - x) - W s * Real.cos (s - x)) (Set.Ico x hi)) :
+    {t | t ∈ Set.Icc lo hi ∧ 0 < W t}.OrdConnected := by
+  constructor
+  intro x hx z hz y hy
+  rcases eq_or_lt_of_le hy.1 with h | hxy
+  · exact h ▸ hx
+  rcases eq_or_lt_of_le hy.2 with h | hyz
+  · exact h ▸ hz
+  have hxz : x < z := lt_trans hxy hyz
+  have hxlo : lo ≤ x := hx.1.1
+  have hzhi : z ≤ hi := hz.1.2
+  refine ⟨⟨le_trans hxlo hxy.le, le_trans hyz.le hzhi⟩, ?_⟩
+  refine pos_between_of_antitone hxz (by linarith) hWc
+    (fun t ht => hW t ⟨le_trans hxlo ht.1, lt_of_lt_of_le ht.2 hzhi⟩)
+    ((hanti x ⟨hxlo, lt_of_lt_of_le hxz hzhi⟩).mono
+      (fun t ht => ⟨ht.1, lt_of_lt_of_le ht.2 hzhi⟩))
+    hx.2 hz.2 y ⟨hxy, hyz⟩
+
+/-- **The atom is never in the cut set.** After the gauge `H(π/2) = 1`, `W(π/2) = -p_y`, so
+every point of the cap off the floor has `π/2` in the negative set of `W`. That is why the
+split of `{W > 0}` at the atom is forced, and why neither window ever needs `W'` at `π/2`. -/
+theorem atom_not_cut {hval px py : ℝ} (hg : hval = 1) (hpy : 0 < py) :
+    hval - 1 - (px * Real.cos (Real.pi / 2) + py * Real.sin (Real.pi / 2)) < 0 := by
+  rw [Real.cos_pi_div_two, Real.sin_pi_div_two, hg]; linarith
+
+/-- **`T(p)` is an interval.** The two half-window statements intersect: the second is pulled
+back along the monotone quarter-period shift `t ↦ t + π/2`, which is where `arm_shift` enters.
+-/
+theorem cut_set_interval {W : ℝ → ℝ}
+    (hlo : {t | t ∈ Set.Icc (0 : ℝ) (Real.pi / 2) ∧ 0 < W t}.OrdConnected)
+    (hhi : {t | t ∈ Set.Icc (Real.pi / 2) Real.pi ∧ 0 < W t}.OrdConnected) :
+    ({t | t ∈ Set.Icc (0 : ℝ) (Real.pi / 2) ∧ 0 < W t} ∩
+      ((fun t => t + Real.pi / 2) ⁻¹'
+        {t | t ∈ Set.Icc (Real.pi / 2) Real.pi ∧ 0 < W t})).OrdConnected :=
+  cut_set_ordConnected hlo (hhi.preimage_mono fun _ _ h => by linarith)
+
+/-- A function vanishing at `t` with strictly positive derivative there is strictly positive
+immediately to the right. The strict counterpart of `entry_deriv_nonneg`, and the step that
+turns a preimage with nondegenerate Jacobian into a left endpoint of the cut set. -/
+theorem pos_right_of_deriv_pos {w : ℝ → ℝ} {d t : ℝ} (hd : HasDerivAt w d t) (hz : w t = 0)
+    (hpos : 0 < d) : ∀ᶠ y in nhdsWithin t (Set.Ioi t), 0 < w y := by
+  have hw : HasDerivWithinAt w d (Set.Ioi t) t := hd.hasDerivWithinAt
+  rw [hasDerivWithinAt_iff_tendsto_slope,
+    Set.diff_singleton_eq_self (by simp : t ∉ Set.Ioi t)] at hw
+  have hs : ∀ᶠ y in nhdsWithin t (Set.Ioi t), 0 < slope w t y := hw (Ioi_mem_nhds hpos)
+  filter_upwards [hs, self_mem_nhdsWithin] with y hy hy2
+  have hty : t < y := hy2
+  rw [slope_def_field, hz, sub_zero] at hy
+  rcases div_pos_iff.mp hy with ⟨h1, _⟩ | ⟨_, h2⟩
+  · exact h1
+  · linarith
+
+/-- **A nondegenerate preimage is a left endpoint of the cut set.** On face 1 the offset is
+`v(t)` and the Jacobian is `u'(t) = s - α₁`; on face 2 it is `u(t)` and `v'(t) = α₂ - s`. In
+both cases a strictly positive Jacobian makes the trajectory cross strictly into
+`{u > 0, v > 0}`. -/
+theorem entry_eventually_cut {u v : ℝ → ℝ} {t d : ℝ} (hu : Continuous u) (hv : Continuous v)
+    (h : (u t = 0 ∧ 0 < v t ∧ HasDerivAt u d t) ∨ (v t = 0 ∧ 0 < u t ∧ HasDerivAt v d t))
+    (hd : 0 < d) :
+    ∀ᶠ y in nhdsWithin t (Set.Ioi t), y ∈ {s | 0 < u s ∧ 0 < v s} := by
+  rcases h with ⟨hz, hp, hder⟩ | ⟨hz, hp, hder⟩
+  · have h1 := pos_right_of_deriv_pos hder hz hd
+    have h2 : {y | 0 < v y} ∈ nhdsWithin t (Set.Ioi t) :=
+      nhdsWithin_le_nhds ((isOpen_lt continuous_const hv).mem_nhds hp)
+    filter_upwards [h1, h2] with y hy1 hy2 using ⟨hy1, hy2⟩
+  · have h1 := pos_right_of_deriv_pos hder hz hd
+    have h2 : {y | 0 < u y} ∈ nhdsWithin t (Set.Ioi t) :=
+      nhdsWithin_le_nhds ((isOpen_lt continuous_const hu).mem_nhds hp)
+    filter_upwards [h1, h2] with y hy1 hy2 using ⟨hy2, hy1⟩
+
+/-- A preimage time is not itself in the cut set: one of the two coordinates vanishes there. -/
+theorem entry_not_cut {u v : ℝ → ℝ} {t : ℝ} (h : u t = 0 ∨ v t = 0) :
+    t ∉ {s | 0 < u s ∧ 0 < v s} := by
+  rintro ⟨h1, h2⟩
+  rcases h with h | h
+  · rw [h] at h1; exact lt_irrefl 0 h1
+  · rw [h] at h2; exact lt_irrefl 0 h2
+
+/-- **At most one entry into an order-connected set.** If two distinct points both fail to lie
+in `S` yet have right neighbourhoods inside `S`, the later of them is trapped between two
+points of `S`. -/
+theorem at_most_one_entry {S : Set ℝ} (hS : S.OrdConnected) {t₀ t₁ : ℝ} (h01 : t₀ < t₁)
+    (hn : t₁ ∉ S)
+    (hs0 : ∀ᶠ y in nhdsWithin t₀ (Set.Ioi t₀), y ∈ S)
+    (hs1 : ∀ᶠ y in nhdsWithin t₁ (Set.Ioi t₁), y ∈ S) : False := by
+  obtain ⟨a, haS, ha⟩ := (hs0.and (Ioo_mem_nhdsGT h01)).exists
+  obtain ⟨b, hbS, hb⟩ := (hs1.and self_mem_nhdsWithin).exists
+  exact hn (hS.out haS hbS ⟨le_of_lt ha.2, le_of_lt hb⟩)
+
+/-- **`prop:V` (i)+(ii), assembled.** If the cut set is order-connected, a point cannot have
+two preimages of nondegenerate Jacobian under the union of the two truncated sweeps —
+whichever faces they sit on. Injectivity of each sweep and disjointness of the two are the
+special cases where the two preimages lie on the same face and on opposite faces.
+
+Nothing here mentions `thm:rc` or `thm:cross`: the only input is order-connectedness of
+`{u > 0, v > 0}`, which `cut_set_interval` supplies from `r ≤ 1` and the gauge. -/
+theorem at_most_one_preimage {u v : ℝ → ℝ} {t₀ t₁ d₀ d₁ : ℝ}
+    (hu : Continuous u) (hv : Continuous v)
+    (hcon : {s | 0 < u s ∧ 0 < v s}.OrdConnected) (hne : t₀ ≠ t₁)
+    (hd₀ : 0 < d₀) (hd₁ : 0 < d₁)
+    (h0 : (u t₀ = 0 ∧ 0 < v t₀ ∧ HasDerivAt u d₀ t₀) ∨
+          (v t₀ = 0 ∧ 0 < u t₀ ∧ HasDerivAt v d₀ t₀))
+    (h1 : (u t₁ = 0 ∧ 0 < v t₁ ∧ HasDerivAt u d₁ t₁) ∨
+          (v t₁ = 0 ∧ 0 < u t₁ ∧ HasDerivAt v d₁ t₁)) : False := by
+  have main : ∀ {a b da db : ℝ}, a < b → 0 < da → 0 < db →
+      ((u a = 0 ∧ 0 < v a ∧ HasDerivAt u da a) ∨ (v a = 0 ∧ 0 < u a ∧ HasDerivAt v da a)) →
+      ((u b = 0 ∧ 0 < v b ∧ HasDerivAt u db b) ∨ (v b = 0 ∧ 0 < u b ∧ HasDerivAt v db b)) →
+      False := by
+    intro a b da db hab hda hdb ha hb
+    refine at_most_one_entry hcon hab ?_ (entry_eventually_cut hu hv ha hda)
+      (entry_eventually_cut hu hv hb hdb)
+    exact entry_not_cut (by rcases hb with ⟨h, _⟩ | ⟨h, _⟩; exacts [Or.inl h, Or.inr h])
+  rcases lt_or_gt_of_ne hne with h | h
+  · exact main h hd₀ hd₁ h0 h1
+  · exact main h hd₁ hd₀ h1 h0
+
+end SingleEntry
+
 end MovingSofa
