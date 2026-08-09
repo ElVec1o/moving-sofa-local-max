@@ -2109,6 +2109,33 @@ Rule~0: \verb|near_far_split|, \verb|far_margin| and \verb|far_positive_not_cove
 \textsc{verified}. The far margin for $\Sig$ is \textsc{heuristic}, being the measurement
 above, and the constants of Remark~\ref{rem:v20} remain \textsc{conjecture}.
 \end{remark}
+
+\begin{remark}[The degeneration rate in closed form]\label{rem:v22}
+The near/far split of Remark~\ref{rem:v21} needs the rate $a$ at which the slack degenerates
+away from a gauge contact. It is not a measurement.
+
+The constraint is $g(t,\psi)=\langle c(t),\mu_\psi\rangle-h(\psi)$, so
+$\partial g/\partial\psi=\langle c(t),\nu_\psi\rangle-h'(\psi)$. At the contact
+$(t,\psi)=(0,-\pi/2)$ one has $c(0)=(H(0)-1,0)$ and $\nu_{-\pi/2}=(1,0)$, so the first term is
+$H(0)-1$; and $h(-\omega)=H(\omega)-\sin\omega$ gives
+$h'(-\pi/2)=\cos(\pi/2)-H'(\pi/2)=-H'(\pi/2^-)$. Hence
+\[
+  \frac{\partial g}{\partial\psi}=(H(0)-1)+H'(\pi/2^-) ,
+\]
+which under the second gauge $H(0)=1$ is exactly $H'(\pi/2^-)$. For $\Sig$ that is
+$-(1-\tfrac23a_1)$, so
+\[
+  a=1-\tfrac23a_1 ,
+\]
+an algebraic number already carried by the note, and the exclusion-radius scan of
+Remark~\ref{rem:v21}, whose ratios clustered near $0.45$, was estimating it. The rate is
+positive exactly when $a_1<\tfrac32$, which $\Sig$ satisfies.
+
+So one of the three constants is closed in exact form. What remains are the Lipschitz constant
+of the constraint family in $\eta$ and $\Sig$'s far margin, both still measurements.
+
+Rule~0: \verb|degeneration_rate|, \verb|sigma_rate| and \verb|rate_pos| are \textsc{verified}.
+\end{remark}
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why

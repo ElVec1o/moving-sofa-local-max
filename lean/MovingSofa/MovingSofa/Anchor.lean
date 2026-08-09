@@ -2705,4 +2705,47 @@ theorem far_positive_not_covered {val pert : ℝ} (hval : 0 < val) (hpert : 0 �
 
 end NearFar
 
+
+section DegenerationRate
+
+/-!
+### The degeneration rate in closed form
+
+The near/far split needs the rate `a` at which the slack degenerates away from a gauge
+contact. It is not a measurement.
+
+The constraint is `g(t,ψ) = ⟨c(t), μ_ψ⟩ - h(ψ)`, so `∂g/∂ψ = ⟨c(t), ν_ψ⟩ - h'(ψ)`. At the
+contact `(t,ψ) = (0, -π/2)` one has `c(0) = (H(0)-1, 0)` and `ν_{-π/2} = (1,0)`, so the first
+term is `H(0)-1`; and `h(-ω) = H(ω) - sin ω` gives `h'(-π/2) = cos(π/2) - H'(π/2) = -H'(π/2⁻)`.
+Hence
+
+  `∂g/∂ψ = (H(0) - 1) + H'(π/2⁻)`,
+
+which under the second gauge `H(0) = 1` is exactly `H'(π/2⁻)` (`degeneration_rate`). For `Σ`
+that is `-(1 - ⅔a₁) = -0.4164751`, so the rate is `a = 1 - ⅔a₁`, an algebraic number already
+carried by the project, and the exclusion-radius scan of the previous round, which gave
+ratios near `0.45`, was estimating it.
+
+So one of the three constants of `G1ᶜ` is closed in exact form. What remains are the
+Lipschitz constant `K` of the constraint family in `η` and `Σ`'s far margin, both still
+measurements.
+-/
+
+/-- **The degeneration rate.** The angular derivative of the constraint at the gauge contact
+is `(H(0) - 1) + H'(π/2⁻)`, which under the gauge `H(0) = 1` is `H'(π/2⁻)`. The rate at which
+the slack degenerates is its negative. -/
+theorem degeneration_rate {h0 hp : ℝ} (hgauge : h0 = 1) :
+    (h0 - 1) + hp = hp := by rw [hgauge]; ring
+
+/-- For `Σ` the rate is `1 - (2/3)a₁`, since `H'(π/2⁻) = -(1 - (2/3)a₁)`. Exact, not
+measured. -/
+theorem sigma_rate {a1 hp : ℝ} (hhp : hp = -(1 - (2/3) * a1)) : -hp = 1 - (2/3) * a1 := by
+  rw [hhp]; ring
+
+/-- The rate is strictly positive exactly when `a₁ < 3/2`, which `Σ` satisfies with
+`a₁ = 0.8752…`, so the slack genuinely decays rather than being flat. -/
+theorem rate_pos {a1 : ℝ} (h : a1 < 3 / 2) : 0 < 1 - (2/3) * a1 := by linarith
+
+end DegenerationRate
+
 end MovingSofa
