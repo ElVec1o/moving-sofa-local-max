@@ -1156,4 +1156,83 @@ theorem sweep_same_param_eq {cx cy μx μy νx νy s s' : ℝ}
 
 end SweepDisjoint
 
+section SweepCover
+
+/-!
+### Covering: every niche point sits on a face, by a release-time argument
+
+`prop:V`'s third hypothesis is that the two sweeps together cover `N`. The geometric
+statement looks hard, but the content is an intermediate-value argument and not a geometric
+one, which is why it is provable here while disjointness is not.
+
+Fix a point `p`. In the moving frame put `u(t) = -⟨p - c(t), μ_t⟩` and `v(t) = -⟨p - c(t),
+ν_t⟩`. The corner at time `t` occupies the quarter-plane `u ≥ 0, v ≥ 0`, and its two
+boundary edges are exactly the two sweeps: `v = 0, u ≥ 0` is the face-2 ray `c - s·μ`, and
+`u = 0, v ≥ 0` is the face-1 ray `c - s·ν`. So `p` is *strictly cut* at time `t` iff
+`u(t) > 0` and `v(t) > 0`, and `p` lies on a face iff `min(u,v) = 0` with the other
+coordinate nonnegative.
+
+A point of `N` is cut at some time and released by the end of the rotation. `min(u,v)` is
+continuous, positive at the first time and nonpositive at the last, so it has a zero in
+between — and at that zero `p` is on one of the two faces. That is the covering statement.
+`corner_release_face` is the argument; `frame_face1` then converts the face condition into
+the explicit offset, `p = c - s·ν` with `s = -⟨p - c, ν⟩`, so the point is genuinely a value
+of the sweep map and not merely on its line.
+
+WHAT THIS DOES NOT SETTLE, and it is the same gap as in `SweepDisjoint`: the sweeps in
+`prop:V` are *truncated*, `s ∈ [0, α₂⁺]` on face 2 and `s ∈ [α₁⁺, σ]` on face 1. This
+argument produces a face point but does not show its offset lands inside the truncation
+window. The truncation limits are where the arm functions enter, so closing that is the
+same missing ingredient as before. Rasterising both sweeps (`sofa_sweep`) leaves under
+`0.001` of `N` uncovered, which is the evidence that the windows are in fact wide enough.
+-/
+
+/-- A minimum of two reals vanishes exactly when one of them vanishes and the other is
+nonnegative. This is the step that turns a zero of `min(u,v)` into membership of a face. -/
+theorem min_eq_zero_cases {a b : ℝ} (h : min a b = 0) :
+    (a = 0 ∧ 0 ≤ b) ∨ (b = 0 ∧ 0 ≤ a) := by
+  rcases le_total a b with hab | hab
+  · rw [min_eq_left hab] at h; exact Or.inl ⟨h, h ▸ hab⟩
+  · rw [min_eq_right hab] at h; exact Or.inr ⟨h, h ▸ hab⟩
+
+/-- A continuous function that is nonnegative at `t` and nonpositive at `b` has a zero on
+`[t, b]`. The release time of a niche point is produced this way. -/
+theorem exists_boundary_time {g : ℝ → ℝ} {t b : ℝ} (hle : t ≤ b)
+    (hc : ContinuousOn g (Set.Icc t b)) (hpos : 0 ≤ g t) (hneg : g b ≤ 0) :
+    ∃ t₀ ∈ Set.Icc t b, g t₀ = 0 :=
+  intermediate_value_Icc' hle hc ⟨hneg, hpos⟩
+
+/-- **Covering, up to the truncation window.** If `p` is strictly cut by the corner at time
+`t` and has been released by time `b`, then at some intermediate time it lies on one of the
+two faces: either `u = 0` with `v ≥ 0` (face 1) or `v = 0` with `u ≥ 0` (face 2). -/
+theorem corner_release_face {u v : ℝ → ℝ} {t b : ℝ} (hle : t ≤ b)
+    (hu : ContinuousOn u (Set.Icc t b)) (hv : ContinuousOn v (Set.Icc t b))
+    (hut : 0 < u t) (hvt : 0 < v t) (hout : u b ≤ 0 ∨ v b ≤ 0) :
+    ∃ t₀ ∈ Set.Icc t b, (u t₀ = 0 ∧ 0 ≤ v t₀) ∨ (v t₀ = 0 ∧ 0 ≤ u t₀) := by
+  have hpos : 0 ≤ min (u t) (v t) := le_min hut.le hvt.le
+  have hneg : min (u b) (v b) ≤ 0 := by
+    rcases hout with h | h
+    · exact le_trans (min_le_left _ _) h
+    · exact le_trans (min_le_right _ _) h
+  obtain ⟨t₀, ht₀, hz⟩ := exists_boundary_time hle (ContinuousOn.inf hu hv) hpos hneg
+  exact ⟨t₀, ht₀, min_eq_zero_cases hz⟩
+
+/-- The face condition `⟨p, μ⟩ = 0` in an oriented orthonormal frame says exactly that `p`
+is the `ν`-multiple `⟨p, ν⟩·ν`. This is what makes a face point an actual value of the
+sweep map, with a named offset, rather than merely a point on the face's line. -/
+theorem frame_face1 {μx μy νx νy px py : ℝ}
+    (horth : μx * νx + μy * νy = 0) (hν : νx * νx + νy * νy = 1)
+    (hdet : μx * νy - μy * νx = 1) (hm : px * μx + py * μy = 0) :
+    px = (px * νx + py * νy) * νx ∧ py = (px * νx + py * νy) * νy := by
+  -- Orientation plus orthonormality pins mu to the rotation of nu, so the face condition
+  -- becomes the cross product px*nuy - py*nux = 0.
+  have hμx : μx = νy := by linear_combination νx * horth + νy * hdet - μx * hν
+  have hμy : μy = -νx := by linear_combination νy * horth - νx * hdet - μy * hν
+  have hcross : px * νy - py * νx = 0 := by
+    rw [hμx, hμy] at hm; linear_combination hm
+  exact ⟨by linear_combination νy * hcross - px * hν,
+         by linear_combination (-νx) * hcross - py * hν⟩
+
+end SweepCover
+
 end MovingSofa

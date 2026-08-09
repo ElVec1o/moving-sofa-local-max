@@ -1438,6 +1438,37 @@ advance into already-swept territory contributes to the flux but gains no area.
 Integrating over $T\in[0,\pi/2]$ gives $|N|\le V$.
 \end{proof}
 
+\begin{remark}[Partial progress on hypotheses (ii) and (iii)]\label{rem:v4}
+Hypothesis (i), injectivity of each sweep, is proved for one corner by Baek
+\cite{Bae24}. The other two have no prior art, and both split cleanly into a part that
+standard tools settle and a part that needs the arm system. Write the sweeps in the moving
+frame, $u(t)=-\langle p-c(t),\mu_t\rangle$ and $v(t)=-\langle p-c(t),\nu_t\rangle$; the
+corner at time $t$ occupies $\{u\ge0,\ v\ge0\}$ and its two edges are the two sweeps.
+
+For (ii), \emph{disjointness at equal parameters is exact}. A point on both sweeps at the
+same $t$ satisfies $s\mu_t=s'\nu_t$; pairing against $\mu_t$ and against $\nu_t$ and using
+$\langle\mu_t,\nu_t\rangle=0$ forces $s=s'=0$, so the point is $c(t)$. One point per $t$ is
+a curve, of measure zero, contributing nothing to $|N|$. What is left open is $t\ne t'$,
+where orthogonality says nothing.
+
+For (iii), \emph{covering is an intermediate-value statement, not a geometric one}. A point
+of $N$ is strictly cut at some time, so $\min(u,v)>0$ there, and is released by the end of
+the rotation, so $\min(u,v)\le0$ at the last time. Both are continuous, so $\min(u,v)$
+vanishes in between, and a zero of the minimum is exactly membership of one of the two
+faces. Orientation and orthonormality then convert the face condition into the explicit
+offset, so the point is a value of the sweep map and not merely on its line. What is left
+open is the \emph{truncation}: the sweeps in Proposition~\ref{prop:V} run over
+$s\in[0,\alpha_2^+]$ and $s\in[\alpha_1^+,\sigma]$, and this argument does not place the
+offset inside those windows.
+
+So the same ingredient is missing in both, and it is the arm system rather than the frame
+geometry. Rasterising both sweeps puts the overlap at $0.0041$ of $|N|$, halving with
+resolution as a measure-zero curve must, and leaves under $0.001$ of $N$ uncovered.
+Rule~0: (ii) and (iii) remain \textsc{conjecture}; the equal-parameter case of (ii) and the
+untruncated form of (iii) are \textsc{proved}, formalised as \verb|sweep_same_param|,
+\verb|corner_release_face| and \verb|frame_face1|.
+\end{remark}
+
 \begin{remark}[The size of the gap, measured]\label{rem:gap}
 Equality in Proposition~\ref{prop:reynolds} holds exactly when nothing is re-swept, which
 is what the three hypotheses of Proposition~\ref{prop:V} assert, and which is why
