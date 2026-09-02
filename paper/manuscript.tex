@@ -250,25 +250,30 @@ $\pm\nu_{\theta}$, so the total symbol has eigenvalues equal to the
 contact counts, and $\lambda_{\min}\equiv1$ by
 Proposition~\ref{prop:multicontact}.  A G\aa rding inequality plus
 the finite-dimensional computation then gives $H^{1}$ coercivity,
-and---because all contact paths are affine in $(c,c')$, killing the
-one cubic monomial that could obstruct it
-(Lemma~\ref{lem:affine})---the two-norm theorems of
-Ioffe~\cite{Ioffe1979} and
-Dambrine--Lamboley~\cite{DambrineLamboley} convert this into a
-strict local maximum in a uniform $H^{2}$-ball, conditional on two
-explicit constants and on the arithmetic caveat of
-Section~\ref{sec:discussion}.
+This does \emph{not}, however, close the argument by the route one
+would expect.  All contact paths are affine in $(c,c')$
+(Lemma~\ref{lem:affine}), which kills the cubic \emph{integrand}; but
+affineness does not control the moving breakpoints, and
+Theorem~\ref{thm:fatal-cubic} shows the coefficient of
+$\eta'(b_{j})^{3}$ is nonzero.  The improved-Taylor hypothesis of
+Ioffe~\cite{Ioffe1979} and Dambrine--Lamboley~\cite{DambrineLamboley}
+therefore fails in the pair $(H^{1},H^{2})$, and the two-norm route is
+unavailable.  What replaces it is a direct argument
+(Sections~\ref{sec:quartic}--\ref{sec:blowup}): within a fixed
+combinatorial cell $F$ is \emph{exactly quadratic}, so local
+maximality is the statement $g(\varepsilon)\leq0$ with no Taylor
+expansion at all.
 
 The same structural chain applies to the \emph{ambidextrous}
 moving-sofa problem, where Romik's candidate
 $\Sigma$~\cite{Romik2018} is conjectured optimal but neither global
 nor local optimality is known
 (Romik~\cite[\S7, Open Problem~1]{Romik2018}); affineness holds for
-the reflected contact family as well.  What we have not done is
-tally the contact counts $(n_{\mu},n_{\nu})$ for $\Sigma$'s phase
-structure, which is what Proposition~\ref{prop:multicontact} would
-need there.  We therefore draw no conclusion about $\Sigma$, and in
-particular do not claim its local maximality.
+the reflected contact family as well.  The obstruction for $\Sigma$ is
+not unfinished bookkeeping: its principal symbol degenerates at the two
+end caps (Remark~\ref{rem:sigma-harder}), so no uniform G\aa rding
+constant exists.  We therefore draw no conclusion about $\Sigma$, and
+in particular do not claim its local maximality.
 
 Romik~\cite{Romik2018} reformulated Gerver's solution as the rotation
 path of the hallway's inner corner in the body frame of the sofa,
@@ -421,8 +426,11 @@ including off-diagonal coupling, is
 Theorem~\ref{thm:garding} together with Remark~\ref{rem:closing}.
 
 Section~\ref{sec:two-norm} then shows that $H^{1}$ coercivity does
-combine with the cubic remainder into a strict local maximum in a
-uniform $H^{2}$-ball, the bridge being Lemma~\ref{lem:affine}.
+\emph{not} combine with the cubic remainder in the way one would
+hope: Lemma~\ref{lem:affine} kills the cubic integrand, but
+Theorem~\ref{thm:fatal-cubic} shows the moving breakpoints supply a
+nonzero $\eta'(b_{j})^{3}$ coefficient, so the two-norm hypothesis
+fails.
 
 \subsection*{Outline of the argument}
 
@@ -3165,7 +3173,17 @@ and this is the substantive point.
 Because $\rho$ is the reflection across $y=1/2$, with linear part
 $\operatorname{diag}(1,-1)$, one has $\rho(\mu_{\theta}) =
 \mu_{-\theta}$: the reflected family contributes normals at angle
-$-\theta$, which are not orthogonal to the direct family's.  Measuring
+$-\theta$.  These are not orthogonal to the direct family's, but the
+obstruction is \emph{not} the loss of orthogonality: the cross terms
+cancel identically, since
+$\hat n(\theta)\hat n(\theta)^{\top}+\hat n(-\theta)\hat n(-\theta)^{\top}
+=\operatorname{diag}(2\cos^{2}\theta,\,2\sin^{2}\theta)$, so for a
+$\rho$-symmetric contact set $D_{\mathrm{tot}}^{\Sigma}$ is diagonal
+with $\lambda_{\min}\geq2\min(n_{\mu},n_{\nu})$, \emph{larger} than
+the Gerver value.  The measured middle-phase $D_{\mathrm{tot}}\approx4I$
+with trace exactly $8.0000$ is that formula at $n_{\mu}=n_{\nu}=2$.  The
+genuine obstruction is that a contact count \emph{collapses} at the end
+caps.  Measuring
 the directional quotients against the ambidextrous oracle
 (\texttt{rigorous/phase2i\_sigma\_symbol.py},
 \texttt{phase2j\_sigma\_endcaps.py}) gives a sharply two-regime
@@ -3268,12 +3286,14 @@ tail bound
 \end{equation}
 i.e.\ essentially twice the Gerver bound \eqref{eq:tail-num} (the
 doubling acts on the dominant off-diagonal Hilbert term).  With the
-cross-term placeholder also doubled to $0.10$, the full-space
-coercivity is
-\[
-   m^{R} \;\geq\; m_{N=16}^{R} - 0.53 - 0.10
-         \;\geq\; 2.896 - 0.63 \;=\; 2.27.
-\]
+cross-term placeholder also doubled to $0.10$, an earlier version of
+this proof continued ``the full-space coercivity is
+$m^{R}\geq 2.896-0.63=2.27$''.  That subtraction is invalid:
+$m_{N=16}^{R}$ is a constant in the \emph{Euclidean coefficient} norm
+while the tail bound is an $H^{2}$ operator norm, and the two cannot be
+combined.  The figure $m^{R}\geq2.27$ is withdrawn
+(Remark~\ref{rem:sigma-open}); by Theorem~\ref{thm:no-h2} no
+full-space constant exists for $\Sigma$.
 The computer-assisted computation is in
 \texttt{rigorous/romik\_hessian.py} (default step $\varepsilon=10^{-5}$,
 $N=16$).
@@ -3350,10 +3370,14 @@ the remaining obstruction.
 \subsection*{Identified gaps for full rigor}
 
 Four items, identified throughout the manuscript, separate the
-present argument from a strict computer-assisted proof.  None of them
-is now structural: the two-norm difficulty, which an earlier draft of
-this work regarded as the principal obstruction, is resolved by
-Lemma~\ref{lem:affine} and Proposition~\ref{prop:multicontact}.
+present argument from a strict computer-assisted proof.  Item~(0) is
+structural and is the operative obstruction; items~(i)--(iii) are
+implementation gaps.  An earlier draft asserted that the two-norm
+difficulty had been resolved by Lemma~\ref{lem:affine} and
+Proposition~\ref{prop:multicontact}; that assertion was incorrect,
+since affineness constrains the integrand and not the moving limits,
+and Theorem~\ref{thm:fatal-cubic} shows the two-norm route cannot be
+repaired.
 \begin{enumerate}
 \setcounter{enumi}{-1}
 \item \textbf{The moving-breakpoint cubic (the operative
