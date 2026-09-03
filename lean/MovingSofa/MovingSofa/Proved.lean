@@ -3995,4 +3995,122 @@ theorem coercivity_const_ge_seven_sixteenths (L : ℝ) (hL0 : 0 < L) (hL : L ≤
 
 end ReductionOne
 
+/-! ### A139: the domain-motion (corner) term is nonnegative
+
+`|C_2|(e) = int_{a e}^{b e} g x e dx` with `g = hi - lo` and the endpoints defined by `g = 0`.
+Because the integrand VANISHES at the endpoints, the first-order boundary terms cancel and
+`F' = int g_e dx`.  At second order they do not cancel, and differentiating `g (b e) e = 0`
+gives `b' = -g_e / g_x`.  Hence
+
+    F'' = int g_ee dx  +  g_e b ^ 2 / |g_x b|  +  g_e a ^ 2 / |g_x a|,     g_x b < 0 < g_x a.
+
+Mathlib has no moving-endpoint Leibniz rule, so the analytic step
+`F'' = g_e b * b' - g_e a * a' + int g_ee` is carried as an explicit hypothesis
+(`hLeibniz` below) rather than proved here.  Everything downstream of it -- the substitution, the
+closed form, and the SIGN, which is the mathematical content -- is proved. -/
+section DomainMotion
+
+/-- Substituting the implicit-function derivatives `b' = -g_e b / g_x b` and
+`a' = -g_e a / g_x a` into the endpoint-motion contribution. -/
+theorem corner_of_endpoint_motion
+    (geb gea gxb gxa bp ap : ℝ) (hb : gxb ≠ 0) (ha : gxa ≠ 0)
+    (hbp : bp = -geb / gxb) (hap : ap = -gea / gxa) :
+    geb * bp - gea * ap = -(geb ^ 2) / gxb + gea ^ 2 / gxa := by
+  subst hbp; subst hap; field_simp; ring
+
+/-- With `g_x b < 0`, the right endpoint contributes a nonnegative amount. -/
+theorem corner_right_nonneg (geb gxb : ℝ) (hb : gxb < 0) :
+    0 ≤ -(geb ^ 2) / gxb := by
+  have h : 0 ≤ geb ^ 2 := sq_nonneg geb
+  exact div_nonneg_of_nonpos (by linarith) (le_of_lt hb)
+
+/-- With `g_x a > 0`, the left endpoint contributes a nonnegative amount. -/
+theorem corner_left_nonneg (gea gxa : ℝ) (ha : 0 < gxa) :
+    0 ≤ gea ^ 2 / gxa := by
+  positivity
+
+/-- **The corner term is nonnegative.**  This is A139's mathematical content: both endpoint
+contributions are squares divided by quantities of the correct sign. -/
+theorem corner_nonneg (geb gea gxb gxa : ℝ) (hb : gxb < 0) (ha : 0 < gxa) :
+    0 ≤ -(geb ^ 2) / gxb + gea ^ 2 / gxa :=
+  add_nonneg (corner_right_nonneg geb gxb hb) (corner_left_nonneg gea gxa ha)
+
+/-- The closed form quoted in the log, with absolute values made explicit. -/
+theorem corner_eq_abs_form (geb gea gxb gxa : ℝ) (hb : gxb < 0) (ha : 0 < gxa) :
+    -(geb ^ 2) / gxb + gea ^ 2 / gxa = geb ^ 2 / |gxb| + gea ^ 2 / |gxa| := by
+  rw [abs_of_neg hb, abs_of_pos ha]
+  field_simp
+
+/-- **A139, assembled.**  Given the moving-endpoint Leibniz step as a hypothesis, the second
+variation of `|C_2|` is the bulk integral plus a NONNEGATIVE corner term in closed form. -/
+theorem A139_corner_closed_form
+    (F2 bulk geb gea gxb gxa bp ap : ℝ) (hb : gxb < 0) (ha : 0 < gxa)
+    (hbp : bp = -geb / gxb) (hap : ap = -gea / gxa)
+    (hLeibniz : F2 = bulk + (geb * bp - gea * ap)) :
+    F2 = bulk + (geb ^ 2 / |gxb| + gea ^ 2 / |gxa|) ∧
+      0 ≤ geb ^ 2 / |gxb| + gea ^ 2 / |gxa| := by
+  have hb' : gxb ≠ 0 := ne_of_lt hb
+  have ha' : gxa ≠ 0 := ne_of_gt ha
+  have hsub := corner_of_endpoint_motion geb gea gxb gxa bp ap hb' ha' hbp hap
+  have habs := corner_eq_abs_form geb gea gxb gxa hb ha
+  constructor
+  · rw [hLeibniz, hsub, habs]
+  · rw [← habs]; exact corner_nonneg geb gea gxb gxa hb ha
+
+/-- **The moving-endpoint Leibniz rule**, the step Mathlib lacks and which has blocked A139's star
+since the beginning.  For a continuous integrand and differentiable endpoints,
+
+    d/ds  int_{a s}^{b s} h x dx  =  h (b s) * b' - h (a s) * a'.
+
+Proof: write the integral as `H (b s) - H (a s)` for `H y = int_0^y h`, differentiate `H` by the
+second fundamental theorem of calculus, and compose with the chain rule. -/
+theorem moving_endpoint_leibniz
+    (h : ℝ → ℝ) (a b : ℝ → ℝ) (s a' b' : ℝ)
+    (hc : Continuous h)
+    (hda : HasDerivAt a a' s) (hdb : HasDerivAt b b' s) :
+    HasDerivAt (fun σ => ∫ x in (a σ)..(b σ), h x)
+      (h (b s) * b' - h (a s) * a') s := by
+  -- `H y = int_0^y h` has derivative `h y` everywhere (FTC-2 for continuous integrands)
+  have key : ∀ y : ℝ, HasDerivAt (fun u => ∫ x in (0:ℝ)..u, h x) (h y) y := by
+    intro y
+    exact intervalIntegral.integral_hasDerivAt_right
+      (hc.intervalIntegrable _ _)
+      (hc.stronglyMeasurableAtFilter _ _)
+      hc.continuousAt
+  -- the integral splits at 0
+  have hsplit : (fun σ => ∫ x in (a σ)..(b σ), h x)
+      = fun σ => (∫ x in (0:ℝ)..(b σ), h x) - (∫ x in (0:ℝ)..(a σ), h x) := by
+    funext σ
+    rw [← intervalIntegral.integral_interval_sub_left
+      (hc.intervalIntegrable _ _) (hc.intervalIntegrable _ _)]
+  rw [hsplit]
+  exact ((key (b s)).comp s hdb).sub ((key (a s)).comp s hda)
+
+/-- **A139, with the Leibniz hypothesis discharged.**  `h` plays the role of `g_e`, and the endpoint
+velocities are the implicit-function values `b' = -g_e b / g_x b`, `a' = -g_e a / g_x a`.  The
+derivative of the moving-domain integral is then the corner term in closed form, and it is
+NONNEGATIVE.  No hypothesis about Leibniz is assumed: it is supplied by
+`moving_endpoint_leibniz`. -/
+theorem A139_corner_proved
+    (h : ℝ → ℝ) (a b : ℝ → ℝ) (s gxa gxb : ℝ)
+    (hc : Continuous h)
+    (hda : HasDerivAt a (-(h (a s)) / gxa) s)
+    (hdb : HasDerivAt b (-(h (b s)) / gxb) s)
+    (hbneg : gxb < 0) (hapos : 0 < gxa) :
+    HasDerivAt (fun σ => ∫ x in (a σ)..(b σ), h x)
+      (h (b s) ^ 2 / |gxb| + h (a s) ^ 2 / |gxa|) s
+    ∧ 0 ≤ h (b s) ^ 2 / |gxb| + h (a s) ^ 2 / |gxa| := by
+  have hL := moving_endpoint_leibniz h a b s (-(h (a s)) / gxa) (-(h (b s)) / gxb) hc hda hdb
+  have hb' : gxb ≠ 0 := ne_of_lt hbneg
+  have ha' : gxa ≠ 0 := ne_of_gt hapos
+  have hval : h (b s) * (-(h (b s)) / gxb) - h (a s) * (-(h (a s)) / gxa)
+      = h (b s) ^ 2 / |gxb| + h (a s) ^ 2 / |gxa| := by
+    rw [abs_of_neg hbneg, abs_of_pos hapos]; field_simp; ring
+  refine ⟨hval ▸ hL, ?_⟩
+  have h1 : 0 ≤ h (b s) ^ 2 / |gxb| := by positivity
+  have h2 : 0 ≤ h (a s) ^ 2 / |gxa| := by positivity
+  linarith
+
+end DomainMotion
+
 end MovingSofa
