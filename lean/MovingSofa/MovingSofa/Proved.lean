@@ -4113,4 +4113,115 @@ theorem A139_corner_proved
 
 end DomainMotion
 
+/-! ### T4.2: a concave function cannot vanish on an open set and be positive elsewhere
+
+The two-niche interaction term `G = |U ∩ rho U|` is nonnegative, vanishes IDENTICALLY on the open
+region `{M < 1/2}` where the two niches are disjoint (Sigma sits there, `M = 0.3878`, margin
+`0.112`), and is positive once they overlap.  It enters the area with a PLUS sign:
+
+    A = |C_2| - |U| - |rho U| + G.
+
+The lemma below shows no such `G` can be concave.  Hence any proof that `A` is concave must exhibit
+a cancellation in which `-|U| - |rho U|` loses curvature at exactly the rate `G` gains it, across a
+codimension-one wall.  Baek's one-corner argument has ONE niche and no such wall, so this
+obstruction is intrinsic to the two-corner problem rather than technical. -/
+section TwoNicheObstruction
+
+/-- If `x` is the convex combination `(s * p + y)/(1 + s)` of `p` and `y` with `s > 0`, and a
+concave `f` vanishes at both `x` and `y` while `f p > 0`, we get a contradiction.  The concavity
+hypothesis is taken in the explicit form it is used, so the lemma is independent of which
+`ConcaveOn` API one prefers. -/
+theorem concave_vanishing_contradiction
+    (f : ℝ → ℝ) (p y x s : ℝ) (hs : 0 < s)
+    (hconc : (s / (1 + s)) * f p + (1 / (1 + s)) * f y ≤ f x)
+    (hfy : f y = 0) (hfp : 0 < f p) (hfx : f x = 0) : False := by
+  have h1 : (0:ℝ) < 1 + s := by linarith
+  have hw : 0 < s / (1 + s) := div_pos hs h1
+  have : 0 < (s / (1 + s)) * f p := mul_pos hw hfp
+  rw [hfy, hfx] at hconc
+  simp at hconc
+  linarith
+
+/-- Restated positively: a concave `f` with `f y = 0` and `f x = 0` at a point `x` strictly between
+`p` and `y` forces `f p ≤ 0`.  Applied to `G ≥ 0`, vanishing on an open set: `G` is concave only if
+it vanishes identically. -/
+theorem concave_zero_forces_nonpos
+    (f : ℝ → ℝ) (p y x s : ℝ) (hs : 0 < s)
+    (hconc : (s / (1 + s)) * f p + (1 / (1 + s)) * f y ≤ f x)
+    (hfy : f y = 0) (hfx : f x = 0) : f p ≤ 0 := by
+  by_contra hcon
+  push_neg at hcon
+  exact concave_vanishing_contradiction f p y x s hs hconc hfy hcon hfx
+
+end TwoNicheObstruction
+
+/-! ### A300: the niche functional is CONVEX, by pure convexity
+
+If the niche is a graph over an `H`-INDEPENDENT abscissa interval -- which A299 confirms at Sigma,
+`|q|^2 + det(q,q') >= 0` at 20000 of 20000 nodes, with equality only in the limit `t -> 0` -- then
+
+    |N|(H) = int_I (F x H - lo x H)_+ dx
+
+with `F x .` a supremum of AFFINE functions of `H` (hence convex) and `lo x .` affine.  Convexity
+then follows with no second variation, no crossing analysis and no Brunn-Minkowski: the positive
+part is convex nondecreasing, composition preserves convexity, and integration is a positive
+combination.  This SUBSUMES gap (ii), which is the local statement `d2|N| >= 0`.
+
+The crossing set, which cost the numerical programme most of its effort, is a NON-ISSUE here: a
+supremum of affine functions is convex whether or not the argmax is unique, and non-uniqueness is
+merely non-differentiability.  Every purely absolutely-continuous computation therefore
+UNDERESTIMATES the second variation. -/
+section NicheConvexity
+
+variable {E : Type*} [AddCommGroup E] [Module ℝ E]
+
+/-- The positive part of a convex function is convex. -/
+theorem convexOn_posPart {s : Set E} {f : E → ℝ} (hs : Convex ℝ s) (hf : ConvexOn ℝ s f) :
+    ConvexOn ℝ s (fun x => max (f x) 0) :=
+  hf.sup (convexOn_const 0 hs)
+
+/-- A finite positive combination of convex functions is convex -- the discretised integral. -/
+theorem convexOn_weighted_sum {s : Set E} (hs : Convex ℝ s)
+    (ι : Type*) (t : Finset ι) (w : ι → ℝ) (hw : ∀ i ∈ t, 0 ≤ w i)
+    (f : ι → E → ℝ) (hf : ∀ i ∈ t, ConvexOn ℝ s (f i)) :
+    ConvexOn ℝ s (fun x => ∑ i ∈ t, w i * f i x) := by
+  classical
+  induction t using Finset.induction_on with
+  | empty => simpa using convexOn_const 0 hs
+  | insert i t hi ih =>
+      have hfi : ConvexOn ℝ s (f i) := hf i (Finset.mem_insert_self i t)
+      have hwi : 0 ≤ w i := hw i (Finset.mem_insert_self i t)
+      have ih' : ConvexOn ℝ s (fun x => ∑ j ∈ t, w j * f j x) :=
+        ih (fun j hj => hw j (Finset.mem_insert_of_mem hj))
+           (fun j hj => hf j (Finset.mem_insert_of_mem hj))
+      have hscal : ConvexOn ℝ s (fun x => w i * f i x) := by
+        have h := hfi.smul hwi
+        simpa [smul_eq_mul] using h
+      have hsum : ConvexOn ℝ s ((fun x => w i * f i x) + fun x => ∑ j ∈ t, w j * f j x) :=
+        hscal.add ih'
+      have e2 : (fun x => ∑ j ∈ insert i t, w j * f j x)
+          = (fun x => w i * f i x) + fun x => ∑ j ∈ t, w j * f j x := by
+        funext x; simp [Finset.sum_insert hi]
+      rw [e2]; exact hsum
+
+/-- **The niche functional is convex.**  Discretised form: with cell weights `w i >= 0` and each
+cell's integrand the positive part of a convex function of `H`, the total is convex in `H`.
+Consequently `d2|N| >= 0` -- gap (ii) -- holds as a COROLLARY of convexity rather than as a separate
+spectral computation. -/
+theorem niche_convex {s : Set E} (hs : Convex ℝ s)
+    (ι : Type*) (t : Finset ι) (w : ι → ℝ) (hw : ∀ i ∈ t, 0 ≤ w i)
+    (F lo : ι → E → ℝ)
+    (hF : ∀ i ∈ t, ConvexOn ℝ s (F i)) (hlo : ∀ i ∈ t, ConvexOn ℝ s (fun x => -(lo i x))) :
+    ConvexOn ℝ s (fun x => ∑ i ∈ t, w i * max (F i x - lo i x) 0) := by
+  refine convexOn_weighted_sum hs ι t w hw _ ?_
+  intro i hi
+  have hd : ConvexOn ℝ s (fun x => F i x - lo i x) := by
+    have hadd := (hF i hi).add (hlo i hi)
+    have e : (F i + fun x => -(lo i x)) = fun x => F i x - lo i x := by
+      funext x; simp [sub_eq_add_neg]
+    rwa [e] at hadd
+  exact convexOn_posPart hs hd
+
+end NicheConvexity
+
 end MovingSofa
