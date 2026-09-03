@@ -236,10 +236,13 @@ paper/figures/, algorithm/rigorous/{gerver_*,sigma_*}.py
 cd lean/MovingSofa && lake build
 ```
 
-Lean 4.30, **no Mathlib**. Trigonometric quantities are carried as formal symbols
-under sign or Pythagorean side conditions and arithmetic is over `Int`, so the
-identities stay decidable. Instantiating those symbols at actual sines and cosines is a
-separate Mathlib-track task and is **not** claimed. `#print axioms` reports nothing
+Lean 4.33. **810 theorems, no `sorry`.** The 114-theorem core (`MovingSofa/Basic.lean`)
+is **Mathlib-free** — it has no imports at all: trigonometric quantities are carried as
+formal symbols under sign or Pythagorean side conditions and arithmetic is over `Int`,
+so the identities stay decidable. The remaining 696 theorems use Mathlib. Instantiating
+the formal symbols at actual sines and cosines, formerly listed here as a separate
+Mathlib-track task and not claimed, is now **partly done**: see the `StrictCoercivity`
+and `ReductionOne` sections of `MovingSofa/Proved.lean`. `#print axioms` reports nothing
 beyond `propext` and `Quot.sound`, except `strip_covers_iff` and `cone_nu_iff`, which
 also use `Classical.choice`. That list was checked by running `#print axioms` over every
 theorem in the file.

@@ -17,3 +17,4 @@ import MovingSofa.Comparison
 import MovingSofa.Containment
 import MovingSofa.Rotation
 import MovingSofa.Anchor
+import MovingSofa.Proved

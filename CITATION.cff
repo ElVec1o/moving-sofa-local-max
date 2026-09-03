@@ -5,8 +5,8 @@ authors:
   - family-names: Bonfioli
     given-names: Vico
     email: vicobonfioli@gmail.com
-version: "1.0.0"
-date-released: 2026-07-31
+version: "11.0.0"
+date-released: 2026-09-04
 license: MIT
 doi: "10.5281/zenodo.20434287"
 repository-code: "https://github.com/ElVec1o/moving-sofa-local-max"
@@ -67,7 +67,11 @@ abstract: >
   the advancing wedge boundary, so V >= |N| by Reynolds' transport theorem and Q
   bounds nothing where the sweep fails to be injective. In particular the construction
   does not recover Gerver's sofa, whose cap violates (RC). Optimality of Sigma remains
-  open. Lean 4 (no Mathlib): 100 theorems, no sorry.
+  open. Lean 4: 810 theorems, no sorry. The 114-theorem core (Basic.lean) is
+  standalone -- it has no imports at all, carries trigonometric quantities as formal
+  symbols under Pythagorean side conditions, and works over Int so the identities stay
+  decidable. The remaining 696 theorems use Mathlib, and include the instantiation of
+  those formal symbols at actual sines and cosines.
 
   An earlier line of work in this repository, on local maximality via second variation
   in H^2, is WITHDRAWN; see paper/PROGRAM.md.

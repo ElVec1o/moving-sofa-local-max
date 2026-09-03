@@ -971,6 +971,31 @@ theorem atom_is_first_mode (θ : ℝ) : Real.sin (θ - Real.pi/2) = -Real.cos θ
   rw [Real.sin_sub, Real.sin_pi_div_two, Real.cos_pi_div_two]
   ring
 
+/-- The admissible frequencies are the odd integers `n = 2k+1`, all `>= 1`, so `hn` above is
+never an extra hypothesis in practice. -/
+theorem odd_freq_ge_one (k : ℕ) : (1:ℝ) ≤ 2 * (k:ℝ) + 1 := by
+  have : (0:ℝ) ≤ (k:ℝ) := Nat.cast_nonneg k
+  linarith
+
+/-- The EQUALITY case, and with it the two-dimensional kernel.  The form vanishes exactly when
+every mode above the first is absent -- which is the finite-sum content of "equality holds on a
+two-dimensional space, spanned by the two first modes".  Together with `cap_quadratic_nonpos`
+this is the whole algebraic core of `prop:wirt`; only the eigenbasis expansion itself is
+analysis. -/
+theorem cap_quadratic_eq_zero (s : Finset ℕ) (n w : ℕ → ℝ) (hn : ∀ k ∈ s, 1 ≤ n k) :
+    ∑ k ∈ s, (1 - (n k)^2) * (w k)^2 = 0 ↔ ∀ k ∈ s, n k = 1 ∨ w k = 0 := by
+  rw [Finset.sum_eq_zero_iff_of_nonpos (fun k hk => by
+    have h := wirtinger_mode (hn k hk); nlinarith [sq_nonneg (w k)])]
+  constructor
+  · intro h k hk
+    rcases mul_eq_zero.1 (h k hk) with h1 | h2
+    · exact Or.inl ((wirtinger_mode_eq (hn k hk)).1 h1)
+    · exact Or.inr (by simpa using sq_eq_zero_iff.1 h2)
+  · intro h k hk
+    rcases h k hk with h1 | h2
+    · rw [h1]; ring
+    · rw [h2]; ring
+
 end Wirtinger
 
 section NicheConvexity
