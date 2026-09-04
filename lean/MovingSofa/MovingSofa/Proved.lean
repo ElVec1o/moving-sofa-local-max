@@ -4262,4 +4262,95 @@ theorem min_eq_left_of_clamp_inactive {lo hi f M : ℝ}
 
 end ClampInactive
 
+/-! ### A311/A318: the crossing integrand collapses to a total derivative
+
+On the crossing arc the niche boundary is the corner curve, `f(x) = c_y(t(x))` with `t(x)` defined
+implicitly by `c_x(t) = x`.  Differentiating that relation twice at FIXED `x` gives
+`t' = -d_x/c_x'` and `t'' = -(c_x'' t'^2 + 2 d_x' t')/c_x'`, and since `c_y` is affine in `H`,
+`f'' = c_y'' t'^2 + c_y' t'' + 2 d_y' t'`.
+
+Substituting and multiplying by the change-of-variables factor `-c_x'` collapses everything: with
+`sigma = c_y'/c_x'` the integrand is
+
+    -sigma' d_x^2 - 2 sigma d_x d_x' + 2 d_x d_y'  =  -(sigma d_x^2)' + 2 d_x d_y',
+
+a TOTAL DERIVATIVE plus a swept-area term.  No `c_x''`, no `c_y''`, and no `c_x'` in any
+denominator beyond `sigma` itself -- so the apparent non-integrable singularity of the unsimplified
+form (the `c_x'^{-3}` in `t''`) is an artifact of the parametrisation, not of the integrand. -/
+section CrossingCollapse
+
+/-- The crossing integrand in closed form.  `u = c_x'`, `v = c_x''`, `a = c_y'`, `b = c_y''`. -/
+theorem crossing_integrand_collapse
+    (a b u v dx dxp dyp : ℝ) (hu : u ≠ 0) :
+    (b * (-dx / u) ^ 2
+       + a * (-(v * (-dx / u) ^ 2 + 2 * dxp * (-dx / u)) / u)
+       + 2 * dyp * (-dx / u)) * (-u)
+      = (a * v - b * u) / u ^ 2 * dx ^ 2 - 2 * (a / u) * dx * dxp + 2 * dx * dyp := by
+  field_simp
+  ring
+
+/-- The first two terms are exactly `-(sigma d_x^2)'` when `sigma = a/u`: writing
+`sigma' = (b u - a v)/u^2`, the coefficient of `d_x^2` is `-sigma'`. -/
+theorem sigma_derivative_form (a b u v : ℝ) (hu : u ≠ 0) :
+    (a * v - b * u) / u ^ 2 = -((b * u - a * v) / u ^ 2) := by
+  field_simp
+  ring
+
+end CrossingCollapse
+
+/-! ### A317: the symmetric second difference is the wrong object at a boundary point
+
+If `g` has one-sided expansions `g(s) = g0 + s*ap + s^2*bp/2 + ...` for `s > 0` and
+`g(-s) = g0 + s*am + s^2*bm/2 + ...`, then the SYMMETRIC second difference satisfies
+
+    (g(s) - 2 g0 + g(-s)) / s^2  =  (ap + am)/s  +  (bp + bm)/2.
+
+Two consequences.  If the one-sided slopes fail to cancel (`ap + am != 0`, a genuine kink) the
+symmetric difference DIVERGES like `1/s` and converges to no second derivative at all.  If they do
+cancel, it converges to the AVERAGE of the two one-sided curvatures -- and at a boundary point of
+the admissible set only ONE of those is attainable, so the symmetric difference measures a quantity
+that mixes an admissible with an inadmissible direction. -/
+section OneSidedSecondDifference
+
+/-- The exact decomposition of a symmetric second difference into a kink term and the average of
+the one-sided curvatures. -/
+theorem sym_second_difference_decomp
+    (g0 ap am bp bm s : ℝ) (hs : s ≠ 0) :
+    ((g0 + s * ap + s ^ 2 * bp / 2) - 2 * g0 + (g0 + s * am + s ^ 2 * bm / 2)) / s ^ 2
+      = (ap + am) / s + (bp + bm) / 2 := by
+  field_simp
+  ring
+
+/-- With no kink (`ap + am = 0`) the symmetric difference is exactly the mean of the one-sided
+curvatures, so it EQUALS the admissible one only when the two agree. -/
+theorem sym_is_mean_of_one_sided
+    (g0 ap am bp bm s : ℝ) (hs : s ≠ 0) (hkink : ap + am = 0) :
+    ((g0 + s * ap + s ^ 2 * bp / 2) - 2 * g0 + (g0 + s * am + s ^ 2 * bm / 2)) / s ^ 2
+      = (bp + bm) / 2 := by
+  rw [sym_second_difference_decomp g0 ap am bp bm s hs, hkink]
+  simp
+
+end OneSidedSecondDifference
+
+/-! ### T2.4: the two-norm step is uniform in the direction
+
+The obstruction to upgrading directionwise maximality to LOCAL maximality is that the admissible
+step `s_0(u)` may shrink to zero as `u` ranges over the unit sphere.  In the two-norm scheme the
+weak-norm factor CANCELS and the step becomes uniform: if along a direction the quadratic term is
+`-(s^2/2) c N` and the cubic remainder is bounded by `(s^3/6) C N`, where `N = ||u||^2` in the WEAK
+norm and `c, C` are constants (the cubic being controlled by the STRONG norm, held at 1), then the
+increment is nonpositive for every `s` up to `3c/C` -- a bound with no `u` in it. -/
+section TwoNormUniformStep
+
+/-- The uniform admissible step.  `N` is the weak-norm factor common to both terms; it cancels, so
+the bound `s ≤ 3c/C` does not depend on the direction. -/
+theorem two_norm_uniform_step
+    (c C s N : ℝ) (hc : 0 < c) (hC : 0 < C) (hN : 0 ≤ N)
+    (hs : 0 ≤ s) (hle : s ≤ 3 * c / C) :
+    -(s ^ 2 / 2) * c * N + (s ^ 3 / 6) * C * N ≤ 0 := by
+  have hCs : s * C ≤ 3 * c := (le_div_iff₀ hC).mp hle
+  nlinarith [mul_nonneg (mul_nonneg hs hs) hN, mul_nonneg hs hN]
+
+end TwoNormUniformStep
+
 end MovingSofa

@@ -236,7 +236,7 @@ paper/figures/, algorithm/rigorous/{gerver_*,sigma_*}.py
 cd lean/MovingSofa && lake build
 ```
 
-Lean 4.33. **826 theorems, no `sorry`.** The 114-theorem core (`MovingSofa/Basic.lean`)
+Lean 4.33. **831 theorems, no `sorry`.** The 114-theorem core (`MovingSofa/Basic.lean`)
 is **Mathlib-free** — it has no imports at all: trigonometric quantities are carried as
 formal symbols under sign or Pythagorean side conditions and arithmetic is over `Int`,
 so the identities stay decidable. The remaining 696 theorems use Mathlib. Instantiating
