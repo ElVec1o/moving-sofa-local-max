@@ -4224,4 +4224,42 @@ theorem niche_convex {s : Set E} (hs : Convex ℝ s)
 
 end NicheConvexity
 
+/-! ### A305: the clamp is never active, so the convexity lemma applies unconditionally
+
+`niche_convex` needs the niche integrand to be `(F - lo)_+` with `F` a supremum of affine functions
+of `H`.  The actual integrand is `(min (f x H) (hi x H) - lo x H)_+`, and `min` of a convex function
+with an `H`-dependent one is NOT convex -- so the lemma applies only where the clamp `f ≥ hi` is
+INACTIVE.  It never is, for a structural reason:
+
+* `C_2 = C ∩ rho C` is `rho`-INVARIANT, since `rho (C ∩ rho C) = rho C ∩ C = C_2`.  Each vertical
+  slice is therefore symmetric under `y ↦ 1 - y`; being convex and nonempty it is an interval with
+  `hi + lo = 1`, whence `hi ≥ 1/2`.
+* The separation result puts the niche below `M = max_t c_y t = 0.3878381292441943... < 1/2`
+  (`niche_below_apex`, already machine-checked).
+
+So `f ≤ M < 1/2 ≤ hi` identically: the clamp never binds, `min (f) (hi) = f`, and `niche_convex`
+applies with no side condition.  A277's measurement (`f ≥ hi` at 0 of 800 abscissae) is the
+numerical shadow of this. -/
+section ClampInactive
+
+/-- A `rho`-symmetric slice has `hi + lo = 1`, hence `hi ≥ 1/2`. -/
+theorem hi_ge_half_of_symmetric {lo hi : ℝ} (hsym : hi + lo = 1) (hne : lo ≤ hi) :
+    (1:ℝ) / 2 ≤ hi := by linarith
+
+/-- **The clamp is never active.**  With the slice `rho`-symmetric and the niche below `M < 1/2`,
+the niche's upper boundary lies strictly below the cap's top. -/
+theorem clamp_inactive {lo hi f M : ℝ}
+    (hsym : hi + lo = 1) (hne : lo ≤ hi) (hM : M < 1 / 2) (hf : f ≤ M) :
+    f < hi := by
+  have h := hi_ge_half_of_symmetric hsym hne
+  linarith
+
+/-- Consequently the clamped and unclamped integrands agree. -/
+theorem min_eq_left_of_clamp_inactive {lo hi f M : ℝ}
+    (hsym : hi + lo = 1) (hne : lo ≤ hi) (hM : M < 1 / 2) (hf : f ≤ M) :
+    min f hi = f :=
+  min_eq_left (le_of_lt (clamp_inactive hsym hne hM hf))
+
+end ClampInactive
+
 end MovingSofa
