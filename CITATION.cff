@@ -67,7 +67,7 @@ abstract: >
   the advancing wedge boundary, so V >= |N| by Reynolds' transport theorem and Q
   bounds nothing where the sweep fails to be injective. In particular the construction
   does not recover Gerver's sofa, whose cap violates (RC). Optimality of Sigma remains
-  open. Lean 4: 831 theorems, no sorry. The 114-theorem core (Basic.lean) is
+  open. Lean 4: 837 theorems, no sorry. The 114-theorem core (Basic.lean) is
   standalone -- it has no imports at all, carries trigonometric quantities as formal
   symbols under Pythagorean side conditions, and works over Int so the identities stay
   decidable. The remaining 696 theorems use Mathlib, and include the instantiation of

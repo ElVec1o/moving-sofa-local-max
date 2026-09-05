@@ -4353,4 +4353,106 @@ theorem two_norm_uniform_step
 
 end TwoNormUniformStep
 
+/-! ### A323: the left endpoint is paid for by the discarded strict mass
+
+After the collapse the second variation is a Dirichlet form on the crossing arc plus a boundary
+form at each end.  The boundary form is INDEFINITE, so it must be paid for.  The payment comes from
+the part of the strict integral on `[0, b]` that the arc discards -- and there the gauge conditions
+`dH(0) = dH'(0) = 0` give a Dirichlet end, hence a Poincare inequality with a large constant.
+
+Numerically, with `b = 0.2896538`: `c = 1 - 9 b^2/pi^2 = 0.92349`, so
+`STRICT_[0,b] >= c * int|w'|^2`; Cauchy-Schwarz gives `|w(b)|^2 <= b * int|w'|^2 <= (b/c) * STRICT`,
+i.e. `0.31365 * STRICT`; and the boundary form costs at most `0.67077 * |w(b)|^2 <= 0.21039 * STRICT`
+-- a slack factor of `4.75`.
+
+The lemma below is the general step, with the three inputs as hypotheses. -/
+section EndpointPaidFor
+
+/-- If the strict mass dominates the Dirichlet energy (`c * W <= S`), the trace is controlled by the
+Dirichlet energy (`P <= b * W`), and the boundary form costs `K * P`, then the cost is a fixed
+fraction `K * b / c` of the strict mass -- with no reference to the direction. -/
+theorem endpoint_paid_for
+    (b c K P W S : ℝ) (hb : 0 ≤ b) (hc : 0 < c) (hK : 0 ≤ K)
+    (hW : 0 ≤ W) (hcW : c * W ≤ S) (hP : P ≤ b * W) :
+    K * P ≤ (K * b / c) * S := by
+  have h1 : K * P ≤ K * (b * W) := mul_le_mul_of_nonneg_left hP hK
+  have h2 : K * b * (c * W) ≤ K * b * S :=
+    mul_le_mul_of_nonneg_left hcW (mul_nonneg hK hb)
+  rw [div_mul_eq_mul_div, le_div_iff₀ hc]
+  nlinarith [h1, h2]
+
+/-- The strict mass on `[0,b]` dominates the Dirichlet energy whenever the Poincare constant beats
+the potential: `S = W - q * V` with `V <= p * W` and `q * p < 1` gives `S >= (1 - q*p) * W`. -/
+theorem strict_dominates_dirichlet
+    (W V S q p : ℝ) (hW : 0 ≤ W) (hq : 0 ≤ q) (hV : V ≤ p * W)
+    (hS : S = W - q * V) :
+    (1 - q * p) * W ≤ S := by
+  rw [hS]
+  nlinarith [mul_le_mul_of_nonneg_left hV hq]
+
+end EndpointPaidFor
+
+/-! ### T1.9': the second variation is nonnegative, with the rotation as its only kernel
+
+After the substitution `p = g sin t`, `q = f cos t` the singular parts of the antisymmetric term and
+of `-int g f` CANCEL IDENTICALLY (`A + P = int (p q' - q p')`), the Euler-Lagrange equation on the
+arc is `z'' = -i z'` for `z = p + i q` -- whose solutions are exactly the infinitesimal RIGID
+MOTIONS -- and splitting that finite-dimensional piece off reduces the whole form to a `3x3`
+quadratic in `(a, c, beta)`, the rotation parameter dropping out identically:
+
+    Qred = cot b (a^2 + c^2) + 2 a c + 2 cot b * beta^2 + (2 / sin b) (a + c) beta.
+
+The two lemmas below are its exact sum-of-squares and the determinant of its even block.  Together
+they give positivity precisely when `cot b > 1`, i.e. `b < pi/4`. -/
+section ReducedForm
+
+/-- **Exact sum of squares for the reduced form.**  Writing `s = sin b`, `co = cos b`, and using
+`u = (a+c)/sqrt 2`, `w = (a-c)/sqrt 2` implicitly through `(a+c)^2/2` and `(a-c)^2/2`, the reduced
+quadratic is a positive combination of three squares whose coefficients are `2 cot b`,
+`1 - tan b` and `cot b - 1`. -/
+theorem reduced_form_sos (a c bt s co : ℝ) (hs : s ≠ 0) (hco : co ≠ 0)
+    (hpy : s ^ 2 + co ^ 2 = 1) :
+    (co / s) * (a ^ 2 + c ^ 2) + 2 * a * c + 2 * (co / s) * bt ^ 2
+        + (2 / s) * (a + c) * bt
+      = 2 * (co / s) * (bt + (a + c) / (2 * co)) ^ 2
+        + (1 - s / co) * ((a + c) ^ 2 / 2)
+        + ((co / s) - 1) * ((a - c) ^ 2 / 2) := by
+  have h : co ^ 2 = 1 - s ^ 2 := by linarith
+  field_simp
+  nlinarith [h, sq_nonneg (a + c), sq_nonneg (a - c)]
+
+/-- **The determinant that closes the theorem.**  The even block is
+`!![cot b + 1, sqrt 2 / s; sqrt 2 / s, 2 cot b]`, whose determinant is `2 (cot b - 1)`. -/
+theorem reduced_form_det (s co : ℝ) (hs : s ≠ 0) (hpy : s ^ 2 + co ^ 2 = 1) :
+    2 * (co / s) * ((co / s) + 1) - 2 / s ^ 2 = 2 * ((co / s) - 1) := by
+  have h : co ^ 2 = 1 - s ^ 2 := by linarith
+  field_simp
+  nlinarith [h]
+
+/-- Below `pi/4` all three sum-of-squares coefficients are positive: `cot b > 1` and `tan b < 1`
+are the same condition, and it is exactly `s < co`. -/
+theorem reduced_form_coeffs_pos (s co : ℝ) (hs : 0 < s) (hlt : s < co) :
+    1 < co / s ∧ s / co < 1 ∧ 0 < 2 * (co / s) := by
+  have hco : 0 < co := lt_trans hs hlt
+  refine ⟨(one_lt_div hs).mpr hlt, (div_lt_one hco).mpr hlt, by positivity⟩
+
+/-- **The reduced form is nonnegative below `pi/4`.** -/
+theorem reduced_form_nonneg (a c bt s co : ℝ) (hs : 0 < s) (hlt : s < co)
+    (hpy : s ^ 2 + co ^ 2 = 1) :
+    0 ≤ (co / s) * (a ^ 2 + c ^ 2) + 2 * a * c + 2 * (co / s) * bt ^ 2
+          + (2 / s) * (a + c) * bt := by
+  have hco : 0 < co := lt_trans hs hlt
+  rw [reduced_form_sos a c bt s co (ne_of_gt hs) (ne_of_gt hco) hpy]
+  obtain ⟨h1, h2, h3⟩ := reduced_form_coeffs_pos s co hs hlt
+  have e1 : 0 ≤ 2 * (co / s) * (bt + (a + c) / (2 * co)) ^ 2 := by positivity
+  have e2 : 0 ≤ (1 - s / co) * ((a + c) ^ 2 / 2) := by
+    have : 0 ≤ 1 - s / co := by linarith
+    positivity
+  have e3 : 0 ≤ ((co / s) - 1) * ((a - c) ^ 2 / 2) := by
+    have : 0 ≤ (co / s) - 1 := by linarith
+    positivity
+  linarith
+
+end ReducedForm
+
 end MovingSofa
