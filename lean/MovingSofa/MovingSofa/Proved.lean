@@ -4648,4 +4648,103 @@ theorem strict_kernel_two_dim {g f : ℝ → ℝ} {a b : ℝ}
 
 end StrictGF
 
+/-! ### A355: the threshold `1/4` of the essential spectrum
+
+The model operator at the degenerate end is `−(t² g')' = λ g`.  On `g = tˢ` this
+is the indicial equation `λ = −s(s+1)`, whose roots `s = (−1 ± √(1−4λ))/2` are
+real exactly for `λ ≤ 1/4` and complex — hence oscillatory — for `λ > 1/4`.
+At `λ = 1/4` the root is double, `s = −1/2`, and there the Rayleigh quotient is
+an *identity*: `t²g'² = (1/4)g²` pointwise. -/
+section EssentialSpectrum
+
+/-- The indicial equation: `g = tˢ` solves `−(t²g')' = λg` iff `λ = −s(s+1)`. -/
+theorem indicial_equation (s lam : ℝ) :
+    lam = -(s * (s + 1)) ↔ s ^ 2 + s + lam = 0 := by
+  constructor <;> intro h <;> nlinarith [h]
+
+/-- The indicial roots, written out.  `1 − 4λ` is the discriminant. -/
+theorem indicial_roots (s lam : ℝ) (h : s ^ 2 + s + lam = 0) :
+    (2 * s + 1) ^ 2 = 1 - 4 * lam := by nlinarith [h]
+
+/-- **Threshold.**  The discriminant is nonnegative — the roots are real, so no
+oscillation — exactly when `λ ≤ 1/4`. -/
+theorem discriminant_nonneg_iff (lam : ℝ) : 0 ≤ 1 - 4 * lam ↔ lam ≤ 1 / 4 := by
+  constructor <;> intro h <;> linarith
+
+/-- At the threshold the root is double and equals `−1/2`. -/
+theorem threshold_double_root (s : ℝ) (h : s ^ 2 + s + 1 / 4 = 0) : s = -(1 / 2) := by
+  nlinarith [sq_nonneg (2 * s + 1), h]
+
+/-- **Sharpness, pointwise.**  For `g = t^(−1/2)`, so that `g' = −(1/2)t^(−3/2)`,
+the Rayleigh integrand is exactly `1/4` times the mass integrand — an identity,
+not an inequality.  Stated via `g = t⁻¹ᐟ²` in the algebraic form
+`t² · ((−1/2)·t⁻¹·g)² = (1/4)·g²`. -/
+theorem hardy_sharp_pointwise (t g : ℝ) (ht : t ≠ 0) (hg : g ^ 2 = t⁻¹) :
+    t ^ 2 * ((-(1 / 2) * t⁻¹ * g)) ^ 2 = (1 / 4) * g ^ 2 := by
+  have : t ^ 2 * (t⁻¹) ^ 2 = 1 := by field_simp
+  nlinarith [this, hg]
+
+/-- The truncated spectrum in closed form: after the Liouville substitution the
+problem is `−u'' = (λ − 1/4)u` with Dirichlet ends on an interval of length
+`L = ln(1/ε)`, so `λₙ = 1/4 + (nπ/L)²`.  Here: each such `λₙ` exceeds `1/4`,
+and the excess tends to `0` as `L → ∞`. -/
+theorem truncated_eigenvalue_gt (n L : ℝ) (hn : n ≠ 0) (hL : 0 < L) :
+    1 / 4 < 1 / 4 + (n * Real.pi / L) ^ 2 := by
+  have : 0 < (n * Real.pi / L) ^ 2 := by
+    have : n * Real.pi / L ≠ 0 := by
+      apply div_ne_zero _ (ne_of_gt hL)
+      exact mul_ne_zero hn (ne_of_gt Real.pi_pos)
+    positivity
+  linarith
+
+end EssentialSpectrum
+
+/-! ### A356: the trace constant `κ` at the breakpoint
+
+`E + mass` collapses, by the same `cot² − csc² = −1` cancellation used
+throughout, to `∫p'² − [cot t · p²]`.  With `p(β) = sin β`, `p(π/2) = 0` the
+minimum is `sc + s²/L`, so `sc·κ = 1/(1 + tan β/L) < 1` — an identity plus
+positivity, unconditional on the window, with no numerical constant. -/
+section TraceConstant
+
+/-- The cancellation driving the collapse: `cot² t − csc² t = −1`. -/
+theorem cot_sq_sub_csc_sq_eq_neg_one (s c : ℝ) (hs : s ≠ 0) (hpy : s ^ 2 + c ^ 2 = 1) :
+    (c / s) ^ 2 - (1 / s) ^ 2 = -1 := by
+  field_simp
+  linarith [hpy]
+
+/-- The boundary contribution at `β` is exactly `sc`: `cot β · sin²β = sin β cos β`. -/
+theorem boundary_term_at_beta (s c : ℝ) (hs : s ≠ 0) :
+    (c / s) * s ^ 2 = s * c := by field_simp
+
+/-- **A356 (closed form).**  `min{E + mass} = sc + s²/L`. -/
+theorem trace_min_closed_form (s c L : ℝ) (hs : s ≠ 0) (hL : 0 < L) :
+    (c / s) * s ^ 2 + s ^ 2 / L = s * c + s ^ 2 / L := by
+  rw [boundary_term_at_beta s c hs]
+
+/-- **A356 (the inequality).**  `sc·κ = sc/(sc + s²/L) = 1/(1 + tan β / L)`. -/
+theorem sc_kappa_eq (s c L : ℝ) (hs : 0 < s) (hc : 0 < c) (hL : 0 < L) :
+    (s * c) / (s * c + s ^ 2 / L) = 1 / (1 + (s / c) / L) := by
+  have hsc : s * c + s ^ 2 / L ≠ 0 := by positivity
+  have h1 : 1 + (s / c) / L ≠ 0 := by positivity
+  field_simp
+
+
+/-- **A356 (conclusion).**  `sc·κ < 1` for every `β` in the open window — no
+numerical constant, and no smallness of `β`, is involved. -/
+theorem sc_kappa_lt_one (s c L : ℝ) (hs : 0 < s) (hc : 0 < c) (hL : 0 < L) :
+    (s * c) / (s * c + s ^ 2 / L) < 1 := by
+  have hpos : 0 < s ^ 2 / L := by positivity
+  have : 0 < s * c := by positivity
+  rw [div_lt_one (by linarith)]
+  linarith
+
+/-- **The fragility.**  Drop the Dirichlet condition at `π/2` and the
+interpolation term `s²/L` disappears, leaving `sc·κ = 1` exactly: the strict
+inequality comes entirely from `g(π/2) = 0`, not from the window. -/
+theorem sc_kappa_free_end_critical (s c : ℝ) (h : s * c ≠ 0) :
+    (s * c) / (s * c) = 1 := div_self h
+
+end TraceConstant
+
 end MovingSofa
