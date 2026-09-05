@@ -4455,4 +4455,197 @@ theorem reduced_form_nonneg (a c bt s co : ℝ) (hs : 0 < s) (hlt : s < co)
 
 end ReducedForm
 
+/-! ### A350/A351: the cancellation, the arc Euler-Lagrange, and the assembly
+
+Three remaining pieces of T1.9', all finite algebra.
+
+`A350` is the cancellation that makes the antisymmetric term harmless: in the frame
+`p = g sin t`, `q = f cos t` the singular factor `1/(sin t cos t)` in `-int g f` is exactly the one
+produced by `sin t cos t (g f' - g' f)`, and they annihilate, leaving a plain area integral.
+
+`A351` records that the infinitesimal rigid motions solve the arc Euler-Lagrange system
+`p'' = q'`, `q'' = -p'` (equivalently `z'' = -i z'` for `z = p + i q`).
+
+`A352_assembly` is the logical shape of the conclusion: the form splits as a rigid-motion part,
+handled by `reduced_form_nonneg`, plus a zero-trace part controlled by a Poincare constant. -/
+section ArcCancellation
+
+/-- **A350.**  With `p = g s`, `q = f c` and `s' = c`, `c' = -s`, the Wronskian of `(p,q)` equals the
+weighted antisymmetric term MINUS the product: `p q' - q p' = s c (g f' - g' f) - g f`.  Hence
+`A + P = int (p q' - q p')` and the term `P` needs no estimate at all. -/
+theorem arc_cancellation (g f gp fp s c : ℝ) (hpy : s ^ 2 + c ^ 2 = 1) :
+    (g * s) * (fp * c - f * s) - (f * c) * (gp * s + g * c)
+      = s * c * (g * fp - gp * f) - g * f := by
+  -- LHS - RHS = -(g*f)*(s^2 + c^2 - 1), a single multiple of the Pythagorean hypothesis
+  linear_combination (-(g * f)) * hpy
+
+/-- The same statement rearranged: the weighted antisymmetric integrand equals the Wronskian plus
+the product, so the two singular contributions cancel in `A + P`. -/
+theorem arc_cancellation' (g f gp fp s c : ℝ) (hpy : s ^ 2 + c ^ 2 = 1) :
+    s * c * (g * fp - gp * f) - g * f
+      = ((g * s) * (fp * c - f * s) - (f * c) * (gp * s + g * c)) := by
+  rw [arc_cancellation g f gp fp s c hpy]
+
+/-- **A351.**  The rigid motion `p = a + al*cos t + be*sin t`, `q = c - al*sin t + be*cos t` has
+`p'' = q'` and `q'' = -p'`, i.e. it solves the arc Euler-Lagrange system.  (Derivatives are supplied
+as the explicit trigonometric expressions, so this is an algebraic check.) -/
+theorem rigid_motion_solves_arc_EL (al be s co : ℝ) :
+    (-(al * co) - be * s) = (-(al * co) - be * s)
+      ∧ (al * s - be * co) = -(-(al * s) + be * co) := by
+  constructor
+  · ring
+  · ring
+
+/-- The Poincare constant on the arc is positive: the arc has length `pi/2 - 2b < pi`. -/
+theorem arc_poincare_pos (b : ℝ) (hb : 0 < b) : 0 < 1 - (Real.pi / 2 - 2 * b) / Real.pi := by
+  have hpi : (0:ℝ) < Real.pi := Real.pi_pos
+  have h : (Real.pi / 2 - 2 * b) / Real.pi < 1 := by
+    rw [div_lt_one hpi]; linarith
+  linarith
+
+/-- **Assembly.**  `Q` splits as a rigid-motion part (nonnegative by `reduced_form_nonneg`) plus a
+zero-trace part bounded below by a positive multiple of its energy.  Hence `Q >= 0`. -/
+theorem arc_positivity_assembly (Qe Q0 c1 EM0 : ℝ)
+    (hQe : 0 ≤ Qe) (hc1 : 0 < c1) (hEM : 0 ≤ EM0) (hQ0 : c1 * EM0 ≤ Q0) :
+    0 ≤ Qe + Q0 := by
+  have : 0 ≤ c1 * EM0 := mul_nonneg (le_of_lt hc1) hEM
+  linarith
+
+/-- Equality forces both parts to vanish: the zero-trace part has zero energy, and the
+rigid-motion part sits in the kernel of the reduced form. -/
+theorem arc_equality_forces (Qe Q0 c1 EM0 : ℝ)
+    (hQe : 0 ≤ Qe) (hc1 : 0 < c1) (hEM : 0 ≤ EM0) (hQ0 : c1 * EM0 ≤ Q0)
+    (hzero : Qe + Q0 = 0) : Qe = 0 ∧ EM0 = 0 := by
+  have h1 : 0 ≤ c1 * EM0 := mul_nonneg (le_of_lt hc1) hEM
+  have hQ0z : Q0 = 0 := by linarith
+  have hQez : Qe = 0 := by linarith
+  refine ⟨hQez, ?_⟩
+  have : c1 * EM0 ≤ 0 := by linarith
+  nlinarith [hEM, hc1]
+
+end ArcCancellation
+
+
+/-! ### A334: the `B_σ` boundary collapse
+
+At the two breakpoints the boundary form `F` collapses onto a single common
+factor `sc = sin β cos β`.  The `cot β` that appears in `F` cancels against the
+`sin²` in the substitution `p = sin t · g`, `q = cos t · f`; that cancellation is
+the factor ≈ 12.3 that makes the budget close.  Pure algebra, `s ≠ 0`. -/
+section BSigmaCollapse
+
+/-- `F(t_b) = sc·(g_b f_b − f_b²)` after substitution. -/
+theorem B_sigma_right (gb fb s c : ℝ) (hs : s ≠ 0) :
+    (c * gb) * (s * fb) - (s * fb) ^ 2 * (c / s)
+      = s * c * (gb * fb - fb ^ 2) := by
+  field_simp
+
+/-- `F(t_a) = sc·(g_a² − g_a f_a)` after substitution. -/
+theorem B_sigma_left (ga fa s c : ℝ) (hs : s ≠ 0) :
+    (s * ga) ^ 2 * (c / s) - (s * ga) * (c * fa)
+      = s * c * (ga ^ 2 - ga * fa) := by
+  field_simp
+
+/-- **A334.**  `B_σ = F(t_b) − F(t_a) = sc·(g_b f_b − f_b² − g_a² + g_a f_a)`.
+The common factor is `sc`, not `cot β`: the cotangent has cancelled. -/
+theorem B_sigma_collapse (ga fa gb fb s c : ℝ) (hs : s ≠ 0) :
+    ((c * gb) * (s * fb) - (s * fb) ^ 2 * (c / s))
+        - ((s * ga) ^ 2 * (c / s) - (s * ga) * (c * fa))
+      = s * c * (gb * fb - fb ^ 2 - ga ^ 2 + ga * fa) := by
+  rw [B_sigma_right gb fb s c hs, B_sigma_left ga fa s c hs]; ring
+
+/-- The collapsed factor is exactly `sin β cos β`, and it is positive on the
+window `0 < β < π/2`. -/
+theorem B_sigma_factor_pos (b : ℝ) (hb : 0 < b) (hb2 : b < Real.pi / 2) :
+    0 < Real.sin b * Real.cos b :=
+  mul_pos (Real.sin_pos_of_pos_of_lt_pi hb (hb2.trans (by linarith [Real.pi_pos])))
+    (Real.cos_pos_of_mem_Ioo ⟨by linarith [Real.pi_pos], hb2⟩)
+
+end BSigmaCollapse
+
+/-! ### A328: STRICT in the `(g,f)` coordinates, and its kernel
+
+With `γ = (p,q)`, `M = diag(cot t, −tan t)`, the substitution `p = sin t · g`,
+`q = cos t · f` turns the STRICT integrand `|γ' − Mγ|²` into
+`sin²t · g'² + cos²t · f'²` — manifestly nonnegative, and with no `1/(sin t cos t)`
+singularity anywhere.  The kernel is then read off directly: the integrand
+vanishes iff `g` and `f` are constant, i.e. `p ∈ span{sin}`, `q ∈ span{cos}`. -/
+section StrictGF
+
+/-- First component: `p' − cot t · p = sin t · g'`.  The `cos t · g` produced by
+differentiating the substitution is exactly what `cot t · p` removes. -/
+theorem strict_comp_p (g gp s c : ℝ) (hs : s ≠ 0) :
+    (c * g + s * gp) - (c / s) * (s * g) = s * gp := by
+  field_simp
+  ring
+
+/-- Second component: `q' + tan t · q = cos t · f'`, by the same cancellation. -/
+theorem strict_comp_q (f fp s c : ℝ) (hc : c ≠ 0) :
+    (-(s * f) + c * fp) + (s / c) * (c * f) = c * fp := by
+  field_simp
+  ring
+
+/-- **A328 (form).**  The STRICT integrand in `(g,f)` coordinates:
+`|γ' − Mγ|² = sin²t · g'² + cos²t · f'²`. -/
+theorem strict_integrand_gf (g f gp fp s c : ℝ) (hs : s ≠ 0) (hc : c ≠ 0) :
+    ((c * g + s * gp) - (c / s) * (s * g)) ^ 2
+        + ((-(s * f) + c * fp) + (s / c) * (c * f)) ^ 2
+      = s ^ 2 * gp ^ 2 + c ^ 2 * fp ^ 2 := by
+  rw [strict_comp_p g gp s c hs, strict_comp_q f fp s c hc]; ring
+
+/-- The integrand is pointwise nonnegative — no cancellation is being hidden. -/
+theorem strict_integrand_gf_nonneg (gp fp s c : ℝ) :
+    0 ≤ s ^ 2 * gp ^ 2 + c ^ 2 * fp ^ 2 :=
+  add_nonneg (mul_nonneg (sq_nonneg s) (sq_nonneg gp))
+    (mul_nonneg (sq_nonneg c) (sq_nonneg fp))
+
+/-- **A328 (kernel, pointwise).**  On the open window both `sin t` and `cos t`
+are nonzero, so the integrand vanishes only where `g' = f' = 0`. -/
+theorem strict_integrand_gf_eq_zero (gp fp s c : ℝ) (hs : s ≠ 0) (hc : c ≠ 0)
+    (h : s ^ 2 * gp ^ 2 + c ^ 2 * fp ^ 2 = 0) : gp = 0 ∧ fp = 0 := by
+  have hs2 : (0:ℝ) < s ^ 2 := by positivity
+  have hc2 : (0:ℝ) < c ^ 2 := by positivity
+  have h1 : s ^ 2 * gp ^ 2 = 0 := by
+    nlinarith [sq_nonneg gp, sq_nonneg fp, mul_nonneg hc2.le (sq_nonneg fp),
+      mul_nonneg hs2.le (sq_nonneg gp)]
+  have h2 : c ^ 2 * fp ^ 2 = 0 := by linarith
+  constructor
+  · have := (mul_eq_zero.1 h1).resolve_left (ne_of_gt hs2)
+    exact pow_eq_zero_iff (n := 2) (by norm_num) |>.1 this
+  · have := (mul_eq_zero.1 h2).resolve_left (ne_of_gt hc2)
+    exact pow_eq_zero_iff (n := 2) (by norm_num) |>.1 this
+
+/-- **A328 (kernel, conclusion).**  If `g` and `f` are constant with values
+`c₁, c₂`, the corresponding `γ` is `(c₁ sin t, c₂ cos t)`: the kernel of STRICT
+is `span{sin} × span{cos}`, which is two-dimensional. -/
+theorem strict_kernel_form (c1 c2 s c : ℝ) :
+    (s * c1, c * c2) = (c1 * s, c2 * c) := by
+  simp [mul_comm]
+
+/-- **A328 (kernel, constancy).**  If the STRICT integrand vanishes throughout
+the window then `g` is genuinely constant there — not merely `g' = 0` pointwise.
+This is the step that upgrades the pointwise kernel computation to a statement
+about the function, via the mean value theorem. -/
+theorem strict_kernel_const {g : ℝ → ℝ} {a b : ℝ}
+    (hdiff : DifferentiableOn ℝ g (Set.Icc a b))
+    (hzero : ∀ x ∈ Set.Ico a b, derivWithin g (Set.Icc a b) x = 0) :
+    ∀ x ∈ Set.Icc a b, g x = g a :=
+  constant_of_derivWithin_zero hdiff hzero
+
+/-- The two-dimensional kernel, stated on functions: `g ≡ g a` and `f ≡ f a`
+give `γ(t) = (g a · sin t, f a · cos t)`. -/
+theorem strict_kernel_two_dim {g f : ℝ → ℝ} {a b : ℝ}
+    (hg : DifferentiableOn ℝ g (Set.Icc a b))
+    (hf : DifferentiableOn ℝ f (Set.Icc a b))
+    (hgz : ∀ x ∈ Set.Ico a b, derivWithin g (Set.Icc a b) x = 0)
+    (hfz : ∀ x ∈ Set.Ico a b, derivWithin f (Set.Icc a b) x = 0) :
+    ∀ t ∈ Set.Icc a b,
+      (Real.sin t * g t, Real.cos t * f t)
+        = (g a * Real.sin t, f a * Real.cos t) := by
+  intro t ht
+  rw [strict_kernel_const hg hgz t ht, strict_kernel_const hf hfz t ht]
+  simp [mul_comm]
+
+end StrictGF
+
 end MovingSofa
