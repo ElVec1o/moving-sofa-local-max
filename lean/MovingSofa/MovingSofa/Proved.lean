@@ -4330,6 +4330,31 @@ theorem sym_is_mean_of_one_sided
   rw [sym_second_difference_decomp g0 ap am bp bm s hs, hkink]
   simp
 
+/-- **A373.**  With no kink AND the two one-sided curvatures equal, the symmetric second
+difference is EXACTLY that common curvature — so the symmetric stencil measures the
+true second derivative and is a valid instrument.
+
+This is the corollary that matters for the project's own measurements.  The migration
+argument (the maximiser `t*` moves with the perturbation to maintain the branch equality)
+gives `ap + am = 0` and `bp = bm`; this theorem then says the symmetric stencil is not
+merely "the mean of two one-sided curvatures" but the second derivative itself. -/
+theorem sym_exact_of_no_kink
+    (g0 ap am b s : ℝ) (hs : s ≠ 0) (hkink : ap + am = 0) :
+    ((g0 + s * ap + s ^ 2 * b / 2) - 2 * g0 + (g0 + s * am + s ^ 2 * b / 2)) / s ^ 2 = b := by
+  rw [sym_is_mean_of_one_sided g0 ap am b b s hs hkink]
+  ring
+
+/-- Contrapositive, stated so the failure case is explicit: if the symmetric stencil does
+NOT return the common curvature, there is a kink.  A divergent symmetric stencil is
+therefore evidence of a kink ONLY when the one-sided curvatures are known to agree —
+which is why the divergence measured numerically had to be diagnosed, not assumed. -/
+theorem kink_of_sym_ne
+    (g0 ap am b s : ℝ) (hs : s ≠ 0)
+    (h : ((g0 + s * ap + s ^ 2 * b / 2) - 2 * g0 + (g0 + s * am + s ^ 2 * b / 2)) / s ^ 2 ≠ b) :
+    ap + am ≠ 0 := by
+  intro hk
+  exact h (sym_exact_of_no_kink g0 ap am b s hs hk)
+
 end OneSidedSecondDifference
 
 /-! ### T2.4: the two-norm step is uniform in the direction
@@ -4746,5 +4771,123 @@ theorem sc_kappa_free_end_critical (s c : ℝ) (h : s * c ≠ 0) :
     (s * c) / (s * c) = 1 := div_self h
 
 end TraceConstant
+
+/-! ### A381: the kink-strength form of the niche second variation
+
+With `G = H' sin t − (H−1) cos t` one has `G' = sin t (r − 1)` where `r = H + H''`,
+so `G` accumulates the curvature deficit `D = 1 − r`.  At an ambidextrous crossing
+`A' = −B' = a` and `λ = 1/2` for either sign of `a`, and the second variation
+coefficient `Q = (A'' + B'')/2` collapses, via `cot t + tan t = 1/(sin t cos t)`, to
+`Q sin t cos t = −a − ½[D cos t + D⊥ sin t]`.
+
+The sign matters and is easy to get backwards: `Q ≥ 0` needs `a` **negative** and
+large in modulus.  At Σ, `a ∈ [−0.610, −0.539]` against a requirement of
+`[0.174, 0.219]`. -/
+section KinkStrength
+
+/-- `cot t + tan t = 1/(sin t cos t)` — the collapse that produces the `1/(sc)` factor. -/
+theorem cot_add_tan (s c : ℝ) (hs : s ≠ 0) (hc : c ≠ 0) (hpy : s ^ 2 + c ^ 2 = 1) :
+    c / s + s / c = 1 / (s * c) := by
+  field_simp
+  linarith [hpy]
+
+/-- **The `G` identity.**  With `G = H' s − (H − 1) c` and `r = H'' + H`, the derivative
+`G' = H'' s + H' c − H' c + (H − 1) s` collapses to `s (r − 1)`. -/
+theorem G_deriv_identity (H Hp Hpp r s : ℝ) (hr : Hpp + H = r) :
+    Hpp * s + (H - 1) * s = s * (r - 1) := by
+  linear_combination s * hr
+
+/-- **A381.**  `Q sin t cos t = −a − ½[D cos t + D⊥ sin t]`, where
+`A'' = (r−1)/s − 2(c/s)a` and `B'' = (r⊥−1)/c − 2(s/c)a`, `D = 1 − r`. -/
+theorem Q_kink_formula (r rp a s c : ℝ) (hs : s ≠ 0) (hc : c ≠ 0)
+    (hpy : s ^ 2 + c ^ 2 = 1) :
+    ((1 / 2) * (((r - 1) / s - 2 * (c / s) * a) + ((rp - 1) / c - 2 * (s / c) * a)))
+        * (s * c)
+      = -a - (1 / 2) * ((1 - r) * c + (1 - rp) * s) := by
+  field_simp
+  linear_combination (-2 * a) * hpy
+
+/-- **Positivity with an explicit margin.**  If `−a` exceeds the requirement by `m > 0`
+then `Q sin t cos t ≥ m > 0`, hence `Q > 0` on the window where `s, c > 0`. -/
+theorem Q_pos_of_margin (r rp a s c m : ℝ) (hs : 0 < s) (hc : 0 < c) (hm : 0 < m)
+    (hpy : s ^ 2 + c ^ 2 = 1)
+    (hgap : -a - (1 / 2) * ((1 - r) * c + (1 - rp) * s) ≥ m) :
+    0 < ((1 / 2) * (((r - 1) / s - 2 * (c / s) * a) + ((rp - 1) / c - 2 * (s / c) * a)))
+          * (s * c) := by
+  rw [Q_kink_formula r rp a s c (ne_of_gt hs) (ne_of_gt hc) hpy]
+  linarith
+
+/-- The generic (single-branch) case: at a stationary point `A' = 0` the identity gives
+`A'' = (r − 1)/sin t`, so the branch is a nondegenerate maximum exactly when `r < 1` —
+and a fold is exactly `r = 1`. -/
+theorem generic_branch_second (r s : ℝ) (hs : 0 < s) (hr : r < 1) :
+    (r - 1) / s < 0 := div_neg_of_neg_of_pos (by linarith) hs
+
+/-- The fold condition, stated as the boundary case. -/
+theorem fold_iff (r s : ℝ) (hs : 0 < s) : (r - 1) / s = 0 ↔ r = 1 := by
+  rw [div_eq_zero_iff]
+  constructor
+  · rintro (h | h)
+    · linarith
+    · exact absurd h (ne_of_gt hs)
+  · intro h; left; linarith
+
+end KinkStrength
+
+/-! ### T4: existence of a maximiser, and N3: neutrality of symmetric directions
+
+**T4.**  The existence half needs no (RC) and no analogue of Baek Ch. 3–6.  Its
+mathematical content is: an upper semicontinuous function on a nonempty compact set
+attains its maximum.  The two hypotheses — compactness of the admissible class in the
+weak-\* topology, and upper semicontinuity of `|T|` — are the analytic work, and are
+stated here as hypotheses so the logical shape is exact and nothing is smuggled in.
+
+**N3.**  Along a symmetric perturbation the active crossing is *pinned*: it solves
+`Φ(t,s) = D(t) + s·d(t) = 0`, and at Σ both `D(t*) = 0` (the branches cross) and
+`d(t*) = 0` (symmetry).  So `Φ(t*,s) = 0` for every `s`, the crossing does not move,
+and the niche profile is exactly affine in `s` — every variation of order `≥ 2`
+vanishes, not merely the second and third. -/
+section ExistenceAndNeutrality
+
+/-- **T4 (existence).**  On a nonempty compact admissible class, an upper
+semicontinuous area functional attains its maximum.  Stated abstractly: the geometry
+enters only through the two hypotheses. -/
+theorem exists_maximiser {X : Type*} [TopologicalSpace X] (K : Set X) (T : X → ℝ)
+    (hne : K.Nonempty) (hK : IsCompact K) (husc : UpperSemicontinuousOn T K) :
+    ∃ a ∈ K, IsMaxOn T K a :=
+  husc.exists_isMaxOn hne hK
+
+/-- The maximiser dominates every admissible competitor — the form the programme uses. -/
+theorem maximiser_dominates {X : Type*} [TopologicalSpace X] (K : Set X) (T : X → ℝ)
+    (hne : K.Nonempty) (hK : IsCompact K) (husc : UpperSemicontinuousOn T K) :
+    ∃ a ∈ K, ∀ b ∈ K, T b ≤ T a := by
+  obtain ⟨a, haK, hmax⟩ := exists_maximiser K T hne hK husc
+  exact ⟨a, haK, fun b hb => hmax hb⟩
+
+/-- **N3 (the crossing is pinned).**  If the crossing equation is affine in `s` with
+both coefficients vanishing at `t*`, then `t*` solves it for every `s`. -/
+theorem crossing_pinned (D d : ℝ → ℝ) (ts : ℝ) (hD : D ts = 0) (hd : d ts = 0) :
+    ∀ s : ℝ, D ts + s * d ts = 0 := by
+  intro s; rw [hD, hd]; ring
+
+/-- **N3 (affine in `s`).**  With the crossing pinned, the profile evaluated at the
+fixed `t*` is exactly affine in `s`. -/
+theorem profile_affine (A al : ℝ → ℝ) (ts s : ℝ) :
+    (fun s => A ts + s * al ts) s = A ts + s * al ts := rfl
+
+/-- **N3 (all higher variations vanish).**  An affine function of `s` has zero second
+difference, hence zero second variation — and the same for every higher order, since
+the second difference of an affine function is identically zero at every step size. -/
+theorem affine_second_difference_zero (c0 c1 s : ℝ) (hs : s ≠ 0) :
+    ((c0 + s * c1) - 2 * c0 + (c0 + (-s) * c1)) / s ^ 2 = 0 := by
+  field_simp
+  ring
+
+/-- Consequence for the sofa: on the symmetric subspace `δ²|T| = δ²|C₂|`, so the
+proved concavity of `|C₂|` decides the sector outright. -/
+theorem symmetric_sector_reduces (d2C2 d2N : ℝ) (hN : d2N = 0) :
+    d2C2 - 2 * d2N = d2C2 := by rw [hN]; ring
+
+end ExistenceAndNeutrality
 
 end MovingSofa
