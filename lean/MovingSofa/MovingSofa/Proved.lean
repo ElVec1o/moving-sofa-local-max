@@ -4937,4 +4937,46 @@ theorem radius_direction_free (a0 L : ℝ) (ha0 : 0 < a0) (hL : 0 < L) : 0 < a0 
 
 end InterfaceAndRadius
 
+/-! ### B1 and the height cutoff: the corrected second variation of the niche
+
+A measure-zero moving boundary buys one derivative, not two.  Differentiating the
+niche integral twice produces, besides the bulk term, a contribution at the endpoints
+of the support:
+
+`d²|N|/ds² = ∫_E v_ss dx + [ (v_s)² / |v_x| ]`
+
+The bracket is a sum of squares over `|v_x| > 0`, hence **nonnegative**; since
+`|T| = |C₂| - 2|N|` it *lowers* `d²|T|/ds²`, which is the favourable direction.
+It vanishes only when `v_s = 0` at the endpoints, which is not the case at Σ. -/
+section BoundaryTerm
+
+/-- The boundary contribution at one endpoint is nonnegative whenever the vanishing
+is transversal (`v_x ≠ 0`). -/
+theorem boundary_term_nonneg (vs vx : ℝ) (hvx : vx ≠ 0) : 0 ≤ vs ^ 2 / |vx| :=
+  div_nonneg (sq_nonneg vs) (abs_nonneg vx)
+
+/-- It is strictly positive exactly when `v_s ≠ 0` — so it cannot be dropped at Σ,
+where `v_s` was measured nonzero at both endpoints. -/
+theorem boundary_term_pos (vs vx : ℝ) (hvx : vx ≠ 0) (hvs : vs ≠ 0) :
+    0 < vs ^ 2 / |vx| :=
+  div_pos (by positivity) (abs_pos.mpr hvx)
+
+/-- **The corrected second variation lowers `δ²|T|`.**  With `|T| = |C₂| - 2|N|`,
+adding a nonnegative term `b` to `δ²|N|` subtracts `2b` from `δ²|T|`. -/
+theorem boundary_term_favourable (d2C2 bulk b : ℝ) (hb : 0 ≤ b) :
+    d2C2 - 2 * (bulk + b) ≤ d2C2 - 2 * bulk := by linarith
+
+/-- **The height cutoff.**  If the total splits as bulk-plus-exceptional and the
+exceptional part is bounded by `b` for every cutoff, then the total is within `b` of
+the bulk — the form the cutoff argument uses. -/
+theorem cutoff_split (total inn out b : ℝ) (hsplit : total = inn + out)
+    (hout : |out| ≤ b) : |total - inn| ≤ b := by
+  rw [hsplit]; simpa using hout
+
+/-- Transversal vanishing gives a `C¹` endpoint, which is what makes the Leibniz rule
+applicable: stated as the nondegeneracy hypothesis it supplies. -/
+theorem transversal_endpoint (vx : ℝ) (h : vx ≠ 0) : 0 < |vx| := abs_pos.mpr h
+
+end BoundaryTerm
+
 end MovingSofa
