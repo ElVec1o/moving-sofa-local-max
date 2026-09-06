@@ -236,10 +236,10 @@ paper/figures/, algorithm/rigorous/{gerver_*,sigma_*}.py
 cd lean/MovingSofa && lake build
 ```
 
-Lean 4.33. **891 theorems, no `sorry`.** The 114-theorem core (`MovingSofa/Basic.lean`)
+Lean 4.33. **890 theorems, no `sorry`.** The 114-theorem core (`MovingSofa/Basic.lean`)
 is **Mathlib-free** — it has no imports at all: trigonometric quantities are carried as
 formal symbols under sign or Pythagorean side conditions and arithmetic is over `Int`,
-so the identities stay decidable. The remaining 777 theorems use Mathlib. Instantiating
+so the identities stay decidable. The remaining 776 theorems use Mathlib. Instantiating
 the formal symbols at actual sines and cosines, formerly listed here as a separate
 Mathlib-track task and not claimed, is now **partly done**: see the `StrictCoercivity`
 and `ReductionOne` sections of `MovingSofa/Proved.lean`. `#print axioms` reports nothing
