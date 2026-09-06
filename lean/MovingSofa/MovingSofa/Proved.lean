@@ -4890,4 +4890,51 @@ theorem symmetric_sector_reduces (d2C2 d2N : ℝ) (hN : d2N = 0) :
 
 end ExistenceAndNeutrality
 
+/-! ### N2 and P2: the interface selection, and the persistence radius
+
+**N2.**  On the niche support at Σ the measurement gives `f < hi` with margin `0.613`.
+The consequence needed is purely order-theoretic: where `f < hi` the selection
+`min(f,hi)` equals `f`, so the `{f = hi}` branch never activates and its (negative)
+contribution to the second variation is absent.
+
+**P2.**  The transversality radius: if the crossing slope `a` is bounded below in
+modulus and the perturbation's slope is bounded above, the crossing stays transversal
+for `|s|` below an explicit bound with **no direction in it** — the same cancellation
+as `two_norm_uniform_step`. -/
+section InterfaceAndRadius
+
+/-- **N2.**  Strict inequality makes the selection inactive. -/
+theorem min_inactive_of_lt (f hi : ℝ) (h : f < hi) : min f hi = f := min_eq_left h.le
+
+/-- **N2, with an explicit margin.**  A margin `m > 0` gives the same conclusion and
+records that the inequality is not a near miss. -/
+theorem min_inactive_of_margin (f hi m : ℝ) (hm : 0 < m) (h : f + m ≤ hi) :
+    min f hi = f := min_eq_left (by linarith)
+
+/-- The interface contribution is absent: the selected value does not depend on `hi`
+once the margin holds, so perturbing `hi` cannot contribute at any order. -/
+theorem interface_independent_of_hi (f hi hi' m : ℝ) (hm : 0 < m)
+    (h : f + m ≤ hi) (h' : f + m ≤ hi') : min f hi = min f hi' := by
+  rw [min_inactive_of_margin f hi m hm h, min_inactive_of_margin f hi' m hm h']
+
+/-- **P2.**  Transversality persists: if `|a| ≥ a₀ > 0` and the perturbation slope is
+bounded by `L`, then `a + s·(slope)` keeps `a`'s sign for `|s| < a₀ / L`.  Stated for
+the negative branch, which is the one Σ is in (`a ∈ [-0.610, -0.539]`). -/
+theorem transversality_persists (a a0 L s slope : ℝ)
+    (ha0 : 0 < a0) (hL : 0 < L) (ha : a ≤ -a0) (hsl : |slope| ≤ L)
+    (hs : |s| < a0 / L) : a + s * slope < 0 := by
+  have h1 : |s * slope| ≤ |s| * L := by
+    rw [abs_mul]; exact mul_le_mul_of_nonneg_left hsl (abs_nonneg s)
+  have h2 : |s| * L < a0 := by
+    have := (lt_div_iff₀ hL).mp hs
+    linarith
+  have h3 : s * slope < a0 := lt_of_le_of_lt (le_trans (le_abs_self _) h1) h2
+  linarith
+
+/-- The radius has NO direction in it: `a₀ / L` depends only on the two scalar bounds. -/
+theorem radius_direction_free (a0 L : ℝ) (ha0 : 0 < a0) (hL : 0 < L) : 0 < a0 / L :=
+  div_pos ha0 hL
+
+end InterfaceAndRadius
+
 end MovingSofa
