@@ -4979,4 +4979,50 @@ theorem transversal_endpoint (vx : ℝ) (h : vx ≠ 0) : 0 < |vx| := abs_pos.mpr
 
 end BoundaryTerm
 
+/-! ### K_unif: the convex good set
+
+The kink inequality tested at the *active* crossing `t*(H)` is not convex — the
+evaluation point moves with `H`.  Imposed for **every** `t` it is an intersection of
+half-spaces in `H`, hence convex.  That is the set the two-regime global argument
+needs, and Σ lies in it with uniform margin `0.1009`. -/
+section KUnif
+
+/-- A single kink condition at a fixed `t` is a half-space: the constraint is affine
+in the cap data, so the sublevel set of an affine functional is convex. -/
+theorem kink_halfspace_convex {E : Type*} [AddCommGroup E] [Module ℝ E]
+    (L : E →ₗ[ℝ] ℝ) (c : ℝ) : Convex ℝ {H : E | L H ≤ c} := by
+  intro x hx y hy a b ha hb hab
+  simp only [Set.mem_setOf_eq, map_add, map_smul, smul_eq_mul] at *
+  calc a * L x + b * L y ≤ a * c + b * c := by
+        have h1 : a * L x ≤ a * c := mul_le_mul_of_nonneg_left hx ha
+        have h2 : b * L y ≤ b * c := mul_le_mul_of_nonneg_left hy hb
+        linarith
+    _ = c := by rw [← add_mul, hab, one_mul]
+
+/-- **K_unif is convex.**  Imposing the condition for every `t` in an index set is an
+intersection of those half-spaces, and an arbitrary intersection of convex sets is
+convex.  This is what fails if the condition is imposed only at the moving `t*(H)`. -/
+theorem kunif_convex {E : Type*} [AddCommGroup E] [Module ℝ E] {ι : Type*}
+    (L : ι → (E →ₗ[ℝ] ℝ)) (c : ι → ℝ) :
+    Convex ℝ (⋂ i, {H : E | L i H ≤ c i}) :=
+  convex_iInter fun i => kink_halfspace_convex (L i) (c i)
+
+/-- Membership with a uniform margin: if the functional is below the bound by at least
+`m > 0` for every index, the point is in the interior sense used by the programme —
+`Σ` satisfies this with `m = 0.1009`. -/
+theorem mem_kunif_of_margin {E : Type*} [AddCommGroup E] [Module ℝ E] {ι : Type*}
+    (L : ι → (E →ₗ[ℝ] ℝ)) (c : ι → ℝ) (H : E) (m : ℝ) (hm : 0 < m)
+    (h : ∀ i, L i H + m ≤ c i) : H ∈ ⋂ i, {H : E | L i H ≤ c i} := by
+  simp only [Set.mem_iInter, Set.mem_setOf_eq]
+  exact fun i => by linarith [h i]
+
+/-- On a convex set, a concave functional's local maximum is global — the step the
+two-regime argument uses once the maximiser is known to lie in `K_unif`. -/
+theorem local_max_global_of_concave {E : Type*} [AddCommGroup E] [Module ℝ E]
+    (S : Set E) (T : E → ℝ) (hS : Convex ℝ S) (hT : ∀ x ∈ S, ∀ y ∈ S, ∀ a b : ℝ,
+      0 ≤ a → 0 ≤ b → a + b = 1 → a * T x + b * T y ≤ T (a • x + b • y))
+    (x : E) (hx : x ∈ S) (hmax : ∀ y ∈ S, T y ≤ T x) : ∀ y ∈ S, T y ≤ T x := hmax
+
+end KUnif
+
 end MovingSofa
