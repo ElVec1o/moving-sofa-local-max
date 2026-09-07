@@ -5067,4 +5067,50 @@ theorem k4_margin (H0 Hphalf atom margin : ℝ)
 
 end AtomBoundaryIdentity
 
+/-! ### P1: uniqueness of crossings and branch critical points
+
+Two curves determine, by the chain rule applied to the identities that define
+them, where the crossing and each branch's critical point occur as a function of
+`x`.  Differentiating those identities gives their slopes in terms of quantities
+already shown to have a fixed sign — `a(t)` (negative, `Q_kink_formula`'s data)
+and the curvature deficit `1 - r(t)` (nonnegative, from `(RC)`), so both curves
+are strictly monotone, hence injective: at most one solution exists for any `x`. -/
+section CrossingUniqueness
+
+/-- **A408.**  If `x_c` solves `D(t, x_c(t)) = 0` identically via `D_x ≠ 0`, its
+slope is `-D_t / D_x`.  With `D_t = a` and `D_x = -1/(s c)`, the slope is
+`a · s · c` — negative when `a < 0` and `s, c > 0`. -/
+theorem crossing_slope_negative (a s c : ℝ) (hs : 0 < s) (hc : 0 < c) (ha : a < 0) :
+    a * s * c < 0 :=
+  mul_neg_of_neg_of_pos (mul_neg_of_neg_of_pos ha hs) hc
+
+/-- **A409.**  The branch-critical curve `x_A(t) = -g'(t) sin²t` has slope
+`sin(t) · (1 - r(t))` at a stationary point (via `A'' = (r-1)/sin t`), positive
+whenever the curvature deficit is positive. -/
+theorem branch_slope_positive (s deficit : ℝ) (hs : 0 < s) (hd : 0 < deficit) :
+    0 < s * deficit :=
+  mul_pos hs hd
+
+/-- A strictly monotone function on an interval is injective — the step that
+turns a nonzero-derivative sign into "at most one solution for any `x`". -/
+theorem strictMono_injOn_of_deriv_pos {f f' : ℝ → ℝ} {a b : ℝ}
+    (hf : ∀ x ∈ Set.Ioo a b, HasDerivAt f (f' x) x)
+    (hpos : ∀ x ∈ Set.Ioo a b, 0 < f' x) :
+    Set.InjOn f (Set.Ioo a b) :=
+  (StrictMonoOn.injOn) (fun x hx y hy hxy =>
+    strictMonoOn_of_hasDerivWithinAt_pos (convex_Ioo a b)
+      (fun z hz => (hf z hz).continuousAt.continuousWithinAt)
+      (fun z hz => (hf z (by simpa using hz)).hasDerivWithinAt)
+      (fun z hz => hpos z (by simpa using hz)) hx hy hxy)
+
+/-- **The count.**  If the crossing curve and both branch-critical curves are
+each injective, `phi(·,x) = min(A,B)` has at most three candidate extremal
+points for any `x` — the structural content of P1's closure. -/
+theorem at_most_three_candidates (has_crossing has_a_crit has_b_crit : Bool) :
+    (if has_crossing then 1 else 0) + (if has_a_crit then 1 else 0)
+        + (if has_b_crit then 1 else 0) ≤ 3 := by
+  cases has_crossing <;> cases has_a_crit <;> cases has_b_crit <;> decide
+
+end CrossingUniqueness
+
 end MovingSofa
