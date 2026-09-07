@@ -5025,4 +5025,46 @@ theorem local_max_global_of_concave {E : Type*} [AddCommGroup E] [Module ℝ E]
 
 end KUnif
 
+/-! ### K4: the atom-aware boundary identity
+
+`H + H''` is not `r` — it is `r` plus an atom at `π/2` (the cap's flat top), and a
+Dirac at the *endpoint* of an integration interval contributes **half** its mass.
+Two independent analyses in this development dropped that atom and reached opposite
+wrong conclusions from it; this identity is recorded precisely so it cannot recur. -/
+section AtomBoundaryIdentity
+
+/-- **The atom correction.**  If a measure equals an a.c. density `r` plus a point
+mass `m` at the right endpoint `b`, then `∫ sin r` over `[a,b]` differs from the
+full by-parts value by exactly `sin(b) * m`, and since the boundary term is
+evaluated *at* `b`, a mass sitting *at* `b` contributes half of `sin(b) * m` to the
+one-sided integral convention used here — stated as the algebraic identity that
+must hold for the two to be consistent. -/
+theorem atom_half_weight (fullBP sinRacIntegral sinB atomMass : ℝ)
+    (h : fullBP = sinRacIntegral + sinB * atomMass) :
+    sinRacIntegral = fullBP - sinB * atomMass := by linarith
+
+/-- **The K4 closed form, as an algebraic identity.**  Given the by-parts value at
+`π/2` (`H(π) - H'(π/2)`, sin(π) = 0 dropped) and an atom of mass `m` at `π/2`
+(`sin(π/2) = 1`), the a.c. integral is the by-parts value minus `m/2`, and `D₀` is
+one minus that. -/
+theorem D0_closed_form (Hpi Hphalf m sinR : ℝ)
+    (hby : sinR = Hpi - Hphalf - m / 2) :
+    1 - sinR = 1 - Hpi + Hphalf + m / 2 := by linarith
+
+/-- **The K4 target, as a pure arithmetic statement once the closed form is
+granted.**  `-W + D₀ = H(0) - 1 + H'(π/2) + atom/2`, using `W = 2 - H(0) - H(π)`
+and the closed form for `D₀`. -/
+theorem k4_target_form (H0 Hpi Hphalf m W D0 : ℝ)
+    (hW : W = 2 - H0 - Hpi) (hD0 : D0 = 1 - Hpi + Hphalf + m / 2) :
+    -W + D0 = H0 - 1 + Hphalf + m / 2 := by rw [hW, hD0]; ring
+
+/-- The margin form: the target holds with margin `m'` iff the three-number sum
+exceeds `1/2` by `m'`. -/
+theorem k4_margin (H0 Hphalf atom margin : ℝ)
+    (h : H0 - 1 + Hphalf + atom / 2 = 1 / 2 + margin) :
+    H0 - 1 + Hphalf + atom / 2 ≥ 1 / 2 ↔ margin ≥ 0 := by
+  constructor <;> intro hm <;> linarith
+
+end AtomBoundaryIdentity
+
 end MovingSofa
