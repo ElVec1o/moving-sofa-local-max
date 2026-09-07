@@ -5219,4 +5219,48 @@ theorem linear_rate_limit (a : ℝ) (r : ℝ → ℝ) (hr : Filter.Tendsto (fun 
 
 end DebtReduction
 
+/-! ### M ≤ 1: the atom = 0 exclusion, with the bound now genuinely proved
+
+`atom_zero_excluded` (already in this file) took `M ≤ 1` as a hypothesis. Here
+`M ≤ 1` is proved outright: `r(s)\sin s \le \sin s` pointwise since `0 \le r \le 1`
+and `\sin \ge 0` on `[0,\pi/2]`, and `\int_0^{\pi/2}\sin = \cos 0 - \cos(\pi/2) = 1`
+exactly, via Mathlib's `integral_sin`. -/
+section MBoundProved
+
+/-- `\int_0^{\pi/2}\sin = 1` exactly. -/
+theorem integral_sin_zero_to_halfpi :
+    (∫ s in (0:ℝ)..(Real.pi / 2), Real.sin s) = 1 := by
+  rw [integral_sin]
+  simp
+
+/-- **`M ≤ 1`, proved.**  For any measurable `r : ℝ → ℝ` with `0 ≤ r ≤ 1` on
+`[0, π/2]` and integrable `r · sin`, the sin-weighted moment is at most `1`. -/
+theorem M_le_one (r : ℝ → ℝ) (hint : IntervalIntegrable (fun s => r s * Real.sin s)
+    MeasureTheory.volume 0 (Real.pi / 2))
+    (hr : ∀ s ∈ Set.Icc (0:ℝ) (Real.pi / 2), r s ≤ 1) :
+    (∫ s in (0:ℝ)..(Real.pi / 2), r s * Real.sin s) ≤ 1 := by
+  have hle : ∀ s ∈ Set.Icc (0:ℝ) (Real.pi / 2), r s * Real.sin s ≤ Real.sin s := by
+    intro s hs
+    have hs' : s ∈ Set.Icc (0:ℝ) Real.pi := ⟨hs.1, hs.2.trans (by linarith [Real.pi_pos])⟩
+    have hsin : 0 ≤ Real.sin s := Real.sin_nonneg_of_mem_Icc hs'
+    nlinarith [hr s hs]
+  have hsinint : IntervalIntegrable Real.sin MeasureTheory.volume 0 (Real.pi / 2) :=
+    Real.continuous_sin.intervalIntegrable _ _
+  have hpi : (0:ℝ) ≤ Real.pi / 2 := by linarith [Real.pi_pos]
+  calc (∫ s in (0:ℝ)..(Real.pi / 2), r s * Real.sin s)
+      ≤ ∫ s in (0:ℝ)..(Real.pi / 2), Real.sin s :=
+        intervalIntegral.integral_mono_on hpi hint hsinint hle
+    _ = 1 := integral_sin_zero_to_halfpi
+
+/-- **The atom = 0 exclusion, fully proved.**  With `M` an honest integral
+(not a bare hypothesis), a fully smooth cap (`atom = 0`) can never satisfy the
+K4 target `M + atom ≥ 3/2`. -/
+theorem atom_zero_excluded_proved (r : ℝ → ℝ)
+    (hint : IntervalIntegrable (fun s => r s * Real.sin s) MeasureTheory.volume 0 (Real.pi / 2))
+    (hr : ∀ s ∈ Set.Icc (0:ℝ) (Real.pi / 2), r s ≤ 1) :
+    (∫ s in (0:ℝ)..(Real.pi / 2), r s * Real.sin s) + 0 < 3 / 2 :=
+  atom_zero_excluded _ (M_le_one r hint hr)
+
+end MBoundProved
+
 end MovingSofa
