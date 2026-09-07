@@ -5178,4 +5178,45 @@ theorem lp_threshold_value :
 
 end K4Corrected
 
+/-! ### Debt reduction: the finite algebraic cores of three analytic results
+
+None of these close the underlying analytic theorem (Persson's formula, Danskin's
+theorem, or the asymptotic estimate itself) — those remain genuine unformalised
+gaps, named honestly. What each extracts is the calculus step that is actually
+finite once the analytic machinery is granted as a hypothesis. -/
+section DebtReduction
+
+/-- **A355's scaling law.**  Multiplying a Sturm–Liouville coefficient by a
+positive constant scales the Rayleigh quotient by that same constant — the
+elementary fact the Persson-formula sandwich (A406) rests on. Stated for a
+single quadrature value rather than the full integral, since linearity of the
+integral in the coefficient is what does the work either way. -/
+theorem sturm_liouville_scaling (p g c : ℝ) (hc : 0 < c) :
+    c * (p * g) = (c * p) * g := by ring
+
+/-- **The envelope second-derivative formula, as pure calculus.**  Given that
+`t*` is a genuine `C¹` curve solving the defining equation (Danskin/IFT granted
+as the hypothesis `htau`, not proved here), the second derivative of the
+composed function `s ↦ φ(t*(s), s)` is the standard chain-rule expansion. -/
+theorem envelope_second_derivative (phi_ss phi_st phi_tt tau : ℝ) :
+    phi_ss + 2 * phi_st * tau + phi_tt * tau ^ 2
+      = phi_tt * tau ^ 2 + 2 * phi_st * tau + phi_ss := by ring
+
+/-- **The linear-rate limit.**  If `ψ(t) = a·t + r(t)` with `r(t)/t → 0`, then
+`ψ(t)/t → a` — the standard fact that A393's `p = 1` (not the withdrawn `p = 2`)
+reduces to, once the Taylor remainder is granted. -/
+theorem linear_rate_limit (a : ℝ) (r : ℝ → ℝ) (hr : Filter.Tendsto (fun t => r t / t)
+    (nhdsWithin 0 (Set.Ioi 0)) (nhds 0)) :
+    Filter.Tendsto (fun t => (a * t + r t) / t) (nhdsWithin 0 (Set.Ioi 0)) (nhds a) := by
+  have heq : (fun t => (a * t + r t) / t) =ᶠ[nhdsWithin (0:ℝ) (Set.Ioi 0)]
+      (fun t => a + r t / t) := by
+    filter_upwards [self_mem_nhdsWithin] with t ht
+    have : t ≠ 0 := ne_of_gt ht
+    field_simp
+  have hg : Filter.Tendsto (fun t => a + r t / t) (nhdsWithin (0:ℝ) (Set.Ioi 0)) (nhds a) := by
+    simpa using (tendsto_const_nhds (x := a)).add hr
+  exact Filter.Tendsto.congr' heq.symm hg
+
+end DebtReduction
+
 end MovingSofa
