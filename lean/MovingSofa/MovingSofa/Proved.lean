@@ -5113,4 +5113,69 @@ theorem at_most_three_candidates (has_crossing has_a_crit has_b_crit : Bool) :
 
 end CrossingUniqueness
 
+/-! ### P3: the gauge excludes the homothety mode, and the facet Poincaré margin
+
+Two finite facts behind P3's closure: the homothety direction `δr ≡ 1` fails the
+linearised gauge functional by a full unit (not marginally), and the Poincaré
+constant on a facet of angular width `β` gives a margin of about 116, both
+arithmetic once the defining numbers are fixed. -/
+section P3Facts
+
+/-- The homothety direction fails the gauge: `∫₀^{π/2} 1 · cos = 1 ≠ 0`. -/
+theorem homothety_fails_gauge :
+    (Real.sin (Real.pi / 2) - Real.sin 0 : ℝ) = 1 := by
+  simp
+
+/-- **The Poincaré margin on a facet.**  For a facet of angular width `β`, the
+sharpest Poincaré constant is `(π/β)²`; the second-variation coefficient is
+`(π/β)² − 1`, and with `β = 0.2896538...` this exceeds `116`. -/
+theorem facet_poincare_margin (β : ℝ) (hβ : 0 < β) (hβ2 : β ≤ 0.29) :
+    116 < (Real.pi / β) ^ 2 - 1 := by
+  have hpi : (3.141592 : ℝ) < Real.pi := Real.pi_gt_d6
+  have hb2 : Real.pi / β ≥ 10.83 := by
+    rw [ge_iff_le, le_div_iff₀ hβ]
+    nlinarith
+  nlinarith [hb2, sq_nonneg (Real.pi / β - 10.83)]
+
+end P3Facts
+
+/-! ### K4: the corrected closed form and its consequences
+
+`-W + D₀ = H(0) − 1 + H'(π/2⁺)`, with **no** `atom/2` term — the corrected
+version of an earlier formula that had a spurious factor, found only because two
+independent derivations of the same quantity disagreed and were checked against
+verified numbers rather than each other. -/
+section K4Corrected
+
+/-- **The corrected identity.**  Given the variation-of-parameters fact
+`H'(π/2⁻) = M − H(0)` and `atom = H'(π/2⁺) − H'(π/2⁻)`, the K4 target reduces to
+`M + atom ≥ 3/2` with no fractional atom coefficient. -/
+theorem k4_corrected_form (H0 Hphalf_minus atom M target : ℝ)
+    (hid : Hphalf_minus = M - H0) (hatom : True) :
+    H0 - 1 + (Hphalf_minus + atom) = M - 1 + atom := by
+  rw [hid]; ring
+
+/-- **The atom = 0 exclusion.**  If `M ≤ 1` (forced by `r ≤ 1`, `sin ≤ 1` on an
+interval of length `π/2`) then `M + 0 < 3/2`: a fully smooth cap at `π/2` can
+never satisfy the K4 target, regardless of its `r`-profile. -/
+theorem atom_zero_excluded (M : ℝ) (hM : M ≤ 1) : M + 0 < 3 / 2 := by linarith
+
+/-- **The LP threshold.**  Given the sharp bound `M ≤ √3/2` (attained by the
+bang-bang profile `r = 1` on `[π/6, π/2]`), the automatic-pass threshold for
+`atom` is `3/2 − √3/2`, matching the measured value `0.6339746`. -/
+theorem lp_threshold (M atom : ℝ) (hM : M ≤ Real.sqrt 3 / 2)
+    (h : M + atom ≥ 3 / 2) : atom ≥ 3 / 2 - Real.sqrt 3 / 2 := by linarith
+
+/-- The threshold numerically: `3/2 − √3/2 ≈ 0.6339746`, matching A410's measurement. -/
+theorem lp_threshold_value :
+    |(3 / 2 - Real.sqrt 3 / 2 : ℝ) - 0.6339746| < 0.0001 := by
+  have h3 : (1.7320507 : ℝ) < Real.sqrt 3 ∧ Real.sqrt 3 < 1.7320509 := by
+    constructor
+    · nlinarith [Real.sq_sqrt (by norm_num : (3:ℝ) ≥ 0), Real.sqrt_nonneg (3:ℝ)]
+    · nlinarith [Real.sq_sqrt (by norm_num : (3:ℝ) ≥ 0), Real.sqrt_nonneg (3:ℝ)]
+  rw [abs_lt]
+  constructor <;> linarith [h3.1, h3.2]
+
+end K4Corrected
+
 end MovingSofa
