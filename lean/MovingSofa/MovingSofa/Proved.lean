@@ -5263,4 +5263,31 @@ theorem atom_zero_excluded_proved (r : ℝ → ℝ)
 
 end MBoundProved
 
+/-! ### The bang-bang extremal profile achieves M = √3/2, exactly
+
+This does NOT prove the LP optimality (that no profile does better — the
+rearrangement/bathtub principle over the whole function space is a separate,
+harder undertaking left as the honest remaining gap). What it proves is
+narrower and real: the specific candidate `r = 1` on `[π/6, π/2]`, `r = 0`
+below, satisfies the moment constraint exactly and achieves the claimed
+value `√3/2`. -/
+section ExtremalProfile
+
+/-- `\int_{\pi/6}^{\pi/2}\cos = 1/2` — the extremal profile satisfies the
+moment constraint exactly. -/
+theorem extremal_profile_moment :
+    (∫ s in (Real.pi / 6)..(Real.pi / 2), Real.cos s) = 1 / 2 := by
+  rw [integral_cos, Real.sin_pi_div_two, Real.sin_pi_div_six]
+  norm_num
+
+/-- `\int_{\pi/6}^{\pi/2}\sin = \sqrt3/2` — the extremal profile achieves
+exactly the claimed `M` value. -/
+theorem extremal_profile_M :
+    (∫ s in (Real.pi / 6)..(Real.pi / 2), Real.sin s) = Real.sqrt 3 / 2 := by
+  rw [integral_sin]
+  rw [Real.cos_pi_div_two, Real.cos_pi_div_six]
+  ring
+
+end ExtremalProfile
+
 end MovingSofa
