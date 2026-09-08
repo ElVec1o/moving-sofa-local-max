@@ -5477,4 +5477,27 @@ theorem relaxed_witness_no_contradiction {α : Type*} (f : α → ℝ) (D : Set 
 
 end RelaxedSupDoesNotThreaten
 
+/-! ### The complete H'(π/2⁺) formula, and K4's recovered original form
+
+Careful re-derivation (A464/A465) of `h'(θ)` from `Cap.h`'s definition shows
+the pointwise `r(θ)` terms cancel exactly in the product rule, leaving
+`h'(θ) = -sin θ + (1/2) cos θ + cos θ · A(θ) + sin θ · B(θ)`, where
+`A(θ) = ∫₀^θ r cos` and `B(θ) = ∫₀^θ r sin`. At `θ = π/2`, `H'` jumps by
+exactly `atom` (from the atom term's own derivative, `cos(θ - π/2)`,
+evaluating to `1` there), giving `H'(π/2⁺) = M - 1 + atom` where
+`M := B(π/2) = ∫₀^{π/2} r sin`. This recovers K4's original form exactly
+(`H'(π/2⁺) ≥ 1/2 ⟺ M + atom ≥ 3/2`), now re-derived and numerically verified
+from first principles rather than merely recalled — an earlier attempt at
+this identity (retracted in A455) omitted the atom jump term. The BVP/Duhamel
+derivation itself is not formalised here; only the algebraic rearrangement is. -/
+section HPrimeJumpFormula
+
+/-- **K4's recovered closed form.**  Given `H'(π/2⁺) = M - 1 + atom`, the
+condition `H'(π/2⁺) ≥ 1/2` is equivalent to `M + atom ≥ 3/2`. -/
+theorem k4_via_M_plus_atom (Hp M atom : ℝ) (heq : Hp = M - 1 + atom) :
+    Hp ≥ 1 / 2 ↔ M + atom ≥ 3 / 2 := by
+  rw [heq]; constructor <;> intro h <;> linarith
+
+end HPrimeJumpFormula
+
 end MovingSofa
