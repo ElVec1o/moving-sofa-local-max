@@ -5500,4 +5500,82 @@ theorem k4_via_M_plus_atom (Hp M atom : ℝ) (heq : Hp = M - 1 + atom) :
 
 end HPrimeJumpFormula
 
+/-! ### T4's containment gap on `[π/2, π]`: an explicit uniform bound `atom ≤ √2 + √3/2`
+
+A466/A467 chain several already-proven facts into an explicit uniform bound
+closing T4's remaining containment gap. The pieces:
+
+1. **Variation of parameters** (A467, verified here by direct differentiation
+   of the general 2nd-order linear ODE solution): for `y'' + y = f` on
+   `[a, b]` with `y(a) = α`, `y'(a) = β`,
+   `y(θ) = α cos(θ-a) + β sin(θ-a) + ∫ₐ^θ sin(θ-s) f(s) ds`. Applied with
+   `a = π/2`, `α = H(π/2) = 1`, `β = c := H'(π/2⁺)`, `f = r`, at `θ = 3π/4`:
+   `H(3π/4) = cos(π/4)·(1 + c) + [nonnegative integral, since r ≥ 0]`.
+2. **`c = M - 1 + atom`** (A465, this file's `HPrimeJumpFormula` section).
+3. **`M ≥ 1 - √3/2`** (A432, an LP over `0 ≤ r ≤ 1` and the gauge moment on
+   `[0, π/2]` alone — not formalised here, a numeric/LP fact).
+4. **`atom ≥ 0`** (convexity: `H + H'' ≥ 0` as a measure — not formalised
+   here).
+5. **`1 ≤ H(π/4) ≤ √2`** (A437, this file's `T4Containment` section).
+
+Chaining 2–4 gives `c ≥ -√3/2`, hence (via 1, dropping the nonnegative
+integral) `H(3π/4) ≥ cos(π/4)·(1 - √3/2)`. Combined with 5 in A458's
+witness-bound mechanism (`maxcy(atom) ≥ C(π/4) + atom/2`, from the
+`AtomAffineBound` section with `slope = sin(π/4)cos(π/4) = 1/2`, requiring
+`maxcy(atom) ≤ 1/2`), this yields the explicit numeric bound. Only the
+final arithmetic assembly is formalised here — the ODE step's application to
+`Cap.h`, the LP fact, and the convexity fact are cited as already-established
+results elsewhere in this project, not re-derived in Lean. -/
+section T4AtomBoundChain
+
+/-- **The chained lower bound on `c = H'(π/2⁺)`.**  Given `c = M - 1 + atom`,
+`M ≥ 1 - √3/2`, and `atom ≥ 0`, then `c ≥ -√3/2`. -/
+theorem c_lower_bound (c M atom : ℝ) (heq : c = M - 1 + atom)
+    (hM : M ≥ 1 - Real.sqrt 3 / 2) (hatom : atom ≥ 0) :
+    c ≥ -(Real.sqrt 3 / 2) := by rw [heq]; linarith
+
+/-- **The chained lower bound on `H(3π/4)`.**  Given the variation-of-parameters
+value `H(3π/4) = cos(π/4) * (1 + c) + rest` with `rest ≥ 0` (the nonnegative
+integral term) and `c ≥ -√3/2`, then `H(3π/4) ≥ cos(π/4) * (1 - √3/2)`. -/
+theorem h3pi4_lower_bound (H3 c rest : ℝ) (hcos : Real.cos (Real.pi / 4) ≥ 0)
+    (heq : H3 = Real.cos (Real.pi / 4) * (1 + c) + rest)
+    (hc : c ≥ -(Real.sqrt 3 / 2)) (hrest : rest ≥ 0) :
+    H3 ≥ Real.cos (Real.pi / 4) * (1 - Real.sqrt 3 / 2) := by
+  have hmono : Real.cos (Real.pi / 4) * (1 + c) ≥ Real.cos (Real.pi / 4) * (1 - Real.sqrt 3 / 2) :=
+    mul_le_mul_of_nonneg_left (by linarith) hcos
+  rw [heq]; linarith
+
+/-- **The final assembly: an explicit uniform bound on `atom`.**  Given the
+witness-bound mechanism `atom ≤ 1 - 2 * C`, `C = (H4 - 1) * sin(π/4) +
+(H3 - 1) * cos(π/4)`, `sin(π/4) = cos(π/4)`, `H4 ≥ 1` (from `T4Containment`),
+and `H3 ≥ cos(π/4) * (1 - √3/2)` (this section's `h3pi4_lower_bound`), then
+`atom ≤ √2 + √3/2`, using `cos(π/4) = sin(π/4) = √2/2` and
+`cos(π/4)^2 = 1/2`. -/
+theorem atom_uniform_bound (atom C H4 H3 : ℝ)
+    (hsc : Real.sin (Real.pi / 4) = Real.cos (Real.pi / 4))
+    (hcos2 : Real.cos (Real.pi / 4) ^ 2 = 1 / 2)
+    (hcospos : Real.cos (Real.pi / 4) ≥ 0)
+    (hC : C = (H4 - 1) * Real.sin (Real.pi / 4) + (H3 - 1) * Real.cos (Real.pi / 4))
+    (hbound : atom ≤ 1 - 2 * C)
+    (hH4 : H4 ≥ 1) (hH3 : H3 ≥ Real.cos (Real.pi / 4) * (1 - Real.sqrt 3 / 2)) :
+    atom ≤ Real.sqrt 2 + Real.sqrt 3 / 2 := by
+  have hs2 : Real.sqrt 2 = 2 * Real.cos (Real.pi / 4) := by
+    have h2 : (2 * Real.cos (Real.pi / 4)) ^ 2 = 2 := by nlinarith [hcos2]
+    have hnn : (0:ℝ) ≤ 2 * Real.cos (Real.pi / 4) := by linarith
+    nlinarith [Real.sq_sqrt (show (0:ℝ) ≤ 2 by norm_num), Real.sqrt_nonneg (2:ℝ), h2, hnn,
+      sq_nonneg (Real.sqrt 2 - 2 * Real.cos (Real.pi / 4))]
+  rw [hC, hsc] at hbound
+  have hexp : (H4 - 1) * Real.cos (Real.pi / 4) + (H3 - 1) * Real.cos (Real.pi / 4)
+      = (H4 - 1) * Real.cos (Real.pi / 4) + H3 * Real.cos (Real.pi / 4) - Real.cos (Real.pi / 4) := by ring
+  rw [hexp] at hbound
+  have hH4' : (H4 - 1) * Real.cos (Real.pi / 4) ≥ 0 := mul_nonneg (by linarith) hcospos
+  have hH3' : H3 * Real.cos (Real.pi / 4) ≥ Real.cos (Real.pi / 4) * (1 - Real.sqrt 3 / 2) * Real.cos (Real.pi / 4) :=
+    mul_le_mul_of_nonneg_right hH3 hcospos
+  have hexp2 : Real.cos (Real.pi / 4) * (1 - Real.sqrt 3 / 2) * Real.cos (Real.pi / 4)
+      = Real.cos (Real.pi / 4) ^ 2 * (1 - Real.sqrt 3 / 2) := by ring
+  rw [hexp2, hcos2] at hH3'
+  linarith [hbound, hH4', hH3', hs2]
+
+end T4AtomBoundChain
+
 end MovingSofa
