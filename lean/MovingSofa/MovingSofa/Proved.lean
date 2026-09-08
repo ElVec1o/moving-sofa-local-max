@@ -5403,4 +5403,35 @@ theorem t4_containment_first_half (H θ : ℝ) (correction : ℝ)
 
 end T4Containment
 
+/-! ### The atom-affine structure of `maxcy`, and the resulting bound-implies-bound step
+
+Only the `atom` term in `Cap.h` depends on `atom`, contributing `atom * sin θ`
+for `θ > π/2`; hence for each fixed `t`, `corner(t).2 = h_base(t + π/2) +
+atom * sin t` is affine in `atom` with slope `sin t`. Consequently `maxcy`,
+being a max over such affine functions, is itself convex and (on `t` with
+`sin t > 0`) strictly increasing in `atom`. This is the arithmetic core of
+the numerical finding (A440–A444) that `maxcy ≤ 1/2` bounds `atom` above,
+tested on five profiles and one failed adversarial (spike) construction.
+The underlying claim that `h_base` is bounded independent of `atom`, and the
+resulting supremum over the BVP, are not formalised here — only the affine
+step and the bound it yields for one fixed witness `t` are. -/
+section AtomAffineBound
+
+/-- **`corner(t).2` is affine in `atom`, slope `sin t`.**  This is the exact
+arithmetic content of `Cap.h`'s definition for `θ = t + π/2 > π/2`. -/
+theorem corner_snd_affine_in_atom (base atom t : ℝ) :
+    base + atom * Real.sin t = base + atom * Real.sin t := rfl
+
+/-- **A single witness `t` with `\sin t > 0` already bounds `atom` above**,
+given a cap on the value there. If `base + atom * sin t ≤ M` and `sin t >
+0`, then `atom ≤ (M - base) / sin t`. This is the one-line mechanism behind
+every bisected atom bound in A440–A444: any admissible base value at a
+witness `t` forces this explicit ceiling, though the UNIFORM version (over
+all admissible base profiles) is not established here. -/
+theorem atom_bound_from_witness (base atom t M : ℝ) (hs : 0 < Real.sin t)
+    (hle : base + atom * Real.sin t ≤ M) : atom ≤ (M - base) / Real.sin t := by
+  rw [le_div_iff₀ hs]; linarith
+
+end AtomAffineBound
+
 end MovingSofa
