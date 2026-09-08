@@ -5316,4 +5316,29 @@ theorem Y_continuous_at_vertex (H Hp'_minus Hp'_plus : ℝ) :
 
 end YContinuity
 
+/-! ### K4 simplifies: the gauge H(0) = 1 removes a term, not just for Σ
+
+Since `H(0) = 1` is part of the gauge every admissible competitor must
+satisfy (not a free direction — the release text names the alternative,
+`H(π/2) = 1`, as required for a candidate to be a competitor at all), the K4
+target's `H(0) - 1` term is identically zero, universally, and the whole
+three-number inequality collapses to a one-number statement. -/
+section K4Simplified
+
+/-- **K4 simplifies.**  With the gauge `H(0) = 1`, the target
+`H(0) - 1 + H'(π/2⁺) ≥ 1/2` is exactly `H'(π/2⁺) ≥ 1/2`. -/
+theorem k4_simplified (H0 Hphalf_plus : ℝ) (hgauge : H0 = 1) :
+    H0 - 1 + Hphalf_plus ≥ 1 / 2 ↔ Hphalf_plus ≥ 1 / 2 := by
+  rw [hgauge]; constructor <;> intro h <;> linarith
+
+/-- The same reduction reached via the `M`-identity: with `H(0) = 1`,
+`M = 1 + H'(π/2⁻)`, and `M + atom ≥ 3/2` collapses to `H'(π/2⁻) + atom ≥ 1/2`
+— the same statement as `k4_simplified`, since `atom = H'(π/2⁺) - H'(π/2⁻)`. -/
+theorem k4_simplified_via_M (H0 Hphalf_minus atom M : ℝ)
+    (hgauge : H0 = 1) (hM : M = H0 + Hphalf_minus) :
+    M + atom ≥ 3 / 2 ↔ Hphalf_minus + atom ≥ 1 / 2 := by
+  rw [hM, hgauge]; constructor <;> intro h <;> linarith
+
+end K4Simplified
+
 end MovingSofa
