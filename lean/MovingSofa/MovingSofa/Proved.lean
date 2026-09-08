@@ -5359,4 +5359,48 @@ theorem moment_slack_positive (C : ℝ) (hC : C = 1 / 2) : 0 < 1 - C := by
 
 end MomentNotSaturated
 
+/-! ### T4's containment bound on `[0, π/2]`, corrected
+
+The Green's function for `H'' + H = r` with `H(0) = H(π/2) = 1` gives
+`H(θ) = (\cos θ + \sin θ) − \text{correction}`, where the correction is
+non-negative and at most `(\cos θ + \sin θ) − 1` (found by first getting the
+sign backwards and catching it against the `r ≡ 1` special case, which must
+give the unit circle, `H ≡ 1`, exactly). This is the arithmetic consequence
+of that corrected sign; the boundary-value problem itself is not formalised
+here. -/
+section T4Containment
+
+/-- **The corrected containment bound.**  Given the correction's range, `H`
+is sandwiched between `1` and `\cos θ + \sin θ`. -/
+theorem containment_bound (base correction : ℝ) (hlo : 0 ≤ correction)
+    (hhi : correction ≤ base - 1) :
+    1 ≤ base - correction ∧ base - correction ≤ base := by
+  constructor <;> linarith
+
+/-- **The uniform ceiling.**  Since `\cos θ + \sin θ ≤ √2` on `[0, π/2]`
+(via `\cos θ + \sin θ = √2 \sin(θ + π/4)`), `H ≤ √2` there. -/
+theorem cos_add_sin_le_sqrt_two (θ : ℝ) : Real.cos θ + Real.sin θ ≤ Real.sqrt 2 := by
+  have h2 : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have h : Real.cos θ + Real.sin θ = Real.sqrt 2 * Real.sin (θ + Real.pi / 4) := by
+    rw [Real.sin_add, Real.sin_pi_div_four, Real.cos_pi_div_four]
+    rw [show Real.sqrt 2 * (Real.sin θ * (Real.sqrt 2 / 2) + Real.cos θ * (Real.sqrt 2 / 2))
+          = Real.sqrt 2 ^ 2 * (1 / 2) * (Real.sin θ + Real.cos θ) by ring, h2]
+    ring
+  rw [h]
+  have h1 : Real.sin (θ + Real.pi / 4) ≤ 1 := Real.sin_le_one _
+  nlinarith [Real.sqrt_nonneg (2:ℝ)]
+
+/-- **T4's `[0, π/2]` containment, assembled.**  `1 ≤ H(θ) ≤ √2` there. -/
+theorem t4_containment_first_half (H θ : ℝ) (correction : ℝ)
+    (heq : H = (Real.cos θ + Real.sin θ) - correction)
+    (hlo : 0 ≤ correction) (hhi : correction ≤ (Real.cos θ + Real.sin θ) - 1) :
+    1 ≤ H ∧ H ≤ Real.sqrt 2 := by
+  constructor
+  · rw [heq]; linarith
+  · rw [heq]
+    have := cos_add_sin_le_sqrt_two θ
+    linarith
+
+end T4Containment
+
 end MovingSofa
