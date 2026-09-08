@@ -5578,4 +5578,23 @@ theorem atom_uniform_bound (atom C H4 H3 : ℝ)
 
 end T4AtomBoundChain
 
+/-! ### K4 is automatically forced once `atom` is large enough
+
+A corollary of facts already established: `M ≥ 1 - √3/2` (A432's LP bound,
+`0 ≤ r ≤ 1` and the gauge moment on `[0, π/2]` alone) and K4's form
+`H'(π/2⁺) ≥ 1/2 ⟺ M + atom ≥ 3/2` (`HPrimeJumpFormula`). Since
+`M + atom ≥ (1 - √3/2) + atom`, K4 is FORCED regardless of `M` whenever
+`atom ≥ 1/2 + √3/2 ≈ 1.366`. Combined with `T4AtomBoundChain`'s uniform
+ceiling `atom ≤ √2 + √3/2 ≈ 2.280`, this narrows where K4 could conceivably
+fail to `atom ∈ [0, 1/2 + √3/2)` — consistent with every K4-violator found
+numerically this stretch (A435, A471, A472), all with `atom < 1`. -/
+section K4ForcedByLargeAtom
+
+/-- **K4 is forced once `atom ≥ 1/2 + √3/2`.**  Given `M ≥ 1 - √3/2` and
+`atom ≥ 1/2 + √3/2`, then `M + atom ≥ 3/2`, i.e. K4's condition holds. -/
+theorem k4_forced_large_atom (M atom : ℝ) (hM : M ≥ 1 - Real.sqrt 3 / 2)
+    (hatom : atom ≥ 1 / 2 + Real.sqrt 3 / 2) : M + atom ≥ 3 / 2 := by linarith
+
+end K4ForcedByLargeAtom
+
 end MovingSofa
