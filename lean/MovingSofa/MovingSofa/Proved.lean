@@ -5290,4 +5290,30 @@ theorem extremal_profile_M :
 
 end ExtremalProfile
 
+/-! ### The Y-continuity mechanism: `hi(0)` is atom-independent, structurally
+
+The boundary coordinate `Y(p) = H(p)\sin p + H'(p)\cos p` loses its `H'`
+dependence exactly at `p = \pi/2`, because `\cos(\pi/2) = 0`. So a jump in `H'`
+at `\pi/2` (an atom in the curvature measure — a vertex there) cannot move
+`Y(\pi/2)`, however large the jump. This is the mechanism behind A428's
+numerical finding that `hi(0) = H(\pi/2)` independent of the atom size. -/
+section YContinuity
+
+/-- **The mechanism.**  At `p = π/2`, `Y(p) = H(p)·sin p + H'(p)·cos p`
+reduces to `H(p)` alone: the coefficient of `H'` vanishes. -/
+theorem Y_atom_independent (H Hp' : ℝ) :
+    H * Real.sin (Real.pi / 2) + Hp' * Real.cos (Real.pi / 2) = H := by
+  rw [Real.sin_pi_div_two, Real.cos_pi_div_two]
+  ring
+
+/-- **Consequence.**  Whatever the two one-sided derivatives `Hp'_minus`,
+`Hp'_plus` are (however large their difference — the atom), `Y` evaluates to
+the same thing on both sides. -/
+theorem Y_continuous_at_vertex (H Hp'_minus Hp'_plus : ℝ) :
+    H * Real.sin (Real.pi / 2) + Hp'_minus * Real.cos (Real.pi / 2)
+      = H * Real.sin (Real.pi / 2) + Hp'_plus * Real.cos (Real.pi / 2) := by
+  rw [Y_atom_independent, Y_atom_independent]
+
+end YContinuity
+
 end MovingSofa
