@@ -5341,4 +5341,22 @@ theorem k4_simplified_via_M (H0 Hphalf_minus atom M : ℝ)
 
 end K4Simplified
 
+/-! ### The moment is not at saturation: LP forcing does not apply
+
+If `\int_0^{\pi/2} r\cos = C` with `r \le 1` and `\cos \ge 0`, then `C \le
+\int_0^{\pi/2}\cos = 1`, with equality forcing `r = 1` a.e. The measured `C =
+1/2` is not at that bound, so no such forcing occurs — recorded as the
+arithmetic gap between the measured value and the saturation threshold. -/
+section MomentNotSaturated
+
+/-- The gap between the moment's saturation value and its measured value. -/
+theorem moment_not_saturated (C : ℝ) (hC : C = 1 / 2) : C < 1 := by rw [hC]; norm_num
+
+/-- Consequently `1 - C ≠ 0`: the slack that an LP-saturation argument would
+need to vanish does not. -/
+theorem moment_slack_positive (C : ℝ) (hC : C = 1 / 2) : 0 < 1 - C := by
+  rw [hC]; norm_num
+
+end MomentNotSaturated
+
 end MovingSofa
