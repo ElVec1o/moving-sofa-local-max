@@ -5597,4 +5597,33 @@ theorem k4_forced_large_atom (M atom : ℝ) (hM : M ≥ 1 - Real.sqrt 3 / 2)
 
 end K4ForcedByLargeAtom
 
+/-! ### The domain on which `|T|` concavity is an established fact, not a heuristic
+
+A483 traced K4's relationship to "gap (ii)" (global concavity of `|T|` on the
+full relaxed admissible set `A`, which allows `r > 1`) through the project's
+history: gap (ii) on `A` was left HEURISTIC/open. But `|C_2|` concave is
+proved unconditionally (the Wirtinger inequality `prop:wirt` never uses
+`r ≤ 1`), and `|N|` convex is proved specifically on the subset `D` where
+`r ≤ 1` (`C1`). Since `|T| = |C_2| - 2|N|`, concavity of `|T|` on `D` follows
+from these two facts ALONE — a one-line consequence, formalised here as the
+generic algebraic fact that a concave function minus twice a convex function
+is concave. Combined with T3's resolution (this stretch: `r ≤ 1` is
+classically necessary, Blaschke's rolling theorem, for a cap to be a genuine
+physical ambidextrous sofa), `D` is exactly the TRUE competitor space — so
+this concavity fact, though only established on `D` and not the larger `A`,
+is the concavity fact K4 and any argument about genuine sofas actually needs.
+The underlying concavity/convexity facts about the specific functionals
+`|C_2|`, `|N|` are not re-derived here — only the generic composition rule. -/
+section ConcavityOnD
+
+/-- **Concave minus twice convex is concave.**  If `f` is concave and `g` is
+convex (both in the difference-quotient / secant sense on a convex domain),
+then `f - 2•g` is concave. Stated for a single secant inequality at a convex
+combination `t•x + (1-t)•y`. -/
+theorem concave_sub_two_convex (fx fy fm gx gy gm t : ℝ) (ht0 : 0 ≤ t) (ht1 : t ≤ 1)
+    (hf : fm ≥ t * fx + (1 - t) * fy) (hg : gm ≤ t * gx + (1 - t) * gy) :
+    fm - 2 * gm ≥ t * (fx - 2 * gx) + (1 - t) * (fy - 2 * gy) := by nlinarith
+
+end ConcavityOnD
+
 end MovingSofa
