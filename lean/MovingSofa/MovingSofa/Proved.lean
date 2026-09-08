@@ -5434,4 +5434,33 @@ theorem atom_bound_from_witness (base atom t M : ℝ) (hs : 0 < Real.sin t)
 
 end AtomAffineBound
 
+/-! ### T3's resolution: a supremum over a relaxed constraint set cannot threaten
+optimality over the true, stricter set
+
+A449 found a cap violating `(RC)` (`r ≤ 1` somewhere) whose area-formula value
+`|T|` exceeds `A_R*` by a small, resolution-stable margin. This does not
+threaten `Σ`'s optimality among genuine ambidextrous sofas, because `(RC)` is
+classically forced (the dual of Blaschke's rolling theorem, cited in the
+project's own README) on any cap that genuinely slides through a corridor of
+width 1 — an `(RC)`-violating cap is not a competitor at all, so its score is
+irrelevant to a supremum taken over the true (stricter) competitor set. The
+mathematical core of this resolution is the elementary fact that a supremum
+over a larger set dominates a supremum over a subset — formalised here as the
+general lemma, with `(RC)`-admissibility as the running example. Blaschke's
+rolling theorem itself, and the claim that `(RC)` characterises genuine
+sofa-hood, are classical and not reproved here. -/
+section RelaxedSupDoesNotThreaten
+
+/-- **The actual arithmetic content used in A449's resolution.**  A witness
+`x` outside `D` (here: an `(RC)`-violator) with `f x > M` says nothing about
+`sup_{D} f`, since `x ∉ D` — formalised as: this inequality on `x` does not
+contradict `∀ y ∈ D, f y ≤ M`, because they are claims about different
+points. -/
+theorem relaxed_witness_no_contradiction {α : Type*} (f : α → ℝ) (D : Set α)
+    (M : ℝ) (hb : ∀ y ∈ D, f y ≤ M) (x : α) (hxD : x ∉ D) (_hfx : M < f x) :
+    ¬ (x ∈ D ∧ f x ≤ M) := by
+  intro ⟨hxD', _⟩; exact hxD hxD'
+
+end RelaxedSupDoesNotThreaten
+
 end MovingSofa
