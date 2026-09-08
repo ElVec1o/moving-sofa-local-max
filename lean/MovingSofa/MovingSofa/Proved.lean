@@ -5597,23 +5597,21 @@ theorem k4_forced_large_atom (M atom : ℝ) (hM : M ≥ 1 - Real.sqrt 3 / 2)
 
 end K4ForcedByLargeAtom
 
-/-! ### The domain on which `|T|` concavity is an established fact, not a heuristic
+/-! ### A generic composition fact — NOT known to apply to `|C_2|`, `|N|` (A485 correction)
 
-A483 traced K4's relationship to "gap (ii)" (global concavity of `|T|` on the
-full relaxed admissible set `A`, which allows `r > 1`) through the project's
-history: gap (ii) on `A` was left HEURISTIC/open. But `|C_2|` concave is
-proved unconditionally (the Wirtinger inequality `prop:wirt` never uses
-`r ≤ 1`), and `|N|` convex is proved specifically on the subset `D` where
-`r ≤ 1` (`C1`). Since `|T| = |C_2| - 2|N|`, concavity of `|T|` on `D` follows
-from these two facts ALONE — a one-line consequence, formalised here as the
-generic algebraic fact that a concave function minus twice a convex function
-is concave. Combined with T3's resolution (this stretch: `r ≤ 1` is
-classically necessary, Blaschke's rolling theorem, for a cap to be a genuine
-physical ambidextrous sofa), `D` is exactly the TRUE competitor space — so
-this concavity fact, though only established on `D` and not the larger `A`,
-is the concavity fact K4 and any argument about genuine sofas actually needs.
-The underlying concavity/convexity facts about the specific functionals
-`|C_2|`, `|N|` are not re-derived here — only the generic composition rule. -/
+A483 claimed this composition rule shows `|T|` concave on `D` (the `r ≤ 1`
+subset), citing `|C_2|` concave as "proved unconditionally" via `prop:wirt`.
+**A485 retracts that premise**: re-reading the log further forward than A483
+did turned up an explicit, computed refutation (entries ~296–313) of
+`prop:wirt`'s original claim — `|C_2|`'s true second variation has an extra
+boundary/domain-motion "corner" term missed by the early statement, and
+`corner > |bulk_{C_2}|` occurs on a computed 24-dimensional subspace, so
+`|C_2|` is **not** concave in general. Concavity of `|T|` on the full
+admissible set remained explicitly "HEURISTIC" as of the log's own later
+entries, not proved. The theorem below is retained as a true, harmless,
+standalone piece of algebra (concave minus twice convex is concave, in the
+abstract) — but it is NOT known to apply to this project's actual `|C_2|`,
+`|N|` functionals, and no claim of significance for K4 is made here anymore. -/
 section ConcavityOnD
 
 /-- **Concave minus twice convex is concave.**  If `f` is concave and `g` is
