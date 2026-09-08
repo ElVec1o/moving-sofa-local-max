@@ -5406,30 +5406,44 @@ end T4Containment
 /-! ### The atom-affine structure of `maxcy`, and the resulting bound-implies-bound step
 
 Only the `atom` term in `Cap.h` depends on `atom`, contributing `atom * sin θ`
-for `θ > π/2`; hence for each fixed `t`, `corner(t).2 = h_base(t + π/2) +
-atom * sin t` is affine in `atom` with slope `sin t`. Consequently `maxcy`,
-being a max over such affine functions, is itself convex and (on `t` with
-`sin t > 0`) strictly increasing in `atom`. This is the arithmetic core of
-the numerical finding (A440–A444) that `maxcy ≤ 1/2` bounds `atom` above,
-tested on five profiles and one failed adversarial (spike) construction.
-The underlying claim that `h_base` is bounded independent of `atom`, and the
-resulting supremum over the BVP, are not formalised here — only the affine
-step and the bound it yields for one fixed witness `t` are. -/
+for `θ > π/2`. **Correction (A457):** an earlier version of this section
+claimed `corner(t).2` itself is affine in `atom` with slope `sin t`; this was
+WRONG. `corner(t).2 = (f - 1) * sin t + (g - 1) * cos t` where `g = h(t +
+π/2)` carries the atom term, so the atom-dependent part of `corner(t).2` is
+`atom * sin t * cos t`, not `atom * sin t` — the extra `cos t` factor from
+`corner`'s own definition was missed. Verified numerically against the
+harness's actual `corner` function (A457): the measured slope matches `sin t
+* cos t` exactly at several sample points, not `sin t`. The theorems below
+are stated with a generic slope variable and remain valid as abstract facts;
+`atom_bound_from_witness` applies with `sin t * cos t` (or any positive
+slope) substituted for the witness coefficient — the SPECIFIC claim that this
+coefficient equals `sin t` is retracted. Consequently `maxcy`, being a max
+over such affine functions, is still convex and increasing in `atom` on
+witnesses with positive slope — just with the corrected coefficient. This is
+the arithmetic core of the numerical finding (A440–A444) that `maxcy ≤ 1/2`
+bounds `atom` above (those results used the harness's actual `corner`/`maxcy`
+functions directly, not this hand-derived slope, so they are unaffected by
+this correction). The underlying claim that `h_base` is bounded independent
+of `atom`, and the resulting supremum over the BVP, are not formalised here —
+only the affine step and the bound it yields for one fixed witness `t` are. -/
 section AtomAffineBound
 
-/-- **`corner(t).2` is affine in `atom`, slope `sin t`.**  This is the exact
-arithmetic content of `Cap.h`'s definition for `θ = t + π/2 > π/2`. -/
-theorem corner_snd_affine_in_atom (base atom t : ℝ) :
-    base + atom * Real.sin t = base + atom * Real.sin t := rfl
+/-- **A quantity of the form `base + atom * slope` is affine in `atom`.**
+Stated generically: instantiate `slope` with the correct coefficient for the
+quantity of interest (e.g. `sin t * cos t` for `corner(t).2`, per A457's
+correction — not `sin t`, as an earlier version of this file claimed). -/
+theorem corner_snd_affine_in_atom (base atom slope : ℝ) :
+    base + atom * slope = base + atom * slope := rfl
 
-/-- **A single witness `t` with `\sin t > 0` already bounds `atom` above**,
-given a cap on the value there. If `base + atom * sin t ≤ M` and `sin t >
-0`, then `atom ≤ (M - base) / sin t`. This is the one-line mechanism behind
+/-- **A single witness `t` with `slope > 0` already bounds `atom` above**,
+given a cap on the value there. If `base + atom * slope ≤ M` and `slope >
+0`, then `atom ≤ (M - base) / slope`. This is the one-line mechanism behind
 every bisected atom bound in A440–A444: any admissible base value at a
-witness `t` forces this explicit ceiling, though the UNIFORM version (over
-all admissible base profiles) is not established here. -/
-theorem atom_bound_from_witness (base atom t M : ℝ) (hs : 0 < Real.sin t)
-    (hle : base + atom * Real.sin t ≤ M) : atom ≤ (M - base) / Real.sin t := by
+witness `t` forces this explicit ceiling (with `slope = sin t * cos t` for
+`corner(t).2`, per A457's correction), though the UNIFORM version (over all
+admissible base profiles) is not established here. -/
+theorem atom_bound_from_witness (base atom slope M : ℝ) (hs : 0 < slope)
+    (hle : base + atom * slope ≤ M) : atom ≤ (M - base) / slope := by
   rw [le_div_iff₀ hs]; linarith
 
 end AtomAffineBound
