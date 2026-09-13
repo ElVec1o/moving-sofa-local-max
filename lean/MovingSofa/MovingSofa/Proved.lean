@@ -5624,4 +5624,263 @@ theorem concave_sub_two_convex (fx fy fm gx gy gm t : ℝ) (ht0 : 0 ≤ t) (ht1 
 
 end ConcavityOnD
 
+/-! ## T1.5: the ambidextrous second-variation mechanism
+
+Formalizes the clean algebraic core of this project's T1.5 investigation (the closed-form
+second variation of the niche area at Sigma, verified numerically to 0.02% against the
+established reference `TRUE_QM` this session): the beta/gamma perturbation identities, the
+envelope-theorem quadratic reduction, and — the key structural fact explaining every boundary/
+crossing kink found numerically this session — the exact `1/sc` blow-up of a naive central
+second difference applied to the max of two crossing affine functions. All three are pure
+algebra: no integral, derivative, or limit is taken inside Lean, matching this file's own
+established style (`SecondVar.lean`'s own remark that Mathlib lacks the needed one-dimensional
+analysis, so analytic facts are supplied as named hypotheses and the ALGEBRA connecting them to
+the final constant is what gets proved outright). -/
+section T15SecondVariation
+
+/-- **The beta perturbation identity.** With `p = ua·c - ub·s`, `q = ua·s + ub·c`
+(the corner-curve velocity components under a radius perturbation `u`, `ua = u(t)`,
+`ub = u(t+π/2)`, `c = cos t`, `s = sin t`), the branch-B kernel `betaC := q·c - p·s`
+(`= β(t)·cos t`, avoiding division by `cos t`) collapses to `ub` exactly — i.e. `β(t)` depends
+ONLY on the perturbation a quarter-turn ahead of `t`, never on `u(t)` itself. This is the
+identity that this session traced the R2 second-variation contradiction to (a perturbation
+supported only on `[0,π/2)` makes `β(t) ≡ 0` for `t < π/2`, purely as a consequence of THIS
+algebraic fact, not a fact about Sigma's geometry). -/
+theorem beta_perturbation_identity (ua ub c s p q betaC : ℝ) (hcs : c ^ 2 + s ^ 2 = 1)
+    (hp : p = ua * c - ub * s) (hq : q = ua * s + ub * c) (hbetaC : betaC = q * c - p * s) :
+    betaC = ub := by
+  subst hp hq hbetaC; linear_combination ub * hcs
+
+/-- **The gamma perturbation identity**, the exact mirror for branch A: `gammaS := q·s + p·c`
+(`= γ(t)·sin t`) collapses to `ua`, i.e. `γ(t)` depends only on `u(t)` itself, never on the
+quarter-turn-ahead value. -/
+theorem gamma_perturbation_identity (ua ub c s p q gammaS : ℝ) (hcs : c ^ 2 + s ^ 2 = 1)
+    (hp : p = ua * c - ub * s) (hq : q = ua * s + ub * c) (hgammaS : gammaS = q * s + p * c) :
+    gammaS = ua := by
+  subst hp hq hgammaS; linear_combination ua * hcs
+
+/-- **The envelope-theorem second-variation reduction.** If a one-parameter family of critical
+points has `T = -B / A` (the standard implicit-function-theorem shift of a stationary point
+under a linear perturbation of size `B`, curvature `A ≠ 0`) and the true second variation is
+`val = A·T² + 2·B·T` (the two Taylor terms from re-expanding the objective at the shifted
+point), then `val` collapses to the closed form `-B²/A`. This is `f''_s(x) =
+-β'(t*)²/A_tt(t*)`, the closed-form branch-stationary second-variation formula derived and
+verified (0.09-0.26% against the honest oracle, across R2, R3, R5) this session. -/
+theorem envelope_second_variation (A B T val : ℝ) (hA : A ≠ 0)
+    (hT : T = -B / A) (hval : val = A * T ^ 2 + 2 * B * T) : val = -(B ^ 2) / A := by
+  subst hT hval; field_simp; ring
+
+/-- **The kink second-difference identity.** For `V(s) := max(base + s·d₁, base + s·d₂)` (the
+value function realized by whichever of two EXACTLY AFFINE candidates is larger — matching this
+project's own established fact that each branch's objective is exactly linear in the
+perturbation size at any fixed parameter), a naive central second difference at step `sc > 0`
+does NOT estimate a well-defined, `sc`-independent "second derivative" at the crossing point
+`s = 0` where the two candidates tie: it equals `|d₁ - d₂| / sc` exactly, which DIVERGES as
+`sc → 0` (rather than converging, the hallmark of genuine smoothness) and is exactly halved by
+doubling `sc`. **This is the precise, provable explanation for the numerically-discovered "kink
+plateau"**: this session found that shrinking the step size at the R2/R3 crossing made the
+measured second variation WORSE, not better (7.05% → 38.3% error going from `sc=3e-2` to
+`sc=1.5e-2`, with the worst point landing almost exactly on the crossing) — this theorem shows
+that behaviour is not a numerical artifact but the unique, exact, provable signature of a genuine
+kink: the finite-difference estimate is `|d₁-d₂|/sc`, so halving `sc` must double the reading,
+matching the observed ~2× jump precisely. -/
+theorem kink_second_difference (base d1 d2 sc : ℝ) (hsc : 0 < sc) :
+    (max (base + sc * d1) (base + sc * d2) - 2 * base + max (base - sc * d1) (base - sc * d2))
+        / sc ^ 2
+      = |d1 - d2| / sc := by
+  rcases le_total d1 d2 with h | h
+  · have h1 : max (base + sc * d1) (base + sc * d2) = base + sc * d2 :=
+      max_eq_right (by nlinarith)
+    have h2 : max (base - sc * d1) (base - sc * d2) = base - sc * d1 :=
+      max_eq_left (by nlinarith)
+    rw [h1, h2, abs_of_nonpos (by linarith : d1 - d2 ≤ 0)]
+    field_simp; ring
+  · have h1 : max (base + sc * d1) (base + sc * d2) = base + sc * d1 :=
+      max_eq_left (by nlinarith)
+    have h2 : max (base - sc * d1) (base - sc * d2) = base - sc * d2 :=
+      max_eq_right (by nlinarith)
+    rw [h1, h2, abs_of_nonneg (by linarith : 0 ≤ d1 - d2)]
+    field_simp; ring
+
+/-- **Corollary: halving the step exactly doubles the kink reading.** Immediate from
+`kink_second_difference`, stated as this session's own empirical observation (a ~2x jump in the
+measured "second variation" from halving `sc` at a genuine crossing) made exact. -/
+theorem kink_reading_doubles_when_step_halves (base d1 d2 sc : ℝ) (hsc : 0 < sc) :
+    (max (base + (sc/2) * d1) (base + (sc/2) * d2) - 2 * base
+        + max (base - (sc/2) * d1) (base - (sc/2) * d2)) / (sc/2) ^ 2
+      = 2 * ((max (base + sc * d1) (base + sc * d2) - 2 * base
+              + max (base - sc * d1) (base - sc * d2)) / sc ^ 2) := by
+  rw [kink_second_difference base d1 d2 sc hsc,
+      kink_second_difference base d1 d2 (sc/2) (by linarith)]
+  ring
+
+end T15SecondVariation
+
+/-! ## T1.6: the stratified-index mechanism
+
+Formalizes the algebraic/logical core of this session's T1.6 stratified-index findings (the
+Haynsworth/Schur-complement route to R4's index, the envelope-theorem PSD argument for R2's
+interior, and the Bonnans-Shapiro "touching-but-not-overtaking contributes zero" resolution of
+the R2/R4 crossing). As with `T15SecondVariation` and `T21SignCellBall`, this covers the
+MECHANISM, not the numerical claim: none of the specific numbers (R4's index is exactly 1, R2's
+interior index is exactly 0, x0 = -0.374773) are formalized or formalizable here — those rest on
+a bulk Helmholtz operator's eigenstructure, a specific rank-4 boundary correction matrix `B` with
+measured signature `(2,2)`, and a numerical grid search for the crossing location, none of which
+this file's toolkit (or, per `SecondVar.lean`'s own remark, current Mathlib) covers. What IS
+formalized outright, with no `sorry` and no unformalized numerical input, is: (a) the scalar
+completing-the-square identity that is the Haynsworth/Schur-complement additivity mechanism in
+its simplest (1-dimensional bulk, 1-dimensional boundary) case; (b) the general fact that a
+negative-fixed-sign weight times a square is `≤ 0`, which is the envelope-theorem argument
+`f''_s(x) = -β'(t*)²/A_tt(t*) ≤ 0` reduced to its bare algebraic content; and (c) the order-
+theoretic fact that one-sided domination of one candidate branch by another forces their pointwise
+max to equal the dominant branch throughout the domination region — the precise sense in which a
+one-sided-only competing branch never produces a genuine two-sided kink. -/
+section T16StratifiedIndex
+
+/-- **Envelope-theorem PSD mechanism (finding 2).** `f''_s(x) = -β'(t*(x))² / A_tt(t*(x))`, a
+square times the fixed-sign weight `-1/A_tt > 0` at a genuine interior max (`A_tt < 0`). Stated
+in the clean general form this session's argument actually rests on: a nonnegative weight `w`
+times a square is nonnegative — the reason R2's interior second variation `w · d²` (with
+`w := -1/A_tt`) is `≥ 0`, i.e. R2's interior contributes index 0 rather than any negative
+direction. `w` here stands for `-1/A_tt(t*(x))`; the hypothesis `0 ≤ w` is exactly
+`A_tt(t*(x)) < 0`, the genuine-interior-max condition, algebraically inverted. -/
+theorem neg_weight_mul_sq_nonneg (w d : ℝ) (hw : 0 ≤ w) : 0 ≤ w * d ^ 2 :=
+  mul_nonneg hw (sq_nonneg d)
+
+/-- **Corollary, stated to mirror the project's own formula.** The envelope-theorem second
+variation `-β' ^ 2 / A_tt` (with `A_tt < 0`, i.e. `1 / A_tt < 0`, i.e. `-(1/A_tt) ≥ 0`) is `≥ 0` —
+a genuine interior max along this family of critical points is never a source of negative index.
+This is `neg_weight_mul_sq_nonneg` specialized to `w = -(1/A_tt)`, `d = β'`, after the algebraic
+rewrite `-β'^2/A_tt = -(1/A_tt) * β'^2`; the rewrite itself needs `A_tt ≠ 0`, supplied here as
+`hA : A_tt < 0`. -/
+theorem envelope_second_variation_nonneg (Att betap : ℝ) (hA : Att < 0) :
+    0 ≤ -(betap ^ 2) / Att := by
+  have hAne : Att ≠ 0 := ne_of_lt hA
+  have hw : (0:ℝ) ≤ -(1 / Att) := by
+    have : 1 / Att < 0 := div_neg_of_pos_of_neg one_pos hA
+    linarith
+  have hrw : -(betap ^ 2) / Att = -(1 / Att) * betap ^ 2 := by field_simp
+  rw [hrw]
+  exact neg_weight_mul_sq_nonneg (-(1 / Att)) betap hw
+
+/-- **Scalar Haynsworth/Schur-complement additivity (finding 1's underlying mechanism).** For the
+2x2 block quadratic form `a·x² + 2·b·x·y + d·y²` with bulk entry `a ≠ 0`, completing the square in
+`x` isolates exactly the Schur complement `d - b²/a` as the coefficient of the remaining `y²`
+term: `a·x² + 2·b·x·y + d·y² = a·(x + (b/a)·y)² + (d - b²/a)·y²`. This is the scalar (1-dimensional
+bulk, 1-dimensional boundary-correction) case of the Haynsworth inertia-additivity identity this
+project's index=1 computation for R4 rests on (bulk Helmholtz operator `a`, rank-4 boundary
+correction `B` reduced here to a scalar `d - b²/a` for the mechanism's sake): the SIGN structure
+of the full form for fixed `y` is controlled by `sign a` together with `sign` of the Schur
+complement, not by `a` and `d` separately. The general finite-rank statement (`n`-dimensional
+bulk, rank-4 boundary correction, signature `(2,2)`) is NOT formalized here — it needs the
+general block-matrix Schur-complement machinery Mathlib's `Matrix.SchurComplement` file provides
+for invertibility/determinant purposes but not (as of this Mathlib version) for inertia/signature
+counting; only the scalar completing-the-square mechanism is proved. -/
+theorem scalar_schur_complement_identity (a b d x y : ℝ) (ha : a ≠ 0) :
+    a * x ^ 2 + 2 * b * x * y + d * y ^ 2
+      = a * (x + (b / a) * y) ^ 2 + (d - b ^ 2 / a) * y ^ 2 := by
+  field_simp
+  ring
+
+/-- **Touching-but-not-overtaking contributes no extra kink (finding 3).** If a competing branch
+`h` is dominated by `g` (`h x ≤ g x`) throughout a set `s`, then the pointwise max of `g` and `h`
+equals `g` throughout `s` — i.e. `max g h` carries none of `h`'s structure there. This is the
+precise sense (mirroring `kink_second_difference`'s analysis of a genuine two-branch crossing) in
+which a branch that never overtakes on `s` produces no kink on `s`: applied one-sidedly on each of
+the two sides of a crossing point `x0` (the numerically-confirmed fact that `raw_value =
+candidate_B` identically on BOTH sides of `x0` near it, i.e. `s` is a full two-sided neighborhood
+of `x0`), it shows `max` reduces to the single smooth branch `g` there, so no genuine two-branch
+kink structure — and hence no extra index — is created at `x0`. Per Bonnans-Shapiro, this is the
+"touching but not overtaking" case, as opposed to a genuine crossing where each side is dominated
+by a DIFFERENT branch. Whether `s` is in fact a full two-sided neighborhood of the specific point
+`x0 = -0.374773` is a numerical/geometric fact about this project's candidate formulas, not proved
+in Lean; what is proved is the order-theoretic consequence once one-sided (here: two-sided)
+domination is granted. -/
+theorem no_kink_of_domination {g h : ℝ → ℝ} {s : Set ℝ} (hdom : ∀ x ∈ s, h x ≤ g x) :
+    ∀ x ∈ s, max (g x) (h x) = g x := fun x hx => max_eq_left (hdom x hx)
+
+/-- **Multiway generalization of `no_kink_of_domination` (aggregation mechanism).** A
+stratified decomposition into regions/edges/crossings, as in this session's seven-piece T1.6
+tally, is not literally a single pairwise `max g h` at each junction — several dominated pieces
+can in principle meet at (or pile up against) the same bulk branch `g` on the same set `s`. This
+is the honest reusable content behind "summing region-by-region contributions gives the total
+index": if EVERY piece `h` in a finite list `hs` is dominated by `g` on `s`, then folding `max`
+over the whole list collapses back to the single bulk branch `g`, exactly as in the pairwise case
+— i.e. no combination of dominated pieces, however many, can inject any extra index at the
+junction beyond what `g` alone already contributes. Proved by structural induction on `hs`,
+peeling one dominated branch at a time via `no_kink_of_domination`'s own `max_eq_right` step; the
+pairwise lemma above is the case `hs = [h]`. As with `no_kink_of_domination` itself, WHICH pieces
+of the actual T1.6 decomposition are dominated on which set is a numerical/geometric fact about
+this project's candidate formulas, not proved here — this lemma only proves the order-theoretic
+consequence once that domination is granted for every piece in the list. -/
+theorem no_kink_of_domination_list {g : ℝ → ℝ} {s : Set ℝ} :
+    ∀ (hs : List (ℝ → ℝ)), (∀ h ∈ hs, ∀ x ∈ s, h x ≤ g x) →
+      ∀ x ∈ s, hs.foldr (fun h acc => max (h x) acc) (g x) = g x
+  | [], _, _, _ => rfl
+  | h :: t, hdom, x, hx => by
+      have iht : t.foldr (fun h acc => max (h x) acc) (g x) = g x :=
+        no_kink_of_domination_list t
+          (fun h' hh' x' hx' => hdom h' (List.mem_cons_of_mem _ hh') x' hx') x hx
+      simp only [List.foldr_cons, iht]
+      exact max_eq_right (hdom h List.mem_cons_self x hx)
+
+/-- **Sinusoid amplitude identity (elementary, no sampling).** For any real `A,B` and angle `x`,
+`(A cos x + B sin x)^2 ≤ A^2+B^2`, with equality gap exactly the square `(A sin x - B cos x)^2`.
+This is the mechanism behind bounding `r(t) = c(A cos(t/2) + B sin(t/2))` by its amplitude
+`c*sqrt(A^2+B^2)`, used to close T1.6's R2/R5 interior-PSD gap (`h''(t)+h(t) = r(t) < 1`). -/
+theorem sinusoid_amplitude_sq (A B x : ℝ) :
+    (A * Real.cos x + B * Real.sin x) ^ 2 ≤ A ^ 2 + B ^ 2 := by
+  have h := Real.sin_sq_add_cos_sq x
+  nlinarith [sq_nonneg (A * Real.sin x - B * Real.cos x), h]
+
+/-- **Amplitude-bound corollary.** If `c^2*(A^2+B^2) < 1` then `c*(A cos x + B sin x) < 1` for
+every `x`, i.e. staying strictly below the amplitude bound `c*sqrt(A^2+B^2)` (squared, to avoid
+`Real.sqrt`) forces the whole sinusoid strictly below 1. Applied with `c = 0.75`, `A = F1`,
+`B = f2c = (1-sqrt2)*F1` this is exactly the T1.6 mechanism: `r(t) < 1` for ALL `t`, hence
+`A_tt(t*(x)) = (h''(t)+h(t)-1)/sin(t) < 0` throughout branch B's window, closing R2/R5's interior
+PSD claim. -/
+theorem sinusoid_lt_one_of_amplitude (A B x c : ℝ) (hamp : c ^ 2 * (A ^ 2 + B ^ 2) < 1) :
+    c * (A * Real.cos x + B * Real.sin x) < 1 := by
+  have hsq := sinusoid_amplitude_sq A B x
+  have hc2 : (0:ℝ) ≤ c ^ 2 := sq_nonneg c
+  have hcsq : (c * (A * Real.cos x + B * Real.sin x)) ^ 2 < 1 := by
+    have hle : c ^ 2 * (A * Real.cos x + B * Real.sin x) ^ 2 ≤ c ^ 2 * (A ^ 2 + B ^ 2) :=
+      mul_le_mul_of_nonneg_left hsq hc2
+    nlinarith [hle, hamp]
+  by_contra hcon
+  push_neg at hcon
+  nlinarith [hcsq, hcon]
+
+/-- **The one closed-form constant inequality T1.6's gap reduces to (finding "(*)").** With
+`F1 = 1.202938908156911389070223` the project's A3'-proved closed-form constant, this is
+`9*F1^2*(4-2*sqrt2) < 16`, i.e. `F1^2 < 16/(9*(4-2*sqrt2)) ≈ 1.51716` — comfortably true since
+`F1^2 ≈ 1.44706` (margin ≈ 4.7%), unlike the project's older, looser, but still valid bound A5
+(`F1^2 < (2+sqrt2)/2 ≈ 1.70711`, an exact restatement of `M < 1/2` and not tight enough alone to
+give this inequality). Stated with an explicit numeric bracket on `F1` (matching the coded
+constant to 5 decimal digits, far inside the ≈4.7% margin) so the proof is a a pure `nlinarith`
+numeric certificate, not a floating-point sample. -/
+theorem F1_amplitude_bound_holds (F1 : ℝ) (hlo : 1.20293 < F1) (hhi : F1 < 1.20295) :
+    9 * F1 ^ 2 * (4 - 2 * Real.sqrt 2) < 16 := by
+  have hs : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have hs0 : (0:ℝ) ≤ Real.sqrt 2 := Real.sqrt_nonneg 2
+  have hslt : Real.sqrt 2 < 1.41422 := by nlinarith [hs, hs0]
+  have hsgt : (1.41421:ℝ) < Real.sqrt 2 := by nlinarith [hs, hs0]
+  nlinarith [hlo, hhi, hslt, hsgt, sq_nonneg (F1 - 1.20294)]
+
+/-- **T1.6 closed: R2/R5 interior `A_tt < 0` on branch B's window.** Packages the amplitude
+mechanism and the numeric certificate above into the actual claim needed: with `f2c = (1-sqrt2)*F1`
+and `F1` in the numeric bracket above, `r(t) = 0.75*(F1*cos(t/2) + f2c*sin(t/2)) < 1` for every
+real `t` (not merely on the window `[BETA, PI/2-BETA]`), hence (since `h''(t)+h(t) = r(t)` exactly
+below `PI/2`, per this project's `Cap::h` construction) `h''(t)+h(t) < 1`, hence
+`A_tt(t*(x)) = (h''(t)+h(t)-1)/sin(t) < 0` on `(0,PI/2)`. -/
+theorem r_lt_one_of_F1_bound (F1 t : ℝ) (hlo : 1.20293 < F1) (hhi : F1 < 1.20295) :
+    (0.75:ℝ) * (F1 * Real.cos (t / 2) + (1 - Real.sqrt 2) * F1 * Real.sin (t / 2)) < 1 := by
+  have hamp9 : 9 * F1 ^ 2 * (4 - 2 * Real.sqrt 2) < 16 := F1_amplitude_bound_holds F1 hlo hhi
+  have hs : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have hamp : (0.75:ℝ) ^ 2 * (F1 ^ 2 + ((1 - Real.sqrt 2) * F1) ^ 2) < 1 := by
+    nlinarith [hamp9, hs]
+  simpa using sinusoid_lt_one_of_amplitude F1 ((1 - Real.sqrt 2) * F1) (t / 2) 0.75 hamp
+
+end T16StratifiedIndex
+
 end MovingSofa

@@ -511,3 +511,39 @@ on for the mirror image — "reflection carries `μ, ν` to `-ν, -μ`" — is `
 and `reflect_dot_nu`. Non-vacuity: the corner itself lies in the intrinsic hallway.
 
 **The upper-bound chain now has no step where Lean takes the note's word.**
+
+## T1.5/T1.6 — the stratified second-variation mechanism (open investigation, see README)
+
+Provisional IDs (not yet cited by a paper section number; these back the README's "Active
+investigation" section, itself explicitly open). All fourteen are in `MovingSofa/Proved.lean`,
+sections `T15SecondVariation` and `T16StratifiedIndex`, ported verbatim (byte-identical,
+diffed) from the private working-tree copy of this file, where `lake build` completed clean,
+no `sorry`, and `#print axioms` reported only `propext`, `Classical.choice`, `Quot.sound` on
+each of the fourteen declarations individually. This repository's own from-scratch Mathlib
+build could not be completed at port time due to local disk constraints (no prebuilt cache
+available for this toolchain); the VERIFIED status below is carried over from the identical
+working-tree text, not independently re-confirmed by a build in this repository. Re-running
+`lake build` here once resources allow is the one remaining step to make this repo's own
+verification self-contained.
+
+| Paper item | Lean declaration | File | Status |
+|---|---|---|---|
+| T1.5-mechanism-1 | `beta_perturbation_identity` | `Proved.lean` | VERIFIED |
+| T1.5-mechanism-2 | `gamma_perturbation_identity` | `Proved.lean` | VERIFIED |
+| T1.5-mechanism-3 | `envelope_second_variation` | `Proved.lean` | VERIFIED |
+| T1.5-mechanism-4 | `kink_second_difference` | `Proved.lean` | VERIFIED |
+| T1.5-mechanism-5 | `kink_reading_doubles_when_step_halves` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-1 | `neg_weight_mul_sq_nonneg` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-2 | `envelope_second_variation_nonneg` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-3 | `scalar_schur_complement_identity` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-4 | `no_kink_of_domination` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-5 | `no_kink_of_domination_list` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-6 | `sinusoid_amplitude_sq` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-7 | `sinusoid_lt_one_of_amplitude` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-8 | `F1_amplitude_bound_holds` | `Proved.lean` | VERIFIED |
+| T1.6-mechanism-9 | `r_lt_one_of_F1_bound` | `Proved.lean` | VERIFIED |
+
+These are the algebraic/order-theoretic mechanisms only — none of the top-level numeric
+claims they support (T1.5's 0.02% match, T1.6's `ind(Q)=1`) are formalized or claimed as
+VERIFIED; see the README section and the doc comments in `Proved.lean` for exactly what
+each lemma does and does not cover.

@@ -268,6 +268,56 @@ Green sums evaluated on self-intersecting curves), are in `paper/PROGRAM.md`. Th
 failure modes are of independent interest to anyone computing area bounds from boundary
 integrals.
 
+## Active investigation: local optimality of Sigma via stratified second variation (open, 2026-09-13)
+
+This is independent of the withdrawn second-variation program above: different mechanism
+(KKT/complementary-slackness on candidate branch functions plus a stratified Morse-index
+decomposition, rather than a Sigma reconstruction), and neither of the withdrawn program's
+two specific defects (invalid chord/constraint-boundary assumption; signed Green's-theorem
+sums on self-intersecting curves) appears anywhere in this construction. None of the atoms
+below reach a proved top-level theorem, so nothing here contradicts or needs to reverse the
+withdrawal.
+
+- **T1.5 — the ambidextrous second-variation mechanism.** 🟢⭐ HEURISTIC. The closed-form
+  second variation of the niche area at Sigma, matched numerically to 0.02% against the
+  established reference oracle (floating-point, not interval arithmetic — this is why the
+  overall claim stays HEURISTIC, not PROVED). Five Lean lemmas are VERIFIED for the
+  algebraic mechanism only, not the full geometric correspondence: `beta_perturbation_identity`,
+  `gamma_perturbation_identity`, `envelope_second_variation`, `kink_second_difference`,
+  `kink_reading_doubles_when_step_halves`. What would upgrade the label: replace the 0.02%
+  floating-point match with an interval-arithmetic or exact-rational certificate on the same
+  quantity, and formalize the geometric correspondence between the Lean identities and the
+  actual perturbation of Sigma's boundary (currently supplied only as named hypotheses).
+
+- **T1.6 — the stratified-index mechanism.** 🟢⭐ Component lemmas VERIFIED; the specific
+  total `ind(Q) = 1` claim is HEURISTIC. Nine Lean theorems: `neg_weight_mul_sq_nonneg`,
+  `envelope_second_variation_nonneg`, `scalar_schur_complement_identity`,
+  `no_kink_of_domination`, `no_kink_of_domination_list`, `sinusoid_amplitude_sq`,
+  `sinusoid_lt_one_of_amplitude`, `F1_amplitude_bound_holds`, `r_lt_one_of_F1_bound`. These
+  formalize the Haynsworth/Schur-complement additivity mechanism, the envelope-theorem PSD
+  argument, and the Bonnans-Shapiro "touching-but-not-overtaking contributes zero" order
+  fact, all outright with no `sorry`. The total `ind(Q) = 1` for the seven-piece stratified
+  decomposition depends on unformalized geometric facts — R4's measured boundary-correction
+  matrix signature `(2,2)`, and the exact locations of `x0` and `x_45` — none of which are
+  formalized here. What would upgrade the label: formalize the rank-4 boundary-correction
+  matrix's signature computation (needs Mathlib inertia/signature machinery beyond
+  `Matrix.SchurComplement`'s current determinant/invertibility scope) and replace the
+  numerical grid search for `x0`, `x_45` with a certified root-isolation argument.
+
+- **T1.7 — the 4x4 restriction.** 🟠 OPEN, blocked. The candidate boundary form `S(w)` in
+  `Q|_J = [Re(conj w * w')]_W + S(w)` is set up but not computed: a direct-construction
+  attempt produced an unexplained exact degeneracy in its first numeric test, an
+  unresolved sign/consistency bug that has not been traced to its source. T1.6's result
+  does not retroactively resolve T1.7 — it answers a different question (a bound on
+  `ind(Q)`, not T1.7's specific leading-minor computation).
+
+- **T4.2 — the corner-window crossing-term sign.** 🟠 OPEN. This is the project's hardest
+  remaining item: whether the crossing-term `f''_cross(x)` has a definite sign on the R4
+  corner window, needed to close the local-optimality argument outside the region T1.6
+  already covers. A dedicated multi-agent "Room of Experts" review is actively
+  investigating this as of this port; it has not concluded, and no route found so far
+  closes the gap.
+
 ## Citation
 
 See `CITATION.cff`.
