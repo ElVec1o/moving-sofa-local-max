@@ -228,6 +228,16 @@ superseded, retained only because the archived release contained them, and each
 marked WITHDRAWN in its own header:
 paper/manuscript.tex, paper/OFFDIAG_RIGOROUS.tex, paper/UNIQUENESS.tex,
 paper/figures/, algorithm/rigorous/{gerver_*,sigma_*}.py
+
+code/ambi_*/              in-progress Rust ports of the plain-float algorithm/rigorous
+                          scripts (this project's own standing convention is Rust, not
+                          Python, for new work). 5 of the 22 ambi_*.py scripts are ported
+                          and verified byte-identical against the Python originals as of
+                          2026-09-14 (ambi_connected, ambi_racelp, ambi_cap, ambi_btail,
+                          ambi_ordercert); the rest, including the one script that needs
+                          real interval/ball arithmetic (ambi_certbound.py), remain to be
+                          ported. The Python originals above are unchanged and still the
+                          canonical, complete set until this migration finishes.
 ```
 
 ## Lean
